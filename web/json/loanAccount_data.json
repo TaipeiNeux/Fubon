@@ -1,0 +1,29 @@
+{
+  "data": {
+  	"client_type": [
+		
+		{"signin": "no" },
+		{"check": "no" }
+    ],
+	"client_detail": [
+		{"state":"normal", "num":"1", "account":"haha111" , "bank_name":"ha_1" , "remain_money":"1234", "rate":"1.7" , "pay_day":"10", "return_detail":"repaymentInquiry_1_haha.html", "my_detail":"my_detail.html",  "detail":[
+			{"semister":"95", "semister_state":"0.5", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"94", "semister_state":"0", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"95", "semister_state":"0", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" }
+		]},
+		{"state":"normal", "num":"1", "account":"haha22233" , "bank_name":"ha_2" , "remain_money":"12345", "rate":"1.7" , "pay_day":"10", "return_detail":"repaymentInquiry_1_haha.html", "my_detail":"my_detail.html",  "detail":[
+			{"semister":"95", "semister_state":"0.5", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"94", "semister_state":"0.5", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"95", "semister_state":"0", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"96", "semister_state":"0", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" }
+		]},
+		{"state":"delay", "num":"1", "account":"haha333" , "bank_name":"ha_3" ,"remain_money":"123456", "rate":"1.7" , "pay_day":"10", "return_detail":"repaymentInquiry_1_haha.html", "my_detail":"my_detail.html",  "detail":[
+			{"semister":"95", "semister_state":"0.5", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"95", "semister_state":"0.5", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"95", "semister_state":"0.5", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"95", "semister_state":"0", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" },
+			{"semister":"95", "semister_state":"0", "original_money":"222" , "balance_money":"111", "need_pay_month":"22" }
+		]}
+    ]
+  }
+}

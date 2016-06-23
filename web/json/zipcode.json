@@ -1,0 +1,16 @@
+{
+    "zipcodes" : [
+        {
+            "zipcode" : "100",
+            "areaName" : "中正區"
+        },
+        {
+            "zipcode" : "100",
+            "areaName" : "中正區"
+        },
+        {
+            "zipcode" : "100",
+            "areaName" : "中正區"
+        }
+    ]
+}

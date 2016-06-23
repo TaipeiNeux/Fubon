@@ -1,0 +1,122 @@
+@charset "UTF-8";
+
+body#body.processBar_3 .processTab ul li, body#body.processBar_3 .processTab ul li.active {
+    width: 33.3333%;
+}
+
+
+body#body.processBar_4 .processTab ul li, body#body.processBar_4 .processTab ul li.active {
+    width: 25%;
+}
+
+
+body#body.processBar_5 .processTab ul li, body#body.processBar_5 .processTab ul li.active {
+    width: 20%;
+}
+
+
+body#body.processBar_6 .processTab ul li, body#body.processBar_6 .processTab ul li.active {
+    width: 16.666%;
+}
+
+body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBar_4 .processTab ul li:last-child a:after, body#body.processBar_5 .processTab ul li:last-child a:after, body#body.processBar_6 .processTab ul li:last-child a:after {
+    content: "";
+    display: block;
+    background: url(../img/smile.png);
+    position: absolute;
+    width: 33px;
+    height: 76px;
+    top: -3px;
+    right: -2%;
+}
+
+@media screen and (max-width: 769px) {
+    body#body.processBar_3 .processTab ul li {
+        width: 25%;
+    }
+
+    body#body.processBar_3 .processTab ul li.active {
+        width: 50%;
+    }
+
+    body#body.processBar_3 .processTab ul li:last-child a:after {
+        top: -13px;
+        right: -2%;
+    }
+
+    body#body.processBar_4 .processTab ul li {
+        width: 18%;
+    }
+
+    body#body.processBar_4 .processTab ul li.active {
+        width: 38%;
+    }
+
+    
+    
+    body#body.processBar_4 .processTab ul li:last-child a:after {
+        top: -12px;
+        right: -48%;
+    }
+
+    body#body.processBar_5 .processTab ul li {
+        width: 12%;
+    }
+
+    body#body.processBar_5 .processTab ul li.active {
+        width: 50%;
+    }
+
+    body#body.processBar_5 .processTab ul li:last-child a:after {
+        top: -13px;
+        right: -20%;
+    }
+
+
+    body#body.processBar_6 .processTab ul li {
+        width: 13%;
+    }
+
+    body#body.processBar_6 .processTab ul li.active {
+        width: 33%;
+    }
+
+    body#body.processBar_6 .processTab ul li:last-child a:after {
+        top: -13px;
+        right: -20%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body#body.processBar_3 .processTab ul li {
+        width: 23%;
+    }
+
+    body#body.processBar_3 .processTab ul li:last-child a:after {
+        right: -22%;
+    }
+
+    body#body.processBar_4 .processTab ul li {
+        width: 17%;
+    }
+
+    body#body.processBar_4 .processTab ul li:last-child a:after {
+        right: -75%;
+    }
+
+    body#body.processBar_5 . ul li {
+        width: 11%;
+    }
+
+    body#body.processBar_5 .processTab ul li:last-child a:after {
+        right: -75%;
+    }
+
+    body#body.processBar_6 .processTab ul li {
+        width: 12%;
+    }
+
+    body#body.processBar_6 .processTab ul li:last-child a:after {
+        right: -79%;
+    }
+}

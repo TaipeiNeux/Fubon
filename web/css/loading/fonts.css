@@ -1,0 +1,144 @@
+/*-------- Icon - quick tools ----------*/
+@font-face {
+  font-family: 'QuickTools';
+  src: url("fonts/quick-tools.eot?fo6nfe");
+  src: url("fonts/quick-tools.eot?fo6nfe#iefix") format("embedded-opentype"), url("fonts/quick-tools.ttf?fo6nfe") format("truetype"), url("fonts/quick-tools.woff?fo6nfe") format("woff"), url("fonts/quick-tools.svg?fo6nfe#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+.i-qtools-apply:before, .i-qtools-contact:before, .i-qtools-calculate:before, .i-qtools-download:before, .i-qtools-clue:before {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: 'QuickTools';
+  font-size: 24px;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 30px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.i-qtools-apply:before {
+  content: "\e900";
+}
+
+.i-qtools-contact:before {
+  content: "\e901";
+}
+
+.i-qtools-calculate:before {
+  content: "\e902";
+}
+
+.i-qtools-download:before {
+  content: "\e903";
+}
+
+.i-qtools-clue:before {
+  content: "\e904";
+}
+
+@font-face {
+  font-family: 'FuBon-Font';
+  src: url("fonts/FuBon-Font.eot?2015100502&1447231922");
+  src: url("fonts/FuBon-Font.eot?&1447231922#iefix2015100502") format("embedded-opentype"), url("fonts/FuBon-Font.woff?2015100502&1447231922") format("woff"), url("fonts/FuBon-Font.ttf?2015100502&1447231922") format("truetype"), url("fonts/FuBon-Font.svg?2015100502&1447231922#skmFount") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+.i-arrow-updown:before, .i-arrow-right:before {
+  font: normal normal normal 14px/1 FuBon-Font;
+  font-size: inherit;
+  text-rendering: auto;
+  text-transform: none;
+  speak: none;
+  -moz-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  -webkit-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.m-icon {
+  font: normal normal normal 14px/1 FuBon-Font;
+  font-size: inherit;
+  text-rendering: auto;
+  text-transform: none;
+  speak: none;
+  -moz-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  -webkit-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
+  display: inline-block;
+  vertical-align: middle;
+}
+.m-icon.is-absolute {
+  top: 0 !important;
+  left: 0 !important;
+  position: absolute !important;
+  display: block !important;
+  vertical-align: middle;
+}
+
+.m-icon-stack .m-icon {
+  top: 0;
+  left: 0;
+  text-align: center;
+  height: 100%;
+  display: block;
+}
+
+.m-icon-stack .m-icon.is-absolute {
+  top: 0 !important;
+  left: 0 !important;
+  position: absolute !important;
+  display: block !important;
+  vertical-align: middle;
+}
+
+.m-icon-fubon-blue:before {
+  content: "\e936";
+}
+
+.m-icon-fubon-green:before {
+  content: "\e937";
+}
+
+.i-arrow-updown:before {
+  content: "\e900";
+}
+.i-arrow-updown.active:before {
+  content: "\e903";
+}
+
+.active .i-arrow-updown:before {
+  content: "\e903";
+}
+
+/*.i-search {
+	@extend %icon-fubon;
+
+	&:before {
+		content: "\e965";
+	}
+}*/
+/*.i-burger {
+	@extend %icon-fubon;
+
+	&:before {
+		content: "\e94e";
+	}
+}*/
+.i-arrow-right:before {
+  content: "\e91e";
+}

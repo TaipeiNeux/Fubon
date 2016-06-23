@@ -1,0 +1,32 @@
+{
+    "Header": {
+        "errorCode": "0",
+        "errorMsg": "(當errorCode不為0時，請alert出errorMsg)"
+    },
+    "Content": {
+        "EducationStage": "4",
+        "school": {
+            "isNational": "Y",
+            "name": "台灣大學",
+            "isDay": "Y"
+        },
+        "department": "資訊科學",
+        "OnTheJob": "N",
+        "gradeClass": {
+            "grade": "3",
+            "class": "A"
+        },
+        "id": "G10216009",
+        "enterDate": {
+            "year": "102",
+            "month": "9",
+            "day": "1"
+        },
+        "graduationDate": {
+            "year": "105",
+            "month": "1",
+            "day": "31"
+        }
+    }
+
+}

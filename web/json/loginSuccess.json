@@ -1,0 +1,50 @@
+{
+    "Header": {
+        "errorCode": "0",
+        "errorMsg": "(當errorCode不為0時，請alert出errorMsg)"
+    },
+	"isLogin" : "Y",
+    "content": {
+        "isPeriod": "N",
+        "isRecord": "Y",
+        "isEtabs": "N",
+        "isPopUp": "N",
+        "appCases": "N",
+        "tempCases": "Y",
+        "kindOfCases": "1",
+        "censor": "1",
+        "appName": "金X狼",
+		"firstSemesterStart": "0801",
+		"firstSemesterEnd": "0407",
+		"secondSemesterStart": "0102",
+		"secondSemesterEnd": "0506",
+		"semester": "1",
+		"online": {
+			"appYear": "2015",
+			"appMonth": "01",
+			"appDay": "22",
+			"appHour": "12",
+			"appMin": "22",
+			"appSec": "24"
+		},
+		"document": {
+			"appYear": "2016",
+			"appMonth": "01",
+			"appDay": "28",
+			"appHour": "05",
+			"appMin": "27",
+			"appSec": "29"
+		},
+		"branchName": "板橋分行",
+		"branchAddr": "新北市板橋xx路",
+		"branchTel": "(02)23114477",
+		"allObjArr": [
+			"第三人(陳X三)之身分證及印章",
+			"戶籍謄本或新式戶口名簿<p>【需為最近三個月且記事欄需詳載，包含本人(王X人)、第三人(陳X三)、配偶(張X偶)如戶籍不同者，需分別檢附】</p>",
+			"第三人(陳X三)之扣繳憑單、財力證明或在職證明",
+			"政府機關出具之低收入戶或中低收入戶證明"
+		],
+		"reservation": "2016-01-22 PM01:00~02:00"
+    }
+
+}

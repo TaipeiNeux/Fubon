@@ -1,0 +1,38 @@
+{
+    "Header": {
+        "errorCode": "0",
+        "errorMsg" : "(當errorCode不為0時，請alert出errorMsg)"
+    },
+    "Content": {
+        "flow" : {
+            "flowId" : "apply",
+            "viewURL" : "flow/apply6_1.jsp",
+            "currentMainStep" : "apply6",
+            "currentSubStep" : "apply6_1",
+            "mainStep" : [
+                {
+                    "id" : "apply1",
+                    "name" : "申請人基本資料"
+                },
+                {
+                    "id" : "apply2",
+                    "name" : "關係人基本資料"
+                },
+                {
+                    "id" : "apply3",
+                    "name" : "就讀學校及申貸金額"
+                },
+                {
+                    "id" : "apply4",
+                    "name" : "確認資料"
+                },
+                {
+                    "id" : "apply5",
+                    "name" : "申請結果"
+                }
+            ],
+            "subStep" : []
+        }
+       
+    }
+}
