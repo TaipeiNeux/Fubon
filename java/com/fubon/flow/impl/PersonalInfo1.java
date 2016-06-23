@@ -153,6 +153,10 @@ public class PersonalInfo1 implements ILogic {
         //用zipcode反查city
         domicileAddressCityId = ProjUtils.toCityId(domicileAddressZipCode,dao);
 
+
+
+        //測試
+
         //用zipcode反查city
         teleAddressCityId = ProjUtils.toCityId(teleAddressZipCode,dao);
 
