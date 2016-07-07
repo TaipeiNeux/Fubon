@@ -37,12 +37,21 @@ public class FlowUtils {
 
     public static Document getFlowDocument() {
         if(doc == null) {
+            InputStream is = null;
             try{
-                InputStream is = FlowUtils.class.getResourceAsStream("/flow.xml");
+                is = FlowUtils.class.getResourceAsStream("/flow.xml");
                 String html = IOUtils.toString(is, "utf-8");
                 doc = Jsoup.parse(html, "utf-8");
             }catch(Exception e) {
                 e.printStackTrace();
+            }finally{
+                if(is != null) {
+                    try{
+                        is.close();
+                    }catch(Exception ex) {
+                        ;
+                    }
+                }
             }
         }
 

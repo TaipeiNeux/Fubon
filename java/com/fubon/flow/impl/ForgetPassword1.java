@@ -45,7 +45,7 @@ public class ForgetPassword1 implements ILogic {
             studentUserProfileDetail.setValue("AplyIdNo",id);
 
             if(!dao.querySingle(studentUserProfileDetail,null)) {
-                throw new Exception("此身份證的生日不存在");
+                throw new Exception("生日驗證錯誤");
             }
             else {
                 String aplyBirthday = studentUserProfileDetail.getValue("AplyBirthday");
@@ -58,7 +58,7 @@ public class ForgetPassword1 implements ILogic {
                 String bd = ProjUtils.toYYYYBirthday(bdYear + bdMonth + bdDay);
 
                 if(!aplyBirthday.equalsIgnoreCase(bd)) {
-                    throw new Exception("您輸入的生日資料不正確");
+                    throw new Exception("生日驗證錯誤");
                 }
             }
         }

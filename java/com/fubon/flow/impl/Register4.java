@@ -40,7 +40,7 @@ public class Register4 implements ILogic {
         HttpSession session = request.getSession();
 
         String today = DateUtil.getTodayString();
-        today = DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",today);
+        today = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",today);
 
         String errorCode = "" , errorMsg = "";
         String registerResult = "fail", registerDate = today.substring(0,10), registerTime = today.substring(11);
@@ -56,7 +56,6 @@ public class Register4 implements ILogic {
         String email = step2Root.element("email").getText();
 
         try{
-
 
             String id = step2Root.element("id").getText();
             String userPwd = step2Root.element("userPwd").getText();
@@ -117,7 +116,7 @@ public class Register4 implements ILogic {
             else {
                 //要編ErrorCode
                 errorCode = "10";
-                errorMsg = "該會員資料已存在";
+                errorMsg = "該身分證字號已為本服務專區會員，請您於首頁直接登入。若您已忘記使用者代碼或密碼，可點選[首頁>忘記代碼/密碼]功能進行重設。";
             }
 
 

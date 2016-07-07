@@ -1,5 +1,10 @@
 @charset "UTF-8";
 
+body#body .processTab ul li.active:first-child {
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
 body#body.processBar_3 .processTab ul li, body#body.processBar_3 .processTab ul li.active {
     width: 33.3333%;
 }
@@ -26,8 +31,18 @@ body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBa
     position: absolute;
     width: 33px;
     height: 76px;
-    top: -3px;
+    top: -6px;
+    right: -1%;
+
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 15px;
+}
+
+body#body.processBar_4 .processTab ul li:last-child a:after {
     right: -2%;
+
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 20px;
 }
 
 @media screen and (max-width: 769px) {
@@ -49,14 +64,14 @@ body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBa
     }
 
     body#body.processBar_4 .processTab ul li.active {
-        width: 38%;
+        width: 46%;
     }
 
     
     
     body#body.processBar_4 .processTab ul li:last-child a:after {
         top: -12px;
-        right: -48%;
+        right: -10%;
     }
 
     body#body.processBar_5 .processTab ul li {
@@ -69,7 +84,7 @@ body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBa
 
     body#body.processBar_5 .processTab ul li:last-child a:after {
         top: -13px;
-        right: -20%;
+        right: -45%;
     }
 
 
@@ -101,7 +116,7 @@ body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBa
     }
 
     body#body.processBar_4 .processTab ul li:last-child a:after {
-        right: -75%;
+        right: -40%;
     }
 
     body#body.processBar_5 . ul li {
@@ -109,7 +124,7 @@ body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBa
     }
 
     body#body.processBar_5 .processTab ul li:last-child a:after {
-        right: -75%;
+        right: -60%;
     }
 
     body#body.processBar_6 .processTab ul li {
@@ -119,4 +134,145 @@ body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBa
     body#body.processBar_6 .processTab ul li:last-child a:after {
         right: -79%;
     }
+}
+
+@media screen and (min-width: 769px) {
+    #body .contentArea {
+      padding-top: 136px;
+    }
+
+    #body .processTab ul li {
+      height: 50px;
+    }
+
+    #body .processTab ul li a {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+
+    .processTab ul li:before {
+        top: -7px;
+    }
+
+    #body .processTab ul li a:before {
+      top: 7px;
+    }
+
+    #body .processTab ul li:after {
+      top: -7px;
+    }
+
+    #body.processBar_3 .processTab ul li:last-child a:after, body#body.processBar_4 .processTab ul li:last-child a:after, body#body.processBar_5 .processTab ul li:last-child a:after, body#body.processBar_6 .processTab ul li:last-child a:after {
+      top: -8px;
+    }
+
+    #body .apply_1_step1 .processArea {
+      padding: 0 ;
+    }
+
+    body#body.processBar_3 .processTab ul li:last-child a:after, 
+    body#body.processBar_4 .processTab ul li:last-child a:after, 
+    body#body.processBar_5 .processTab ul li:last-child a:after, 
+    body#body.processBar_6 .processTab ul li:last-child a:after {
+      right: -3%;
+    }
+}
+
+@media screen and (max-width:769px) {
+    body#body.processBar_5 .processTab ul li.active {
+        width: 48%;
+    }
+}
+
+
+@media screen and (max-width:380px) {
+/*    body#body.forgetPassword_2 .processTab ul li.active p,*/
+    body#body.apply_3_step1 .processTab ul li.active p,
+    body#body.apply_3_step2 .processTab ul li.active p {
+        line-height: 18px;
+    }
+}
+@media (min-width:769px) {
+	body#body.index .contentArea {
+		padding-top: 100px;
+	}
+}
+
+@media (max-width:769px) {
+	
+	body.index .border_title .zh {
+		font-size: 17px;
+	}
+	
+	.modal-dialog .modal-content .btn-default {
+		width: 125px;
+	}
+	
+	body#body .processTab {
+		padding: 0 5px;
+	}
+	
+	.news h3 {
+		font-size: 15px;
+	}
+   
+}
+
+@media (max-width:290px) {
+    body#body.forgetPassword_1 .processTab ul li.active p {
+        line-height: 18px;
+    }
+}
+
+@media (max-width:769px) {
+    body#body.processBar_4 .processTab ul li.active:last-child a:after {
+        right: -1%;
+    }
+}
+
+@media (max-width:480px) {
+    body#body.processBar_4 .processTab ul li.active:last-child a:after {
+        right: -8%;
+    }
+}
+
+@media (max-width:480px) {
+    body#body.processBar_3 .processTab ul li.active:last-child a:after
+        right: -8%;
+}
+
+@media (max-width:480px) {
+    body#body.processBar_3 .processTab ul li:last-child.active a:after {
+        right: -10%;
+    }
+}
+
+/* IE11 步驟列 fix 陳拓0704 */
+
+@media (min-width:769px) and (-ms-high-contrast:none) {
+    body#body.processBar_3 .processTab ul li:last-child a:after, body#body.processBar_4 .processTab ul li:last-child a:after, body#body.processBar_5 .processTab ul li:last-child a:after, body#body.processBar_6 .processTab ul li:last-child a:after {
+        right: -0.5%;
+    }
+    
+    body#body.processBar_3 .processTab ul li:last-child.active a:after,
+    body#body.processBar_4 .processTab ul li:last-child.active a:after,
+    body#body.processBar_5 .processTab ul li:last-child.active a:after,
+    body#body.processBar_6 .processTab ul li:last-child.active a:after {
+        right: -1.5%;
+    }
+    
+    body#body.processBar_3 .processTab ul li:last-child a:after {
+        right: 0;
+    }
+}
+
+/* 1024步驟列 */
+@media (max-width:1024px) and (min-width:769px) {
+    body#body .processTab ul li p {
+        font-size: 12px;
+    }
+}
+
+.processTab ul li:last-child:after {
+    
 }

@@ -39,7 +39,7 @@ public class ForgetPassword3_1 implements ILogic {
 
         //取得是否已撥款
         String isRecord = ProjUtils.isPayHistory(id,dao) ? "Y" : "N";
-        String mobile = "" , email = "", account = "", password = "";
+        String mobile = "" , email = "", account = "", pd = "";
 
 
         //查詢手機跟Email
@@ -60,13 +60,13 @@ public class ForgetPassword3_1 implements ILogic {
         Element step2Root = step2Doc.getRootElement();
 
         account = step2Root.element("userAccount").getText();
-        password = step2Root.element("userPwd").getText();
+        pd = step2Root.element("userPwd").getText();
 
         content.put("hasAppropriation",isRecord);
         content.put("mobile",mobile);
         content.put("email",email);
         content.put("account",account);
-        content.put("password",password);
+        content.put("password",pd);
     }
 
     @Override

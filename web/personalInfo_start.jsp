@@ -20,7 +20,7 @@
         <!-- 由flow.js自己長 -->
         <div class="processTab"></div>
 
-        <div class="processArea">
+        <div class="processArea" style="display:none;">
             <div class="stepArea">
 
             </div>

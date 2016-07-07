@@ -251,6 +251,7 @@
           <h3>特殊情形</h3>
           <p>原則上未成年人辦理就學貸款應提供父母雙方為連帶保證人，惟有特殊情形時(重病、精神錯亂、失蹤、在監受長期徒刑)而無法導致父母任一方無法行使親權時，由父或母一方擔任保證人。</p>
         </div>
+        <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">確定</button></div>
       </div>
     </div>
   </div>
@@ -266,6 +267,7 @@
           <h3>特殊情形</h3>
           <p>原則上未成年人辦理就學貸款應提供父母雙方為連帶保證人，惟有特殊情形時(重病、精神錯亂、失蹤、在監受長期徒刑)而無法導致父母任一方無法行使親權時，由父或母一方擔任保證人。</p>
         </div>
+        <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">確定</button></div>
       </div>
     </div>
   </div>
@@ -281,6 +283,7 @@
           <h3>第三人監護</h3>
           <p>如為未成年人無父母或父母均不能行使權利義務時及受監護宣告之人，且已辦理監護登記者，應以戶籍謄本之記事欄位所登載之監護權人為就學貸款連帶保證人。</p>
         </div>
+        <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">確定</button></div>
       </div>
     </div>
   </div>

@@ -26,14 +26,17 @@
                 </div>
             </div>
         </div>
-        <h3 class="snopy pen">證明文件
+        <h3 class="snopy pen sectop">證明文件
                 <div class="editBtnBoxbottom">
                 </div>
               </h3>
+              <div class="error-msg" id="documentType" style="display:none">只允許上傳jpg、png、pdf、tif或gif影像檔</div>
+            <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
         <table class="mqua">
             <thead>
                 <tr>
-                    <th colspan="2">檔案名稱</th>
+					<th></th>
+                    <th>檔案名稱</th>
                     <th>上傳/修改</th>
                     <th>預覽</th>
                 </tr>
@@ -123,8 +126,8 @@
                     <td class="clickView" colspan="4" style="display:none" id="sPos">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="studentIdPositiveImg" src="">-->
-								<iframe id="studentIdPositiveImg" src="" style="width:100%; height: 100%;"></iframe>
+                                <!--<img id="studentIdPositiveViewImg" src="">-->
+								<iframe id="studentIdPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>

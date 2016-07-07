@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" %>
+﻿<%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
 <% request.setCharacterEncoding("utf-8"); %>
 
@@ -13,10 +13,11 @@
 
 <div class="wrapper">
 
+<div class="wrapper-blocker"></div>
 <div class="headerArea">
     <%@ include file="include/headerArea.jsp" %>
 </div>
-<form id="mainForm">
+<div id="mainForm" method="post">
 <input type="hidden" class="loginMsg" name="loginMsg" value="" />
 <input type="hidden" class="determineStstus" name="determineStstus" value="" />
 <div class="contentArea">
@@ -31,14 +32,14 @@
 
             </div>
             <div class="smbtnArea">
-                <a href="javascript:;" class="pobtn-srw" id="registerMobile">註冊會員</a>
+                <a href="register.jsp" class="pobtn-srw" id="registerMobile">註冊會員</a>
                 <a href="javascript:;" class="pobtn-srb" id="loginMobile">立即登入</a>
             </div>
             <a href="javascript:;" class="gonext"></a>
         </div>
     </div>
     <div class="bannerRight">
-        <form id="basicInformation">
+        <div id="basicInformation" method="post">
             <div id="isNotLogin" class="personal" style="display:none;">
                 <div class="inputArea perinputArea">
                     <h3 class="pertitle">立即登入</h3>
@@ -53,19 +54,21 @@
                     <img src="img/fu-08.png" alt="">
                   </span>
                   <input type="text" name="studentId" placeholder="身分證字號">
-                </div>
+				</div>
                 <div class="inputArea">
                   <span>
                     <img src="img/fu-09.png" alt="">
                   </span>
-                  <input type="password" name="studentCode" placeholder="使用者代碼">
+                  <input type="password" name="studentCode" placeholder="使用者代碼" autocomplete="off">
                 </div>
                 <div class="inputArea">
+				<div class="insideArea">
                   <span>
                     <img src="img/fu-10.png" alt="">
                   </span>
-                  <input type="password" name="studentPassword" placeholder="使用者密碼">
+                  <input type="password" name="studentPassword" placeholder="使用者密碼" autocomplete="off">
                 </div>
+				</div>
                 -->
                 <div class="inputArea">
               <span>
@@ -78,27 +81,27 @@
               <span>
                 <img src="img/fu-09.png" alt="">
               </span>
-                    <input type="password" name="studentCode" placeholder="使用者代碼">
+                    <input type="password" name="studentCode" placeholder="使用者代碼" autocomplete="off">
                     <label class="error"></label>
                 </div>
                 <div class="inputArea">
               <span>
                 <img src="img/fu-10.png" alt="">
               </span>
-                    <input type="password" name="studentPassword" placeholder="使用者密碼">
+                    <input type="password" name="studentPassword" placeholder="使用者密碼" autocomplete="off">
                     <label class="error"></label>
                 </div>
                 <div class="loginBtn">
                     <a href="javascript:;" class="pobtn-srb" id="loginBtn">登入</a>
                 </div>
             </div>
-        </form>
+        </div>
         <div id="isLogin" class="personal personalin">
-            <h4>Hi ,
-                <span></span> 你好!</h4>
+            <h4>
+                <span></span></h4>
             <p></p>
-            <a href="#" class="pobtn-srw reset">重新申請</a>
-            <a href="apply.jsp" class="pobtn-srb">繼續填寫</a>
+            <a href="#" class="pobtn-srw reset"></a>
+            <a href="apply.jsp" class="pobtn-srb"></a>
         </div>
         <div class="news">
             <h3>最新消息</h3>
@@ -385,7 +388,7 @@
 </section>
 
 </div>
-</form>
+</div>
 <div class="sidebarArea">
     <%@ include file="include/sidebarArea.jsp" %>
 </div>

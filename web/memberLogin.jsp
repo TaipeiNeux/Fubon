@@ -53,7 +53,7 @@
                                     <div id="registerQR" style="display:none">
                                        <h2 style="color:7C7C7C" class="QRtitle">掃描 QR code</h2>
                                         <div class="QRCODE"><img src="img/register.png" style="width:200px"></div>
-                                        <a href="#" style="color:7C7C7C" class="QRLink greyBorder">註冊會員</a>
+                                        <a href="register.jsp" style="color:7C7C7C" class="QRLink greyBorder">註冊會員</a>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                                     <div id="loginQR" style="display:none">
                                        <h2 style="color:white" class="QRtitle">掃描 QR code</h2>
                                         <div class="QRCODE"><img src="img/indexMobile.png" style="width:200px"></div>
-                                        <a href="#" style="color:white" class="QRLink whiteBorder">我要申請</a>
+                                        <a href="#" style="color:white" class="QRLink whiteBorder applyBtn">我要申請</a>
                                     </div>
                                 </div>
                             </div>

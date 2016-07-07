@@ -40,7 +40,6 @@ public class Apply5_1 implements ILogic {
         //我要申請最後第5步確認資料的基本欄位
         ProjUtils.setApplyCommitStep5BasicData(queryStringInfo,content,userId,dao);
 
-
         //上傳文件撈Table
         SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
         query.addParamValue(userId);

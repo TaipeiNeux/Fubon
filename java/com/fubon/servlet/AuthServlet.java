@@ -14,7 +14,9 @@ import com.fubon.utils.ProjUtils;
 import com.fubon.utils.bean.MailBean;
 import com.neux.utility.orm.bean.DataColumn;
 import com.neux.utility.orm.bean.DataObject;
+import com.neux.utility.orm.dal.QueryConfig;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.orm.dal.dao.order.Order;
 import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.JSPUtils;
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -260,6 +263,7 @@ public class AuthServlet extends HttpServlet {
                                     else {
                                         isETab =  true;
                                         acnoSlList = "20003210005097"; //testing
+//                                        isArrearChk++;//testing
                                     }
 
                                     String isEtabs = isETab ? "Y" : "N";//紀錄是否有簽訂線上服務註記
@@ -274,7 +278,7 @@ public class AuthServlet extends HttpServlet {
 
                                     queryStringInfo.getRequest().getSession().setAttribute("loginUserBean",loginUserBean);
 
-                                    String lastSignOn = DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString());
+                                    String lastSignOn = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString());
 
                                     //放入application，以控制不同session只能登入一次
                                     SessionLoginBean sessionLoginBean = new SessionLoginBean();
@@ -289,6 +293,18 @@ public class AuthServlet extends HttpServlet {
                                     dao.update(studentUserProfile);
 
                                     jsonObject.put("errorCode","0");
+
+                                    //取得登入成功去哪一頁
+                                    String loginSuccessPage = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute("loginSuccessPage"));
+//                                    GardenLog.log(GardenLog.DEBUG,"loginSuccessPage = " + loginSuccessPage);
+                                    if("null".equalsIgnoreCase(loginSuccessPage) || StringUtils.isEmpty(loginSuccessPage)) {
+                                        loginSuccessPage = "index.jsp";
+                                    }
+
+                                    jsonObject.put("loginSuccessPage",loginSuccessPage);
+
+                                    //清空session
+                                    queryStringInfo.getRequest().getSession().removeAttribute("loginSuccessPage");
 
                                     sendEmail = false;
                                 }
@@ -353,7 +369,7 @@ public class AuthServlet extends HttpServlet {
                 mailBean.setTitle(MessageUtils.loginFailTitle);
                 mailBean.addResultParam("errorCode","98");
                 mailBean.addResultParam("result",jsonObject.getString("errorMsg"));
-                mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString()));
+                mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
 
                 MessageUtils.sendEmail(mailBean);
             }catch(Exception e) {
@@ -370,6 +386,7 @@ public class AuthServlet extends HttpServlet {
 
         JSONObject jsonObject = new JSONObject();
         JSONObject content = new JSONObject();
+        JSONArray reasonArray = new JSONArray();
         try{
             jsonObject.put("isLogin","N");
             jsonObject.put("content",content);
@@ -401,18 +418,24 @@ public class AuthServlet extends HttpServlet {
                     //取得當下學期
                     HashMap<String,String> eduYearInfo = ProjUtils.getEduYearInfo(dao,null);
 
+                    String eduYear = eduYearInfo.get("eduYear");//學年
                     String semester = eduYearInfo.get("semester"); //取得第幾學期
                     String applySDate = eduYearInfo.get("apply_sDate"); //網路投保開始時間
                     String applyEDate = eduYearInfo.get("apply_eDate"); //網路投保開始時間
                     String preApplyDate = eduYearInfo.get("preApplyDate"); //提前時間
+                    String noPeriodDisplayHTML = eduYearInfo.get("Bulletin");//若現在不是對保期間，撈對保期間的文字
+
                     String today = DateUtil.getTodayString().substring(0,8);
 
+                    GardenLog.log(GardenLog.DEBUG,"eduYear = " + eduYear);
+                    GardenLog.log(GardenLog.DEBUG,"semester = " + semester);
                     GardenLog.log(GardenLog.DEBUG,"applySDate = " + applySDate);
                     GardenLog.log(GardenLog.DEBUG,"applyEDate = " + applyEDate);
                     GardenLog.log(GardenLog.DEBUG,"preApplyDate = " + preApplyDate);
                     GardenLog.log(GardenLog.DEBUG,"today = " + today);
 
-                    if(StringUtils.isNotEmpty(preApplyDate)) {
+                    //若提請開放時間早於起日才蓋過
+                    if(StringUtils.isNotEmpty(preApplyDate) && StringUtils.isNotEmpty(applySDate) && Long.parseLong(applySDate) >= Long.parseLong(preApplyDate)) {
                         applySDate = preApplyDate;
                     }
 
@@ -493,6 +516,18 @@ public class AuthServlet extends HttpServlet {
                         draftAppSec = modifyTime14.substring(12,14);
                     }
 
+                    //取6-2的草稿資料
+                    String draft6_2XML = FlowUtils.getDraftData(userId,"apply","apply_online_6",dao);
+                    String objListHidden = "";
+
+                    if(StringUtils.isNotEmpty(draft6_2XML)) {
+                        Document draft6_2Doc = DocumentHelper.parseText(draft6_2XML);
+                        Element draft6_2Root = draft6_2Doc.getRootElement();
+
+                        if(draft6_2Root.element("objListHidden") != null) {
+                            objListHidden = draft6_2Root.element("objListHidden").getText();
+                        }
+                    }
 
                     //抓對保期間
                     HashMap<String,String> regionMap = ProjUtils.getApplyDateRegion(dao);
@@ -506,6 +541,7 @@ public class AuthServlet extends HttpServlet {
                     if(aplyMemberData != null) {
 
                         String aplyStatus = aplyMemberData.getValue("APLYSTATUS");
+
                         //(未對保) = 尚未審核
                         if("UNVERIFIED".equalsIgnoreCase(aplyStatus)) {
                             censor = "1";
@@ -521,6 +557,30 @@ public class AuthServlet extends HttpServlet {
                         //審核完成未通過
                         else if("REJECT".equalsIgnoreCase(aplyStatus)) {
                             censor = "4";
+                        }
+
+                        //拒絕原因
+                        DataObject aplyMemberTuitionLoanDtlReason = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_reason");
+                        aplyMemberTuitionLoanDtlReason.setValue("AplyNo",aplyMemberData.getValue("AplyNo"));
+                        if(dao.querySingle(aplyMemberTuitionLoanDtlReason,null)) {
+                            Vector<DataObject> rejectRS = new Vector<DataObject>();
+                            dao.query(rejectRS,DaoFactory.getDefaultDataObject("RejectReason"),new QueryConfig().addOrder("ReasonId", Order.ASC));
+
+
+                            for(int i=0;i<rejectRS.size();i++) {
+                                DataObject reasonObject = rejectRS.get(i);
+                                String reasonId = reasonObject.getValue("ReasonId");
+
+                                String id = reasonId.substring(1);
+                                id = String.valueOf(Integer.parseInt(id));
+
+                                String aplyReasonValue = aplyMemberTuitionLoanDtlReason.getValue("Reason" + id);
+
+                                if("Y".equalsIgnoreCase(aplyReasonValue)) {
+                                    reasonArray.put(reasonObject.getValue("Reason"));
+                                }
+
+                            }
                         }
 
                         appName = aplyMemberData.getValue("Applicant");
@@ -557,8 +617,6 @@ public class AuthServlet extends HttpServlet {
                             String expectDate = aplyMemberData.getValue("expectDate");
                             String expectTime = aplyMemberData.getValue("expectTime");
 
-
-
                             Map<String,String> searchMap = new LinkedHashMap<String, String>();
                             searchMap.put("b.BranchId",expectBranchId);
                             Vector<DataObject> ret = ProjUtils.getBranch(searchMap, dao);
@@ -568,7 +626,14 @@ public class AuthServlet extends HttpServlet {
                             branchAddr = branch.getValue("Addr"); //對保分行地址
                             branchTel = branch.getValue("Tel"); //對保分行電話
                             carryObjArr = ""; //攜帶的物品
-                            reservation = DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",expectDate + expectTime + "00"); //預約對保分行的時間
+
+                            int time = Integer.parseInt(expectTime);
+                            boolean isAM = time >= 1000;
+
+                            String endTime = (Integer.parseInt(expectTime.substring(0,2)) + 1) + "00";
+                            endTime = StringUtils.leftPad(endTime,4,"0");
+
+                            reservation = DateUtil.convert14ToDate("yyyy/MM/dd",expectDate + "000000") + " " +(isAM ? "AM" : "PM") + expectTime.substring(0,2) + ":" + expectTime.substring(2) + "-" + endTime.substring(0,2) + ":" + endTime.substring(2); //預約對保分行的時間
                         }
 
                     }
@@ -588,6 +653,8 @@ public class AuthServlet extends HttpServlet {
                     content.put("secondSemesterEnd",secondSemesterEnd);
                     content.put("semester",semester);
                     content.put("appName",appName);
+                    content.put("noPeriodDisplayHTML",noPeriodDisplayHTML);
+                    content.put("reasons",reasonArray);
 
                     JSONObject online = new JSONObject();
 
@@ -625,6 +692,8 @@ public class AuthServlet extends HttpServlet {
                     content.put("branchTel",branchTel);
                     content.put("carryObjArr",carryObjArr);
                     content.put("reservation",reservation);
+
+                    content.put("objListHidden",objListHidden);
                 }
 
 

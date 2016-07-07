@@ -5,6 +5,7 @@ import com.neux.utility.orm.ORMAPI;
 import com.neux.utility.orm.hdl.connection.SQLConnection;
 import com.neux.utility.orm.hdl.connection.module.IConnection;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -23,6 +24,8 @@ import java.util.Hashtable;
  * To change this template use File | Settings | File Templates.
  */
 public class DBUtils {
+
+    public static final String PIBDataSource = "jdbc/pib";
 
     public static Connection getConnection(String jndiName) {
         DataSource ds = null;
@@ -65,6 +68,12 @@ public class DBUtils {
         } finally {
             try {
                 if (pStatement != null) pStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+
+            try {
                 if (connection != null) connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -78,6 +87,46 @@ public class DBUtils {
         }
 
         return result;
+    }
+
+    public static String getPibBranchName(String branchId) {
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+
+            conn = getConnection(PIBDataSource);
+
+            ps = conn.prepareStatement("select * from BRANCH where BRANCH_ID = ?");
+            ps.setString(1,branchId);
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                return rs.getString("BRANCH_NAME");
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
 }

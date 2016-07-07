@@ -1,5 +1,6 @@
 package com.fubon.servlet;
 
+import com.fubon.utils.*;
 import com.fubon.webservice.WebServiceAgent;
 import com.fubon.webservice.bean.RQBean;
 import com.fubon.webservice.bean.RSBean;
@@ -8,9 +9,6 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.neux.garden.listener.SessionBean;
 import com.neux.garden.log.GardenLog;
 import com.fubon.mark.MarkBean;
-import com.fubon.utils.FlowUtils;
-import com.fubon.utils.MessageUtils;
-import com.fubon.utils.ProjUtils;
 import com.neux.utility.orm.ORMAPI;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.QueryConfig;
@@ -29,12 +27,16 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.krysalis.barcode4j.impl.code39.Code39Bean;
+import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
+import org.krysalis.barcode4j.tools.UnitConv;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.DatatypeConverter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -155,6 +157,14 @@ public class DataServlet extends HttpServlet {
         else if("repaymentInquiry".equalsIgnoreCase(action)){
             repaymentInquiry(queryStringInfo, resp);
         }
+        //電子對帳單
+        else if("myElectronicPay".equalsIgnoreCase(action)){
+            myElectronicPay(queryStringInfo, resp);
+        }
+        //更新跳出網路註記
+        else if("updatePopupEtag".equalsIgnoreCase(action)){
+            updatePopupEtag(queryStringInfo, resp);
+        }
 
 //        else if("getApplyMessage".equalsIgnoreCase(action)) {
 //            getApplyMessage(queryStringInfo, resp);
@@ -199,7 +209,10 @@ public class DataServlet extends HttpServlet {
                 id = loginUserBean.getCustomizeValue("IdNo");
                 name = loginUserBean.getUserName();
                 birthday = loginUserBean.getCustomizeValue("AplyBirthday");
-                marryStatus = "1".equalsIgnoreCase(loginUserBean.getCustomizeValue("Marriage")) ? "Y" : "N";
+                if(StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("Marriage"))) {
+                    marryStatus = "1".equalsIgnoreCase(loginUserBean.getCustomizeValue("Marriage")) ? "Y" : "N";
+                }
+
                 cellPhone = loginUserBean.getCustomizeValue("AplyCellPhoneNo");
                 email = loginUserBean.getCustomizeValue("AplyEmail");
 
@@ -283,7 +296,19 @@ public class DataServlet extends HttpServlet {
                     }
 
 
+
+                    String domicileAddressZipCode = aplyMemberHistoryData.getValue("AplyZip1");
+                    String domicileAddressLiner = aplyMemberHistoryData.getValue("Aply1Village");
+                    String domicileAddressNeighborhood = aplyMemberHistoryData.getValue("AplyAddr1_3");
                     domicileAddressAddress = aplyMemberHistoryData.getValue("AplyAddr1");
+
+                    if(StringUtils.isNotEmpty(domicileAddressZipCode)) {
+                        String domicileAddressCityId = ProjUtils.toCityId(domicileAddressZipCode,dao);
+                        domicileAddressAddress = ProjUtils.toCityName(domicileAddressCityId,dao) + ProjUtils.toZipCodeName(domicileAddressZipCode,dao) + domicileAddressLiner + domicileAddressNeighborhood + "鄰" + domicileAddressAddress;
+                    }
+
+
+
 //                    domicileAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","1");
                 }
                 //要帶出完整戶藉/通訊地址
@@ -431,18 +456,30 @@ public class DataServlet extends HttpServlet {
 
 
         try{
+
             String isLogin = loginUserBean == null ? "N" : "Y"; //有無登入
             String isEtabs = "Y".equals(isLogin) ? (loginUserBean.getCustomizeValue("isEtabs")) : "N"; //有無線上註記
             String hasData = "Y".equals(isLogin) ? (ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(loginUserBean.getUserId(),DaoFactory.getDefaultDao()) == null ? "N" : "Y" ) : "N";//有無撥款紀錄
             String isArrears = "Y".equals(isLogin) ? (loginUserBean.getCustomizeValue("isArrear")) : "N"; //是否不欠款
+            String hasAccount = "Y".equals(isLogin) ? StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("acnoSlList")) ? "Y" : "N" : "N";//是否有貸款帳號
+
+            if("Y".equalsIgnoreCase(isLogin)) {
+
+                String userId = loginUserBean.getUserId();
+
+                //清除文件
+                SQLCommand update = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
+                update.addParamValue(userId);
+                DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+            }
 
             JSONObject jsonObject = new JSONObject();
 
             jsonObject.put("isLogin",isLogin);
-
             jsonObject.put("isEtabs",isEtabs);
             jsonObject.put("hasData",hasData);
             jsonObject.put("isArrears",isArrears);
+            jsonObject.put("hasAccount",hasAccount);
 
             JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
         }catch(Exception e) {
@@ -460,7 +497,7 @@ public class DataServlet extends HttpServlet {
             jsonObject.put("addr","台北市中山區中山北路二段50號");
 
             Map<String,String> searchMap = new LinkedHashMap<String, String>();
-            searchMap.put("b.BranchId","200"); //就貸組預設的分行代號
+            searchMap.put("b.BranchId","870"); //就貸組預設的分行代號
             Vector<DataObject> ret = ProjUtils.getBranch(searchMap, DaoFactory.getDefaultDao());
             if(ret.size() != 0) {
                 DataObject branch = ret.get(0);
@@ -693,7 +730,7 @@ public class DataServlet extends HttpServlet {
                         "from AplyMemberTuitionLoanDtl \n" +
                         "where 1=1\n" +
                         "and ExpectBranchId = ? \n" +
-                        "and AplyStatus = 'UNVERIFIED'\n" +
+//                        "and AplyStatus = 'UNVERIFIED'\n" +
                         "and ExpectDate like ?\n" +
                         "order by ExpectDate,ExpectTime");
                 query.addParamValue(branchId);
@@ -737,7 +774,7 @@ public class DataServlet extends HttpServlet {
                     }
 
 
-                    //暫時不知道每個時段可預約的總人數怎麼計算
+                    //依照這間分行的每個時間可預約人數計算
                     String isFull = "Y";
                     for(String time : timeMap.keySet()) {
                         Integer count = timeMap.get(time);
@@ -776,6 +813,7 @@ public class DataServlet extends HttpServlet {
         HttpServletRequest req = queryStringInfo.getRequest();
         String type = queryStringInfo.getParam("type");
         String convert = queryStringInfo.getParam("convert");
+        String noMark = queryStringInfo.getParam("noMark");
 
         JSONObject jsonObject = new JSONObject();
 
@@ -873,39 +911,54 @@ public class DataServlet extends HttpServlet {
 
 
                 //隱碼
-                MarkBean markBean = (MarkBean) queryStringInfo.getRequest().getSession().getAttribute("MarkBean"); //因為這一段會同呼叫我很多次，所以要抓session的
-                if(markBean == null) markBean = new MarkBean();
+                if(!"Y".equalsIgnoreCase(noMark)) {
+                    MarkBean markBean = (MarkBean) queryStringInfo.getRequest().getSession().getAttribute("MarkBean"); //因為這一段會同呼叫我很多次，所以要抓session的
+                    if(markBean == null) markBean = new MarkBean();
 
-                markBean.addCode(type + "_id",id,ProjUtils.toIDMark(id));
-                markBean.addCode(type + "_name",name,ProjUtils.toNameMark(name));
-                markBean.addCode(type + "_phone",telePhonePhone,ProjUtils.toTelMark(telePhonePhone));
-                markBean.addCode(type + "_mobile",mobile,ProjUtils.toTelMark(mobile));
-                markBean.addCode(type + "_liner_domi",domicileLinerName,ProjUtils.toAddressAllMark(domicileLinerName));
-                markBean.addCode(type + "_neighborhood_domi",domicileAddressNeighborhood,ProjUtils.toAddressAllMark(domicileAddressNeighborhood));
-                markBean.addCode(type + "_address_domi",domicileAddressAddress,ProjUtils.toAddressAllMark(domicileAddressAddress));
+                    markBean.addCode(type + "_id",id,ProjUtils.toIDMark(id));
+                    id = ProjUtils.toIDMark(id);
 
+                    markBean.addCode(type + "_name",name,ProjUtils.toNameMark(name));
+                    name = ProjUtils.toNameMark(name);
 
-                queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
+                    markBean.addCode(type + "_phone",telePhonePhone,ProjUtils.toTelMark(telePhonePhone));
+                    telePhonePhone = ProjUtils.toTelMark(telePhonePhone);
+
+                    markBean.addCode(type + "_mobile",mobile,ProjUtils.toTelMark(mobile));
+                    mobile = ProjUtils.toTelMark(mobile);
+
+                    markBean.addCode(type + "_liner_domi",domicileLinerName,ProjUtils.toAddressAllMark(domicileLinerName));
+//                    domicileLinerName = ProjUtils.toAddressAllMark(domicileLinerName);
+
+                    markBean.addCode(type + "_neighborhood_domi",domicileAddressNeighborhood,ProjUtils.toAddressAllMark(domicileAddressNeighborhood));
+                    domicileAddressNeighborhood = ProjUtils.toAddressAllMark(domicileAddressNeighborhood);
+
+                    markBean.addCode(type + "_address_domi",domicileAddressAddress,ProjUtils.toAddressMark(domicileAddressAddress));
+                    domicileAddressAddress = ProjUtils.toAddressMark(domicileAddressAddress);
+
+                    queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
+                }
+
 
 
                 content.put("isGuarantor",isGuarantor);
-                content.put("id",ProjUtils.toIDMark(id));
-                content.put("name",ProjUtils.toNameMark(name));
+                content.put("id",id);
+                content.put("name",name);
                 content.put("birthday",birthday);
 
                 JSONObject telePhone = new JSONObject();
                 telePhone.put("regionCode",telePhoneRegionCode);
-                telePhone.put("phone",ProjUtils.toTelMark(telePhonePhone));
+                telePhone.put("phone",telePhonePhone);
                 content.put("telePhone",telePhone);
 
-                content.put("mobile",ProjUtils.toTelMark(mobile));
+                content.put("mobile",mobile);
 
                 JSONObject domicileAddress = new JSONObject();
                 domicileAddress.put("cityId",domicileAddressCityId);
                 domicileAddress.put("zipCode",domicileAddressZipCode);
                 domicileAddress.put("liner",domicileLinerName);
                 domicileAddress.put("neighborhood",domicileAddressNeighborhood);
-                domicileAddress.put("address",ProjUtils.toAddressMark(domicileAddressAddress));
+                domicileAddress.put("address",domicileAddressAddress);
 
                 domicileAddress.put("cityName",domicileAddressCityName);
                 domicileAddress.put("zipCodeName",domicileAddressZipCodeName);
@@ -1250,6 +1303,7 @@ public class DataServlet extends HttpServlet {
     }
 
     public void repaymentInquiry(JSPQueryStringInfo queryStringInfo, HttpServletResponse resp) {
+
         String account = queryStringInfo.getParam("account");
         String startDate = queryStringInfo.getParam("start_date");
         String endDate = queryStringInfo.getParam("end_date");
@@ -1411,13 +1465,13 @@ public class DataServlet extends HttpServlet {
             }
 
             Map<String,String[]> columnMap = new LinkedHashMap<String,String[]>();
-            columnMap.put("TX_DATE",new String[]{"還款日期","N","N"});
-            columnMap.put("YR_TERM",new String[]{"學期別","N","N"});
+            columnMap.put("TX_DATE",new String[]{"還款日期","Y","N"});
+            columnMap.put("YR_TERM",new String[]{"學期別","Y","N"});
             columnMap.put("CURRATE",new String[]{"幣別","N","N"});
-            columnMap.put("PRN_AMT",new String[]{"本金","Y","Y"});
-            columnMap.put("INT_AMT",new String[]{"利息","Y","Y"});
-            columnMap.put("DLY_AMT",new String[]{"遲延息","Y","Y"});
-            columnMap.put("PNT_AMT",new String[]{"逾期違約金","Y","Y"});
+            columnMap.put("PRN_AMT",new String[]{"本金","N","Y"});
+            columnMap.put("INT_AMT",new String[]{"利息","N","Y"});
+            columnMap.put("DLY_AMT",new String[]{"遲延息","N","Y"});
+            columnMap.put("PNT_AMT",new String[]{"逾期違約金","N","Y"});
             columnMap.put("TOT_AMT",new String[]{"還款金額合計","Y","Y"});
             columnMap.put("LOAN_BAL",new String[]{"貸款餘額","Y","Y"});
 
@@ -1440,7 +1494,7 @@ public class DataServlet extends HttpServlet {
 
                     String value = "";
                     if("CURRATE".equalsIgnoreCase(column)) {
-                        value = "台幣";
+                        value = "臺幣";
                     }
                     else {
                         value = foo.elementText(column).trim();
@@ -1476,6 +1530,47 @@ public class DataServlet extends HttpServlet {
         JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
     }
 
+    public void updatePopupEtag(JSPQueryStringInfo queryStringInfo, HttpServletResponse resp) {
+
+
+        JSONObject jsonObject = new JSONObject();
+
+        try{
+            jsonObject.put("isSuccess","N");
+
+            LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
+
+            String userId = loginUserBean.getUserId();
+
+            DataObject applyIsPromo = DaoFactory.getDefaultDataObject("apply_is_promo");
+            if(applyIsPromo != null) {
+                applyIsPromo.setValue("AplyIdNo",userId);
+
+
+                IDao dao = DaoFactory.getDefaultDao();
+                if(!dao.querySingle(applyIsPromo,null)) {
+                    applyIsPromo.setValue("CreateTime",DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString()));
+                    dao.insert(applyIsPromo);
+                }
+
+                jsonObject.put("isSuccess","Y");
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
+    }
+
+    public void myElectronicPay(JSPQueryStringInfo queryStringInfo, HttpServletResponse resp) {
+        LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
+
+        JSONObject jsonObject = ElectronicPayUtils.getElectronicPay(loginUserBean);
+
+        JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
+
+    }
+
     private boolean check382607RowHasData(Element ele) {
 
         List<Element> lists = ele.elements();
@@ -1495,23 +1590,27 @@ public class DataServlet extends HttpServlet {
 
         JSONObject jsonObject = new JSONObject();
         JSONObject data = new JSONObject();
-        JSONArray client_type = new JSONArray();
         JSONArray client_detail = new JSONArray();
 
         try{
 
-            JSONObject clientTypeSignin = new JSONObject();
-            JSONObject clientTypeCheck = new JSONObject();
+            String hasAccount = StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
+            String isArrears = loginUserBean.getCustomizeValue("isArrear"); //是否不欠款
+            String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N"; //有無線上註記
 
-            clientTypeSignin.put("signin",ProjUtils.isEtabs(loginUserBean) ? "on" : "no");
 
-            data.put("client_type",client_type);
+            jsonObject.put("isArrears",isArrears);
+            jsonObject.put("isEtabs",isEtabs);
+            jsonObject.put("hasAccount",hasAccount);
+
             data.put("client_detail",client_detail);
 
             jsonObject.put("data",data);
 
             long total = 0;
             for(String acnoSl: acnoSlList) {
+
+                if(StringUtils.isEmpty(acnoSl)) continue;
 
                 JSONObject clientDetail = new JSONObject();
 
@@ -1569,13 +1668,13 @@ public class DataServlet extends HttpServlet {
                             "        <CRE_BRH>-320</CRE_BRH>\n" +
                             "        <INT_RATE>1.6200</INT_RATE>\n" +
                             "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
-                            "        <LOAN_BAL>30,708</LOAN_BAL>\n" +
+                            "        <LOAN_BAL></LOAN_BAL>\n" +
                             "        <INT_DATE>108/06/30</INT_DATE>\n" +
                             "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
                             "        <INT_FLG>N</INT_FLG>\n" +
                             "        <WORK_FLG>N</WORK_FLG>\n" +
                             "        <PARTIAL_FLG/>\n" +
-                            "        <INS_AMT>661</INS_AMT>\n" +
+                            "        <INS_AMT></INS_AMT>\n" +
                             "    </TxRepeat>\n" +
                             "    <TxRepeat>\n" +
                             "        <YR_TERM>1042</YR_TERM>\n" +
@@ -1592,18 +1691,18 @@ public class DataServlet extends HttpServlet {
                             "        <INS_AMT>661</INS_AMT>\n" +
                             "    </TxRepeat>\n" +
                             "    <TxRepeat>\n" +
-                            "        <YR_TERM/>\n" +
-                            "        <DOC_NO/>\n" +
-                            "        <CRE_BRH/>\n" +
-                            "        <INT_RATE/>\n" +
-                            "        <LOAN_AMT/>\n" +
-                            "        <LOAN_BAL/>\n" +
-                            "        <INT_DATE/>\n" +
-                            "        <NEXT_INT_DATE/>\n" +
-                            "        <INT_FLG/>\n" +
-                            "        <WORK_FLG/>\n" +
+                            "        <YR_TERM>0880</YR_TERM>\n" +
+                            "        <DOC_NO>013429</DOC_NO>\n" +
+                            "        <CRE_BRH>-705</CRE_BRH>\n" +
+                            "        <INT_RATE>1.6200</INT_RATE>\n" +
+                            "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
+                            "        <LOAN_BAL>30,708</LOAN_BAL>\n" +
+                            "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                            "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                            "        <INT_FLG>N</INT_FLG>\n" +
+                            "        <WORK_FLG>N</WORK_FLG>\n" +
                             "        <PARTIAL_FLG/>\n" +
-                            "        <INS_AMT/>\n" +
+                            "        <INS_AMT>661</INS_AMT>\n" +
                             "    </TxRepeat>\n" +
                             "    <TxRepeat>\n" +
                             "        <YR_TERM/>\n" +
@@ -1703,6 +1802,9 @@ public class DataServlet extends HttpServlet {
                 String intRate = "";
                 String nextIntDate = "";
 
+                //分行名稱用帳號前三碼去撈Oracle的branch name
+                bankName = DBUtils.getPibBranchName(acnoSl.substring(0,3));
+
                 loanBalTot = loanBalTot.replaceAll(",", "");
 
                 JSONArray detailArray = new JSONArray();
@@ -1718,9 +1820,12 @@ public class DataServlet extends HttpServlet {
                     nextIntDate = foo.elementText("NEXT_INT_DATE").trim();
                     String insAmt = foo.elementText("INS_AMT").trim();
 
+                    if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
+                            || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
+
                     JSONObject jsonDetail = new JSONObject();
                     jsonDetail.put("semister",yrTerm.substring(0, 3));
-                    jsonDetail.put("semister_state",yrTerm.substring(3, 4).equals("1")? "0" : "0.5");
+                    jsonDetail.put("semister_state",yrTerm.substring(3, 4));
                     jsonDetail.put("original_money",loanAmt.replace(",", ""));
                     jsonDetail.put("balance_money", loanBal.replace(",", ""));
                     jsonDetail.put("need_pay_month",insAmt.replace(",", ""));
@@ -1729,13 +1834,13 @@ public class DataServlet extends HttpServlet {
                 }
 
 
-                clientDetail.put("state","normal");
+                clientDetail.put("state","normal");  //delay
                 clientDetail.put("num","");
                 clientDetail.put("account",acnoSl);
                 clientDetail.put("bank_name",bankName);
                 clientDetail.put("remain_money",loanBalTot);
                 clientDetail.put("rate",intRate);
-                clientDetail.put("pay_day",nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
+                clientDetail.put("pay_day",(StringUtils.isNotEmpty(nextIntDate) && nextIntDate.length() < 2) ? "" : nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
                 clientDetail.put("return_detail","repaymentInquiry.jsp");
                 clientDetail.put("my_detail","myElectronicPay_1.jsp");
                 clientDetail.put("detail", detailArray);

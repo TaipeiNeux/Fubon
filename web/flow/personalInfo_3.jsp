@@ -4,7 +4,7 @@
 
 <div class="joy nina">
     <div class="left">
-      <p>申請結果</p>
+      <p>變更結果</p>
     </div>
     <div class="right">
       <p id="registerResult" class=""></p>
@@ -12,7 +12,7 @@
   </div>
   <div class="joy nina">
     <div class="left">
-      <p>申請時間</p>
+      <p>變更時間</p>
     </div>
     <div class="right">
       <p id="registerDate" class="whatdate"></p>
@@ -28,7 +28,7 @@
                       <p >身分證字號</p>
                     </div>
                     <div class="right">
-                      <p class="id">A123****89</p>
+                      <p class="id"></p>
                     </div>
                   </div>
                   <div class="joy ">
@@ -36,7 +36,7 @@
                       <p>姓名</p>
                     </div>
                     <div class="right">
-                      <p class="name">王*明</p>
+                      <p class="name"></p>
                     </div>
                   </div>
                   <div class="joy bgfff">
@@ -44,7 +44,7 @@
                       <p>生日</p>
                     </div>
                     <div class="right">
-                      <p class="birthday">民國75年10月8日</p>
+                      <p class="birthday"></p>
                     </div>
                   </div>
                   <div class="joy">
@@ -52,7 +52,7 @@
                       <p>婚姻狀況</p>
                     </div>
                     <div class="right">
-                      <p class="marryStatus">未婚</p>
+                      <p class="marryStatus"></p>
                     </div>
                   </div>
                   <div class="joy bgfff">
@@ -60,7 +60,7 @@
                       <p>戶籍電話</p>
                     </div>
                     <div class="right ">
-                      <p class="domicilePhone">(02) ******78</p>
+                      <p class="domicilePhone"></p>
                     </div>
                   </div>
                 </div>
@@ -70,7 +70,7 @@
                       <p>通訊電話</p>
                     </div>
                     <div class="right ">
-                      <p class="telePhone">(02) ******78</p>
+                      <p class="telePhone"></p>
                     </div>
                   </div>
                   <div class="joy">
@@ -78,7 +78,7 @@
                       <p>Email</p>
                     </div>
                     <div class="right">
-                      <p class="gmail">****45@gmail.com</p>
+                      <p class="email"></p>
                     </div>
                   </div>
                   <div class="joy bgfff">
@@ -86,7 +86,7 @@
                       <p>行動電話</p>
                     </div>
                     <div class="right">
-                      <p class="mobile">09*****541</p>
+                      <p class="mobile"></p>
                     </div>
                   </div>
                   <div class="joy ">
@@ -94,7 +94,7 @@
                       <p>戶籍地址</p>
                     </div>
                     <div class="right">
-                      <p class="domicileAddress">新北市*********54號8樓</p>
+                      <p class="domicileAddress"></p>
                     </div>
                   </div>
                   <div class="joy bgfff">
@@ -102,7 +102,7 @@
                       <p>通訊地址</p>
                     </div>
                     <div class="right">
-                      <p class="teleAddress">新北市*********54號8樓</p>
+                      <p class="teleAddress"></p>
                     </div>
                   </div>
                 </div>

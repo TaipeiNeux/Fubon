@@ -5,8 +5,10 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -32,7 +34,7 @@ public class Apply2 implements ILogic {
         String birthday = "",domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "",teleAddressAddress = "";
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
-        String isChanged = "N";
+        String isChanged = "Y";
         String guarantorText = "";
         String thirdParty_relationship = "" , thirdPartyTitle = "";
 
@@ -65,7 +67,6 @@ public class Apply2 implements ILogic {
 
         }
 
-
         //取得第1-1、1-2步的草稿資料
 
         String draftXML1 = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
@@ -92,7 +93,6 @@ public class Apply2 implements ILogic {
 
         if(step1Root.element("marryStatus") != null) marryStatus = step1Root.element("marryStatus").getText();
 
-        if(step2Root.element("isChanged") != null) isChanged = step2Root.element("isChanged").getText();
         if(step2Root.element("familyStatus") != null) familyStatus = step2Root.element("familyStatus").getText();
         if(step2Root.element("guarantorStatus") != null) guarantorStatus = step2Root.element("guarantorStatus").getText();
 
@@ -101,7 +101,39 @@ public class Apply2 implements ILogic {
 
         if(step2Root.element("guarantorText") != null) guarantorText = step2Root.element("guarantorText").getText();
 
-//        birthday = ProjUtils.toBirthday(birthday);
+        //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
+        DataObject aplyMemberData = null;
+        if("Y".equalsIgnoreCase(isRecord)) {
+            //帶入撥款紀錄
+            aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        }
+        else {
+            //先取得「本學期」申請資料
+//            aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        }
+
+
+        if(aplyMemberData != null) {
+            String familyStatusVal = aplyMemberData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatusVal) && familyStatusVal.length() >= 3) {
+                String[] statusArray = familyStatusVal.split("_");
+
+                String historyFamilyStatus1 = statusArray[0];
+                String historyFamilyStatus2 = statusArray[1];
+
+                if(step2Root.element("familyStatusLevel1") != null && step2Root.element("familyStatusLevel2") != null) {
+                    String currentFamilyStatusVal1 = step2Root.element("familyStatusLevel1").getText();
+                    String currentFamilyStatusVal2 = step2Root.element("familyStatusLevel2").getText();
+
+                    //判斷這次選的家庭狀況跟歷史是否一樣
+                    if(historyFamilyStatus1.equalsIgnoreCase(currentFamilyStatusVal1) &&
+                            historyFamilyStatus2.equalsIgnoreCase(currentFamilyStatusVal2) ) {
+                        isChanged = "N";
+                    }
+                }
+            }
+        }
+
 
         content.put("isRecord",isRecord);
         content.put("user_birthday",birthday);
@@ -133,7 +165,7 @@ public class Apply2 implements ILogic {
         JSONObject domicileAddress = new JSONObject();
         domicileAddress.put("cityId",domicileAddressCityId);
         domicileAddress.put("zipCode",domicileAddressZipCode);
-        domicileAddress.put("linerName",domicileLinerName);
+//        domicileAddress.put("linerName",domicileLinerName);
         domicileAddress.put("liner",domicileAddressLiner);
         domicileAddress.put("neighborhood",domicileAddressNeighborhood);
         domicileAddress.put("address",domicileAddressAddress);

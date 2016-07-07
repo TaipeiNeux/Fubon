@@ -30,7 +30,7 @@ public class PersonalInfo2_1 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
-        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",marryStatus = "",cellPhone = "", email = "";
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birth_year = "" , birth_month = "", birth_day = "", birthday = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
         String domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
@@ -44,7 +44,11 @@ public class PersonalInfo2_1 implements ILogic {
 
         if(root.element("id") != null) id = root.element("id").getText();
         if(root.element("name") != null) name = root.element("name").getText();
-        if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+
+        if(root.element("birth_year") != null) birth_year = root.element("birth_year").getText();
+        if(root.element("birth_month") != null) birth_month = root.element("birth_month").getText();
+        if(root.element("birth_day") != null) birth_day = root.element("birth_day").getText();
+
         if(root.element("cellPhone") != null) cellPhone = root.element("cellPhone").getText();
 
         if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
@@ -69,6 +73,12 @@ public class PersonalInfo2_1 implements ILogic {
 
         if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
 
+        if(StringUtils.isNotEmpty(birth_year) && StringUtils.isNotEmpty(birth_month) && StringUtils.isNotEmpty(birth_day)) {
+            birth_year = StringUtils.leftPad(birth_year,3,"0");
+            birth_month = StringUtils.leftPad(birth_month,2,"0");
+            birth_day = StringUtils.leftPad(birth_day,2,"0");
+            birthday = birth_year + birth_month + birth_day;
+        }
 
         if(StringUtils.isNotEmpty(domicileAddressCityId)) {
             domicileAddressCityId = ProjUtils.toCityName(domicileAddressCityId,dao);
@@ -86,39 +96,39 @@ public class PersonalInfo2_1 implements ILogic {
             teleAddressZipCode = ProjUtils.toZipCodeName(teleAddressZipCode,dao);
         }
 
-        domicileAddressAddress = domicileAddressCityId + domicileAddressZipCode + domicileLinerName + domicileAddressLiner + domicileAddressNeighborhood + domicileAddressAddress;
+        domicileAddressAddress = domicileAddressCityId + domicileAddressZipCode + domicileLinerName + domicileAddressLiner + domicileAddressNeighborhood + "鄰" + domicileAddressAddress;
         teleAddressAddress = teleAddressCityId + teleAddressZipCode + teleAddressAddress;
 
         //裝值到content
         content.put("isRecord",isRecord);
-        content.put("id",ProjUtils.toIDMark(id));
-        content.put("name",ProjUtils.toNameMark(name));
+        content.put("id",id);
+        content.put("name",name);
         content.put("birthday",birthday);
         content.put("marryStatus",marryStatus);
 
         JSONObject domicilePhone = new JSONObject();
         domicilePhone.put("regionCode",domicilePhoneRegionCode);
-        domicilePhone.put("phone",ProjUtils.toTelMark(domicilePhonePhone));
+        domicilePhone.put("phone",domicilePhonePhone);
         content.put("domicilePhone",domicilePhone);
 
         JSONObject telePhone = new JSONObject();
         telePhone.put("regionCode",telePhoneRegionCode);
-        telePhone.put("phone",ProjUtils.toTelMark(telePhonePhone));
+        telePhone.put("phone",telePhonePhone);
         content.put("telePhone",telePhone);
 
-        content.put("mobile",ProjUtils.toTelMark(cellPhone));
-        content.put("email",ProjUtils.toEMailMark(email));
+        content.put("mobile",cellPhone);
+        content.put("email",email);
 
         //原碼的Email
         content.put("mobile_otp",cellPhone);
         content.put("email_otp",email);
 
         JSONObject domicileAddress = new JSONObject();
-        domicileAddress.put("address",ProjUtils.toAddressMark(domicileAddressAddress));
+        domicileAddress.put("address",domicileAddressAddress);
         content.put("domicileAddress",domicileAddress);
 
         JSONObject teleAddress = new JSONObject();
-        teleAddress.put("address",ProjUtils.toAddressMark(teleAddressAddress));
+        teleAddress.put("address",teleAddressAddress);
         content.put("teleAddress",teleAddress);
     }
 

@@ -297,7 +297,9 @@ public class FlowServlet extends HttpServlet {
                 Vector<DataObject> ret = new Vector<DataObject>();
                 dao.queryByCommand(ret,queryCurrent,null,null);
                 currentStepId = stepId;
-                draftData = ret.get(0).getValue("DraftData");
+                if(ret.size() != 0) {
+                    draftData = ret.get(0).getValue("DraftData");
+                }
             }
         }
 

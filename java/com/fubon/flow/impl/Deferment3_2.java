@@ -50,13 +50,6 @@ public class Deferment3_2 implements ILogic {
 
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
-        String codeInput = queryStringInfo.getParam("codeInput");
-
-        //從session取得OTP驗證碼
-        String otpCode = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute(ProjUtils.OTPCode));
-
-        if(!codeInput.equalsIgnoreCase(otpCode)) {
-            throw new Exception("驗證碼輸入錯誤！");
-        }
+        ProjUtils.validOTP(queryStringInfo,content);
     }
 }

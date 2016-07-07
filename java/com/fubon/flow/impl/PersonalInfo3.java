@@ -11,6 +11,7 @@ import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -37,12 +38,12 @@ public class PersonalInfo3 implements ILogic {
         IDao dao = DaoFactory.getDefaultDao();
 
         String today = DateUtil.getTodayString();
-        today = DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",today);
+        today = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",today);
 
         String errorCode = "" , errorMsg = "";
         String registerResult = "fail", registerDate = today.substring(0,10), registerTime = today.substring(11);
 
-        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",marryStatus = "",cellPhone = "", email = "";
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",birth_year = "" , birth_month = "", birth_day = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
         String domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
@@ -57,7 +58,10 @@ public class PersonalInfo3 implements ILogic {
             Element root = personalInfo1Doc.getRootElement();
             if(root.element("id") != null) id = root.element("id").getText();
             if(root.element("name") != null) name = root.element("name").getText();
-            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+            if(root.element("birth_year") != null) birth_year = root.element("birth_year").getText();
+            if(root.element("birth_month") != null) birth_month = root.element("birth_month").getText();
+            if(root.element("birth_day") != null) birth_day = root.element("birth_day").getText();
+
             if(root.element("cellPhone") != null) cellPhone = root.element("cellPhone").getText();
 
             if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
@@ -81,6 +85,20 @@ public class PersonalInfo3 implements ILogic {
             if(root.element("zipCode") != null) teleAddressZipCode = root.element("zipCode").getText();
             if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
 
+            if(StringUtils.isNotEmpty(birth_year) && StringUtils.isNotEmpty(birth_month) && StringUtils.isNotEmpty(birth_day)) {
+                birth_year = StringUtils.leftPad(birth_year,3,"0");
+                birth_month = StringUtils.leftPad(birth_month,2,"0");
+                birth_day = StringUtils.leftPad(birth_day,2,"0");
+                birthday = birth_year + birth_month + birth_day;
+            }
+
+
+            //半形轉全形
+            name = ProjUtils.toChanisesFullChar(name);
+            domicileAddressNeighborhood = ProjUtils.toChanisesFullChar(domicileAddressNeighborhood);
+            domicileAddressAddress = ProjUtils.toChanisesFullChar(domicileAddressAddress);
+            teleAddressAddress = ProjUtils.toChanisesFullChar(teleAddressAddress);
+
             //更新DB
             DataObject studentUserProfileDetail = DaoFactory.getDefaultDataObject("Student_UserProfileDetail");
             studentUserProfileDetail.setValue("AplyIdNo", id);
@@ -90,7 +108,11 @@ public class PersonalInfo3 implements ILogic {
                 studentUserProfileDetail.setValue("Applicant",name);
                 studentUserProfileDetail.setValue("Marriage", "Y".equalsIgnoreCase(marryStatus) ? "1" : "0");// 婚姻狀況
                 studentUserProfileDetail.setValue("AplyCellPhoneNo",cellPhone);
-                studentUserProfileDetail.setValue("AplyBirthday",ProjUtils.toYYYYBirthday(birthday));//申請人生日
+
+                if(StringUtils.isNotEmpty(birthday)) {
+                    studentUserProfileDetail.setValue("AplyBirthday",ProjUtils.toYYYYBirthday(birthday));//申請人生日
+                }
+
                 studentUserProfileDetail.setValue("AplyTelNo1_1", domicilePhoneRegionCode);// 申請人戶籍電話區碼
                 studentUserProfileDetail.setValue("AplyTelNo1_2", domicilePhonePhone);// 申請人戶籍電話
                 studentUserProfileDetail.setValue("AplyTelNo2_1", telePhoneRegionCode);// 申請人通訊電話區碼
@@ -133,7 +155,10 @@ public class PersonalInfo3 implements ILogic {
                     //本學期有申請就學貸款且案件已送出，要額外更新我要申請的Table
                     if(aplyMemberDataObject != null) {
 
-                        aplyMemberDataObject.setValue("AplyBirthday", ProjUtils.toYYYYBirthday(birthday));//申請人出生年月日
+                        if(StringUtils.isNotEmpty(birthday)) {
+                            aplyMemberDataObject.setValue("AplyBirthday", ProjUtils.toYYYYBirthday(birthday));//申請人出生年月日
+                        }
+
                         aplyMemberDataObject.setValue("Applicant", name); // 申請人姓名
                         aplyMemberDataObject.setValue("AplyCellPhoneNo", cellPhone); //手機
                         aplyMemberDataObject.setValue("Marriage", "Y".equalsIgnoreCase(marryStatus) ? "1" : "0");// 婚姻狀況
@@ -150,7 +175,8 @@ public class PersonalInfo3 implements ILogic {
 
                     //判斷會員狀態看是否更新電文
                     //有撥款紀錄
-                    if("Y".equalsIgnoreCase(isRecord)) {
+                    String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+                    if(!"sit".equalsIgnoreCase(env) && "Y".equalsIgnoreCase(isRecord)) {
 
 
                         //其餘一律更新電文主機

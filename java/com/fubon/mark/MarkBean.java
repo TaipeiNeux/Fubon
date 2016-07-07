@@ -1,5 +1,6 @@
 package com.fubon.mark;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  * Time: 下午 1:37
  * To change this template use File | Settings | File Templates.
  */
-public class MarkBean {
+public class MarkBean implements Serializable{
 
     //存每個input name跟明碼、密碼
     private Map<String,String[]> inputMap = new HashMap<String,String[]>();

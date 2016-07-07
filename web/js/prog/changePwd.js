@@ -104,7 +104,14 @@ function changePwd2_1(content){
 
 function changePwd2_2(content){
 
-    countdown({
+    g_countdown({
+        minute: 4,
+        second: 59,
+        modal_id: 'modal_changePwd_2_2',
+        deadline_class: 'deadline' 
+    });
+    
+    /*countdown({
         minute: 4,
         second: 59,
         modal_id: 'modal_changePwd_2_2'
@@ -114,6 +121,7 @@ function changePwd2_2(content){
     var deadline = today.getFullYear()+'/'+padLeft({str: (today.getMonth()+1), len: 2})+'/'+padLeft({str: today.getDate(), len: 2})+' '
                 +padLeft({str: today.getHours(), len: 2})+':'+padLeft({str: (today.getMinutes()+5), len: 2})+':'+padLeft({str: today.getSeconds(), len: 2});
     $('.deadline').text( deadline );
+    */
 
     //取得的user資料
     var hasAppropriation = content.hasAppropriation,
@@ -162,6 +170,11 @@ function countdown( conf ){
             countdownid=setTimeout(countdownfunc,1000);
         }
     }
+    
+    $('.submitBtn').on('click', function(){
+        window.location = 'changePwd.jsp?step=changePwd2_1';
+    });
+    
 } // end countdown function
 
 function padLeft(conf){
@@ -184,7 +197,7 @@ function changePwd3(content) {
     var changePwdDate = $('#changePwdDate');
     var changePwdTime = $('#changePwdTime');
 
-    changePwdResult.text( (result == 'success')? '申請成功':'申請失敗' );
+    changePwdResult.text( (result == 'success')? '變更成功!':'變更失敗!' );
     changePwdResult.addClass( (result == 'success')? 'nike': 'deny' );
     changePwdDate.text(date);
     changePwdTime.text(time);

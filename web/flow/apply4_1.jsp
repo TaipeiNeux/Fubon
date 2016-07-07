@@ -11,12 +11,14 @@
                                     <img src="img/na-11.png" alt="">
                                   </a>
         </h4>
-        <div class="error-msg" id="hasDocument" style="display:none">請先上傳文件</div>
-        <div class="error-msg" id="documentType" style="display:none">只允許上傳jpg、png、pdf、tif或gif影像檔</div>
+        <div class="error-msg" id="hasDocument" style="display:none">請上傳文件</div>
+        <div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
+        <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
         <table class="mqua">
             <thead>
                 <tr>
-                    <th colspan="2">檔案名稱</th>
+                    <th></th>
+                    <th>檔案名稱</th>
                     <th>上傳/修改</th>
                     <th>預覽</th>
                 </tr>
@@ -119,7 +121,7 @@
         
        <!-- Modal -->
         <div class="modal fade pomodal" id="pleaseUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document" style="width:80%">
+            <div class="modal-dialog" role="document" style="width:60%">
                 <div class="modal-content">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>

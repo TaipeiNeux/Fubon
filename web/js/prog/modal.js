@@ -47,7 +47,7 @@ var modal = {
     },
 
 
-    getFamilyInfo: function(type,convert, callback) {
+    getFamilyInfo: function(type, convert, callback, noMark) {
 		//type:father/mother/thirdparty/spouse		
 		
         g_ajax({
@@ -55,7 +55,8 @@ var modal = {
 			url: 'data?action=getFamilyInfo',
             data: {
                 type: type,
-				convert : convert
+				convert : convert,
+				noMark : noMark
             },
             callback: callback
         });
@@ -344,7 +345,7 @@ var modal = {
         var jsonFullString;
         $.ajax({
             async: false,
-			url : 'data?action=getExpectBranchPeoples&date='+date+'&branchId=' + branchId,
+			url : 'data?action=getExpectBranchPeoples&date='+date+'&branchId=' + branchId + '&v=' + + new Date().getTime(),
             //url: 'json/isFull.json?date=' + date + '&branchId=' + branchId,
             datatype: 'json',
             success: function(json) {
@@ -444,7 +445,8 @@ var modal = {
 		var jsonPay;
         $.ajax({
             async: false,
-            url: 'json/myElectronicPay_1.json',
+            //url: 'json/myElectronicPay_1.json',
+			url: 'data?action=myElectronicPay',
             datatype: 'json',
             success: function(json) {
                 jsonPay = json;
@@ -458,7 +460,8 @@ var modal = {
 		var jsonIbon;
         $.ajax({
             async: false,
-            url: 'json/myElectronicPay_1.json',     //之後要換成繳款單的url!!!!!!!!!!!!!!!!!!!
+            //url: 'json/myElectronicPay_1.json',     //之後要換成繳款單的url!!!!!!!!!!!!!!!!!!!
+			url: 'data?action=myElectronicPay',
             datatype: 'json',
             success: function(json) {
                 jsonIbon = json;
@@ -466,5 +469,19 @@ var modal = {
         });
 
         return jsonIbon;
-	}
+	},
+	getUpdatePopupStatus: function() {
+        var jsonStatus;
+        $.ajax({
+            async: false,
+            url: 'data?action=updatePopupEtag',
+            datatype: 'json',
+            success: function(json) {
+                jsonStatus = json;
+            }
+        });
+        console.debug(jsonStatus);
+
+        return jsonStatus;
+    }
 };

@@ -5,8 +5,8 @@
 	<span class="death"></span>
 </h5>
 <br>
-<h4 class="mipa">請輸入本行寄發到您<span class="sendType"></span> <span class="sendType_val"></span> 的六位數交易驗證碼；
-	<br>如有疑問，請洽本行客服專線02-8751-6665按5。
+<h4 class="mipa">請輸入本行寄發到您<br /><span class="sendType"></span> <span class="sendType_val"></span> 的六位數交易驗證碼；
+	<br>如有疑問，請洽客戶服務專線02-8751-6665按5。
 </h4>
 <div class="parents">
 	<div class="joy finp">
@@ -26,7 +26,7 @@
 	  <div class="right">
 	    <input placeholder="請輸入六位數交易驗證碼" class="verfi input_L" type="text" name="codeInput" maxlength="6">
 	    <div class="error-msg"/>
-	    <p class="ss">交易驗證碼有效截止時間為 <span class="deadline"></span>（依本行系統時間為主）</p>
+	    <p class="ss">有效截止時間為<span class="deadline"></span>（依本行系統時間為主）</p>
 	  </div>
 	</div>
 </div>
@@ -40,7 +40,7 @@
 	    <div class="modal-body">
 	      <h3>本次交易可輸入交易驗證碼的時間已逾時，請重新操作</h3>
 			
-	        <a href="#" class="pobtn-srb submitBtn">確定</a>
+	        <a href="forgetPassword.jsp?step=forgetPassword3_1" class="pobtn-srb submitBtn">確定</a>
 	    </div>
 	  </div>
 	</div>

@@ -29,9 +29,7 @@
                                             
                                           </ul>
                                         </div>
-                                        <!--<div class="QAArea">
-                                          
-                                        </div>-->
+                                        
                                       </div>
                                     </div>
                                 </div>
@@ -51,9 +49,7 @@
                                             <li>
                                                 <h3>貸款金額</h3>
                                                 <div class="sliderRangebar">
-                                                    <input id="Ran-1" type="text" data-slider-min="0" data-slider-max="9999999" data-slider-step="1" data-slider-value="0" />
-
-                                                    <!--<input id="Ran-1" type="text" data-slider-min="0" data-slider-max="5000000" data-slider-step="1" data-slider-value="0">-->
+                                                    <input id="Ran-1" type="text" data-slider-min="0" data-slider-max="9999999" data-slider-step="1" data-slider-value="0" />                                                    
                                                 </div>
                                                 <input id="Ran-1-SliderVal" class="val" value="0">
                                                 <p class="valback">元</p>
@@ -62,11 +58,11 @@
                                             <li>
                                                 <h3>年利率</h3>
                                                 <div class="sliderRangebar">
-                                                    <input id="Ran-2" type="text" data-slider-min="1" data-slider-max="20" data-slider-step="0.01" data-slider-value="1.62">
+                                                    <input id="Ran-2" type="text" data-slider-min="1" data-slider-max="20" data-slider-step="0.01" data-slider-value="1.55">
 
                                                 </div>
 
-                                                <input id="Ran-2-SliderVal" class="val" value="1.62">
+                                                <input id="Ran-2-SliderVal" class="val" value="1.55">
                                                 <p class="valback">%</p>
                                                 <div class="err-message"></div>
                                             </li>
@@ -97,7 +93,7 @@
                                             <div class="MoreLink">
                                                 <p>注意事項:</p>
                                                 <ol class="noteLi">
-                                                    <li>目前就學貸款利率為1.62%，提供您參考，實際利率以營業單位牌告利率為準。</li>
+                                                    <li>目前就學貸款利率為1.55%，提供您參考，實際利率以營業單位牌告利率為準。</li>
                                                     <li>本試算僅供參考。</li>
                                                 </ol>
                                             </div>
@@ -139,7 +135,6 @@
                                                 </div>
                                                 <div class="regionArea">
                                                     <div class="region">
-                                                        <!--<a class="pobmo" id="regionText"></a>-->
                                                         
                                                             <div class="mapAreaS" active>
                                                                <div class="refrashBranch">

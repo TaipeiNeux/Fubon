@@ -71,11 +71,24 @@ $(document).ready(function() {
 
             if(content.marryStatus == 'Y')
                 marrage = '已婚';
-            else 
+            else if(content.marryStatus == 'N') {
                 marrage = '未婚';
-
-            var obj= { 'id': content.id, "name":content.name, "birthday":birthday_tmp, "marryStatus": marrage,"domicilePhone":'('+content.domicilePhone.regionCode+')'+content.domicilePhone.phone ,"telePhone":'('+content.telePhone.regionCode+')'+content.telePhone.phone , "email":content.email, "mobile":content.mobile, "domicileAddress":content.domicileAddress.address, "teleAddress":content.teleAddress.address};
-            
+			}
+			
+			var domicRegionCode = content.domicilePhone.regionCode;
+			var teleRegionCode = content.telePhone.regionCode;
+			
+			if(domicRegionCode != '') {
+				domicRegionCode = '(' + domicRegionCode + ')';
+			}
+			
+			if(teleRegionCode != '') {
+				teleRegionCode = '(' + teleRegionCode + ')';
+			}
+			
+            var obj= { 'id': content.id, "name":content.name, "birthday":birthday_tmp, "marryStatus": marrage,"domicilePhone":domicRegionCode+content.domicilePhone.phone ,"telePhone":teleRegionCode+content.telePhone.phone , "email":content.email, "mobile":content.mobile, "domicileAddress":content.domicileAddress.address, "teleAddress":content.teleAddress.address};
+            			
+			
             show_data.push(obj);
         };
 
@@ -126,6 +139,8 @@ $(document).ready(function() {
             var tmp_index=0;
             $.each(data, function(index, value) {
               
+			  console.debug(index + '=' + value);
+			  
                 $('.right').eq(tmp_index).children().html(value);
 
                 tmp_index++;

@@ -20,6 +20,10 @@ $(document).ready(function() {
 		"forgetPassword2": forgetPassword2_Error,
 		"forgetPassword3_2": forgetPassword3_2_Error
     };
+    
+    if (jumpStep == 'null') {
+        jumpStep = '';
+    }
 
     g_ajax({
         url: 'flow?action=continue&flowId=forgetPassword',
@@ -28,7 +32,9 @@ $(document).ready(function() {
         //url: 'json/forgetPassword3_1.json',
         //url: 'json/forgetPassword3_2.json',
         //url: 'json/forgetPassword4.json',
-        data: {},
+        data: {
+            step: jumpStep
+        },
         callback: function(content) {
 
             //開始長流程畫面
@@ -111,25 +117,33 @@ function forgetPassword3_1(content){
 
 } // end forgetPassword3_1 function
 
-function forgetPassword3_2(content){
-
-    countdown({
+function forgetPassword3_2(content){    
+    g_countdown({
         minute: 4,
         second: 59,
-        modal_id: 'modal_forgetPassword_2_2'
+        modal_id: 'modal_forgetPassword_2_2',
+        deadline_class: 'deadline' 
     });
 
-    var today = new Date();
+    // countdown({
+    //     minute: 0,
+    //     second: 10,
+    //     modal_id: 'modal_forgetPassword_2_2',
+    //     deadline_class: 'deadline' 
+    // });
+
+    /*var today = new Date();
     var deadline = today.getFullYear()+'/'+padLeft({str: (today.getMonth()+1), len: 2})+'/'+padLeft({str: today.getDate(), len: 2})+' '
                 +padLeft({str: today.getHours(), len: 2})+':'+padLeft({str: (today.getMinutes()+5), len: 2})+':'+padLeft({str: today.getSeconds(), len: 2});
-    $('.deadline').text( deadline );
+    $('.deadline').text( deadline );*/
 
     //取得的user資料
     var hasAppropriation = content.hasAppropriation,
         sendType = (hasAppropriation == 'Y' ? '手機號碼':' Email' ),
         sendType_val = (hasAppropriation == 'Y' ? content.mobile : content.email );
     var codeImg = content.code_img;
-
+    
+    
     //畫面上要顯示的user資料之tag id
     var sendType_ele = $('span.sendType');
     var sendType_val_ele = $('span.sendType_val');
@@ -142,13 +156,33 @@ function forgetPassword3_2(content){
 } // end forgetPassword3_2 function
 
 function countdown( conf ){
+
+    // countdown({
+    //     minute: 4,
+    //     second: 59,
+    //     modal_id: 'modal_forgetPassword_2_2',
+    //     deadline_class: 'deadline' 
+    // });
+
     var countdownnumber = conf.second;
     var countdownnumber_min = conf.minute;
     var countdownid;
+    clearTimeout(countdownid);
+
+    _acorssDay();
     countdownfunc();
 
+    function tmp_padLeft(conf){
+        var str = conf.str.toString();
+        if(str.length >= conf.len)
+            return str;
+        else
+            return tmp_padLeft({str: '0'+str, len: conf.len});
+    } // end padLeft function
+
+
     function countdownfunc(){
-        var tmp_time = padLeft({str: countdownnumber_min, len: 2})+':'+padLeft({str: countdownnumber, len: 2});
+        var tmp_time = tmp_padLeft({str: countdownnumber_min, len: 2})+':'+tmp_padLeft({str: countdownnumber, len: 2});
         $('.death').html(tmp_time);
 
         if (countdownnumber==0 && countdownnumber_min ==0 ){ 
@@ -156,21 +190,33 @@ function countdown( conf ){
 
             $('#'+conf.modal_id+' a.submitBtn').on('click', function(){
                 $("#"+conf.modal_id).modal('hide');
+
+                location.reload();
             }); 
 
             clearTimeout(countdownid);
         }
-        else if(countdownnumber == 0){
+        else if(countdownnumber == -1){
 
             countdownnumber_min--;
-            countdownnumber =4;
-            countdownid=setTimeout(countdownfunc,1000);
+            countdownnumber = 59;
+            countdownid=setTimeout(countdownfunc,10);
         }
         else{
             countdownnumber--;
             countdownid=setTimeout(countdownfunc,1000);
         }
     }
+    
+    function _acorssDay(){
+        var d_all = new Date();
+        var d = new Date( d_all.getFullYear(), d_all.getMonth() , d_all.getDate() , d_all.getHours(), d_all.getMinutes()+5 , d_all.getSeconds() );
+        
+        var tmp_time = tmp_padLeft({str: d.getMinutes(), len: 2})+':'+tmp_padLeft({str: d.getSeconds(), len: 2});
+        $("."+countdown.deadline).html( d.getFullYear()+'/'+(d.getMonth())+'/'+d.getDate()+' '+d.getHours()+':'+ tmp_time );
+       
+    }   
+
 } // end countdown function
 
 function padLeft(conf){

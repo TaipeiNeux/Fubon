@@ -20,7 +20,7 @@
     	</div>
   	</div>
 </div>
-<div class=" antcoco">
+<div class=" antcoco overflow">
   <h3 class="snopy pen">歡迎立即登入使用!</h3>
   <div class="may">
     <div class="inputArea">

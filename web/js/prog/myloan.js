@@ -1,34 +1,64 @@
 var Myloan_controller = (function(){
 
 	var main = function(){
+        /**  要資料  **/
 
-		/**  要資料  **/
-		var client_data = Myloan_modal.client_data('data?action=myloanDetail');
+        g_ajax({
+            url: 'data?action=myloanDetail',
+            data: {},
+            datatype:'json',
+            callback: function(json) {
+                //content = $.parseJSON(content);
+                console.debug(json);
+                var client_data = json;
 
-		//長總額
-		$('.morebig').text('$' + GardenUtils.format.convertThousandComma(client_data.total));
-		
-		for(var i = 0;i<client_data.data.client_detail.length;i++){
-			
-			dynamic_client_data(i,client_data.data.client_detail[i]);
-		
-		}
+                console.log(client_data);
 
-		//$('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>').insertbefore($('.casomTitle'));
-		$('.casomTitle').before('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>');
-		
-		$('.picabtn').off('mousedown').on('mousedown',function(){
-			
-			if($(this).hasClass('active')){
-				$(this).html('詳細資訊&nbsp;<i class="fa fa-caret-down"></i>');
-			}
-			else{
+                /*2016-06-23 added by titan 加上是否有貸款帳號跟是否有轉催/轉呆、戶況有協商註記*/
+                var isEtabs = client_data.isEtabs; //是否有貸款帳號
+                var hasAccount = client_data.hasAccount; //是否有貸款帳號
+                var isArrears = client_data.isArrears; //是否無欠款
 
-				$(this).html('收起&nbsp;<i class="fa fa-caret-up"></i>');
-			}
+                if(hasAccount == 'N' || isArrears == 'N') {
+                    redirectNoPermit('1','我的貸款');
+                }
+                else if(isEtabs == 'N') {
+                    redirectNoPermit('2','我的貸款');
+                }
+                else {
+                    var remind = $('li.remind');
+                    remind.show();
 
-		});
-	}	
+                    //長總額
+                    $('.morebig').text('$' + GardenUtils.format.convertThousandComma(client_data.total));
+
+                    for(var i = 0;i<client_data.data.client_detail.length;i++){
+
+                        dynamic_client_data(i,client_data.data.client_detail[i]);
+
+                    }
+
+                    //$('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>').insertbefore($('.casomTitle'));
+                    $('.casomTitle').before('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>');
+
+                    $('.picabtn').off('mousedown').on('mousedown',function(){
+
+                        if($(this).hasClass('active')){
+                            $(this).html('詳細資訊&nbsp;<i class="fa fa-caret-down"></i>');
+                        }
+                        else{
+
+                            $(this).html('收起&nbsp;<i class="fa fa-caret-up"></i>');
+                        }
+
+                    });
+                }
+
+
+            }
+        });
+
+    };	
 
 	var dynamic_client_data = function(i,data){
 		Myloan_view.account_outline(data);
@@ -68,7 +98,7 @@ var Myloan_view = (function(){
 
 	}
 
-	var account_detail = function(i,data){
+	var account_detail = function(i,data) {
 
 		var this_table = $('.repayTable').eq(i);
 		this_table.append('<ul class="resa"> <li> <h4>學期別</h4> </li> <li> <h4>原貸金額</h4> </li> <li> <h4>貸款餘額</h4> </li> <li> <h4>每月應繳月付金</h4> </li> </ul>');

@@ -4,9 +4,9 @@ String.prototype.replaceAt = function(index, character) {
 
 
 $(document).ready(function() {
-		
-	
-	
+
+
+
     //定義每個步驟要對應的javascript function
     var stepEventHandler = {
         "personalInfo1": personalInfo_1,
@@ -20,6 +20,10 @@ $(document).ready(function() {
         "personalInfo_2_2": personalInfo_2_valid
     };
 
+    if (jumpStep == 'null') {
+        jumpStep = '';
+    }
+
     g_ajax({
         url: 'flow?action=continue&flowId=personalInfo',
         //url: 'json/personalInfo_start.json',
@@ -27,7 +31,9 @@ $(document).ready(function() {
         //url: 'json/personalInfo_2_1.json',
         //url: 'json/personalInfo_2_2.json',
         //url: 'json/personalInfo_3.json',
-        data: {},
+        data: {
+            step: jumpStep
+        },
         callback: function(content) {
             console.debug(content);
             console.debug(stepEventHandler);
@@ -42,28 +48,28 @@ $(document).ready(function() {
 
 
 function personalInfo_1(content) {
-   
-		// $("input").blur(function(){
-			
-			// var input_tmp = $(this).val();
-		
-			// function trans_fullwidth (ine){
-				// var oute = '';
-				// for(i=0; i<ine.length; i++) {
-					// if(ine.charCodeAt(i)  >= 33 && ine.charCodeAt(i) <= 270) {
-						// oute += String.fromCharCode(ine.charCodeAt(i) + 65248);
-					// } else if(ine.charCodeAt(i) == 32) {
-						// oute += String.fromCharCode(12288);
-					// }
-				// }
-				// return oute;
-			// }
-			
-			// console.log(trans_fullwidth(input_tmp));
-				
-		// });
-	
-   console.debug(content);
+
+    // $("input").blur(function(){
+
+    // var input_tmp = $(this).val();
+
+    // function trans_fullwidth (ine){
+    // var oute = '';
+    // for(i=0; i<ine.length; i++) {
+    // if(ine.charCodeAt(i)  >= 33 && ine.charCodeAt(i) <= 270) {
+    // oute += String.fromCharCode(ine.charCodeAt(i) + 65248);
+    // } else if(ine.charCodeAt(i) == 32) {
+    // oute += String.fromCharCode(12288);
+    // }
+    // }
+    // return oute;
+    // }
+
+    // console.log(trans_fullwidth(input_tmp));
+
+    // });
+
+    console.debug(content);
 
     //把得到的資料塞進畫面中
     //
@@ -74,6 +80,10 @@ function personalInfo_1(content) {
     //user_birthday = content.birthday;
     var domicileCityId = content.domicileAddress.cityId;
     var domicileZipCode = content.domicileAddress.zipCode;
+
+    var domicileCityName = content.domicileAddress.cityName;
+    var domicileZipCodeName = content.domicileAddress.zipCodeName;
+
     var domicileLiner = content.domicileAddress.liner;
     var cityId = content.teleAddress.cityId;
     var zipCode = content.teleAddress.zipCode;
@@ -152,24 +162,58 @@ function personalInfo_1(content) {
 
     userId.text(id);
     userName.text(name);
-		
-	var b_year = birthday.substring(0, 3);
-	var b_month = birthday.substring(3, 5);
-	var b_day = birthday.substring(5, 7);
-	if(content.isRecord == 'Y'){
-		$('#birth_tmp_1').show();
-		console.log(b_year+' '+b_month+' '+b_day);
-		userBirthday.html('民國&nbsp'+b_year+'年&nbsp'+b_month+'月&nbsp'+b_day+'日&nbsp');
-		
-	}
-	else 	{
-		$('#birth_tmp_2').show();
-		$('[name=birth_year]').val(b_year);
-		$('[name=birth_month]').val(b_month);
-		$('[name=birth_day]').val(b_day);
-		
-	}
-		
+    
+    $('.selectpicker').selectpicker();
+    
+    var jsonCity = modal.getCity();
+    console.debug(jsonCity);
+    cityArr = jsonCity.cities;
+    var cityArray = [];
+
+    //先把city的選項全塞進cityArray
+    cityArray.push('<option value="">請選擇</option>');
+    $.each(cityArr, function(i, cityData) {
+        cityArray.push('<option value=' + cityData.cityId + '>' + cityData.cityName + '</option>');
+    });
+    
+    
+    var domicileCitySelectpicker = $('[name="domicileCityId"]');
+    var domicileZipSelectpicker = $('[name="domicileZipCode"]');
+    var domicileLinerSelectpicker = $('[name="domicileLiner"]');
+    var citySelectpicker = $('[name="cityId"]');
+    var zipSelectpicker = $('[name="zipCode"]');
+    domicileCitySelectpicker.append(cityArray.join(''));
+    domicileCitySelectpicker.selectpicker('refresh');
+    domicileCitySelectpicker.trigger('change');
+    citySelectpicker.append(cityArray.join(''));
+    citySelectpicker.selectpicker('refresh');
+    citySelectpicker.trigger('change');
+    
+    linkage.changeDomicileZipByCity(domicileCitySelectpicker, cityArr, domicileZipSelectpicker);
+    domicileZipSelectpicker.trigger('change');
+    linkage.changeZipByCity(citySelectpicker, cityArr, zipSelectpicker);
+    zipSelectpicker.trigger('change');
+    linkage.changeDomicileLinerByZip(domicileZipSelectpicker, cityArr, domicileLinerSelectpicker);
+    zipSelectpicker.trigger('change');
+    
+    
+
+    var b_year = birthday.substring(0, 3);
+    var b_month = birthday.substring(3, 5);
+    var b_day = birthday.substring(5, 7);
+    if (content.isRecord == 'Y') {
+        $('#birth_tmp_1').show();
+        console.log(b_year + ' ' + b_month + ' ' + b_day);
+        userBirthday.html('民國&nbsp' + b_year + '年&nbsp' + b_month + '月&nbsp' + b_day + '日&nbsp');
+
+    } else {
+        $('#birth_tmp_2').show();
+        $('[name=birth_year]').val(b_year);
+        $('[name=birth_month]').val(b_month);
+        $('[name=birth_day]').val(b_day);
+
+    }
+
     userMobile.val(mobile);
     $('.processInner').prepend('<input type="hidden" value="' + content.mobile + '" name="mobile_hidden"/>');
     userEmail.val(email);
@@ -197,23 +241,30 @@ function personalInfo_1(content) {
         marryHidden.val('');
     }
 
-	//2016-06-18 added by titan 綁半形轉全形
-	GardenUtils.format.inputConvertFullWidth({
-		 name : ['DomicileAddress','address']
-	});
-	
+    //2016-06-18 added by titan 綁半形轉全形
+    GardenUtils.format.inputConvertFullWidth({
+        name: ['DomicileNeighborhood', 'DomicileAddress', 'address']
+    });
+
     //有撥款紀錄者,不開放修改,將input轉為label
     if (isRecord == 'Y') { //續貸
-		//alert('123');
+        //alert('123');
         inputToLabel(dNeighborhood);
         inputToLabel(dAddress);
         inputToLabel(userMobile);
         inputToLabel(dLinerName);
+        /**
         domicileCitySelect.attr("disabled", true);
         domicileZipSelect.attr("disabled", true);
         domicileLinerSelect.attr("disabled", true);
+		**/
         userSingle.attr("disabled", true);
         userMarry.attr("disabled", true);
+
+        //取出戶藉地址的div的右邊
+        var domicileAddrRightDiv = $('#domicileAddr .right');
+
+        domicileToLabel(domicileAddrRightDiv, domicileCityName, domicileZipCodeName, domicileLiner, domiNei, domiAddr);
     }
 
     //點選結婚狀況的radio
@@ -445,8 +496,8 @@ function personalInfo_1(content) {
             });
         }
     });
-	
-	/*var PersonalInfo_controller = (function() {
+
+    /*var PersonalInfo_controller = (function() {
 
         var show_data = [];
 
@@ -765,19 +816,19 @@ function personalInfo_1(content) {
 function personalInfo_2_1(content) {
     var PersonalInfo_controller = (function() {
 
-	console.debug(content);
+        console.debug(content);
         var show_data = [];
 
         var main = function() {
 
-          //  要資料  
+            //  要資料  
             // var data = PersonalInfo_modal.client_data('haha_js_personalInfo/client_data_0.json');
             var birthday_tmp = '民國' + content.birthday.substr(0, 3) + '年' + content.birthday.substr(3, 2) + '月' + content.birthday.substr(5, 6) + '日';
             if (content.marryStatus == 'Y')
                 marrage = '已婚';
             else
                 marrage = '未婚';
-					
+
             var obj = {
                 'id': content.id,
                 "name": content.name,
@@ -786,7 +837,7 @@ function personalInfo_2_1(content) {
                 "domicilePhone": '(' + content.domicilePhone.regionCode + ')' + content.domicilePhone.phone,
                 "telePhone": '(' + content.telePhone.regionCode + ')' + content.telePhone.phone,
                 "email": content.email,
-				"mobile": content.mobile,
+                "mobile": content.mobile,
                 "domicileAddress": content.domicileAddress.address,
                 "teleAddress": content.teleAddress.address
             };
@@ -856,6 +907,36 @@ function personalInfo_2_1(content) {
 function personalInfo_2_2(content) {
 
     var imgSrc = content.code_img;
+    var email = content.email;
+    var mobile = content.mobile;
+    var mobileNumber = content.mobile;
+    var hasAppropriation = content.hasAppropriation;
+    var img = $('#img');
+    var mobile = $('#mobile')
+    var codeInput = $('[name="codeInput"]');
+    var tipMsg = [];
+    
+    if (hasAppropriation == 'N'){
+        tipMsg.push('<h4 class="mipa">請輸入本行寄發到您&nbsp;Email<div class="mipa" id="email">&nbsp;' + email + '</div></h4><h4 class="mipa">的六位數交易驗證碼;<div>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</div></h4>');
+    }
+    else if (hasAppropriation == 'Y'){
+        tipMsg.push('<h4 class="mipa">請輸入本行寄發到您&nbsp;手機號碼<div class="mipa" id="mobile">&nbsp;' + mobile + '</div></h4><h4 class="mipa">的六位數交易驗證碼;<br/>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</h4>');
+    }
+    $('.tip').append(tipMsg.join(''));    
+
+
+    codeInput.attr('maxlength', '6');
+    img.attr('src', imgSrc);
+    mobile.text(mobileNumber);
+
+    g_countdown({
+        minute: 4,
+        second: 59,
+        modal_id: 'myModal_person_2',
+        deadline_class: 'applyDate'
+    });
+
+    /*var imgSrc = content.code_img;
     var mobile = content.mobile;
     var email = content.email;
     var Record = content.hasAppropriation;
@@ -870,10 +951,10 @@ function personalInfo_2_2(content) {
 	
 	
 	if (Record == 'N')
-                $('.tip').html('<h4 class="mipa">請輸入本行寄發到您Email<br><div class="mipa" id="email">'+email+'</div></h4><br><h4 class="mipa">的六位數交易驗證碼;<div>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</div></h4>');
+                $('.tip').html('<h4 class="mipa">請輸入本行寄發到您Email<div class="mipa" id="email">'+email+'</div></h4><h4 class="mipa">的六位數交易驗證碼;<div>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</div></h4>');
 
             else if (Record == 'Y')
-                $('.tip').html('<h4 class="mipa">請輸入本行寄發到您手機號碼<br><div class="mipa" id="mobile">'+mobile+'</div></h4><br><h4 class="mipa">的六位數交易驗證碼;<div>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</div></h4>');
+                $('.tip').html('<h4 class="mipa">請輸入本行寄發到您手機號碼<div class="mipa" id="mobile">'+mobile+'</div></h4><h4 class="mipa">的六位數交易驗證碼;<div>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</div></h4>');
      
 	
 
@@ -929,60 +1010,61 @@ function personalInfo_2_2(content) {
                 $('#mins').text(0);
                 $('#sec').text('00');
                 
-                GardenUtils.display.popup({
-                    title: '',
-                    content: '<p>本次交易可輸入交易驗證碼的時間已逾時，請重新操作</p>',
-                    closeCallBackFn: function() {},
-                    isShowSubmit: false
-                });
+                $("#modal_personalInfo_2_1").modal('show');
+
+				//按下確定後,關掉彈跳訊息及轉導到前一步驟
+	            $("#modal_personalInfo_2_1 a.submitBtn").on('click', function(){
+	                $("#modal_personalInfo_2_1").modal('hide');
+					
+					window.location = 'personalInfo_flow.jsp?step=personalInfo_2_1';
+	            }); 
                 clearInterval(start);
             }
         }
     }
 
-    var start = setInterval(countdown, 10);
+    var start = setInterval(countdown, 1000);*/
 
-	
+
 
 } // end personalInfo_3 function
 
 function personalInfo_3(content) {
-    
-	//把得到的資料塞進畫面中
+
+    //把得到的資料塞進畫面中
     //
     //取得的user資料
     var result = content.registerResult;
     var date = content.registerDate;
     var time = content.registerTime;
-	var errorCode = content.errorCode;
-	var errorMsg = content.errorMsg;
-	
+    var errorCode = content.errorCode;
+    var errorMsg = content.errorMsg;
+
 
     //畫面上要顯示的user資料之tag id
     var registerResult = $('#registerResult');
     var registerDate = $('#registerDate');
     var registerTime = $('#registerTime');
 
-	var resultMsg = '';
-	
-	if(result == 'success') {
-		resultMsg = '申請成功';
-	}
-	else {
-		resultMsg = '申請失敗('+errorCode+')' + errorMsg;
-	}
-	
-    registerResult.text( resultMsg );
-    registerResult.addClass( (result == 'success')? 'nike': 'deny' );
+    var resultMsg = '';
+
+    if (result == 'success') {
+        resultMsg = '變更成功!';
+    } else {
+        resultMsg = '變更失敗!(' + errorCode + ')' + errorMsg;
+    }
+
+    registerResult.text(resultMsg);
+    registerResult.addClass((result == 'success') ? 'nike' : 'deny');
     registerDate.text(date);
     registerTime.text(time);
-	
-	//若失敗則不顯示變更資料
-	if(result != 'success') {
-		$('.myData').hide();
-	}
-	
-	var PersonalInfo_controller = (function() {
+
+    //若失敗則不顯示變更資料
+    if (result != 'success') {
+        $('.myData').hide();
+    }
+
+    var PersonalInfo_controller = (function() {
 
         var show_data = [];
 
@@ -1068,100 +1150,96 @@ function personalInfo_1_valid() {
         showAllErr: false,
         formId: ["mainForm"],
         validEmpty: [{
-            name: 'birth_year',
-            msg: '生日',
-			group: 'birth',
-        },
-		{
-            name: 'birth_month',
-            msg: '生日',
-			group: 'birth',
-        },
-		{
-            name: 'birth_day',
-            msg: '生日',
-			group: 'birth',
-        },
-		
-		{
-            name: 'email',
-            msg: 'Email'
-        }, {
-            name: 'DomicileArea',
-            msg: '戶籍電話',
-            group: 'domicilePhone'
-        }, {
-            name: 'Domicile_Phone',
-            msg: '戶籍電話',
-            group: 'domicilePhone'
-        }, {
-            name: 'areaTelephone',
-            msg: '通訊電話',
-            group: 'tel'
-        }, {
-            name: 'telephone',
-            msg: '通訊電話',
-            group: 'tel'
-        }, {
-            name: 'cellPhone',
-            msg: '行動電話'
-        }, {
-            name: 'DomicileNeighborhood',
-            msg: '戶籍地址',
-            group: 'domicileAddr'
-        }, {
-            name: 'DomicileAddress',
-            msg: '戶籍地址',
-            group: 'domicileAddr'
-        }, {
-            name: 'neighborhood',
-            msg: '通訊地址',
-            group: 'addr'
-        }, {
-            name: 'address',
-            msg: '通訊地址',
-            group: 'addr'
-        }, {
-            name: 'domicileCityId',
-            msg: '戶籍地址',
-            group: 'domicileAddr'
-        }, {
-            name: 'domicileZipCode',
-            msg: '戶籍地址',
-            group: 'domicileAddr'
-        }, {
-            name: 'domicileLiner',
-            msg: '戶籍地址',
-            group: 'domicileAddr'
-        }, {
-            name: 'cityId',
-            msg: '通訊地址',
-            group: 'addr'
-        }, {
-            name: 'zipCode',
-            msg: '通訊地址',
-            group: 'addr'
-        }, {
-            name: 'liner',
-            msg: '通訊地址',
-            group: 'addr'
-        }],
+                name: 'birth_year',
+                msg: '生日',
+                group: 'birth',
+            }, {
+                name: 'birth_month',
+                msg: '生日',
+                group: 'birth',
+            }, {
+                name: 'birth_day',
+                msg: '生日',
+                group: 'birth',
+            },
+
+            {
+                name: 'email',
+                msg: 'Email'
+            }, {
+                name: 'DomicileArea',
+                msg: '戶籍電話',
+                group: 'domicilePhone'
+            }, {
+                name: 'Domicile_Phone',
+                msg: '戶籍電話',
+                group: 'domicilePhone'
+            }, {
+                name: 'areaTelephone',
+                msg: '通訊電話',
+                group: 'tel'
+            }, {
+                name: 'telephone',
+                msg: '通訊電話',
+                group: 'tel'
+            }, {
+                name: 'cellPhone',
+                msg: '行動電話'
+            }, {
+                name: 'DomicileNeighborhood',
+                msg: '戶籍地址',
+                group: 'domicileAddr'
+            }, {
+                name: 'DomicileAddress',
+                msg: '戶籍地址',
+                group: 'domicileAddr'
+            }, {
+                name: 'neighborhood',
+                msg: '通訊地址',
+                group: 'addr'
+            }, {
+                name: 'address',
+                msg: '通訊地址',
+                group: 'addr'
+            }, {
+                name: 'domicileCityId',
+                msg: '戶籍地址',
+                group: 'domicileAddr'
+            }, {
+                name: 'domicileZipCode',
+                msg: '戶籍地址',
+                group: 'domicileAddr'
+            }, {
+                name: 'domicileLiner',
+                msg: '戶籍地址',
+                group: 'domicileAddr'
+            }, {
+                name: 'cityId',
+                msg: '通訊地址',
+                group: 'addr'
+            }, {
+                name: 'zipCode',
+                msg: '通訊地址',
+                group: 'addr'
+            }, {
+                name: 'liner',
+                msg: '通訊地址',
+                group: 'addr'
+            }
+        ],
         validNumber: [{
-	            name: 'birth_year',
-	            msg: '生日',
-				group: 'birth',
-	        },
-			{
-	            name: 'birth_month',
-	            msg: '生日',
-				group: 'birth',
-	        },
-			{
-	            name: 'birth_day',
-	            msg: '生日',
-				group: 'birth',
-	        },
-			{
+                name: 'birth_year',
+                msg: '生日',
+                group: 'birth',
+            }, {
+                name: 'birth_month',
+                msg: '生日',
+                group: 'birth',
+            }, {
+                name: 'birth_day',
+                msg: '生日',
+                group: 'birth',
+            }, {
                 name: 'DomicileArea',
                 msg: '戶籍電話',
                 allowEmpty: false,
@@ -1200,17 +1278,15 @@ function personalInfo_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="email_hidden"]').val()
         }],
-        validDate: [
-			{
-		        name: ['birth_year', 'birth_month', 'birth_day'],
-		        msg: '生日',
-		        //val: $('[name="' + family + 'birthday0' + '"]').val() + '/' + $('[name="' + family + 'birthday2' + '"]').val() + '/' + $('[name="' + family + 'birthday4' + '"]').val(),
-		        splitEle: '/',
-		        format: 'ch',
-		        allowEmpty: false,
-		        group: 'birth'
-		    }
-		],
+        validDate: [{
+            name: ['birth_year', 'birth_month', 'birth_day'],
+            msg: '生日',
+            //val: $('[name="' + family + 'birthday0' + '"]').val() + '/' + $('[name="' + family + 'birthday2' + '"]').val() + '/' + $('[name="' + family + 'birthday4' + '"]').val(),
+            splitEle: '/',
+            format: 'ch',
+            allowEmpty: false,
+            group: 'birth'
+        }],
         validMobile: [{
             name: 'cellPhone',
             msg: '行動電話',
@@ -1520,11 +1596,7 @@ function personalInfo_2_valid() {
             name: 'codeInput',
             msg: '交易驗證碼'
         }],
-        validNumber: [{
-            name: 'codeInput',
-            msg: '交易驗證碼',
-            allowEmpty: false
-        }],
+        validNumber: [],
         validDecimal: [],
         validEmail: [],
         validDate: [],
@@ -1536,7 +1608,7 @@ function personalInfo_2_valid() {
             if (codeInput.length != 6) {
                 customizeValidResult.push({
                     obj: $('[name="codeInput"]'),
-                    msg: '交易驗證碼格式錯誤'
+                    msg: '限輸入6位數字'
                 });
             }
         }

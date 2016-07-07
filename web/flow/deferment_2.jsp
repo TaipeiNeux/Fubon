@@ -25,13 +25,15 @@
                                     <img  src="img/na-11.png" alt="">
                                   </a>
                                 </h4>
-								<div class="error-msg" id="hasDocument" style="display:none">請先上傳文件</div>
-								<div class="error-msg" id="documentType" style="display:none">只允許上傳jpg、png、pdf、tif或gif影像檔</div>
+								<div class="error-msg" id="hasDocument" style="display:none">請上傳文件</div>
+								<div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
+								<div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
         </div>
         <table class="mqua">
             <thead>
                 <tr>
-                    <th colspan="2">檔案名稱</th>
+                    <th></th>
+                    <th>檔案名稱</th>
                     <th>上傳/修改</th>
                     <th>預覽</th>
                 </tr>
@@ -43,7 +45,7 @@
                             <img id="idPositivePhoto" src="">
                         </a>
                     </td>
-                    <td class="file-zh">身份證正面影本</td>
+                    <td class="file-zh">身分證正面影本</td>
                     <td class="file-en" id="idPositiveImg">無</td>
                     <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案</a>
 						<input type="file" name="isPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
@@ -61,7 +63,7 @@
                     <td class="clickView" colspan="4" style="display:none" id="pos">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="idPositiveViewImg" src="img/dh.jpg">-->
+                                
 								<iframe id="idPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
@@ -74,7 +76,7 @@
                             <img id="idNegativePhoto" src="">
                         </a>
                     </td>
-                    <td class="file-zh">身份證反面影本</td>
+                    <td class="file-zh">身分證反面影本</td>
                     <td class="file-en" id="idNegativeImg">無</td>
                     <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案</a>
 						<input type="file" name="isNegativeFile" style="position: absolute;top: 18px;opacity: 0;">
@@ -91,7 +93,7 @@
                     <td class="clickView" colspan="4" style="display:none" id="neg">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="idNegativeViewImg" src="img/dh.jpg">-->
+                                
 								<iframe id="idNegativeViewImg" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
@@ -104,7 +106,7 @@
                             <img id="studentIdPositivePhoto" src="">
                         </a>
                     </td>
-                    <td class="file-zh">學生證正面</td>
+                    <td class="file-zh">學生證正面影本(須蓋有繼續升學學校之註冊章戳)</td>
                     <td class="file-en" id="studentIdPositiveImg">無</td>
                     <td class="file-modify"><a id="studentIdPositiveChange" style="display:none">修改檔案</a>
 						<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
@@ -121,8 +123,8 @@
                     <td class="clickView" colspan="4" style="display:none" id="sPos">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="studentIdPositiveImg" src="">-->
-								<iframe id="studentIdPositiveImg" src="" style="width:100%; height: 100%;"></iframe>
+                                
+								<iframe id="studentIdPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
@@ -134,7 +136,7 @@
                             <img id="studentIdNegativePhoto" src="">
                         </a>
                     </td>
-                    <td class="file-zh">學生證反面</td>
+                    <td class="file-zh">學生證反面影本(須蓋有繼續升學學校之註冊章戳)</td>
                     <td class="file-en" id="studentIdNegativeImg">無</td>
                     <td class="file-modify"><a id="studentIdNegativeChange" style="display:none">修改檔案</a>
 						<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 18px;opacity: 0;">
@@ -151,7 +153,7 @@
                     <td class="clickView" colspan="4" style="display:none" id="sNeg">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="studentIdNegativeViewImg" src="">-->
+                                
 								<iframe id="studentIdNegativeViewImg" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
@@ -162,7 +164,7 @@
 
         <!-- Modal -->
         <div class="modal fade pomodal" id="pleaseUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document" style="width:80%">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>

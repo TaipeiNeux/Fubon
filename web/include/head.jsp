@@ -30,16 +30,19 @@
   <link rel="shortcut icon" href="http://garden.decoder.com.tw/portal/demo/fubon/img/favicon.ico">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/bootstrap-select.min.css">
+
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/customize.css">
   <link rel="stylesheet" href="css/processBar.css">
+  <link rel="stylesheet" href="css/jquery.mmenu.all.css">
+ 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
   <script src="js/html5shiv.min.js"></script>
   <script src="js/respond.min.js"></script>
+  <script>window.location = 'browser.jsp';</script>
   <![endif]-->
-  
   
   <link rel="stylesheet" href="css/loading/fonts.css">
   <link rel="stylesheet" href="css/loading/layout.css">
@@ -142,11 +145,11 @@ if(typeof String.prototype.trim !== 'function') {
 }
 	</script>
 	
-	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery-1.12.1.js"></script>
 	<!--
 	<script src="js/jquery-ui.min.js"></script>
 	-->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.js"></script>
     <script src="js/bootstrap-select.min.js"></script>
     <script src="js/jquery.mmenu.all.min.js"></script>
     <script src="js/prog/modal.js"></script>

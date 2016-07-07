@@ -5,8 +5,10 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -27,26 +29,50 @@ public class Apply1_2 implements ILogic {
     @Override
     public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception {
 
+        LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
+        String userId = loginUserBean.getUserId();
+
         String birthday = "",marryStatus = "",familyStatusLevel1 = "",familyStatusLevel2 = "" , familyStatusLevel1Text = "", familyStatusLevel2Text = "";
+
+        IDao dao = DaoFactory.getDefaultDao();
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
             Element root = draftData.getRootElement();
-//            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
-//            if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
             if(root.element("familyStatusLevel1") != null) familyStatusLevel1 = root.element("familyStatusLevel1").getText();
             if(root.element("familyStatusLevel2") != null) familyStatusLevel2 = root.element("familyStatusLevel2").getText();
 
             if(root.element("familyStatusLevel1Text") != null) familyStatusLevel1Text = root.element("familyStatusLevel1Text").getText();
             if(root.element("familyStatusLevel2Text") != null) familyStatusLevel2Text = root.element("familyStatusLevel2Text").getText();
         }
+        //如果是已撥款戶，要抓之前的家庭狀況(有可能是空值，因為舊平台轉置時是空的，新平台上線後才有值)
+        else {
+            String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
 
+            //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
+            DataObject aplyMemberData = null;
 
-        LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
-        String userId = loginUserBean.getUserId();
+            if("Y".equalsIgnoreCase(isRecord)) {
+                //帶入撥款紀錄
+                aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+            }
+            else {
+                //先取得「本學期」申請資料
+//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+            }
+
+            if(aplyMemberData != null) {
+                String familyStatus = aplyMemberData.getValue("FamilyStatus");
+                if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+                    String[] statusArray = familyStatus.split("_");
+
+                    familyStatusLevel1 = statusArray[0];
+                    familyStatusLevel2 = statusArray[1];
+                }
+            }
+        }
 
         //取得第一步的草稿資料
-        IDao dao = DaoFactory.getDefaultDao();
         String draftXML = FlowUtils.getDraftData(userId,"apply","apply1_1",dao);
         Document step1Doc = DocumentHelper.parseText(draftXML);
         Element step1Root = step1Doc.getRootElement();

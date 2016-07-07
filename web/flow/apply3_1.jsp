@@ -37,13 +37,13 @@
                 </div>
                 <div class="right buttonDown">
                     <select class="selectpicker input_f moneymoneymoney" name="student_isNational">
-                        <option value="none">請選擇</option>
+                        <option value="">請選擇</option>
 						<option value="1">公</option>
 						<option value="2">私</option>
                     </select><div class="schoolSelector">立</div>
                     
                     <select class="selectpicker input_f daynight" name="student_isDay">
-                        <option value="none">請選擇</option>
+                        <option value="">請選擇</option>
 						<option value="1">日</option>
 						<option value="2">夜</option>
                     </select><div class="schoolSelector">間部</div>

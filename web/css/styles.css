@@ -2491,7 +2491,8 @@ input[type=checkbox].sqr-checkbox {
       top: -5px; }
   input[type=checkbox].sqr-checkbox:checked + label.sqr-label {
     background-position: 0 0;
-    background-image: url(../img/csscheckbox_584715bec9b728f21a7a9ecb1b4eecf96.png); }
+    /*background-image: url(../img/csscheckbox_584715bec9b728f21a7a9ecb1b4eecf96.png);*/ 
+    background-image: url(../img/blueSquare2.png); }
 
 label.sqr-label {
   background-image: url(../img/csscheckbox_584715bec9b728f21a7a9ecb1b4eecf95-2.png); }
@@ -2731,7 +2732,7 @@ a[class^="pobtn-"] {
       max-width: 32.333%; } }
 	  
 .wrapper .zip_y {
-  max-width: 90px;
+  max-width: 120px;
   margin-bottom: 5px; }
   @media (max-width: 769px) {
     .wrapper .zip_y {
@@ -3657,7 +3658,8 @@ margin-right: 4px;	}
   z-index: 0;
   width: 275px;
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch; }
+  -webkit-overflow-scrolling: touch; 
+}
   @media (max-width: 769px) {
     [class^='mobileMenu_'] {
       display: block; } }
@@ -6127,7 +6129,7 @@ font-weight: bold;	}
 .qusp .text {
   width: 70%;
   float: left;
-  padding-left: 5%; }
+  padding-left: 6%; }
 
 .qusp h4 {
   font-size: 23px;
@@ -6514,7 +6516,7 @@ font-weight: bold;	}
         border-top: solid 38px transparent;
         border-bottom: solid 38px transparent;
         position: absolute;
-        right: -21px;
+        right: -19px;
         top: 0; }
         @media (max-width: 769px) {
           .processTab ul li:before {
@@ -6529,7 +6531,7 @@ font-weight: bold;	}
         border-top: solid 38px transparent;
         border-bottom: solid 38px transparent;
         position: absolute;
-        right: -20px;
+        right: -18px;
         top: 0;
         z-index: 5; }
         @media (max-width: 769px) {
@@ -7306,8 +7308,8 @@ font-weight: bold;	}
     background-position: bottom; }
     @media (max-width: 769px) {
       .pen:before {
-        width: 20px;
-        height: 24px;
+        width: 17px;
+        height: 21px;
         top: 10px;
         left: 6px; } }
 
@@ -9604,10 +9606,12 @@ font-weight: bold;	}
 .reservationArea .fc-basic-view {
   background: #fefefe;
   color: #221814; }
+/*
 
 .fc-unthemed .fc-today {
   background: #0872bb;
   color: #fff; }
+*/
 
 .reservationTime {
   text-align: center; }
@@ -10139,7 +10143,8 @@ section {
 [class^='myloan'] .myloanAath,
 [class^='register_'] .registerAath,
 [class^='myElectronicPay_'] .myElectronicPayAath,
-[class^='PaymentInstructions'] .PaymentInstructions {
+[class^='PaymentInstructions'] .PaymentInstructions, 
+[class^='changePwd_'] .changePwdAath {
   display: block; }
 
 .path {
@@ -10570,7 +10575,7 @@ section {
 .path ul li a:after {
   width: 5px;
   height: 16px;
-  top: 6px;
+  top: 4px;
 }
 .path ul li:nth-child(2) a {
   padding: 2px 10px 2px 35px;
@@ -10767,10 +10772,15 @@ label {
     content: '';
     display: inline-block;
     position: absolute;
-    background: url(../img/pk-01.png) no-repeat center center;
-    width: 8px;
-    height: 23px;
+    background: url(../img/pk-01-small.png) no-repeat center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: contain;
+         -o-background-size: contain;
+            background-size: contain;
+    width: 6px;
+    height: 13px;
     left: -17px;
+    top: 21px;
 }
 .tip_d p {
     display: inline-block;
@@ -10976,8 +10986,10 @@ label {
 .lightWon .busus {
   padding: 20px 20px;
 }
+/*
 .snopy {
   font-size: 18px;
+*/
 }
 .morebig {
   font-size: 32px;
@@ -12043,7 +12055,7 @@ body.apply_1_step1 [class^='apply_1_'] .processBox {
 .personalinfo_0 .who:before {
   width: 33px;
   height: 46px;
-  left: 38px;
+  left: 6px;
 }
 .notice h3 {
   font-size: 16px;
@@ -12229,14 +12241,14 @@ body.apply_1_step1 [class^='apply_1_'] .processBox {
   width: 34%;
 }*/
 .changePwd_2_step1 .ubt {
-  margin: 30px 17px 0;  
+  margin: 30px 41px 0;  
 }
 /* 0607 by 韋杰 changePwd_2_step1  */
 .changePwd_2_step1 .may {
   width: 85%;
 }
 .changePwd_2_step1 .joy .left {
-  width: 32%;
+  width: 150px;
   text-align: center;
   margin-left: 2%;    
 }
@@ -12340,8 +12352,8 @@ body.changePwd_2_step1 .ubt p.beforeImg:before {
           background-size: contain;
   position: absolute;
   width: 6px;
-  height: 17px;
-  top: 5px;
+  height: 13px;
+  top: 7px;
   left: -10px;
 }
 body.forgetPassword_3_step2 .processInner .mipa {
@@ -12407,9 +12419,11 @@ h4.modal-title {
   font-weight: 600;
   font-size: 16px;  
 }
+/*
 .apply_1_step1 .modal-dialog .modal-content .modal-body p {
   text-align: left;
 }
+*/body.deferment .joy .left p
 .close {
   font-size: 22px;
   opacity: 1;
@@ -12480,9 +12494,11 @@ body.apply_1_step1 .twoDiv .joy input {
   padding: 6px 0;
   text-align: center;
 }
+/*
 body#body.apply_1_step1 .joy_first {
     padding-bottom: 0;
 }
+*/
 body#body.apply_1_step1 .joy_two {
   padding: 0 0 6px;
 }
@@ -12948,9 +12964,11 @@ body.apply .stepArea {
     left: 7%;
 }
 
+/*
 body.apply .nopd {
     width: 69%;
 }
+*/
 
 body.apply .earth h3 {
     font-weight: bold;
@@ -13022,7 +13040,7 @@ body.apply_map .branchMap {
 }
 
 .regionArea .regionPlace .regionText p {
-    width: initial;
+    width: inherit;
 }
 
 .regionArea .regionPlace .regionText {
@@ -13033,24 +13051,51 @@ body.apply_map .processInner {
     padding-right: 0; 
 }
 
-body.apply_map .greyGrey {
-    color: #828686;
-    background-color: #f7fafc;
+table .fc-rigid tr td {
+    background: #FAFAFA;
 }
 
-body.apply_map .greyDeepgrey {
+body.apply_map .greyDeepgrey,
+body.apply_map .fc-past {
     color: #828686;
-    background-color: #BFBEBE;
+    background-color: #F0F0F0;
 }
 
-body.apply_map .blueGrey {
+body.apply_map .blueGrey,
+.fc-future,
+.fc-today {
     color: #0E89CB;
     background-color: #f7fafc;
 }
 
-body.apply_map .whiteBlue {
-    color: white;
-    background-color: #0E89CB;
+/*
+body.apply_map .fc-today {
+    color: #fff;
+    background: #0E89CB;
+}
+*/
+
+body.apply_map .greyGrey,
+.fc-sat,
+.fc-sun {
+    color: #DEDEDE;
+    background-color: #F0F0F0;
+}
+
+.fc-past {
+    background-color: #F0F0F0;
+}
+
+.fc-event span {
+    color: #CC3368;
+    font-size: 15px;
+}
+
+
+.fc-today.active,
+.fc-future.active {
+    color: #fff;
+    background: #0E89CB;
 }
 
 body.apply_5_step1 div.noob {
@@ -13289,7 +13334,7 @@ body.repaymentInquiry_ .processOutBox {
 
 body.repaymentInquiry_ .detail:before {
     top: -2px;
-    background-size: contain;
+/*    background-size: contain;*/
     left: 15px;
 }
 
@@ -13366,7 +13411,8 @@ body.register_1 .moArea::-webkit-scrollbar-thumb
 }
 
 body.register_1 .moArea {
-    font-size: 14px;
+    font-size: 14px;+
+    font-weight: bold;
 }
 
 body.register_1 .deg:before,
@@ -13698,7 +13744,7 @@ body.apply_00 .talkwall p {
 	}
 }
 body.apply_00 .talkwall:before {
-    bottom: -68px;
+    bottom: -59px;
 }
 
 
@@ -13877,8 +13923,9 @@ body.apply_2 p.stringOrRadio {
 
 @media screen and (min-width: 769px) {
   body.apply_3_step2 .sum {
-  	width: 80%;
-  	margin: 0 auto;
+/*  	width: 80%;*/
+/*  	margin: 0 auto;*/
+      padding-left: 176px;
   }
   body.apply_3_step2 .sum input {
   	width: 195px;
@@ -13939,7 +13986,7 @@ body.apply_2 p.stringOrRadio {
   body.memberLogin_1 .modal-dialog .modal-content .modal-body p,
   body.deferment_0 .modal-dialog .modal-content .modal-body p,
   body.apply_3_step2 .modal-dialog .modal-content .modal-body p {
-    text-align: left;
+    text-align: center;
   }
 
   body.deferment_0 .pomodal .pabo > li {
@@ -13997,7 +14044,7 @@ body.apply_2 p.stringOrRadio {
     font-weight: 600;
   }
   body.myloan ul.busus li:nth-child(2) p {
-    text-align: left;
+    text-align: center;
   }
 
   /* myElectronicPay_1 電子繳款單 */
@@ -14078,6 +14125,448 @@ body.apply_2 p.stringOrRadio {
   }  
 }
 
+/* 0621 by Wade apply_1_step1 我要申請Email */
+
+@media screen and (min-width: 769px) {
+  body.apply_1_step1 .nina .left p {
+    text-align: right;
+  }
+}
+
+/* 0621 by Wade apply_1_step1 select-toogle */
+
+@media screen and (min-width: 769px) {
+ .bootstrap-select>.dropdown-toggle {
+    padding-right: 20px;
+ }
+}
+
+/* 0621 by Wade register */
+
+@media screen and (min-width: 769px) { 
+  body.register_2 .parents {
+    padding: 0px 0 20px;
+  }
+  body.wrapper .zip_y {
+    max-width: 123px;
+  }
+  body.apply_2 .wrapper .input_wifs {
+    max-width: 327px;
+  }
+
+/* 變更代碼/注意事項*/
+  body.changePwd_1 .casom {
+    padding: 0 0 0 22px;
+  }
+  body.personalinfo_1 .wrapper .input_address {
+    max-width: 327px;
+  }
+  body.personalinfo_1 .wrapper .input_addr {
+    max-width: 243px;
+  }
+}
+
+/* 0623 by Wade PaymentInstructions 延期繳款 */
+
+@media screen and (min-width: 769px) {  
+  body.PaymentInstructions .border_title .zh {
+    font-size: 20px;
+  }
+  body.PaymentInstructions .qusp h4 {
+    font-size: 15px;
+  }
+  body.PaymentInstructions .PaymentloanUL .jubif {
+    font-size: 14px;
+  }
+  body.PaymentInstructions .border_title {
+    padding: 10px 20px 20px;
+  }
+  body.PaymentInstructions .border_title:before {
+    top: 8px;
+  }
+  body.tip_d:before, .ubt:before {
+    display: none;
+  }
+}
+
+/* 0623 by Wade personalinfo_3 變更申請結果SRS調整 */
+
+@media screen and (min-width: 769px) {  
+  body.personalinfo_3 .joy .left {
+    padding-top: 0;
+  }
+  body.personalinfo_3 .joy .may .right p {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  body.personalinfo_3 .kiwi {
+    font-size: 15px;
+  }
+  body.personalinfo_2_step1 .dan p.ubt:before {
+    display: inline-block;
+    content: '';
+    background: url(../img/pk-01-small.png);
+    background-repeat: no-repeat;
+    -webkit-background-size: contain;
+         -o-background-size: contain;
+            background-size: contain;
+    position: relative;
+    width: 6px;
+    height: 13px;
+    top: 2px;
+    left: -4px;
+  }
+  body.personalinfo_2_step1 .may .joy .left {
+    max-width: 142px; 
+  }
+  body.personalinfo_2_step1 .joy .left p, 
+  body.personalinfo_2_step1 .may .right p {
+    font-weight: bold;
+    line-height: 1.65em;
+  }
+  body.personalinfo_2_step1 .joy .left {
+    padding-top: 0;
+  }
+  body.personalinfo_2_step1 .who {
+    margin-left: 0;
+  }
+}
+
+/* 0624 帳務查詢 -> 我的貸款 欄位請改這 */
+
+@media screen and (min-width: 769px) {  
+
+  body.myloan ul.busus li:nth-child(3) h3, 
+  body.myloan ul.busus li:nth-child(4) h3 {
+    width: 90%;
+    text-align: right;
+  }
+  body.myloan .lightWon .busus li p, 
+  body.myloan .lightWon .busus li h3 {
+    text-align: center;
+  }
+  body.myloan .lightWon .busus li {
+    padding-left: 0;
+  }
+}
+
+
+/* 0624 by Wade 變更基本資料step1-3 欄位請調整這裡 */
+@media screen and (min-width: 769px) {  
+
+  /* step_1  */
+  
+  body.personalinfo_0 .dan h2.who {
+    margin-left: 0;
+  }
+  body.personalinfo_0 .joy .left {
+    width: 100px;
+  }
+  body.personalinfo_0 .joy .right {
+    width: 67%;
+  }
+  body.personalinfo_0 .who {
+    padding-left: 45px;
+  }
+  /* step_2 */
+  
+  body.personalinfo_2_step1 .joy p,
+  body.personalinfo_2_step1 .joy .right {
+      font-size: 15px;
+  }
+  body.personalinfo_2_step1 .joy .left {
+      width: 100px;
+  }
+  body.personalinfo_2_step1 .joy .right {
+      width: 67%;
+  }
+
+  /* step_3 申請結果 */
+  
+  body.personalinfo_3 .may .right p {
+    font-weight: bold;
+  }
+  body.personalinfo_3 .kiwi {
+    font-size: 15px;
+  }
+  body.personalInfo_3 .myData .joy .left{
+    width: 100px; 
+  }
+  body.personalinfo_3 .joy .right {
+    width: 67%;
+  }
+  body.personalinfo_3 .joy .left p {
+    font-weight: bold;
+    line-height: 1.65em;
+  }
+}
+
+@media screen and (min-width: 769px) { 
+	
+  body.personalinfo_3 .deny:before{
+	width: 16px;
+    height: 16px;
+    left: 10px;	
+  }
+  
+  body.deferment_4 .nike:before {
+    left: 1px;
+    top: 4px;
+  }
+
+  body.deferment_4 .nina .right {
+    padding-left: 20px;
+  }
+  body.deferment_4 .nike {
+	padding-left: 30px;
+  }	
+}
+/* 0625  婚姻狀況欄位間距請調整這裡 */
+
+@media screen and (min-width: 769px) { 
+ 
+/*  personalinfo_1  */ 
+
+	body.personalinfo_1 .joy:nth-child(11) .left p {
+		padding-top: 0;
+	}
+
+/* 0625 變更結果 personalinfo_3 請調整這裡 */ 
+
+	body.personalinfo_3 .joy p  {
+		font-weight: bold;
+	}
+	body.personalinfo_3 .nina {
+		width: 50%;
+	}
+ 
+}
+
+/* 還款明細查詢 */
+
+@media screen and (min-width: 769px) { 
+
+	body.repaymentInquiry_ .snopy {
+		margin-top: 20px;
+	}
+	
+} 
+
+/* 0625 by Wade !!! 延期還款  */
+
+@media screen and (min-width: 769px) { 
+	body.deferment_3_step1 .ubt {
+		position: relative;
+	}
+	body.deferment_3_step1 .ubt:before {
+		display: inline-block;	    
+		content: '';	    
+		background: url(../img/pk-01-small.png);	    
+		background-repeat: no-repeat;	    
+		-webkit-background-size: contain;	         
+		-o-background-size: contain;	            
+		background-size: contain;	    
+		position: absolute;	    
+		width: 6px;	    
+		height: 13px;	    
+		top: 6px;	    
+		left: -7px;
+	}
+  body.apply_5_step1 .tip_d:before {
+    top: 7px;
+  } 
+}
+
+/* 0627 by Wade 個人資料->變更申請step_1 */
+
+@media screen and (min-width: 769px) { 
+    body.personalinfo_1 .nina .left {
+    width: 90px;
+    text-align: right;
+  }
+  body.personalInfo_1 .sandy {
+    width: 200px;
+    padding-top: 10px;    
+  }
+  body.personalInfo_1 .twoDiv {
+    width: 280px;
+  }
+  body.personalInfo_1 .twoDiv .left_name {
+    width: 50px;
+  }
+  body.personalInfo_1 .twoDiv .right_name {
+    width: 225px; 
+  }
+  body.personalInfo_1 .right_name .input_s {
+    width: 40px;
+    padding: 6px 0;
+    text-align: center;
+  }
+  body.personalInfo_1  .threeDiv {
+	width: 225px;
+  }
+}
+
+/* 0627 by Wade 驗證碼字型 */
+
+@media screen and (min-width: 769px) { 
+  body.personalinfo_2_step2 .joy .verfi {
+    font-size: 15px;  
+  }
+}
+
+
+
+/* 0627 by Wade 大網 延期還款欄位 */
+
+@media screen and (min-width: 769px) { 
+  body.myloan .repayTable .resa li {
+    vertical-align: top;
+  }
+  body.myloan .repayTable .resa li:first-child h4,
+  body.myloan .repayTable .resa li:nth-child(2) h4,
+  body.myloan .repayTable .resa li:nth-child(3) h4 {
+    height: 61px;
+    line-height: 30px;
+  }
+}
+
+
+  /* 0627 processArea統一壓 */
+  /* 我要申請流程*/
+  
+  body.apply_1_step1 .processArea, 
+  body.apply_1_step2 .processArea,
+  body.apply_1_step2 .processTab,
+  body.apply_2 .processTab,
+  body.apply_2 .processArea,
+  body.apply_3_step1 .processTab,
+  body.apply_3_step1 .processArea,
+  body.apply_3_step2 .processTab,
+  body.apply_3_step2 .processArea,
+  body.apply_4 .processTab,
+  body.apply_4 .processArea,
+  body.apply_5_step1 .processTab,
+  body.apply_5_step1 .processArea,
+  body.apply_5_step2 .processTab,
+  body.apply_5_step2 .processArea,
+  body.apply_6_step1 .processTab,
+  body.apply_6_step1 .processArea,
+  body.personalinfo_1 .processTab,
+  body.personalinfo_1 .processArea,
+  body.personalinfo_2_step1 .processTab, 
+  body.personalinfo_2_step1 .processArea,
+  body.personalinfo_2_step2 .processTab, 
+  body.personalinfo_2_step2 .processArea,
+  body.personalinfo_3 .processTab,  
+  body.personalinfo_3 .processArea,
+  body.changePwd_1 .processTab,   
+  body.changePwd_1 .processArea,
+  body.changePwd_2_step1 .processTab,
+  body.changePwd_2_step1 .processArea,
+  body.changePwd_2_step2 .processTab,
+  body.changePwd_2_step2 .processArea,
+  body.changePwd_3 .processTab,  
+  body.changePwd_3 .processArea,
+  body.register_1 .processTab,
+  body.register_1 .processArea,
+  body.register_2 .processTab,
+  body.register_2 .processArea,
+  body.register_3 .processTab,
+  body.register_3 .processArea,
+  body.register_4 .processTab,
+  body.register_4 .processArea,
+  body.forgetPassword_1 .processTab,
+  body.forgetPassword_1 .processArea,
+  body.forgetPassword_2 .processTab, 
+  body.forgetPassword_2 .processArea,
+  body.forgetPassword_3_step1 .processTab,
+  body.forgetPassword_3_step1 .processArea,
+  body.forgetPassword_3_step2 .processTab, 
+  body.forgetPassword_3_step2 .processArea,
+  body.forgetPassword_4 .processTab, 
+  body.forgetPassword_4 .processArea {
+    padding: 0;
+  }
+
+/* 0630 mantis */
+
+body.apply_5_step1 .joy .left p.changeText {
+  width: 210px;
+}
+body.changePwd_2_step1 .stepArea,
+body.changePwd_2_step2 .stepArea {
+  left: 7%;
+}
+
+
+/*    IE FIX     */
+
+/*.inputArea input {
+  font-size: 7px\0; /* IE8+9 
+}*/
+
+
+/* 陳拓0621 */
+@media (min-width:769px) {
+.personalinfo_2_step1 .who {
+    font-size: 16px;
+} 
+
+.personalinfo_2_step1 .processInner {
+    padding: 10px 7%;
+}
+
+
+.personalinfo_2_step1 .joy p {
+    font-size: 16px;
+}
+
+.personalinfo_2_step2 .processInner .mipa {
+    font-size: 15px;
+}
+
+h4.modal-title {
+    text-align: center;
+}
+
+    .personalinfo_0 .joy .left {
+        width: 40%;
+    }
+}
+
+.kiwi {
+    background: none;
+    color: #0872bb;
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+/* 0624  changePwd_3  變更結果  */
+@media (min-width:769px) {
+	body.changePwd_3 .noticeTitle {
+		font-size: 15px;
+		margin: 50px 0 0 20px;
+	}
+	body.changePwd_3  .notice {
+		width: 588px;
+		font-size: 14px;
+		margin-left: 35px;
+	}
+	body.changePwd_3 .joy {
+		padding: 6px 60px;
+	}	
+	body.changePwd_3 .joy .left p {
+		padding-top: 0;
+	}
+	body.changePwd_3 .joy .left p,
+	body.changePwd_3 .joy .whatdate,
+	body.changePwd_3 .joy .whattime {
+		font-weight: bold;
+		line-height: 1.65em;
+	}	
+}
+ 
 /* 六月之後小版一律從分割線以下新增  
 -----------------------------------------------------------------------
 */
@@ -14266,9 +14755,11 @@ body.apply_2 p.stringOrRadio {
     left: 8px;
   }
 
+/*
   body.deferment .processTab ul {
     min-width: 320px;
   }
+*/
   
   body#body.deferment .processArea {
     padding: 0;
@@ -14294,6 +14785,14 @@ body.apply_2 p.stringOrRadio {
     max-width: 170px;
     left: -15px;
   }
+  
+    body#body.deferment_1 .processInner {
+        padding: 0 2px;
+    }
+    
+    body.deferment_1 div#selectDate {
+        padding-left: 0;
+    }
 }
 
 
@@ -14852,13 +15351,13 @@ body.apply_2 p.stringOrRadio {
     margin: 10px auto;
   }
   body.changePwd_2_step2 .stepArea {
-    height: 70px;
+    width: 25%;
   }
   body.changePwd_2_step2 .processInner {
     padding-top: 0;
   }
   body.changePwd_2_step2 .processOutBox {
-    margin: 0 auto;
+    margin: 30px auto;
   }
   body.forgetPassword_3_step2 .processInner {
     margin-top: 0;
@@ -15051,7 +15550,7 @@ body.apply_2 p.stringOrRadio {
     width: 60%;
   }
   body.apply_2 .onenigh {
-    width: 72px;
+    width: 84px;
     left: -10px;
   }
   body.apply_2 .oneHigh {
@@ -15061,7 +15560,7 @@ body.apply_2 p.stringOrRadio {
 }
 /*2016-06-03 added by titan*/
 body.changePwd .forgetPasswordAath{
-	display:block;
+	display:none;
 }
 
 body.changePwd_2_step1 .processTab ul li,body.changePwd_2_step2 .processTab ul li{
@@ -16163,6 +16662,8 @@ body.personalInfo .processInner {
     }
     
     body.myloan .lightWon .busus {
+		margin-bottom: 20px;
+		/**  0706 忠毅  **/
         padding-left: 10px;
     }
     
@@ -16233,6 +16734,12 @@ body.personalInfo .processInner {
     body.myloan a[class^="pobtn-"] {
 	font-size: 14px;
     }
+	body.myloan a[class^="pobtn-"]:nth-child(3) {
+		/* background: #ff0000; */
+		/**  0706 忠毅   **/
+		position: absolute;
+		left: 140px;
+	}
     
     body.myloan .xizia {
 	margin: 30px 20px 40px 20px;
@@ -16280,6 +16787,12 @@ body.personalInfo .processInner {
     body.myloan .picabtn  {
         margin-top: 20px;
         min-width: 95px;
+		
+		/**  0706 忠毅   **/
+		top: 95px;
+		position: absolute;
+		/* float: right; */
+		right: 0;
     }
     
     body.myloan .xizia h3 {
@@ -16416,9 +16929,7 @@ body.personalInfo .processInner {
         min-height: 80px;
     }
     
-    body.index .bannerLeft {
-        min-height: 200px;
-    }
+
     
 /*
     body.index .news {
@@ -16679,6 +17190,9 @@ body.personalInfo .processInner {
   }
   body.myloan .xizia {
     margin: 30px 20px 40px 10px;
+	/** 0706 忠毅  **/
+	/* overflow: auto;
+    clear: both; */
   }
   body.myloan ul.busus li:nth-child(2) p {
     text-align: left;
@@ -16717,6 +17231,7 @@ body.personalInfo .processInner {
   body.repaymentInquiry_ .copyright{
     padding: 0;
   }
+
 }
 
 /* 0620 by Wade 我的貸款 小板 */
@@ -16775,5 +17290,1397 @@ body.personalInfo .processInner {
     top: -2px;
     left: 0;
   }
+  body.myElectronicPay_1 .repayTable .resa li h5 {
+    font-size: 14px;
+  }
+  body.myElectronicPay_1 .repayTable .resa li:first-child h5 {
+    padding: 10px 5px; 
+  }
+  body.myElectronicPay_1 .resa li {
+    color:#0872BB;
+  } 
+  body.myElectronicPay_1 .resa li:nth-child(2) h5,
+  body.myElectronicPay_1 .resa li:nth-child(3) h5,
+  body.myElectronicPay_1 .resa li:nth-child(4) h5 {
+    padding: 16px 0;
+    min-height: 51px;
+    text-align: center;
+  }
+  body.myElectronicPay_1 .resa li:last-child h5 {
+    padding: 16px 0;
+    text-align: center;
+  }
+  body.myElectronicPay_1 .resa li:first-child h5,
+  body.myElectronicPay_1 .resa li:last-child h5 {
+    min-height: 51px;
+  }
+  body.myElectronicPay_1 .repayTable .resa li h4 {
+    font-size: 12px;
+  }
+  body.myElectronicPay_1 .repayTable .resa li {
+    vertical-align: top;
+  }
+  body.myElectronicPay_1 .repayTable .resa li:first-child h4,
+  body.myElectronicPay_1 .repayTable .resa li:nth-child(2) h4,
+  body.myElectronicPay_1 .repayTable .resa li:nth-child(3) h4,
+  body.myElectronicPay_1 .repayTable .resa li:last-child h4 {
+    padding: 13px 0;
+  }
+  body.myElectronicPay_1 .repayTable .resa li:nth-child(4) h4 {
+    padding: 6px 0;
+  }
+  body.myElectronicPay_1 .pomodal .blue {
+    font-size: 12px;
+  }
+  body.myElectronicPay_1 .repayTable .jbway li h4,
+  body.myElectronicPay_1 .repayTable .jbway li h5 {
+    background-color: #FFF;
+  }
+  body.myElectronicPay_1 .repayTable .jbway li h4 {
+    width: 64%;
+  }
+  body.myElectronicPay_1 .repayTable .jbway li h5 {
+    width: 35%;
+    text-align: center;
+  }
+  body.myElectronicPay_1 .resa li:nth-child(1) {
+    border-left: solid 1px #AAA;
+    border-right: solid 1px #AAA;
+  }
+  body.myElectronicPay_1 .resa li:nth-child(2),
+  body.myElectronicPay_1 .resa li:nth-child(3),
+  body.myElectronicPay_1 .resa li:nth-child(4),
+  body.myElectronicPay_1 .resa li:last-child {
+    border-right: solid 1px #AAA;
+  }
+  body.myElectronicPay_1 .repayTable .jbway li:first-child {
+    border-top: solid 1px #AAA;
+  }
+  body.myElectronicPay_1 .cheetah h3.oom {
+    margin-bottom: 10px;
+  }
+  body.myElectronicPay_1 .repayTable ul.resa {
+    border-top: solid 1px #AAA;
+  }
+  body.myElectronicPay_1 .casom {
+    margin-left: 20px;
+  }
+}
+@media (min-width:769px) {
+    .apply_3_step2 .sum {
+        width: 695px;
+        margin: 0;
+        text-align: left;
+    }
+    
+    .apply_3_step2 .borderBottom {
+        border-bottom: 1px solid #d0d0d0;
+    }
+    
+    .sum {
+        border-top: none;
+    }
+    
+	body.principal .contentArea {
+		padding-top: 125px;
+	}
+    
+    body apply_3_step2 .sum {
+        text-align: left;
+    }
+	
+	.modal-body ul li {
+		font-size: 14px;
+	}
+	
+	body#body.deferment_2 .modal-dialog {
+		padding: 10% 0;
+	}
+	
+	body.deferment_2 .modal-body {
+		padding: 15px 7%;
+	}
+	
+	.modal-body ul li {
+		margin-left: 40px;
+	}
+	
+	.modal-body ul li:first-child {
+		margin-left: 5px;
+	}
+	
+	body#body .modal-content {
+		border-radius: 6px;
+	}
+	
+/*
+	body.index input[name="studentPassword"] {
+		font-size: 6px;
+	}
+*/
+	
+	body#body .snopy {
+		font-size: 16px;
+	}
+	
+	.pen:before {
+		width: 17px;
+		height: 21px;
+		top: 10px;
+	}
+	
+	.warne {
+		margin: 0 0 6% 36px;
+	}
+	.pen {
+		padding-left: 36px;
+	}
+	
+	body.deferment .joy .left p {
+		text-align: right;
+		width: 128px;
+	}
+    
+    body.deferment_2 .joy .left p {
+		text-align: left;
+		width: 100%;
+	}
+	.joy p,
+	.processInner table.mqua th {
+		font-size: 15px;
+	}
+	
+	.path ul li a {
+		font-size: 13px;
+	}
+	
+	.deferment .joy .left {
+		margin-right: 10px;
+	}
+	
+	.editBtn {
+		top: -3px;
+		font-size: 15px;
+	}
+	
+	.editBtn:before {
+		width: 25px;
+		height: 25px;
+	}
+	
+	.processInner table.mqua th {
+		padding: 8px 0;
+	}
+    
+    .jasqa {
+        font-size: 15px;        
+    }
+    
+    body#body .processInner {
+        padding: 10px 5%;
+    }
+    
+    .zoe2,
+    .processInner h4,
+    .processInner table.mqua,
+    button, input, select, textarea {
+        font-size: 15px;
+    }
+    
+    .deferment_1 .swata .left {
+        width: 135px;
+    }
+    
+    .joy .ss {
+        font-size: 15px;
+    }
+    
+    .tic span {
+        font-size: 15px;
+    }
+    
+    .processInner .mipa {
+        font-size: 15px;
+    }
+    
+    .deferment_2 .joy .left p {
+        width: 210px;
+    }
+    
+    .personalinfo_0 .dan h2 {
+        font-size: 16px;
+    }
+    
+    .personalinfo_0 .editBtn {
+        top: 0;
+        right: 40px;
+    }
+    
+    .notice h3 {
+        font-size: 14px;
+    }
+    
+    .apply .right_year p,
+    .apply .right_name p {
+        padding-top: 3px;
+        display: inline-block;
+    }
+    
+    body#body .home:before {
+        width: 39px;
+        height: 27px;
+        top: 11px;
+    }
+    
+     body#body .spouse:before {
+        width: 36px;
+        height: 43px;
+        top: 1px;
+    }
+    
+    body#body .home,
+    body#body .spouse,
+    body#body .hat,
+    body#body .appmoney {
+        padding-left: 70px;
+    }
+    
+    body.apply_2 div.processOutBox {
+        top: 22px;
+    }
+    
+    body#body .hat:before {
+        width: 42px;
+        height: 28px;
+        top: 5px;
+    }
+    
+    body#body .appmoney:before {
+        width: 38px;
+        height: 32px;
+        top: 1px;
+    }
+    
+    body.apply_3_step2 .baka h6 {
+        font-size: 13px;
+    }
+    
+    body#body .processTab ul li p {
+        font-size: 14px
+    }
+}
 
+@media (max-width: 380px) {
+    
+    .deferment_0 .css-label_c {
+        margin-bottom: 10px;
+    }
+    
+    .deferment_1 .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: 100%;
+    }
+}
+
+.modal-dialog .modal-content .modal-body p {
+	font-weight: 100;
+		font-size: 14px;
+}
+
+
+
+@media (max-width:769px) {
+	body#body .saArea h3,
+	.saArea p {
+		font-size: 16px ;
+	}
+	
+	body.principal .contentArea {
+		padding-top: 75px;
+	}
+    
+    body#body.apply .contentArea {
+        padding-top: 85px;
+    }
+    
+    body.deferment_1 .btn {
+        font-size: 12px;
+        padding: 6px 7px;
+    }
+    
+    body#body .processTab ul li p {
+        font-size: 14px;
+    }
+}
+/* 0621 by Wade apply_2 */
+
+@media (max-width:769px) {
+  body.apply_2 div.processOutBox {
+    top: 10px;
+  }
+    
+/*
+    .defermentBtns {
+        display: none;
+    }
+    
+    .deferment_1 .defermentBtns {
+        display: block;
+    }
+*/
+}
+
+/* 0621 by Wade index 首頁標題字體*/
+
+/*
+@media (max-width:769px) {
+	body.index .border_title .zh {
+		font-size: 16px;
+	}
+}
+*/
+
+.nextBtn a.cancel:focus {
+    color: white;
+}
+/*
+@media (max-width:769px) {
+    .deferment_1 a.grey {
+    background: #aaaaa9;
+    float: right;
+    width: 20%;
+    position: relative;     
+    text-indent: -9999px;
+    display: inline-block;
+    left: 50%;
+    top: 7px;
+    margin-left: -10px;
+    }
+    
+    body#body.deferment_1 .nextBtn {
+        display: inline-block;
+        width: 20%;
+    }
+}
+*/
+
+/* 0622 personalinfo */
+
+@media (max-width:769px) { 
+  body.personalinfo_0 .notice p {
+    margin: 0;
+  }
+  body.personalinfo_1 .joy .left {
+  float: none;
+  }
+  body.personalinfo_1 .wrapper .input_flow {
+    max-width: 206px;
+  }  
+}    
+@media (min-width:769px) {
+	body.deferment_1 .wrapper .input_m {
+		max-width: 350px;
+	}
+    
+    body.register_1 div[class*="left"] {
+        margin-top: 5px;
+        
+    }
+    
+    body.register_1 div[class*="left"] b {
+        margin-right: 10px;
+    }
+    
+    body.register_1 div[class*="right"] {
+        padding-left: 52px;
+    }
+    
+    .dan h2 {
+        font-size: 16px;
+    }
+    
+    .tip_d p {
+        font-size: 15px;
+    }
+    
+    body.apply_5_step1 .who:before {
+        width: 30px;
+        height: 42px;
+        top: -15px;
+    }
+    
+    body#body.apply_5_step1 .home:before {
+        top: 0;
+    }
+    
+    body#body.apply_5_step1 .spouse:before {
+        top: -15px;
+    }
+    
+    body#body.apply_5_step1 .appmoney:before,
+    body#body.apply_5_step1 .appmoney:before {
+        top: -5px;
+    }
+    
+    .who {
+        padding-left: 70px;
+    }
+    
+    body#body.apply_5_step1 .hat:before {
+        top: -5px;
+    }
+    
+    body.apply_1_step1 .wrapper .zip_y {
+        max-width: 120px;
+    }
+    
+    body#body.apply_map .processInner {
+        padding: 0;
+    }
+    
+    .mapAreaS {
+        margin: -10px 40px 0 280px;
+    }
+    
+    .nasi {
+        font-size: 15px;
+    }
+    body.deferment_2 .processInner table.mqua tbody tr {
+        white-space: normal;
+    }
+}
+
+@media (max-width:769px) {
+    body.apply_5_step1 .processInner {
+        padding: 0;
+    }
+    .nasi {
+        font-size: 14px;
+    }
+	body.apply input[type=radio].css-checkbox_c + label.css-label_c {
+		font-size: 15px;
+	}
+	
+	.personalinfo_0 .whos {
+		font-size: 17px;
+	}
+	
+	.editBtn {
+		font-size: 14px;
+	}
+	
+	.personalinfo_0 .may .joy .left p,	
+	.personalinfo_0 .may .right p {
+		font-size: 14px;
+	}
+	
+	.notice h3 {
+		font-size: 14px;
+	}
+	
+	body#body .notice p {
+		font-size: 12px;
+	}
+	.stepArea {
+		width: 25%;
+	}
+	
+	body.apply_1_step1 .processOutBox,
+	body.apply_1_step2 .processOutBox {
+		margin-top: 0;
+	}
+	
+	#body .earth {
+		padding: 0 5%;
+	}
+	
+	body#body .header a.logo1 {
+		max-width: 200px;
+	}
+	
+	.header {
+		padding-bottom: 16px;
+	}
+	
+	.right_navIcon a,
+	.navIcon a {
+		margin-top: 20px;
+	}
+    
+    body.forgetPassword .processInner {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+	
+    .forgetPassword_3_step2 .sendType_val {
+        display: block;
+    }
+    
+    body.apply_4 .processInner table.mqua .file-zh, body.apply_5_step1 .processInner table.mqua .file-zh {
+        width: 40%;
+    }
+}
+
+/* 0623 by Wade !!! */
+
+@media (max-width:769px) {
+  body.tip_d:before, .ubt:before {
+    display: none; 
+  }
+}
+
+/* 0623 by Wade btn */
+
+@media (max-width:769px) { 
+  .editBtn {
+    font-weight: 600;
+  }
+}
+
+@media (max-width:769px) { 
+
+  body.deferment_2 .processInner {
+     padding: 0px 10%;
+  }
+  body.deferment_2 .xica {
+     margin-top: 0px;
+  }
+}
+/* 0623 by Wade PaymentInstructions 繳款方式 */
+
+@media (max-width:769px) { 
+  body.PaymentInstructions .lemon li {
+    padding: 0 3% 0px;
+  }
+  body.PaymentInstructions .loanitemArea_1 .lemon li:first-child a,
+  body.PaymentInstructions .loanitemArea_2 .lemon li:first-child a {
+    width: 68px;
+  }
+  body.PaymentInstructions .lemon li p {
+    padding-right: 58px;
+  }
+  body.PaymentInstructions .loanitemArea_1 .lemon li:first-child .clickhere {
+    top: 7px;
+  }
+  body.PaymentInstructions .loanitemArea_2 .lemon li:first-child .clickhere {
+    top: 2px;
+  }
+  body.PaymentInstructions .loanitemArea_6 .lemon li:nth-child(2) p,
+  body.PaymentInstructions .loanitemArea_6 .lemon li:last-child p {
+    padding-right: 0;
+  }
+  body.PaymentInstructions .border_title .zh {
+    font-size: 17px;
+  }
+  body.PaymentInstructions .qusp h4 {
+    font-size: 14px;
+  }
+  body.PaymentInstructions .border_title {
+    padding: 10px 20px 20px 20px;;
+  }
+  body.PaymentInstructions .border_title:before {
+    top: 9px;
+  }
+  body.PaymentInstructions .PaymentloanUL .jubif {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 1.5em;
+    height: 3em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+
+/* 我的貸款*小網置左 */ 
+
+@media (max-width:769px) { 
+  body.myloan ul.busus li:nth-child(2) h3 {
+    text-align: left;
+  }
+}
+
+/* 0623 by Wade deferment_3_step1 調整對應SRS版面 */
+
+@media (max-width:769px) { 
+  body.deferment_3_step1  .pen:before {
+    display: none;
+    }
+  body.personalinfo_3 .may .joy {
+    border-top: none;
+    }
+  body.personalinfo_3  .dan   .may:first-child .bgfff {
+    background-color: #F8FAFC;
+  }
+  body.personalinfo_3 .omega .joy:nth-child(even) {
+    background-color: #F8FAFC;
+  }
+  body.personalinfo_2_step1 .joy .left,
+  body.personalinfo_3 .joy .left {
+    font-weight: 600;
+    width: 40%;
+  }
+  body.personalinfo_2_step1 .joy .right,
+  body.personalinfo_3 .joy .right {
+    width: 60%;
+  }
+  body.personalinfo_3 .kiwi {
+    text-align: left;
+    font-size: 17px;
+    margin-top: 10;
+  }
+  body.personalinfo_2_step1 .joy .left p, 
+  body.personalinfo_3 .joy .left p {
+    line-height: 1.65em;
+  }
+  body.personalinfo_2_step1 .may .right p,
+  body.personalinfo_3 .may .right p {
+    font-weight: bold;
+  }
+  #body.personalinfo_2_step1 .processArea {
+    padding: 0 5px;
+  }
+  body.personalinfo_2_step1 .ubt {
+    padding: 0 13px;
+  }
+  body.personalinfo_2_step1 .dan h2 {
+    font-size: 17px;
+  }
+  /* !!! 小板 */
+  
+  body.personalinfo_2_step1 .dan .ubt {
+    margin: 10px 0 0;    
+  }
+  body.personalinfo_2_step1 .dan p.ubt:before {
+    display: inline-block;
+    content: '';
+    background: url(../img/pk-01-small.png);
+    background-repeat: no-repeat;
+    -webkit-background-size: contain;
+         -o-background-size: contain;
+            background-size: contain;
+    position: relative;
+    width: 6px;
+    height: 13px;
+    top: 2px;
+    left: -4px;
+  }
+  body.personalinfo_2_step2 .time-out {
+    width: 205px;
+  }
+  /* 0625 by Wade !!! 小板 延期還款  */
+  
+  body.deferment_3_step1 p.ubt {
+	position: relative; 
+	padding: 0 0 0 2px;	
+   }
+  
+  body.deferment_3_step1 p.ubt:before { 
+	display: inline-block;    
+	content: '';    
+	background: url(../img/pk-01-small.png);    
+	background-repeat: no-repeat;    
+	-webkit-background-size: contain;         
+	-o-background-size: contain;            
+	background-size: contain;    
+	position: absolute;    
+	width: 6px;    
+	height: 13px;    
+	top: 6px;    
+	left: -5px;  
+	}
+   body.deferment_3_step1 h3.sectop {
+		padding-top: 10px;
+	}   
+  /* 大層統一間距 0 5px  */			
+  body#body.deferment .processArea {
+	padding: 0 5px;
+  }
+}
+
+/* 0624  changePwd_3  變更結果  */
+
+@media (max-width:769px) { 
+	body.changePwd_3  .noticeTitle {
+		margin-top: 30px;
+	}
+	body.changePwd_3 .casom  {
+		margin-left: 0;
+		font-weight: bold;
+		width: 254px;
+	}
+}
+
+/* 0624 register_1 註冊step1 */ 
+
+@media (max-width:769px) { 
+	body.register_1 .deg:before,
+	body.register_1 .psf:before{
+		display: none;
+	}
+	body.register_1 h3.snopy {
+		padding-left: 0;
+	}
+	input[type=checkbox].sqr-checkbox + label.sqr-label p {
+		font-weight: bold;
+	}
+	body.register h3.snopy {
+		font-size: 15px;
+	}
+	body.register .snopy {
+		padding: 0 0 0 30px;
+	}
+	body.register_1 .nextBtn  a.blu ,
+	body.register_1 .nextBtn  a.gray {
+		text-indent: 0;
+	}
+
+}
+
+/* 0624 changePwd 變更資料/密碼 */ 
+@media (max-width:769px) { 
+	body.changePwd_2_step1 #userAccount {
+		font-weight: bold;
+	}
+}
+
+/* 0624 register_2 我要註冊 */
+
+@media (max-width:769px) {  
+  body.register_2  .register .pen:before {
+       top: 0px;
+  }
+  body.register_2 .joy .susi {
+    position: absolute;
+    top: 0;
+    left: 80px;
+    display: inline-block;
+  }
+  body.register_2 .casom li {
+    font-weight: bold;
+  }
+}
+
+@media (max-width:769px) { 
+
+	body.deferment_3_step1 .warne .right p {
+		font-weight: bold;
+	}
+	body.deferment_3_step1 h3.snopy {
+		padding-left: 10px;
+	}	
+}
+/*   processInner  padding: 10px 5% 太高改成0 5%  */
+@media (max-width:769px) {
+	body.changePwd_2_step2 .processInner {
+		padding: 0 5%;
+	}
+	body.personalInfo .processInner {
+		padding: 0 5%;
+	}	
+}
+/* 0625 延期還款 */
+
+@media (max-width:769px) { 
+	body.deferment_3_step1 .snopy {
+		font-size: 17px;
+		background-color: #F8FAFC;
+	}
+	body.deferment_3_step1 .snopy .editBtnBoxbottom {
+		top: 34px;
+	}
+	body.deferment_3_step1 .ubt {
+		margin: 10px 0 0;
+	}
+	body.deferment_3_step1 .processInner:nth-child(2) h3.snopy {
+		padding-top: 10px;	
+	}
+}
+
+/* 0625 by Wade 麵包屑 >>>> */
+
+body.deferment .path ul li:nth-child(2) a:after {
+	top: 4px;
+}
+
+/*0626 by Wade 首頁主視覺  for 6s*/
+
+@media (max-width:415px) {
+	body.index .bannerLeft {
+		min-height: 250px;
+	}
+}
+
+/*0626 by Wade 首頁主視覺  for 5s*/
+
+@media (max-width:321px) {    
+	body.index .bannerLeft {
+        min-height: 200px;
+    }
+}
+
+/* 0628 by Wade 註冊會員step_3 */
+
+body.register_3 .joy .left p {
+  line-height: 1.65em;
+} 
+body.register_3 .smrtq .joy .right p {
+  font-weight: bold;
+}
+
+/* 0624陳拓 */
+@media (min-width:769px) {
+    #body.memberLogin_1 .contentArea {
+        padding-top: 122px;
+    }
+    
+    .index div#isLogin a.pdfImg,
+    .index div#isLogin a.printerImgf {
+        width: 20px;
+    }
+    
+    .index .personalin p {
+        max-width: 100%;
+    }
+}
+
+body.apply_00 .modal-dialog .modal-content .modal-body p {
+        text-align: center;
+}
+
+@media (max-width:769px) {
+    .apply_map .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: 100%;
+    }
+    
+    body#body.apply_map .timeLeft,
+    body#body.apply_map .timeRight {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* 小網  */
+
+@media (max-width:769px) {
+  body.myloan .lightWon .busus li p, 
+  body.myloan .lightWon .busus li h3,
+  body.myloan .lightWon .busus li:nth-child(3) h3,
+  body.myloan .lightWon .busus li:nth-child(4) h3 {
+    font-weight: bold; 
+  }
+}  
+
+
+/* 陳拓 0624 */
+@media (min-width:769px) {
+    body.myElectronicPay_1 .processInner {
+        width: 73%;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    body.myElectronicPay_1 h3.pomodal {
+        color:#76797b;
+    }
+    
+    body.myElectronicPay_1 .lightWon .busus {
+        padding: 20px 0;
+    }
+    
+    body.myElectronicPay_1 .pomodal p, body.myElectronicPay_1 .lightWon .busus li h3 {
+        font-size: 14px;
+    }
+}
+
+/* 陳拓0627 */
+@media (min-width:769px) {
+    .processInner table.mqua .file-view a:before {
+        top: 19px;
+        background-repeat: no-repeat;
+    }
+    
+    .index div#isLogin a.relatedDocuments,
+    .index div#isLogin a.immediately {
+        text-decoration: underline;
+        color: #0E89D4;
+    }
+    
+    body#body .casom li {
+        margin-bottom: 0;
+    }
+    
+    .sub #mapInputS {
+        width: 100%;
+    }
+}
+
+@media (max-width:769px) {
+    .index .csA a.pobtn-srw {
+        max-width: 200px;
+        padding: 8px;
+    }
+    
+    body.apply_5_step1 .thirdParty:before, body.apply_5_step1 .spouse:before {
+        left: 30px;
+    }
+    
+    body.apply_5_step1 .dan {
+        overflow: auto;
+    }
+    
+    body.apply_5_step1 .processInner {
+        background: none;
+    }
+    
+    body.apply_5_step1 .spouse {
+        width: 75%;
+    }
+}
+
+
+/* 陳拓0628 */
+
+#body.register_1 .moArea {
+    width: 100%;
+}
+
+@media (min-width:769px) {
+    #body.PaymentInstructions .contentArea {
+        padding-top: 122px;
+    }
+    
+    .PaymentInstructions .qusp .quspitem {
+        padding: 15px;
+    }
+    
+    body.register_1 .moArea {
+        font-size: 15px;
+    }
+    
+    body.register_1 .error-msg {
+        padding-left: 24px;
+    }
+}
+
+@media (max-width:769px) {
+    .sub .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: 100%;
+    }
+    
+    .sub .mapArea {
+        width: 87%;
+        margin: 0 auto;
+    }
+    
+    .changePwd_3 .nike:before {
+        left: 0;
+    }
+    
+    .changePwd_3 .nike,
+    .personalinfo_3 .nike {
+        padding-left: 30px;
+    }
+    
+    .personalinfo_3 .nike:before {
+        left: 0;
+    }
+    
+    .minMap {
+        height: 100%;
+    }
+}
+
+@media (min-width:769px) {
+    
+    .personalinfo_2_step1 .may .bgfff {
+        background: none;
+    }
+    .personalinfo_2_step1 .may .joy.bg {
+        background: #fff;
+    }
+    .minMap {
+        min-height: 450px;
+    }
+}
+
+/* 陳拓0629 */
+
+@media (min-width:769px) {
+    #body .tic span {
+        font-size: 18px;
+    }
+    
+    .apply .thirdParty:before {
+        top: -10px;
+        width: 37px;
+        height: 43px;
+    }
+    
+    body#body .spouse:before {
+        top: -9px;
+    }
+    
+    .changePwd_1 .joy .right {
+        font-size: 15px;
+    }
+    
+    .changePwd_1 .warning,
+    .changePwd_3 .warning {
+        width: 73%;
+        margin: 0 auto;
+    }
+    
+    .changePwd_2 .warning {
+        display: none;
+    }
+}
+
+@media (max-width:769px) {
+	.QAList ul > li {
+		width: 95%;
+		margin: 10px auto;
+	}
+	
+	#body.deferment_0 .contentArea {
+		padding-top: 70px;
+	}
+    
+    .deferment_2 td.file-photo img,
+    .apply_4 td.file-photo img,
+    .deferment_3_step1 td.file-photo img {
+        width:34px;
+        height: 34px;
+    }
+    
+    body.myloan .repayTable ul.resa h4 {
+        padding: 14px 0;
+    }
+    
+    .forgetPassword_3_step2 .sendType_val {
+        display: inline-block;
+    }
+}
+
+body.myloan .myloan_Box {
+	padding-top: 0;
+}
+
+@media (min-width:769px) {
+	#body.deferment_0 .contentArea {
+		padding-top: 130px;
+	}
+}
+
+/* 首頁步驟列1024解析度樣式 */
+
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+    .index .activity_content .container  {
+        min-width: 900px;
+    }
+    
+    .application_step li a:before {
+        left: -30px;
+    }
+    .application_step li:first-child a:before {
+        left: 0;
+    }
+    
+    .application_step li h2:before {
+        width: 80px;
+        height: 55px;
+    }
+    
+    .application_step li h2:before {
+        left: 65px;
+    }
+    
+    .application_step li:first-child h2:before {
+        left: 78px;
+    }
+    
+    .register_3 .parents {
+        padding: 0 0 30px;
+    }
+}
+
+/* 陳拓0630 */
+@media (min-width:769px) {
+    .changePwd_2_step2 .pomodal h3 {
+        font-size: 16px;
+    }
+    
+    div.catey p:nth-child(2) {
+        line-height: 1.3em;
+    }
+    
+    body.memberLogin_1 .modal-dialog .modal-content .modal-body p {
+        padding: 0;
+    }
+}
+
+/* 陳拓0701 */
+@media (min-width:769px) {
+    .cherry li .text .ti {
+        width: 70px;
+    }
+    
+    .clickhere:visited {
+        color: #fff;
+        background: #3e4143;
+    }
+    
+    #body .nextBtn a:visited {
+        color: #fff;
+    }
+    
+    body.register_4 .loginBtn {
+        margin-top: 0;
+    }
+    
+    body.register_4 .nina .left {
+        width: 80px;
+        padding-right: 0;
+    }
+    
+    #body.index .personal .loginBtn {
+        margin: 0 30px;
+        margin-right: 0;
+    }
+    
+    #body.index .personal .inputArea {
+        max-width: 100%;
+    }
+    
+    .inputArea {
+        margin-right: 0;
+    }
+    
+    .pomodal h3 {
+        font-size: 16px;
+    }
+    
+    .index .personalin p {
+        width: 380px;
+    }
+}
+
+@media (max-width:769px) {
+    body.personalinfo_3 .dan .may .joy {
+        background: #f8fcfa;
+    }
+    
+    body.personalinfo_3 .dan .may .joy.bgfff {
+        background: #fff;
+    }
+    
+    .smrtq .joy {
+        padding: 10px;
+    }
+}
+
+/* 對保分行 行事曆 */
+
+
+.reservationArea .fc-toolbar {
+    margin-bottom: 10px;
+}
+
+.reservationArea .fc-view-container {
+    padding: 0 30px;
+}
+
+.reservationArea .fc-basic-view {
+    padding: 10px;
+}
+
+.fc-day-header {
+    color: #828686;
+    background: none;
+}
+
+@media (max-width:769px) {
+    body.deferment_2 .nextBtn a.gray:before {
+        top: 12px;
+    }
+}
+
+.reservationArea .fc-view-container {
+    padding-bottom: 50px;
+}
+
+/*
+a.reservation:hover {
+    background: black;
+}*/
+
+
+/* 陳拓0705 */
+@media (min-width:769px) {
+    body.apply_3_step1 input[name="student_class"] {
+        width: 138px;
+        max-width: none;
+    }
+    
+    div#isLogin a {
+        width: 35%;
+        font-size: 15px;
+    }
+}
+
+@media (max-width:1024px) and (min-width:769px) {
+    body.apply_2 .wrapper input[name="father_phone"],
+    body.apply_2 .wrapper input[name="mother_phone"],
+    body.apply_2 .wrapper input[name="thirdParty_phone"],
+    body.apply_2 .wrapper input[name="spouse_phone"] {
+        max-width: 147px;
+    }
+    
+    body.apply_2 .finp .left {
+        margin-right: 0;
+    }
+}
+
+.modal-body a.hyperlink {
+    color: #fff;
+    background: #0E89CB;
+    padding: 5px;
+    text-decoration: none;
+}
+@media (min-width:769px) {
+    #body .earth ol {
+        padding-left: 0;
+    }
+
+    #body .casom,
+    #body .casomTitle {
+        margin-left: 0;
+    }
+    
+    body#body .earth li {
+        margin-left: 15px;
+    }
+    
+/*
+    body#body.register_2 .earth {
+        padding-left: 105px;
+    }
+*/
+    .personalinfo_3 .joy .left {
+        float: none;
+    }
+    
+    .personalinfo_3 .nina .left {
+        width: 90px;
+    }
+    
+    .personalinfo_2_step2 .joy {
+        padding: 10px 0;
+    }
+    
+    #body .modal-body a[class^="pobtn-"] {
+        max-width: 200px;
+    }
+    
+    .changePwd_2_step1 .ubt {
+        margin: 15px 41px 0;
+    }
+    
+    .changePwd_2_step1 .may {
+        width: 60%;
+    }
+    
+    .changePwd_3 .nina .left {
+        width: 80px;
+    }
+    
+    body.changePwd_3 .noticeTitle {
+        margin: 0;
+    }
+    
+    .kim, .cate {
+        max-height: 380px;
+    }
+    
+    .register_3 .abon .left {
+        width: 105px;
+    }
+}
+
+@media (min-width:769px) {
+    .reservationArea .fc-view-container {
+        padding-bottom: 20px;
+    }
+    
+    body.apply_5_step1 .joy .left p.changeText.changeTextShort {
+        width: 105px;
+    }
+    
+    .qusp .more {
+        padding: 5px 15px;
+    }
+    
+    .PaymentInstructions .qusp .quspitem.active {
+        padding-bottom: 40px;
+    }
+    
+    .quspitem.active .jubif {
+        text-overflow: inherit;
+        overflow: inherit;
+        display: block;
+    }
+    
+    body.apply_5_step1 div.noob p {
+        margin-right: 23.2%;
+    }
+    
+    .myElectronicPay_1 .img img {
+        max-height: 90px;
+    }
+    
+}
+
+@media (max-width:769px) {
+    body.PaymentInstructions .PaymentloanUL .quspitem.active .jubif {
+        text-overflow: inherit;
+        overflow: inherit;
+        display: block;
+    }
+    
+    body.PaymentInstructions .PaymentloanUL .quspitem.active .quspitemInner {
+        overflow: inherit;
+    }
+    
+    body.PaymentInstructions .PaymentloanUL .quspitem.active .jubif {
+        height: auto;
+    }
+    
+    body.myloan .lightWon {
+        overflow: visible;
+        clear: both;
+		/* top:25px; */
+    }
+}
+
+@media (max-width:1024px) and (min-width:769px) {
+    body.apply_5_step1 .moneyAlign .right p {
+        padding-right: 15px;
+    }
+    
+    body.apply_5_step1 div.noob p.student_publicExpense {
+        margin-right: 0;
+    }
+    
+    body.apply_5_step1 div.noob p {
+        margin-right: 180px;
+    }
+}
+
+.apply_6_step1 .modal-dialog .modal-content .modal-body p {
+    text-align: left;
+}
+
+@media (min-width:769px) {
+	.sp.gabymarginTop {
+		margin-left: 20px;
+	}
 }

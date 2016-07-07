@@ -14,7 +14,7 @@
                     <div class="headerArea">
                         <%@ include file="include/headerArea.jsp" %>
                     </div>
-                    <form id="mainForm">
+                    <form id="mainForm" method="post">
                         <input type="hidden" class="loginMsg" name="loginMsg" value="" />
                         <input type="hidden" class="determineStstus" name="determineStstus" value="" />
                         <div class="contentArea">
@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                                 <div class="bannerRight">
-                                    <form id="basicInformation">
+                                    <form id="basicInformation" method="post">
                                         <div id="isNotLogin" class="personal mobile">
                                             <h2 class="loginMobile">立即登入</h2>
                                             <div class="inputArea">
@@ -45,13 +45,13 @@
                                                 <span>
                 <img src="img/fu-09.png" alt="">
               </span>
-                                                <input type="password" name="studentCode" placeholder="使用者代碼">
+                                                <input type="password" name="studentCode" placeholder="使用者代碼" autocomplete="off">
                                             </div>
                                             <div class="inputArea">
                                                 <span>
                 <img src="img/fu-10.png" alt="">
               </span>
-                                                <input type="password" name="studentPassword" placeholder="使用者密碼">
+                                                <input type="password" name="studentPassword" placeholder="使用者密碼" autocomplete="off">
                                             </div>
                                             <div class="loginBox">
                                                     <a href="forgetPassword.jsp">忘記代碼/密碼</a>

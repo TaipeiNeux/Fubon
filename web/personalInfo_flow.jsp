@@ -1,10 +1,19 @@
+<%@ page import="com.neux.utility.utils.jsp.info.JSPQueryStringInfo" %>
+<%@ page import="com.neux.utility.utils.jsp.JSPUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%@ include file="include/head.jsp" %>
 <%
     request.setCharacterEncoding("utf-8");
+    JSPQueryStringInfo queryStringInfo = JSPUtils.setParams(request,false);
+    String step = queryStringInfo.getParam("step");
 %>
 <script src="js/jquery-ui.min.js"></script>
 <body class="apply_1_step1">
+
+<script>
+    var jumpStep = '<%=step%>';
+</script>
+
 <div class="mobileMenu">
     <%@ include file="include/mobile_menu.jsp" %>
 </div>
@@ -61,5 +70,5 @@
 <script src="js/prog/personalInfo_flow.js"></script>
 <script src='fullcalendar/lib/moment.min.js'></script>
 <script src='fullcalendar/fullcalendar.min.js'></script>
-<!--<script src='fullcalendar/lib/jquery.min.js'></script>-->
+
 </body>

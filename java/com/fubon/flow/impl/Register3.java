@@ -22,7 +22,7 @@ import org.json.JSONObject;
 public class Register3 implements ILogic {
     @Override
     public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception {
-        String id = "" , name = "" , birthday = "", mobile = "",email = "",account = "", password = "";
+        String id = "" , name = "" , birthday = "", mobile = "",email = "",account = "", pd = "";
 
 
         //取得第二步的草稿資料
@@ -36,7 +36,7 @@ public class Register3 implements ILogic {
         if(step2Root.element("cellPhone") != null) mobile = step2Root.element("cellPhone").getText();
         if(step2Root.element("email") != null) email = step2Root.element("email").getText();
         if(step2Root.element("userAccount") != null) account = step2Root.element("userAccount").getText();
-        if(step2Root.element("userPwd") != null) password = step2Root.element("userPwd").getText();
+        if(step2Root.element("userPwd") != null) pd = step2Root.element("userPwd").getText();
 
         content.put("id",id);
         content.put("name",name);
@@ -44,7 +44,7 @@ public class Register3 implements ILogic {
         content.put("mobile",mobile);
         content.put("email",email);
         content.put("account",account);
-        content.put("password",password);
+        content.put("password",pd);
 
     }
 

@@ -242,7 +242,7 @@
                 throw f;
             }
             } finally {
-                if (_messageContext.getTransportOut() != null) {
+                if (_messageContext != null && _messageContext.getTransportOut() != null) {
                       _messageContext.getTransportOut().getSender().cleanup(_messageContext);
                 }
             }

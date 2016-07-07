@@ -31,7 +31,7 @@ public class ChangePwd2_1 implements ILogic {
 
         //取得是否已撥款
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
-        String mobile = "" , email = "", account = "", password = "";
+        String mobile = "" , email = "", account = "", pd = "";
 
         //取得登入者手機跟Email
         mobile = loginUserBean.getCustomizeValue("AplyCellPhoneNo");
@@ -43,13 +43,13 @@ public class ChangePwd2_1 implements ILogic {
         Element step1Root = step1Doc.getRootElement();
 
         account = step1Root.element("userAccount").getText();
-        password = step1Root.element("userPwd").getText();
+        pd = step1Root.element("userPwd").getText();
 
         content.put("hasAppropriation",isRecord);
         content.put("mobile",mobile);
         content.put("email",email);
         content.put("account",account);
-        content.put("password",password);
+        content.put("password",pd);
     }
 
     @Override

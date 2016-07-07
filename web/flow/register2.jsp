@@ -16,7 +16,9 @@
         	<p>姓名</p>
       	</div>
       	<div class="right">
-        	<input class="input_L" type="text" name="name" maxlength="10">
+			<!-- 0629--start 忠毅 改成上限 20 個字 -->
+        	<input class="input_L" type="text" name="name" maxlength="20">
+			<!-- --end 忠毅 改成上限 20 個字 -->
 	        <!--<span class="susi">(請輸入2-20位中文字)</span>-->
 			<div class="error-msg"/>
       	</div>
@@ -86,6 +88,7 @@
       	</div>
     </div>
 </div>
+<div class="earth">
 <p class="casomTitle">注意事項:</p>
 <ol class="casom">
 <li>為提升您的交易安全，「使用者代碼」需為 6 至 10 位，「使用者密碼」需為 6 至 16 位（英文字一律視為大寫）。</li>
@@ -94,3 +97,4 @@
 <li>「使用者代碼」或「使用者密碼」不得與「身分證字號」全部或部分重複。</li>
 <li>「使用者密碼」不得與「使用者代碼」全部或部分重複。</li>
 </ol>
+</div>

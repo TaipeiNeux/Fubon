@@ -3,7 +3,7 @@
 <div class="dan">
                 <h2 class="who">請確認變更後的個人資料</h2>
                 <div class="may">
-                  <div class="joy bgfff">
+                  <div class="joy bg">
                     <div class="left">
                       <p >身分證字號</p>
                     </div>
@@ -11,7 +11,7 @@
                       <p class='tmp_id dynamic_data'>A123****89</p>
                     </div>
                   </div>
-                  <div class="joy ">
+                  <div class="joy  bgfff">
                     <div class="left">
                       <p>姓名</p>
                     </div>
@@ -19,7 +19,7 @@
                       <p class='tmp_name dynamic_data'>王*明</p>
                     </div>
                   </div>
-                  <div class="joy bgfff">
+                  <div class="joy bg">
                     <div class="left">
                       <p>生日</p>
                     </div>
@@ -27,7 +27,7 @@
                       <p class='tmp_birth dynamic_data'>民國75年10月8日</p>
                     </div>
                   </div>
-                  <div class="joy">
+                  <div class="joy bgfff">
                     <div class="left">
                       <p>婚姻狀況</p>
                     </div>
@@ -35,7 +35,7 @@
                       <p class='tmp_marrage dynamic_data'>未婚</p>
                     </div>
                   </div>
-                  <div class="joy bgfff">
+                  <div class="joy bg">
                     <div class="left">
                       <p>戶籍電話</p>
                     </div>
@@ -45,7 +45,7 @@
                   </div>
                 </div>
                 <div class="may omega">
-                  <div class="joy bgfff">
+                  <div class="joy bgfff bg">
                     <div class="left">
                       <p  >通訊電話</p>
                     </div>
@@ -61,7 +61,7 @@
                       <p class='tmp_email dynamic_data'>****45@gmail.com</p>
                     </div>
                   </div>
-                  <div class="joy bgfff">
+                  <div class="joy bgfff bg">
                     <div class="left">
                       <p>行動電話</p>
                     </div>
@@ -77,7 +77,7 @@
                       <p class='tmp_domicileAddress dynamic_data'>新北市*********54號8樓</p>
                     </div>
                   </div>
-                  <div class="joy bgfff">
+                  <div class="joy bgfff bg">
                     <div class="left">
                       <p>通訊地址</p>
                     </div>

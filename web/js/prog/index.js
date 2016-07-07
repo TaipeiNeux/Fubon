@@ -1,6 +1,6 @@
 // 首頁畫面寬高配置
 setBannerAreaHeight();
-
+/* edit by JiaRu 160622: remove to script.js*/
 function setBannerAreaHeight() {
     if ($(window).width() >= 769) {
         var BannerAreaH = ($(window).height()) - (146 + 300);
@@ -60,6 +60,7 @@ addrCity.hide();
 addrZip.hide();
 
 var getDefaultAddress = modal.getDefaultAddress();
+
 addressMap(mapId, [getDefaultAddress.branchName], [getDefaultAddress.addr], [getDefaultAddress.tel]);
 
 $('.placeholder, .mapInput').on('click', function() {
@@ -114,8 +115,8 @@ $('.placeholder, .mapInput').on('click', function() {
             regionTextZip = $(this).text();
 
             var jsonBranch = modal.getBranch($(this).val());
-            console.debug(jsonBranch);
             var branchArr = jsonBranch.branches;
+            console.debug(branchArr.length);
             var branchNameArray = [];
             var branchAddrArray = [];
             var branchTelArray = [];
@@ -126,8 +127,19 @@ $('.placeholder, .mapInput').on('click', function() {
                 branchAddrArray.push(branchData.addr);
                 branchTelArray.push(branchData.tel);
             });
-            addressMap(mapId, branchNameArray, branchAddrArray, branchTelArray);
-            regionText = regionTextCity +','+ regionTextZip;
+            
+            
+            
+            
+            if(branchArr.length > 1){
+                    addressMap(mapId, branchNameArray, branchAddrArray, branchTelArray,13);
+                }
+                else{
+                    addressMap(mapId, branchNameArray, branchAddrArray, branchTelArray);
+                }
+            
+            
+            regionText = regionTextCity + ',' + regionTextZip;
             /*
             if (branchArray.length == 0) {
 
@@ -178,8 +190,8 @@ modal.getNews(function(json) {
 
     $('#owl-carousel_news').empty().append(newsArray.join(''));
 
-	
-	
+
+
     $('#owl-carousel_news').owlCarousel({
         items: 5,
         loop: true,
@@ -429,60 +441,27 @@ if (isInt == true) {
 $('.sidebar').show();
 
 
-modal.getLoginInfo(function(json) {
+g_ajax({
+    url: 'auth?action=getLoginInfo&v=' + new Date().getTime(),
+    data: {},
+    datatype: 'json',
+    callback: function(json) {
+        window.loginInfo = json;
 
-    window.loginInfo = json;
+        if (json.isLogin == 'Y') { //還沒有登入
+            //產生招呼語
+            var contentArr = eightGreeting(json);
+			console.debug(contentArr);
+            var contentMessage = contentArr[0];
+            $('#isLogin').empty();
+            $('#isLogin').append(contentMessage.join(''));
 
-    if (json.isLogin == 'Y') { //還沒有登入
-        //產生招呼語
-        var contentArr = eightGreeting();
-        var contentMessage = contentArr[0];
-        $('#isLogin').empty();
-        $('#isLogin').append(contentMessage.join(''));
+            $('#isLogin .pobtn-srw').click(function(ev) {
+                ev.preventDefault();
 
-        $('#isLogin .pobtn-srw').click(function(ev) {
-            ev.preventDefault();
-
-            modal.resetApply();
-            window.location = 'apply.jsp';
-        });
-    }
-});
-// add by JiaRu 160530
-
-$('a[href="forgetPassword.jsp"]').on('click', function(ev) {
-    ev.preventDefault();
-
-    modal.setGuest(function() {
-        location = 'forgetPassword.jsp';
-    });
-});
-
-$('a[href="register.jsp"]').on('click', function(ev) {
-    ev.preventDefault();
-
-    modal.setGuest(function() {
-        location = 'register.jsp';
-    });
-});
-
-$('a[href="repaymentInquiry.jsp"]').on('click', function(ev) {
-    ev.preventDefault();
-
-    $.ajax({
-        async: false,
-        url: 'auth?action=getLoginInfo',
-        dataType: 'json',
-        success: function(conf) {
-            console.debug('getLoginInfo conf:', conf);
-
-            if (conf.isLogin == 'Y') {
-                modal.setGuest(function() {
-                    location = 'repaymentInquiry.jsp';
-                });
-            } else {
-                alert('請先登入，謝謝！');
-            }
+                modal.resetApply();
+                window.location = 'apply.jsp';
+            });
         }
-    });
+    }
 });

@@ -386,6 +386,8 @@ public class OptionsServlet extends HttpServlet {
         JSONArray liners = new JSONArray();
 
         Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try{
             jsonObject.put("liners",liners);
@@ -394,11 +396,11 @@ public class OptionsServlet extends HttpServlet {
 
             //如果不是SIT就接Oracle的db
             if(!"sit".equalsIgnoreCase(env)) {
-                conn = DBUtils.getConnection("jdbc/pib");
+                conn = DBUtils.getConnection(DBUtils.PIBDataSource);
 
-                PreparedStatement ps = conn.prepareStatement("select * from VILLAGE where ZIPCODE = ?");
+                ps = conn.prepareStatement("select * from VILLAGE where ZIPCODE = ?");
                 ps.setString(1,zipCode);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
                 while(rs.next()) {
                     JSONObject tmp = new JSONObject();
 
@@ -408,6 +410,7 @@ public class OptionsServlet extends HttpServlet {
 
                     liners.put(tmp);
                 }
+
             }
             else {
 
@@ -434,7 +437,20 @@ public class OptionsServlet extends HttpServlet {
             e.printStackTrace();
         }finally{
             try{
-                conn.close();
+                if(rs != null) rs.close();
+
+            }catch(Exception ex) {
+                ;
+            }
+
+            try{
+                if(ps != null) ps.close();
+            }catch(Exception ex) {
+                ;
+            }
+
+            try{
+                if(conn != null) conn.close();
             }catch(Exception ex) {
                 ;
             }

@@ -27,21 +27,21 @@
     </div>
 
     <div class="contentArea">
-        <div class="processArea">
+        <div class="processArea" style="display:none;">
 
             <div class="processOutBox">
                 <div class="processBox">
                     <div class="processInner">
 
                         <div class="talkwall">
-                            <p>Hi 你好，</p>
+                            <p></p>
                             <div class="tonypan">
-                                <p>本行開放就學貸款申請即對保作業期間如下 :</p>
-                                <p>上學期 : 08/01 日起，至 09/30 底止</p>
-                                <p>下學期 : 01/15 日起，至 02/28 底止</p>
+                                <p></p>
+                                <p></p>
+                                <p></p>
                             </div>
-                            <p>如有疑問，請洽本行
-                                <span class="blue">客服專線 (02) 8751-6665 按5</span>
+                            <p>
+                                <span class="blue"></span>
                             </p>
                         </div>
 

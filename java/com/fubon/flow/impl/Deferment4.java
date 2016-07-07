@@ -74,7 +74,7 @@ public class Deferment4 implements ILogic {
 
                 forecastDate = yearYYYY + month + day + "000000";
 
-                forecastDate = DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",forecastDate);
+                forecastDate = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",forecastDate);
             }
 
             //新增
@@ -83,7 +83,7 @@ public class Deferment4 implements ILogic {
             Deferment_Flow.setValue("IP", JSPUtils.getClientIP(queryStringInfo.getRequest()));
             Deferment_Flow.setValue("Eligibility",eligibilityText);
             Deferment_Flow.setValue("ForecastDate", forecastDate);
-            Deferment_Flow.setValue("CreateTime",DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString()));
+            Deferment_Flow.setValue("CreateTime",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
 
             dao.insert(Deferment_Flow);
 

@@ -37,7 +37,7 @@ public class PersonalInfo1 implements ILogic {
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
-        String domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
+        String domicileAddressCityName = "" , domicileAddressCityId = "", domicileAddressZipCode = "",domicileAddressZipCodeName = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "", teleAddressAddress = "";
 
 
@@ -45,7 +45,7 @@ public class PersonalInfo1 implements ILogic {
         id = loginUserBean.getCustomizeValue("IdNo");
         name = loginUserBean.getUserName();
         birthday = loginUserBean.getCustomizeValue("AplyBirthday");
-        marryStatus = "1".equalsIgnoreCase(loginUserBean.getCustomizeValue("Marriage")) ? "Y" : "N";
+        marryStatus = ProjUtils.toMarryName(loginUserBean.getCustomizeValue("Marriage"));
         cellPhone = loginUserBean.getCustomizeValue("AplyCellPhoneNo");
         email = loginUserBean.getCustomizeValue("AplyEmail");
 
@@ -71,7 +71,7 @@ public class PersonalInfo1 implements ILogic {
             id = aplyMemberHistoryData.getValue("AplyIdNo");
             name = aplyMemberHistoryData.getValue("Applicant");
             birthday = aplyMemberHistoryData.getValue("AplyBirthday");
-            marryStatus = "1".equalsIgnoreCase(aplyMemberHistoryData.getValue("Marriage")) ? "Y" : "N";
+            marryStatus = ProjUtils.toMarryName(aplyMemberHistoryData.getValue("Marriage"));
             cellPhone = aplyMemberHistoryData.getValue("AplyCellPhoneNo");
 
             domicilePhoneRegionCode = aplyMemberHistoryData.getValue("AplyTelNo1_1");
@@ -153,15 +153,15 @@ public class PersonalInfo1 implements ILogic {
         //用zipcode反查city
         domicileAddressCityId = ProjUtils.toCityId(domicileAddressZipCode,dao);
 
-
-
-        //測試
-
         //用zipcode反查city
         teleAddressCityId = ProjUtils.toCityId(teleAddressZipCode,dao);
 
         //生日西元轉民國
         birthday = ProjUtils.toBirthday(birthday);
+
+        //轉成中文
+        domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
+        domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
 
         //隱碼
         MarkBean markBean = new MarkBean();
@@ -205,6 +205,10 @@ public class PersonalInfo1 implements ILogic {
         domicileAddress.put("liner",domicileAddressLiner);
         domicileAddress.put("neighborhood",domicileAddressNeighborhood);
         domicileAddress.put("address",ProjUtils.toAddressMark(domicileAddressAddress));
+
+        domicileAddress.put("cityName",domicileAddressCityName);
+        domicileAddress.put("zipCodeName",domicileAddressZipCodeName);
+
         content.put("domicileAddress",domicileAddress);
 
         JSONObject teleAddress = new JSONObject();

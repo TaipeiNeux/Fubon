@@ -6,7 +6,7 @@
         <input type="hidden" name="branchAddr" value="" />
         <input type="hidden" name="branchTel" value="" />
         <input type="hidden" name="reservation" value="" />
-	
+	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">
             <h2 class="who">申請人</h2>
@@ -115,12 +115,13 @@
                     </div>
                     <div class="right">
                         <p id="status1"></p>
-                        <!--<p class="stF" id="status2"></p>-->
+                        
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="wrap">
         <h3 class="snopy pen mt40">關係人基本資料</h3>
 
         <div class="dan" id="father">
@@ -157,15 +158,8 @@
                 </div>
             </div>
             <div class="may omega">
-                <!--<div class="joy abon bgfff">
-                    <div class="left">
-                        <p>戶籍電話</p>
-                    </div>
-                    <div class="right">
-                        <p name="father_phone_domi"></p>
-                    </div>
-                </div>-->
-                <div class="joy abon">
+                
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -173,7 +167,7 @@
                         <p name="father_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -192,16 +186,7 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="maya">
-                <div class="joy abon bgfff">
-                    <div class="left">
-                        <p>通訊地址</p>
-                    </div>
-                    <div class="right">
-                        <p name="father_addr"></p>
-                    </div>
-                </div>
-            </div>-->
+            
         </div>
         <div class="dan" id="mother">
             <h2 class="mather">母親
@@ -237,16 +222,9 @@
                 </div>
             </div>
             <div class="may omega">
-                <!--<div class="joy abon bgfff">
-                    <div class="left">
-                        <p>戶籍電話</p>
-                    </div>
-                    <div class="right">
-                        <p name="mother_phone_domi"></p>
-                    </div>
-                </div>-->
+                
 
-                <div class="joy abon">
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -254,7 +232,7 @@
                         <p name="mother_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -273,16 +251,7 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="maya">
-                <div class="joy abon bgfff">
-                    <div class="left">
-                        <p>通訊地址</p>
-                    </div>
-                    <div class="right">
-                        <p name="mother_addr"></p>
-                    </div>
-                </div>
-            </div>-->
+            
         </div>
         <div class="dan" id="thirdParty">
             <h2 class="thirdParty">第三人
@@ -318,15 +287,8 @@
                 </div>
             </div>
             <div class="may omega">
-                <!--<div class="joy abon bgfff">
-                    <div class="left">
-                        <p>戶籍電話</p>
-                    </div>
-                    <div class="right">
-                        <p name="thirdParty_phone_domi"></p>
-                    </div>
-                </div>-->
-                <div class="joy abon">
+                
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -334,7 +296,7 @@
                         <p name="thirdParty_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -352,16 +314,7 @@
                         <p name="thirdParty_addr_domi"></p>
                     </div>
                 </div>
-                <!--<div class="maya">
-                    <div class="joy abon bgfff">
-                        <div class="left">
-                            <p>通訊地址</p>
-                        </div>
-                        <div class="right">
-                            <p name="thirdParty_addr"></p>
-                        </div>
-                    </div>
-                </div>-->
+                
             </div>
         </div>
         <div class="dan" id="spouse">
@@ -398,15 +351,8 @@
                 </div>
             </div>
             <div class="may omega">
-                <!--<div class="joy abon bgfff">
-                    <div class="left">
-                        <p>戶籍電話</p>
-                    </div>
-                    <div class="right">
-                        <p name="spouse_phone_domi"></p>
-                    </div>
-                </div>-->
-                <div class="joy abon">
+                
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -414,7 +360,7 @@
                         <p name="spouse_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon ">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -432,19 +378,11 @@
                         <p name="spouse_addr_domi"></p>
                     </div>
                 </div>
-                <!--<div class="maya">
-                    <div class="joy abon bgfff">
-                        <div class="left">
-                            <p>通訊地址</p>
-                        </div>
-                        <div class="right">
-                            <p name="spouse_addr"></p>
-                        </div>
-                    </div>
-                </div>-->
+                
             </div>
         </div>
-
+    </div>
+    <div class="wrap">
         <h3 class="snopy pen mt40">就讀學校及申貸金額
             </h3>
 
@@ -532,7 +470,7 @@
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
-                        <p>學雜費</p>
+                        <p class="changeText">學雜費</p>
                     </div>
                     <div class="right">
                         <p class="student_credit">0元</p>
@@ -608,14 +546,15 @@
         </div>
         <div class="dan jam">
             <div class="appcont">本次申貸金額
-                <span class="student_sum"></span><span class="bill">元</span>
+                <span class="student_sum"></span><span class="bill"></span>
             </div>
         </div>
-
+    </div>
+    <div class="wrap">
         <div class="dan">
             <h3 class="snopy pen lastTitle">對保分行</h3>
             <div class="editBtnBoxbottom lastBtn">
-                <a href="apply.jsp?step=apply1_1" class="editBtn">修改</a>
+                <a href="apply.jsp?step=apply_online_4" class="editBtn">修改</a>
             </div>
             <div class="maya may storeLeft">
                 <div class="joy abon bgfff">
@@ -639,4 +578,5 @@
                 </div>
             </div>
         </div>
+    </div>
        

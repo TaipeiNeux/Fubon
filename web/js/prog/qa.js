@@ -57,7 +57,14 @@ if($('.QAListTab').length != 0) {
 			
 		});
 		
-		$('.QAListTab > ul > li > a:first').trigger('click');
+		//如果是大版才要預設展開第一個
+		if(!isMobileWidth()) {
+			$('.QAListTab > ul > li > a:first').trigger('click');
+		}
+		else {
+			$('.QAListTab > ul > li .QAArea_s').hide();
+		}
+		
 
 		
 		$('.QandAtab a').click(function(ev) {

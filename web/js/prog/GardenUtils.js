@@ -17,13 +17,17 @@ var GardenUtils = {
             //                dialog : '',
             //                icon : 'img/marker_bank.png',
             //                scrollwheel : true,
-            //                showDialog : true
+            //                showDialog : true,
+            //                streetPosition: RIGHT_BOTTOM,
+            //                zoomPosition: RIGHT_BOTTOM
             //            };
 
             console.debug('before', obj);
 
             obj = $.extend({
-                scrollwheel: true
+                scrollwheel: true,
+                zoomPosition: 'RIGHT_BOTTOM',
+                streetPosition: 'RIGHT_BOTTOM'
             }, obj);
 
             console.debug('after', obj);
@@ -71,10 +75,49 @@ var GardenUtils = {
 
             function drawAddress(googleAddr) {
                 var geocoder = new google.maps.Geocoder();
+
+                obj['zoomPosition'] = google_postion(obj.zoomPosition);
+                obj['streetPosition'] = google_postion(obj.streetPosition);
+
+                function google_postion(posStr){
+                    switch( posStr ){
+                        case 'BOTTOM_CENTER': 
+                            return google.maps.ControlPosition.BOTTOM_CENTER; break;
+                        case 'BOTTOM_LEFT': 
+                            return google.maps.ControlPosition.BOTTOM_LEFT; break;
+                        case 'BOTTOM_RIGHT': 
+                            return google.maps.ControlPosition.BOTTOM_RIGHT; break;
+                        case 'LEFT_BOTTOM': 
+                            return google.maps.ControlPosition.LEFT_BOTTOM; break;
+                        case 'LEFT_CENTER': 
+                            return google.maps.ControlPosition.LEFT_CENTER; break;
+                        case 'LEFT_TOP': 
+                            return google.maps.ControlPosition.LEFT_TOP; break;
+                        case 'RIGHT_BOTTOM': 
+                            return google.maps.ControlPosition.RIGHT_BOTTOM; break;
+                        case 'RIGHT_CENTER': 
+                            return google.maps.ControlPosition.RIGHT_CENTER; break;
+                        case 'RIGHT_TOP': 
+                            return google.maps.ControlPosition.RIGHT_TOP; break;
+                        case 'TOP_CENTER': 
+                            return google.maps.ControlPosition.TOP_CENTER; break;
+                        case 'TOP_LEFT': 
+                            return google.maps.ControlPosition.TOP_LEFT; break;
+                        case 'TOP_RIGHT': 
+                            return google.maps.ControlPosition.TOP_RIGHT; break;
+                    }
+                }
+
                 var mapOptions = {
                     zoom: zoom,
-                    scrollwheel: obj.scrollwheel
+                    scrollwheel: obj.scrollwheel,
                     // mapTypeId: google.maps.MapTypeId.ROADMAP
+                    zoomControlOptions: {
+                        position: obj.zoomPosition
+                    },
+                    streetViewControlOptions: {
+                        position: obj.streetPosition//google.maps.ControlPosition.LEFT_BOTTOM
+                    }
                 };
                 //$('#mapDiv').css("height","500px");
                 var map = new google.maps.Map(document.getElementById(obj.divId), mapOptions);
@@ -127,7 +170,8 @@ var GardenUtils = {
 
                         } //if
                         else {
-                            alert("Geocode was not successful for the following reason: " + status);
+                            console.debug(status);
+                            alert('GoogleMap忙碌中，請重新整理後再試');
                         } //else
                     });
                 });
@@ -159,6 +203,7 @@ var GardenUtils = {
 //                totalTime : 600, //總時間(秒)
 //                countDownTime : 60, //倒數多少時間後呼叫countDownFn(秒)
 //                countDownFn : function(){}, //倒數多少時間後呼叫的function
+//                countDownIntervalFn : function(){}, //開始倒數每一秒會呼叫callback function
 //                overTimeFn : function(){} //時間到了的function
 //            };
 
@@ -176,6 +221,13 @@ var GardenUtils = {
                 if(totalTime == countDownTime) {
                     if(obj.countDownFn != undefined) {
                         obj.countDownFn.apply(window,[totalTime]);
+                    }
+                }
+                
+                //如果已經在最後時限，每一秒可以呼叫callback function
+                if(totalTime !=0 && countDownTime > totalTime) {
+                    if(obj.countDownIntervalFn != undefined) {
+                        obj.countDownIntervalFn.apply(window,[totalTime]);
                     }
                 }
 
@@ -624,7 +676,8 @@ var GardenUtils = {
                                     src: val,
                                     target: number.hiddenTarget,
                                     checkFun: function(conf){
-                                        return (!conf.isForeigner ? checkID(conf.id):isValidFrgnID(conf.id));
+                                        console.log('isForeigner', checkID(conf.id), isValidFrgnID(conf.id));
+                                        return (!conf.isForeigner ? checkID(conf.id):((checkID(conf.id) || isValidFrgnID(conf.id))? true : false));
                                     },
                                     checkFunParam: {
                                         id: val,
@@ -802,7 +855,7 @@ var GardenUtils = {
                                 msg = '請輸入' + msg;
                             }
                             else {
-                                msg = '請勾選' + msg;
+                                msg = '請選擇' + msg;
                             }
                         }
                         else if(type == 'number') {
@@ -842,7 +895,7 @@ var GardenUtils = {
                                 msg = '請輸入' + msg;
                             }
                             else {
-                                msg = '請勾選' + msg;
+                                msg = '請選擇' + msg;
                             }
                         }
                         else if(type == 'number') {
@@ -855,7 +908,16 @@ var GardenUtils = {
                             msg = msg + '限輸入中文字';
                         }
                         else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
-                            msg = msg + '格式錯誤';
+                           
+                            /** --start 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
+                            if(type == 'identity')
+                                 msg = msg + '驗證錯誤';
+                            
+                            else 
+                            /** --end 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
+                                msg = msg + '格式錯誤';
+
+                            
                         }
 
                         var validObjParent = validObj.parents('div.right:first');
@@ -932,7 +994,7 @@ var GardenUtils = {
                 var sum = 0;
                 s = s.toUpperCase();
 
-                if ((isValidChar(s.substring(0, 2), "ABCDEFGHIJKLMNOPQRSTUVWXYZ")) || (isValidChar(s.substring(s.length-2), "ABCDEFGHIJKLMNOPQRSTUVWXYZ")) ) {
+                /*if ((isValidChar(s.substring(0, 2), "ABCDEFGHIJKLMNOPQRSTUVWXYZ")) || (isValidChar(s.substring(s.length-2), "ABCDEFGHIJKLMNOPQRSTUVWXYZ")) ) {
 
                     return true;
 
@@ -966,7 +1028,7 @@ var GardenUtils = {
 
                         return false;
 
-                }
+                }*/
 
                 if ((s.length != 10)) { //&& (s.length != 8)) {
 
@@ -1161,7 +1223,7 @@ var GardenUtils = {
                 }*/
 
             }
-            // 檢核外國人統一證號(ZZ99999999)
+            // 檢核外國人統一證號(AA12345675)
             // 第一碼：縣市別代碼；第二碼：性別；第三～九碼：流水號；第十碼：檢核碼
             function isValidFrgnID(s) {
 
@@ -1172,9 +1234,13 @@ var GardenUtils = {
                 var sum = 0;
                 var xArray = new Array(1,9,8,7,6,5,4,3,2,1,1);
 
+                console.log('s1', s1);
+
                 for (var i = 0; i < s1.length; i++) {
 
                     sum += parseInt(s1.charAt(i)) * xArray[i];
+
+                    //console.log('sum', sum);
 
                 }
 
@@ -1373,7 +1439,8 @@ var GardenUtils = {
 			
 		},
 		convertThousandComma : function(number) {
-
+		
+		
 			console.debug('convertThousandComma number = ' + number);
 		
 			var num = number.toString();
@@ -1395,11 +1462,10 @@ var GardenUtils = {
                 title : '我是標題',
                 content : '我是內容',
                 closeCallBackFn : function(){popupView},
-	     showCallBackFn : function(){popupView},
+                showCallBackFn : function(){popupView},
                 isShowSubmit : true,
-	     isShowClose : true,
-	     styleCSS:''
-	    
+                isShowClose : true,
+                styleCSS:''
             };
              **/
 
@@ -1407,18 +1473,17 @@ var GardenUtils = {
             if(obj.isShowClose == undefined) {
                 obj.isShowClose = true;
             }
-			
-			if(obj.styleCSS == undefined) {
-				obj.styleCSS = '';
-			}
+            
+            if(obj.styleCSS == undefined) {
+                obj.styleCSS = '';
+            }
 
             var submitButton = obj.isShowSubmit ? '<button type="button" class="btn btn-primary">確認</button>' : '';
             var closeButton = obj.isShowClose ? '<button type="button" class="btn btn-default" data-dismiss="modal">確定</button>' : '';
 
             var popupView = $('<div class="modal fade" id="_popup"><div class="modal-dialog" style="'+obj.styleCSS+'"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title">'+obj.title+'</h4></div><div class="modal-body">'+obj.content+'</div><div class="modal-footer">'+closeButton+submitButton+'</div></div></div></div>').appendTo($('body'));
-            popupView.modal('toggle');
-            popupView.find('.modal-dialog').css('z-index',9999);
-            popupView.on('hidden.bs.modal', function (e) {
+            
+			popupView.on('hidden.bs.modal', function (e) {
                 console.debug('====close modal=====');
                 popupView.remove();
 
@@ -1433,6 +1498,10 @@ var GardenUtils = {
                     obj.showCallBackFn.apply(window,[popupView]);
                 }
             });
+			
+			popupView.modal('toggle');
+            popupView.find('.modal-dialog').css('z-index',9999);
+            
         },
         setContent: function(json, formplace) {
 

@@ -6,17 +6,18 @@
             <input type="hidden" name="idSelected" value="" />
             <input type="hidden" name="dateSelected" value="" />
             <input type="hidden" name="timeSelected" value="" />
+            <input type="hidden" name="btnId" value="" />
 
             <div class="branchSelect">
                 <h2 class="titlesq">選擇所在地區</h2>
                 <div class="baelArea">
                     <div class="bael" id="citySelectpicker">
                         <h3 class="select_a">選擇縣市</h3>
-                        <select class="selectpicker" title="請選擇" name="cityId" value=""></select>
+                        <select class="selectpicker" title="選擇縣市" name="cityId" value=""></select>
                     </div>
                     <div class="bael" id="zipSelectpicker">
                         <h3 class="select_b">選擇區域</h3>
-                        <select class="selectpicker" title="請選擇" name="zipCode" value=""></select>
+                        <select class="selectpicker" title="選擇鄉鎮縣市" name="zipCode" value=""></select>
                     </div>
                     <!--<div class="baelBtn" role="button" id="submitBranch">確認</div>-->
                     <div class="baelBtn">

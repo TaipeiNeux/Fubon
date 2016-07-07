@@ -3,11 +3,12 @@
 
         <div class="candysan mobill">
            <input type="hidden" name="accordingToBill_sum_hidden" value="0" />
-           <input type="hidden" name="freedom_sum_hidden" value="0" />
-		   <input type="hidden" name="accordingToBill_sum" value="0" />
+           <!--<input type="hidden" name="freedom_sum_hidden" value="0" />
+		   <input type="hidden" name="accordingToBill_sum" value="0" />-->
            <input type="hidden" name="freedom_sum" value="0" />
            <input type="hidden" name="loanPrice" value="0" />
            <input type="hidden" name="loanAmt" value="" />
+           <input type="hidden" name="stageSelectValue" value="" />
             <h3 class="snopy appmoney">申貸金額</h3>
             <div class="zoe2">請選擇申貸金額計算方式<div class="error-msg" id="errorTip" style="display:none">請勾選計算方式</div></div>
             <div class="baka firstTitle">
@@ -18,7 +19,7 @@
                     </div>
                 </div>
                 <div class="right" id="loans" style="display:none">
-                    <input type="text" class="input_f" id="loansSum" name="loansSum" value="0"> 元
+                    <input type="text" class="input_f" id="loansSum" name="loansSum" value=""> 元
 					<div class="error-msg"></div>
                 </div>
             </div>
@@ -36,44 +37,44 @@
                         <div class="baka dollars">
                             <div class="left">
                                 <h4 class="">1.書籍費
-                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>
+<!--                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>-->
                     </h4>
                             </div>
                             <div class="right">
-                                <input type="text" class="input_f" id="accordingToBill_book" name="accordingToBill_book" value="0"> 元
+                                <input type="text" class="input_f" id="accordingToBill_book" name="accordingToBill_book" value=""> 元
 								<div class="error-msg"></div>
 							</div>
                         </div>
                         <div class="baka dollars">
                             <div class="left">
                                 <h4 class="">2.住宿費
-                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>
+<!--                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>-->
                     </h4>
                             </div>
                             <div class="right">
-                                <input type="text" class="input_f" id="accordingToBill_live" name="accordingToBill_live" value="0"> 元
+                                <input type="text" class="input_f" id="accordingToBill_live" name="accordingToBill_live" value=""> 元
 								<div class="error-msg"></div>
 						   </div>
                         </div>
                         <div class="baka dollars">
                             <div class="left">
                                 <h4>3.海外研習費
-                      <span class="hig">(限學海飛颺或學海惜珠得獎)</span>
+<!--                      <span class="hig">(限學海飛颺或學海惜珠得獎)</span>-->
                     </h4>
                             </div>
                             <div class="right">
-                                <input type="text" class="input_f" id="accordingToBill_abroad" name="accordingToBill_abroad" value="0"> 元
+                                <input type="text" class="input_f" id="accordingToBill_abroad" name="accordingToBill_abroad" value=""> 元
 								<div class="error-msg"></div>
 							</div>
                         </div>
                         <div class="baka dollars">
                             <div class="left">
                                 <h4>4.生活費
-                      <span class="hig">(限低收入戶或中低收入戶)</span>
+<!--                      <span class="hig">(限低收入戶或中低收入戶)</span>-->
                     </h4>
                             </div>
                             <div class="right">
-                                <input type="text" class="input_f" id="accordingToBill_life" name="accordingToBill_life" value="0"> 元
+                                <input type="text" class="input_f" id="accordingToBill_life" name="accordingToBill_life" value=""> 元
 								<div class="error-msg"></div>
                             </div>
                         </div>
@@ -94,11 +95,11 @@
                                 <h4 class="">1.教育補助費或助學公費</h4>
                             </div>
                             <div class="right">
-                                <input type="text" class="input_f" value="0" id="accordingToBill_publicExpense" name="accordingToBill_publicExpense"> 元
+                                <input type="text" class="input_f" value="" id="accordingToBill_publicExpense" name="accordingToBill_publicExpense"> 元
 								<div class="error-msg"></div>
 							</div>
                         </div>
-                        <div class="baka dollars">
+                        <div class="baka dollars borderBottom">
                             <h6>(如您的註冊繳費單所登載的可貸金額已扣除此項費用，請勿填寫
                     <br>如您的註冊繳費單所登載的可貸金額未扣除此項費用，請於此欄位填寫金額)</h6>
                         </div>
@@ -127,7 +128,7 @@
                                     <span>(含學分費)</span>
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_credit" name="freedom_credit" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_credit" name="freedom_credit" value=""> 元
 									<div class="error-msg"></div>
 								</div>
                             </div>
@@ -136,7 +137,7 @@
                                     <h4>2.學校平安保險</h4>
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_FPA" name="freedom_FPA" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_FPA" name="freedom_FPA" value=""> 元
 									<div class="error-msg"></div>
 								</div>
                             </div>
@@ -145,7 +146,7 @@
                                     <h4>3.實習費</h4>
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_practice" name="freedom_practice" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_practice" name="freedom_practice" value=""> 元
 									<div class="error-msg"></div>
 							   </div>
                             </div>
@@ -154,7 +155,7 @@
                                     <h4>4.音樂指導費</h4>
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_music" name="freedom_music" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_music" name="freedom_music" value=""> 元
 									<div class="error-msg"></div>
 							   </div>
                             </div>
@@ -165,20 +166,20 @@
                             <div class="baka excla">
                                 <div class="left">
                                     <h4 class="">5.書籍費</h4>
-                                    <span>(如已含在可貸金額，請勿填寫)</span>
+<!--                                    <span>(如已含在可貸金額，請勿填寫)</span>-->
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_book" name="freedom_book" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_book" name="freedom_book" value=""> 元
 									<div class="error-msg"></div>
 								</div>
                             </div>
                             <div class="baka excla">
                                 <div class="left">
                                     <h4 class="">6.住宿費</h4>
-                                    <span>(如已含在可貸金額，請勿填寫)</span>
+<!--                                    <span>(如已含在可貸金額，請勿填寫)</span>-->
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_live" name="freedom_live" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_live" name="freedom_live" value=""> 元
 									<div class="error-msg"></div>
 								</div>
                             </div>
@@ -188,17 +189,17 @@
                                     <span>(限學海飛颺或學海惜珠得獎)</span>
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_abroad" name="freedom_abroad" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_abroad" name="freedom_abroad" value=""> 元
 									<div class="error-msg"></div>
 							   </div>
                             </div>
                             <div class="baka excla">
                                 <div class="left">
                                     <h4>8.生活費</h4>
-                                    <span>(限低收入戶或中、低收入戶)</span>
+                                    <span>(限低收入戶或中低收入戶)</span>
                                 </div>
                                 <div class="right">
-                                    <input type="text" class="input_f" id="freedom_life" name="freedom_life" value="0"> 元
+                                    <input type="text" class="input_f" id="freedom_life" name="freedom_life" value=""> 元
 									<div class="error-msg"></div>
 								</div>
                             </div>
@@ -207,7 +208,7 @@
                 </div>
                 <div class="vic">
                     <h5 class="blue">*應扣除教育補助費或助學公費</h5>
-                    <input type="text" class="input_f" id="freedom_publicExpense" name="freedom_publicExpense" value="0"> 元
+                    <input type="text" class="input_f" id="freedom_publicExpense" name="freedom_publicExpense" value=""> 元
 					<div class="error-msg"></div>
 				
                 <div class="baka tyg">

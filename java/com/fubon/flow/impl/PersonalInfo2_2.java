@@ -75,7 +75,7 @@ public class PersonalInfo2_2 implements ILogic {
             mailBean.setReceiver(email);
             mailBean.addResultParam("otpNumber",otpBean.getOtpNumber());
             mailBean.addResultParam("otpCode",otpBean.getOtpCode());
-            mailBean.addResultParam("otpTime", DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss", otpBean.getOtpTime()));
+            mailBean.addResultParam("otpTime", DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss", otpBean.getOtpTime()));
             mailBean.addResultParam("funcName","變更基本資料");
 
             MessageUtils.sendEmail(mailBean);

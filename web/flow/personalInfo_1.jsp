@@ -11,7 +11,7 @@
 <input type="hidden" name="domicileAddress_hidden" value=""/>
 <input type="hidden" name="teleAddress_hidden" value=""/>
 
-        <div class="joy">
+        <div class="joy midd">
             <input type="hidden" name="marryStatus" value="" />
 			
             <input type="hidden" class="userAddress" name="domiCityIdHidden" value="" />
@@ -23,24 +23,21 @@
                 <p>身分證字號</p>
                 <p class="susi" id="joyId"></p>
             </div>
-            <div class="sandy">
+            <div class="sandy twoDiv">
                 <p>姓名</p>
                 <p class="susi" id="joyName"></p>
             </div>
-           <div class="sandy" id="birth_tmp_1" style='display:none;'>
+           <div class="sandy threeDiv" id="birth_tmp_1" style='display:none;'>
                 <p>生日</p>
 				 <p class="susi" id="joyBirthday">民國 75年 10月 8日</p>
-				<!-- <p class="susi" id="joyBirthday">
-					民國&nbsp;<input type="text" class="input_s" name="birth_year" maxlength="3">年&nbsp;<input type="text" class="input_s" name="birth_month" maxlength="2">月&nbsp;<input type="text" class="input_s" name="birth_day" maxlength="3">日&nbsp;
-					<div class="error-msg"></div>
-				</p>-->
+				
 				
             </div>
-			<div class="joy nina" id="birth_tmp_2" style='display:none;'>
-                <div class="left">
+			<div class="joy nina twoDiv" id="birth_tmp_2" style='display:none;'>
+                <div class="left left_name">
                     <p>生日</p>
                 </div>
-                <div class="right">
+                <div class="right right_name">
                     
 					民國
                     <input type="text" class="input_s" name="birth_year" maxlength="3"> 年 &nbsp
@@ -105,7 +102,7 @@
                     <p>Email</p>
                 </div>
                 <div class="right">
-                    <input type="text" name="email" placeholder="****254@gmail.com" class="input_L">
+                    <input type="text" name="email" placeholder="" class="input_L">
 					<div class="error-msg"/>
                 </div>
             </div>
@@ -123,8 +120,9 @@
                     <select class="selectpicker input_y liner_y" name="domicileLiner">
                         <option value="">選擇村/里</option>
                     </select>
-                    <input type="text" name="DomicileNeighborhood" id="dNeighborhood" class="input_s"> 鄰
-                    <input type="text" name="DomicileAddress" id="dAddress" class="input_m">
+                    <input type="text" name="DomicileNeighborhood" id="dNeighborhood" class="input_s"> 
+					<span>鄰</span>
+                    <input type="text" name="DomicileAddress" id="dAddress" class="input_m input_addr">
 					<div class="error-msg"/>
                 </div>
             </div>
@@ -148,7 +146,7 @@
                     </select>
                     <input type="text" class="input_s" id="neighborhood" name="neighborhood"> 鄰
                   -->
-				  <input type="text" class="input_m" id="address" name="address">
+				  <input type="text" class="input_m input_address" id="address" name="address">
 					<div class="error-msg"/>
                 </div>
             </div>
@@ -160,7 +158,7 @@
 		        <li>不開放線上修改之個人資料，您可透過以下兩種方式辦理：
 		            <ul>
 		                <li>(1)透過客服:可撥打客服專線02-8751-6665按5由專人為您服務</li>
-		                <li>(2)透過臨櫃:請您本人攜帶身分證正本及原留印鑑，至本行各<a href="https://www.fubon.com/financial/service/local.htm" class="underblue" target="_blank">服務據點</a>辦理個人基本資料變更</li>
+		                <li>(2)透過臨櫃:請您本人攜帶身分證正本及原留印鑑，至本行各<a href="https://www.fubon.com/banking/locations/locations.htm?type=branch&zoned=0" class="underblue" target="_blank">服務據點</a>辦理個人基本資料變更</li>
 		            </ul>
 		        </li>
 		        <li>

@@ -25,17 +25,17 @@
     <div class="contentArea">
 
         <!-- 查詢區塊 -->
-        <div class="processArea searchArea">
+        <div class="processArea searchArea" style="display:none;">
             <div class="processOutBox">
                 <div class="processBox">
                     <div class="processInner">
                         <h3 class="snopy detail">請選擇查詢內容 <span>（提供最近一年的交易明細查詢）</span></h3>
                         <div class="joy nina">
                             <div class="left">
-                                <p>貸款帳號:</p>
+                                <p>貸款帳號</p>
                             </div>
-<!--                             <div class="right account"></div> -->
-                            <form role="form">
+                            <div class="right account"></div>
+                            <!-- <form role="form">
                                 <div class="form-group">
                                     <label for="sel1"></label>
                                     <select class="form-control" id="sel1">
@@ -44,11 +44,11 @@
                                         <option>3</option>
                                         <option>4</option>
                                     </select>
-                              </form>    
+                              </form>     -->
                         </div>
                         <div class="joy nina">
                             <div class="left">
-                                <p>查詢期間:</p>
+                                <p>查詢期間</p>
                             </div>
                             <div class="right">
                                 <div class="radioArea">
@@ -77,7 +77,7 @@
                                     <span class="star star_1"> 起 </span>
                                     <div class="input_date">
                                         <div class='input-group date mydatetimepicker' id='datetimepicker1'>
-                                            <input type='text' class="form-control" placeholder="YYYY/MM/DD" />
+                                            <input type="text" class="form-control" placeholder="YYYY/MM/DD" />
                         <span class="input-group-addon">
                           <span class="datIcon"></span>
                         </span>
@@ -88,13 +88,15 @@
                                      <span class="star star_2"> 至 </span>
                                     <div class="input_date">
                                         <div class='input-group date mydatetimepicker' id='datetimepicker2'>
-                                            <input type='text' class="form-control" placeholder="YYYY/MM/DD" />
+                                            <input type="text" class="form-control" placeholder="YYYY/MM/DD" />
                         <span class="input-group-addon">
                           <span class="datIcon"></span>
                         </span>
                                         </div>
                                     </div>
                                 </div>
+								
+								<div class="error-msg"></div>
                             </div>
                         </div>
 
@@ -112,7 +114,7 @@
         </div>
 
         <!-- 查詢結果 -->
-<!--         <div class="processArea searchResult">
+<!--   -->      <div class="processArea searchResult hidden">
             <div class="processOutBox">
                 <div class="processBox">
                     <div class="processInner">
@@ -133,7 +135,7 @@
                 </div>
             </div>
 
-        </div> -->
+        </div> 
 
     </div>
 

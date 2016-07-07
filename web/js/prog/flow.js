@@ -29,6 +29,8 @@ function g_ajax(config) {
 		$('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
 	}
 	
+	
+	//顯示Ajax轉轉圖，另外讓主頁面hide	
 	$('.ajax-loader').show();
 	
 
@@ -85,6 +87,7 @@ function g_ajax(config) {
 	            
 				
 				$('.ajax-loader').hide();
+				$('div.processArea').show();
 	        },
 	        error : function() {
 	            //alert('系統出現異常!!');
@@ -195,7 +198,9 @@ function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanld
 
                     var $this = $(this);
                     var isBack = false;
-                    if($this.hasClass('confirm')) {
+					
+					//只有我要申請才要跳confirm
+                    if($this.hasClass('confirm') && Content.flow.flowId == 'apply') {
                         isBack = confirm('是否確定要取消？');
                     }
                     else {
@@ -249,7 +254,8 @@ function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanld
                         //當有name跟value時就放hidden
                         if(colName != '' && value != '') {
                             form.find('input[type="hidden"][name="'+colName+'"]').remove();
-                            form.prepend('<input type="hidden" name="'+colName+'" value="'+value+'"/>');
+                            //form.prepend('<input type="hidden" name="'+colName+'" value="'+value+'"/>');
+							$('.processInner').prepend('<input type="hidden" name="'+colName+'" value="'+value+'"/>');
                         }
                     });
 
@@ -379,7 +385,7 @@ function buildMainFlow(flow) {
         
         /**  外面包一層跟tab一樣寬度的div  **/
         //2016-05-20 modify by titan use background-image
-        $('.processTab').after('<div  style="margin:auto; width:73%;"> <div class="tab_arrow" style="position:relative; top:13px; z-index:50;width: 100px; height: 50px; background-image: url(img/house-1.png); background-repeat:no-repeat "></div></div>');
+        $('.processTab').after('<div  style="margin:auto; width:73%;"> <div class="tab_arrow" style="position:relative; top:3; z-index:50;width: 100px; height: 40px; background-image: url(img/house-1.png); background-repeat:no-repeat "></div></div>');
     }
     
 

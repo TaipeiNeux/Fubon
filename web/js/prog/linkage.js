@@ -41,32 +41,21 @@ var linkage = {
         }
         else{
             domicileCitySelect.on('change', function() {
-            var cityId = $(this).val();
-            var jsonZip = modal.getZip(cityId);
-            //console.debug(jsonZip);
+	            var cityId = $(this).val();
+	            var jsonZip = modal.getZip(cityId);
+	            //console.debug(jsonZip);
 
-			if(jsonZip.zipcodes.length != 0){
-			
-	            zipArr = jsonZip.zipcodes;
-	            var zipArray = [];
+				var zipArray = [];
 				zipArray.push('<option value="">選擇鄉鎮市區</option>');
-	            $.each(zipArr, function(i, zipData) {
-	                zipArray.push('<option value=' + zipData.zipcode + '>' + zipData.areaName + '</option>');
-	            });
-
-	            domicileZipSelect.empty();
-	            domicileZipSelect.append(zipArray.join(''));
-	            domicileZipSelect.selectpicker('refresh');
-
-			}
-            else{
-                var zipArray = [];
-				zipArray.push('<option value="">選擇鄉鎮市區</option>');
-                domicileZipSelect.empty();
-                domicileZipSelect.append(zipArray.join(''));
-	            domicileZipSelect.selectpicker('refresh');
-            }
-        });
+				
+				$.each(jsonZip.zipcodes, function(i, zipData) {
+					zipArray.push('<option value=' + zipData.zipcode + '>' + zipData.areaName + '</option>');
+				});
+				
+				domicileZipSelect.empty();
+		        domicileZipSelect.append(zipArray.join(''));
+		        domicileZipSelect.selectpicker('refresh');
+			});
         }
         
     },
@@ -110,31 +99,20 @@ var linkage = {
         }
         else{
            domicileZipSelect.on('change', function() {
-            var zipId = $(this).val();
-            var jsonLiner = modal.getLiner(zipId);
-            //console.debug(jsonLiner);
+	            var zipId = $(this).val();
+	            var jsonLiner = modal.getLiner(zipId);
+	            console.debug(jsonLiner);
 
-			if(jsonLiner.liners.length != 0){
-	           
-			    var linerArr = jsonLiner.liners;
-	            var linerArray = [];
+				var linerArray = [];
 				linerArray.push('<option value="">選擇村/里</option>');
-	            $.each(linerArr, function(i, linerData) {               
-				   linerArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
-	            });
-
-	            domicileLinerSelect.empty();
-	            domicileLinerSelect.append(linerArray.join(''));
-	            domicileLinerSelect.selectpicker('refresh');
-			}
-            else{
-                var linerArray = [];
-				linerArray.push('<option value="">選擇村/里</option>');
-                domicileLinerSelect.empty();
-                domicileLinerSelect.append(linerArray.join(''));
-				domicileLinerSelect.selectpicker('refresh');
-            }
-        }); 
+		        $.each(jsonLiner.liners, function(i, linerData) {   
+	                    
+					linerArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
+		        });
+				domicileLinerSelect.empty();
+		        domicileLinerSelect.append(linerArray.join(''));
+		        domicileLinerSelect.selectpicker('refresh');
+			}); 
         }
         
     },

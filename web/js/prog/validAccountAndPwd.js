@@ -167,8 +167,40 @@ function isSubstr(src, targetArr){
         }
     });
 
-    if( errMsg != '' ){
-        return '不可為「'+errMsg+'」的子字串';
+    /**   0629 --start 使用者密碼重複要改成: 不得與使用者代碼全部或部分重複  **/
+    if( errMsg != ''){
+
+        return '不得與'+errMsg+'全部或部分重複';
+        //return '不可為「'+errMsg+'」的子字串';
     }
+  
+    /**  0629 --end 使用者密碼重複要改成: 不得與使用者代碼全部或部分重複  **/
+ 
+
     return errMsg;
 }
+
+
+/** --start 忠毅 : 0629 針對密碼重複  **/
+function isSubstr_2(src, targetArr){
+    var errMsg_2 = '';
+    console.log('123');
+    $.each(targetArr, function(i, targetObj){
+
+        if((targetObj.val != null) && (targetObj.val.indexOf(src) >= 0)) {
+
+                if(errMsg_2 != '') errMsg_2 += '、';
+
+                errMsg_2 = targetObj.text;
+
+        }
+    });
+
+    if( errMsg_2 != '' ){
+        
+        return '不得與使用者代碼全部或部分重複';
+    }
+    return errMsg_2;
+}
+/** --end 忠毅 : 0629 針對密碼重複  **/
+

@@ -21,10 +21,13 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 我要申請的1-1：申請人基本資料/基本資料
  */
-public class Apply1_1 implements ILogic {
+public class Apply1_1 extends MarkFlow {
     @Override
     public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception {
 
@@ -33,6 +36,8 @@ public class Apply1_1 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
+        String isPopUp = ProjUtils.isPopupPromoDialog(userId,dao) ? "Y" : "N";//此學期是否已經彈跳過
+        String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N";//紀錄是否有簽訂線上服務註記
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
@@ -80,52 +85,83 @@ public class Apply1_1 implements ILogic {
             cellPhone = loginUserBean.getCustomizeValue("AplyCellPhoneNo");
             email = loginUserBean.getCustomizeValue("AplyEmail");
 
+            domicilePhoneRegionCode = loginUserBean.getCustomizeValue("AplyTelNo1_1");
+            domicilePhonePhone = loginUserBean.getCustomizeValue("AplyTelNo1_2");
+            telePhoneRegionCode = loginUserBean.getCustomizeValue("AplyTelNo2_1");
+            telePhonePhone = loginUserBean.getCustomizeValue("AplyTelNo2_2");
+
+            String zipCode1 = loginUserBean.getCustomizeValue("AplyZip1");
+
+            //用zipcode反查city
+            domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
+
+            domicileAddressZipCode = zipCode1; //戶藉行政區
+            domicileAddressLiner = loginUserBean.getCustomizeValue("Aply1Village");//戶藉村/里名稱(中文)
+            domicileAddressNeighborhood = loginUserBean.getCustomizeValue("AplyAddr1_3");
+            domicileAddressAddress = loginUserBean.getCustomizeValue("AplyAddr1");
+
+
+            String zipCode2 = loginUserBean.getCustomizeValue("AplyZip2");
+
+            //用zipcode反查city
+            teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
+
+            teleAddressZipCode = zipCode2;
+            teleAddressAddress = loginUserBean.getCustomizeValue("AplyAddr2");
+
+            //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
+            DataObject aplyMemberData = null;
 
             //有撥款紀錄要額外帶入：身分證字號、姓名、生日、行動電話、Email、婚姻狀況、戶籍電話、通訊電話、戶籍地址、通訊地址
             if("Y".equalsIgnoreCase(isRecord)) {
-
                 //帶入撥款紀錄
-                DataObject aplyMemberHistoryData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+                aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+            }
+            else {
+                //先取得「本學期」申請資料
+//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+            }
 
-                id = aplyMemberHistoryData.getValue("AplyIdNo");
-                name = aplyMemberHistoryData.getValue("Applicant");
-                birthday = aplyMemberHistoryData.getValue("AplyBirthday");
-                marryStatus = "1".equalsIgnoreCase(aplyMemberHistoryData.getValue("Marriage")) ? "Y" : "N";
+            if(aplyMemberData != null) {
+                id = aplyMemberData.getValue("AplyIdNo");
+                name = aplyMemberData.getValue("Applicant");
+                birthday = aplyMemberData.getValue("AplyBirthday");
+                marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
 
-                domicilePhoneRegionCode = aplyMemberHistoryData.getValue("AplyTelNo1_1");
-                domicilePhonePhone = aplyMemberHistoryData.getValue("AplyTelNo1_2");
+                domicilePhoneRegionCode = aplyMemberData.getValue("AplyTelNo1_1");
+                domicilePhonePhone = aplyMemberData.getValue("AplyTelNo1_2");
 
-                telePhoneRegionCode = aplyMemberHistoryData.getValue("AplyTelNo2_1");
-                telePhonePhone = aplyMemberHistoryData.getValue("AplyTelNo2_2");
+                telePhoneRegionCode = aplyMemberData.getValue("AplyTelNo2_1");
+                telePhonePhone = aplyMemberData.getValue("AplyTelNo2_2");
 
-                cellPhone = aplyMemberHistoryData.getValue("AplyCellPhoneNo");
-                email = aplyMemberHistoryData.getValue("AplyEmail");
+                cellPhone = aplyMemberData.getValue("AplyCellPhoneNo");
+                email = aplyMemberData.getValue("AplyEmail");
 
 
-                String zipCode1 = aplyMemberHistoryData.getValue("AplyZip1");
+                zipCode1 = aplyMemberData.getValue("AplyZip1");
 
                 //用zipcode反查city
                 domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
 
                 domicileAddressZipCode = zipCode1; //戶藉行政區
-                domicileAddressLiner = aplyMemberHistoryData.getValue("Aply1Village");//戶藉村/里名稱(中文)
+                domicileAddressLiner = aplyMemberData.getValue("Aply1Village");//戶藉村/里名稱(中文)
 //                domicileLinerName = aplyMemberHistoryData.getValue("AplyAddr1_4");
-                domicileAddressNeighborhood = aplyMemberHistoryData.getValue("AplyAddr1_3");
-                domicileAddressAddress = aplyMemberHistoryData.getValue("AplyAddr1");
+                domicileAddressNeighborhood = aplyMemberData.getValue("AplyAddr1_3");
+                domicileAddressAddress = aplyMemberData.getValue("AplyAddr1");
                 //domicileAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","1");
 
 
-                String zipCode2 = aplyMemberHistoryData.getValue("AplyZip2");
+                zipCode2 = aplyMemberData.getValue("AplyZip2");
 
                 //用zipcode反查city
                 teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
 
                 teleAddressZipCode = zipCode2;
 //                teleAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","2");
-                teleAddressAddress = aplyMemberHistoryData.getValue("AplyAddr2");
+                teleAddressAddress = aplyMemberData.getValue("AplyAddr2");
+
 
             }
-
 
             //DB是西元轉民國
             birthday = ProjUtils.toBirthday(birthday);
@@ -137,49 +173,76 @@ public class Apply1_1 implements ILogic {
         domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
 
         //隱碼
-        MarkBean markBean = new MarkBean();
-        markBean.addCode("id",id,ProjUtils.toIDMark(id));
-        markBean.addCode("name",name,ProjUtils.toNameMark(name));
-        markBean.addCode("DomicilePhone",domicilePhonePhone,ProjUtils.toTelMark(domicilePhonePhone));
-        markBean.addCode("telephone",telePhonePhone,ProjUtils.toTelMark(telePhonePhone));
-        markBean.addCode("cellPhone",cellPhone,ProjUtils.toTelMark(cellPhone));
-        markBean.addCode("email",email,ProjUtils.toEMailMark(email));
-        markBean.addCode("domicileLiner",domicileAddressLiner,ProjUtils.toAddressAllMark(domicileAddressLiner));
-        markBean.addCode("DomicileNeighborhood",domicileAddressNeighborhood,ProjUtils.toAddressAllMark(domicileAddressNeighborhood));
-        markBean.addCode("DomicileAddress",domicileAddressAddress,ProjUtils.toAddressAllMark(domicileAddressAddress));
-        markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressAllMark(teleAddressAddress));
-        markBean.addCode("birthday",birthday,ProjUtils.toBirthdayMark(birthday));
+        if(isMark()) {
+            MarkBean markBean = new MarkBean();
+            markBean.addCode("id",id,ProjUtils.toIDMark(id));
+            id = ProjUtils.toIDMark(id);
 
-        queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
+            markBean.addCode("name",name,ProjUtils.toNameMark(name));
+            name = ProjUtils.toNameMark(name);
+
+            markBean.addCode("DomicilePhone",domicilePhonePhone,ProjUtils.toTelMark(domicilePhonePhone));
+            domicilePhonePhone = ProjUtils.toTelMark(domicilePhonePhone);
+
+            markBean.addCode("telephone",telePhonePhone,ProjUtils.toTelMark(telePhonePhone));
+            telePhonePhone = ProjUtils.toTelMark(telePhonePhone);
+
+            markBean.addCode("cellPhone",cellPhone,ProjUtils.toTelMark(cellPhone));
+            cellPhone = ProjUtils.toTelMark(cellPhone);
+
+            markBean.addCode("email",email,ProjUtils.toEMailMark(email));
+            email = ProjUtils.toEMailMark(email);
+
+            markBean.addCode("domicileLiner",domicileAddressLiner,ProjUtils.toAddressAllMark(domicileAddressLiner));
+//            domicileAddressLiner = ProjUtils.toAddressAllMark(domicileAddressLiner);
+
+            markBean.addCode("DomicileNeighborhood",domicileAddressNeighborhood,ProjUtils.toAddressAllMark(domicileAddressNeighborhood));
+            domicileAddressNeighborhood = ProjUtils.toAddressAllMark(domicileAddressNeighborhood);
+
+            markBean.addCode("DomicileAddress",domicileAddressAddress,ProjUtils.toAddressAllMark(domicileAddressAddress));
+            domicileAddressAddress = ProjUtils.toAddressAllMark(domicileAddressAddress);
+
+            markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressAllMark(teleAddressAddress));
+            teleAddressAddress = ProjUtils.toAddressAllMark(teleAddressAddress);
+
+            markBean.addCode("birthday",birthday,ProjUtils.toBirthdayMark(birthday));
+            birthday = ProjUtils.toBirthdayMark(birthday);
+
+            queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
+        }
+
+
 
         //裝值到content
+        content.put("isPopUp",isPopUp);
+        content.put("isEtabs",isEtabs);
         content.put("isRecord",isRecord);
-        content.put("id",ProjUtils.toIDMark(id));
-        content.put("name",ProjUtils.toNameMark(name));
-        content.put("birthday",ProjUtils.toBirthdayMark(birthday));
+        content.put("id",id);
+        content.put("name",name);
+        content.put("birthday",birthday);
         content.put("marryStatus",marryStatus);
 
         content.put("sameAddr",sameAddrHidden);
 
         JSONObject domicilePhone = new JSONObject();
         domicilePhone.put("regionCode",domicilePhoneRegionCode);
-        domicilePhone.put("phone",ProjUtils.toTelMark(domicilePhonePhone));
+        domicilePhone.put("phone",domicilePhonePhone);
         content.put("domicilePhone",domicilePhone);
 
         JSONObject telePhone = new JSONObject();
         telePhone.put("regionCode",telePhoneRegionCode);
-        telePhone.put("phone",ProjUtils.toTelMark(telePhonePhone));
+        telePhone.put("phone",telePhonePhone);
         content.put("telePhone",telePhone);
 
-        content.put("mobile",ProjUtils.toTelMark(cellPhone));
-        content.put("email",ProjUtils.toEMailMark(email));
+        content.put("mobile",cellPhone);
+        content.put("email",email);
 
         JSONObject domicileAddress = new JSONObject();
         domicileAddress.put("cityId",domicileAddressCityId);
         domicileAddress.put("zipCode",domicileAddressZipCode);
         domicileAddress.put("liner",domicileAddressLiner);
-        domicileAddress.put("neighborhood",ProjUtils.toAddressAllMark(domicileAddressNeighborhood));
-        domicileAddress.put("address",ProjUtils.toAddressAllMark(domicileAddressAddress));
+        domicileAddress.put("neighborhood",domicileAddressNeighborhood);
+        domicileAddress.put("address",domicileAddressAddress);
 
         domicileAddress.put("cityName",domicileAddressCityName);
         domicileAddress.put("zipCodeName",domicileAddressZipCodeName);
@@ -189,7 +252,7 @@ public class Apply1_1 implements ILogic {
         JSONObject teleAddress = new JSONObject();
         teleAddress.put("cityId",teleAddressCityId);
         teleAddress.put("zipCode",teleAddressZipCode);
-        teleAddress.put("address",ProjUtils.toAddressAllMark(teleAddressAddress));
+        teleAddress.put("address",teleAddressAddress);
         content.put("teleAddress",teleAddress);
 
     }

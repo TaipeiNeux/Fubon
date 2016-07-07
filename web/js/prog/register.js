@@ -131,10 +131,16 @@ function register4(content) {
 		resultMsg = '申請成功';
 	}
 	else {
+	
+		//2016-07-06 added by titan加上當errorCode是10的時候，要顯示html
+		if(errorCode == '10') {
+			errorMsg = '該身分證字號已為本服務專區會員，請您於<a href="index.jsp" class="underline blue">首頁</a>直接登入。<br>若您已忘記使用者代碼或密碼，可點選[首頁&gt;<a href="forgetPassword.jsp" class="underline blue">忘記代碼/密碼</a>]功能進行重設。';
+		}
+	
 		resultMsg = '申請失敗('+errorCode+')' + errorMsg;
 	}
 	
-    registerResult.text( resultMsg );
+    registerResult.html( resultMsg );
     registerResult.addClass( (result == 'success')? 'nike': 'deny' );
     registerDate.text(date.substr(0,4) + '/' + date.substr(5,2) + '/' + date.substr(8,2));
     registerTime.text(time);
@@ -221,17 +227,23 @@ function register2_valid() {
         }],
         validNumber: [{
             name: 'birthday_y',
-            msg: '生日',
+            /** --start  0629  驗證訊息為 : 限輸入錯字, 沒有生日  **/
+            msg: '',
+            /** --end  0629  驗證訊息為 : 限輸入錯字, 沒有生日  **/
             allowEmpty : false,
             group: 'birthday'
         }, {
             name: 'birthday_m',
-            msg: '生日',
+            /** --start  0629  驗證訊息為 : 限輸入錯字, 沒有生日  **/
+            msg: '',
+            /** --end  0629  驗證訊息為 : 限輸入錯字, 沒有生日  **/
             allowEmpty : false,
             group: 'birthday'
         }, {
             name: 'birthday_d',
-            msg: '生日',
+            /** --start  0629  驗證訊息為 : 限輸入錯字, 沒有生日  **/
+            msg: '',
+            /** --end  0629  驗證訊息為 : 限輸入錯字, 沒有生日  **/
             allowEmpty : false,
             group: 'birthday'
         }, {
@@ -243,7 +255,9 @@ function register2_valid() {
         validDecimal: [],
         validChinese: [{
             name: 'name',
-            msg: '姓名'
+            /** --start 0629  忠毅 register的錯誤訊息是: 限輸入中文字 (沒有姓名)  **/
+            msg: ''
+            /** --end 0629  忠毅 register的錯誤訊息是: 限輸入中文字 (沒有姓名)  **/
         }],
         validEmail: [{
             name: 'email',
@@ -268,7 +282,9 @@ function register2_valid() {
             if (user_id.length < 10 || user_id.length > 10) {
                 customizeValidResult.push({
                     obj: $('[name="id"]'),
-                    msg: '身分證字號輸入長度不符'
+                    /** --start 0629  忠毅 SRS: 輸入長度不符  **/ 
+                    msg: '輸入長度不符'
+                    //msg: '身分證字號輸入長度不符'
                 });
             }
 
@@ -276,10 +292,14 @@ function register2_valid() {
             if (user_name.length < 2 ) {
                 customizeValidResult.push({
                     obj: $('[name="name"]'),
-                    msg: '姓名至少兩個字'
+                    /** --start 0629  忠毅 register的錯誤訊息是: 姓名格式錯誤  **/ 
+                    msg: '姓名格式錯誤'
+                    /** --end 0629  忠毅 register的錯誤訊息是: 姓名格式錯誤  **/
                 });
             }
-			else if (user_name.length > 10) {
+            /**  0629--start 忠毅 改成上限 20 個字 **/
+			else if (user_name.length > 20) {
+            /**  0629--end 忠毅 改成上限 20 個字 **/
                 customizeValidResult.push({
                     obj: $('[name="name"]'),
                     msg: '姓名長度過長'
@@ -290,11 +310,28 @@ function register2_valid() {
             var today = new Date();
             var b_birthNow = birth - today;
 
-            if( b_birthNow > 0){
-                customizeValidResult.push({
-                    obj: $('[name="birthday_y"]'),
-                    msg: '生日格式錯誤'
+            if( b_birthNow > 0 ){
+
+                /** --start  0629 若已有生日錯誤出現,則不要在顯示   **/
+                var birth_check = 0;
+                $('.error-msg').each(function(){
+
+                    var str1 = "生日格式";
+                    var str2 = $(this).text();
+                    var s_num = str1.indexOf(str2);
+                 //   alert(str2);
+                    if ( s_num >= 0)
+                        birth_check++;
                 });
+
+                if( birth_check == 0 ){
+                    
+                    customizeValidResult.push({
+                        obj: $('[name="birthday_y"]'),
+                        msg: '生日格式錯誤'
+                    });
+                }   
+                /** --end  0629 若已有生日錯誤出現,則不要在顯示   **/
             }
 
             var user_email = $('[name="email"]').val();
@@ -309,18 +346,23 @@ function register2_valid() {
             if (user_account.length<account_minLen || user_account.length>account_maxLen) {
                 customizeValidResult.push({
                     obj: $('[name="userAccount"]'),
-                    msg: '使用者代碼輸入長度不符'
+                    /**  0629 只有輸入長度不符  **/
+                    msg: '輸入長度不符'
                 });
             } else if(!isValidChar(user_account)) {
                 customizeValidResult.push({
                     obj: $('[name="userAccount"]'),
-                    msg: '使用者代碼限輸入英數字'
+                    /** --start 0629  忠毅 SRS: 限輸入英數字  **/ 
+                    msg: '限輸入英數字'
+                    //msg: '使用者代碼限輸入英數字'
                 });
 
             } else if(!isNumericAlphabetMix(user_account)) {
                 customizeValidResult.push({
                     obj: $('[name="userAccount"]'),
-                    msg: '使用者代碼須包括英文及數字'
+                    /** --start 0629  忠毅 SRS: 須包含英文及數字  **/ 
+                    msg: '須包含英文及數字'
+                    //msg: '使用者代碼須包括英文及數字'
                 });
 
             } else if(isSameChar(user_account)) {
@@ -348,7 +390,7 @@ function register2_valid() {
                 if(errMsg != '') {
                     customizeValidResult.push({
                         obj: $('[name="userAccount"]'),
-                        msg: '使用者代碼'+errMsg
+                        msg: ''+errMsg
                     });
                 }
             }
@@ -357,18 +399,25 @@ function register2_valid() {
             if (user_pwd.length<pwd_minLen || user_pwd.length>pwd_maxLen) {
                 customizeValidResult.push({
                     obj: $('[name="userPwd"]'),
-                    msg: '使用者密碼輸入長度不符'
+                    /** --start 0629  忠毅 SRS: 輸入長度不符  **/ 
+                    msg: '輸入長度不符'
+                    //msg: '使用者密碼輸入長度不符'
+
                 });
             } else if(!isValidChar(user_pwd)) {
                 customizeValidResult.push({
                     obj: $('[name="userPwd"]'),
-                    msg: '使用者密碼限輸入英數字'
+                    /** --start 0629  忠毅 SRS: 限輸入英數字  **/ 
+                    msg: '限輸入英數字'
+                    //msg: '使用者密碼限輸入英數字'
                 });
 
             } else if(!isNumericAlphabetMix(user_pwd)) {
                 customizeValidResult.push({
                     obj: $('[name="userPwd"]'),
-                    msg: '使用者密碼須包括英文及數字'
+                    /** --start 0629  忠毅 SRS: 須包含英文及數字  **/ 
+                    msg: '須包含英文及數字'
+                   // msg: '使用者密碼須包括英文及數字'
                 });
 
             } else if(isSameChar(user_pwd)) {
@@ -392,14 +441,19 @@ function register2_valid() {
                         text: '生日'
                     },{
                         val: user_account,
+                        
                         text: '使用者代碼'
-                    }]
+                       }
+                     ]
+                    
                 );
 
-                if(errMsg != '') {
+               
+
+                if(errMsg != '')  {
                     customizeValidResult.push({
                         obj: $('[name="userPwd"]'),
-                        msg: '使用者密碼'+errMsg
+                        msg: ''+errMsg
                     });
                 }
             }

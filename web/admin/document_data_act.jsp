@@ -47,11 +47,11 @@
 
         //轉成binary後透過原生JDBC物件來更新資料
         Connection conn = null;
-
+        PreparedStatement ps = null;
         try{
             conn = ((SQLConnection)ORMAPI.getConnection("db")).getConnection();
 
-            PreparedStatement ps = conn.prepareStatement("update Document_Data set Data = ? where DataNo = ?");
+            ps = conn.prepareStatement("update Document_Data set Data = ? where DataNo = ?");
 
             FileInputStream is = new FileInputStream(file);
             ps.setBinaryStream(1, is, (int) file.length());
@@ -62,9 +62,17 @@
         }catch(Exception e) {
             e.printStackTrace();
         }finally{
+
+            if(ps != null) {
+                ps.close();
+            }
+
+
             if(conn != null) {
                 conn.close();
             }
+
+
         }
 
     }

@@ -42,12 +42,8 @@
                 </div>
             </div>
         </div>
-        <div class="defermentBtns">
-<a href="deferment_0.jsp" class="grey prev hi">上一步</a>
         <div class="nextBtn">
             
-        </div>
-        
         </div>
     </div>
 

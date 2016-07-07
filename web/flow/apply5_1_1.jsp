@@ -160,7 +160,7 @@
                         <p name="father_phone_domi"></p>
                     </div>
                 </div>-->
-                <div class="joy abon">
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -168,7 +168,7 @@
                         <p name="father_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -241,7 +241,7 @@
                     </div>
                 </div>-->
 
-                <div class="joy abon">
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -249,7 +249,7 @@
                         <p name="mother_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -321,7 +321,7 @@
                         <p name="thirdParty_phone_domi"></p>
                     </div>
                 </div>-->
-                <div class="joy abon">
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -329,7 +329,7 @@
                         <p name="thirdParty_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -401,7 +401,7 @@
                         <p name="spouse_phone_domi"></p>
                     </div>
                 </div>-->
-                <div class="joy abon">
+                <div class="joy abon bgfff">
                     <div class="left">
                         <p>通訊電話</p>
                     </div>
@@ -409,7 +409,7 @@
                         <p name="spouse_phone"></p>
                     </div>
                 </div>
-                <div class="joy abon bgfff">
+                <div class="joy abon">
                     <div class="left">
                         <p>行動電話</p>
                     </div>
@@ -613,11 +613,12 @@
         <h3 class="snopy pen mt40">上傳文件
             </h3>
             <div class="error-msg" id="documentType" style="display:none">只允許上傳jpg、png、pdf、tif或gif影像檔</div>
+            <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
         <table class="mqua">
             <thead>
                 <tr>
                     <th colspan="2">檔案名稱</th>
-                    <th>上傳/修改</th>
+                    <th>檔案上傳</th>
                     <th>預覽</th>
                 </tr>
             </thead>
@@ -720,8 +721,8 @@
         </table>
     </div>
         <div class="tip_d">
-            <p>按「確認」後本行將寄發六位數交易驗證碼至您的手機</p>
-                <div class="tip_tel">0911111111</div>
-            <p>若該手機號碼錯誤或5分鐘內未收到交易驗證碼，請洽客戶務專線<span class="tip_s">02-8751-6665</span>按<span class="tip_s">5</span>。</p>
+            <p>按「確認」後，本行將寄發六位數交易驗證碼至您手機號碼</p>
+                <span><div class="tip_tel">0911111111</div>;</span>
+            <p>若該手機號碼錯誤或5分鐘內未收到交易驗證碼，請洽客戶服務專線<span class="tip_s">02-8751-6665</span>按<span class="tip_s">5</span>。</p>
         </div>    
                     

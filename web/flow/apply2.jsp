@@ -3,6 +3,9 @@
 
         <form id="mainForm">
 
+            <input type="hidden" name="isRecordHidden" value="" />
+            <input type="hidden" name="isChangeHidden" value="" />
+            <input type="hidden" name="adultHidden" value="" />
             <input type="hidden" name="guarantorText" value="" />
             <input type="hidden" name="showInfo" value="" />
             <input type="hidden" name="isGuarantor" value="" />
@@ -12,6 +15,7 @@
             <input type="hidden" name="string_thirdParty" value="" />
             <input type="hidden" name="string_spouse" value="" />
             <input type="hidden" name="thirdPartyTitle" value="" />
+			<input type="hidden" name="user_birthday_hidden" value="" />
 
             <input type="hidden" name="father_sameAddrHidden" value="" />
             <input type="hidden" name="mother_sameAddrHidden" value="" />
@@ -39,7 +43,7 @@
                             <label for="incomeTaxFather" class="sqr-label" id="fatherCkeckbox">父親</label>
                             <input type="checkbox" name="incomeTax_purchaser" id="incomeTaxMother" class="sqr-checkbox">
                             <label for="incomeTaxMother" class="sqr-label" id="motherCkeckbox">母親</label>
-                            <div class="error-msg"></div>
+                            <div class="error-msg" id="checkboxGroup" style="display:none"></div>
                         </div>
                      </div>
                 </span>
@@ -66,7 +70,7 @@
                             </div>
                         </div>
                    </span>
-<div class="error-msg" id="tip0" style="display:none">請勾選是否擔任連帶保證人</div> 
+<div class="error-msg" id="tip0" style="display:none">請選擇是否擔任連帶保證人</div> 
 
                 </h3>
                 <div class="famy">
@@ -146,8 +150,8 @@
                         <div class="right">
                             <div class="sp mb10">
                                 <div class="radioArea">
-                                    <input type="checkbox" name="R_address_dad" id="R_address_1_dad" class="css-checkbox">
-                                    <label for="R_address_1_dad" class="css-label radGroup2">同申請人戶籍地址</label>
+                                    <input type="checkbox" name="R_address_dad" id="R_address_1_father" class="css-checkbox">
+                                    <label for="R_address_1_father" class="css-label radGroup2">同申請人戶籍地址</label>
                                 </div>
                                 <div class="radioArea" style="display:none">
                                     <input type="radio" name="R_address_dad" id="R_address_2_dad" class="css-checkbox_c">
@@ -232,7 +236,7 @@
                         </div>
                    </div>
                     </span>
-                    <div class="error-msg" id="tip1" style="display:none">請勾選是否擔任連帶保證人</div> 
+                    <div class="error-msg" id="tip1" style="display:none">請選擇是否擔任連帶保證人</div> 
 
             </h3>
                 <div class="famy">
@@ -313,8 +317,8 @@
                         <div class="right">
                             <div class="sp mb10">
                                 <div class="radioArea">
-                                    <input type="checkbox" name="R_address_mon" id="R_address_1_mon" class="css-checkbox">
-                                    <label for="R_address_1_mon" class="css-label radGroup2">同申請人戶籍地址</label>
+                                    <input type="checkbox" name="R_address_mon" id="R_address_1_mother" class="css-checkbox">
+                                    <label for="R_address_1_mother" class="css-label radGroup2">同申請人戶籍地址</label>
                                 </div>
                                 <div class="radioArea" style="display:none">
                                     <input type="radio" name="R_address_mon" id="R_address_2_mon" class="css-checkbox_c">
@@ -396,7 +400,7 @@
                         </div>
                     </span>
                     </span>
-                    <div class="error-msg" id="tip2" style="display:none">請勾選是否擔任連帶保證人</div> 
+                    <div class="error-msg" id="tip2" style="display:none">請選擇是否擔任連帶保證人</div> 
 
             </h3>
                 <div class="sodif sodleft">
@@ -502,8 +506,8 @@
                         <div class="right">
                             <div class="sp mb10">
                                 <div class="radioArea">
-                                    <input type="checkbox" name="R_address_third" id="R_address_1_third" class="css-checkbox">
-                                    <label for="R_address_1_third" class="css-label radGroup2">同申請人戶籍地址</label>
+                                    <input type="checkbox" name="R_address_third" id="R_address_1_thirdParty" class="css-checkbox">
+                                    <label for="R_address_1_thirdParty" class="css-label radGroup2">同申請人戶籍地址</label>
                                 </div>
                                 <div class="radioArea" style="display:none">
                                     <input type="radio" name="R_address_third" id="R_address_2_third" class="css-checkbox_c">
@@ -587,7 +591,7 @@
                        ) </div>
                      </span>
                     </span>
-                    <div class="error-msg" id="tip3" style="display:none">請勾選是否擔任連帶保證人</div> 
+                    <div class="error-msg" id="tip3" style="display:none">請選擇是否擔任連帶保證人</div> 
 
             </h3>
                 <div class="famy">
@@ -671,8 +675,8 @@
                         <div class="right">
                             <div class="sp mb10">
                                 <div class="radioArea">
-                                    <input type="checkbox" name="R_address_sp" id="R_address_1_sp" class="css-checkbox">
-                                    <label for="R_address_1_sp" class="css-label radGroup2">同申請人戶籍地址</label>
+                                    <input type="checkbox" name="R_address_sp" id="R_address_1_spouse" class="css-checkbox">
+                                    <label for="R_address_1_spouse" class="css-label radGroup2">同申請人戶籍地址</label>
                                 </div>
                                 <div class="radioArea" style="display:none">
                                     <input type="radio" name="R_address_sp" id="R_address_2_sp" class="css-checkbox_c">
@@ -690,7 +694,7 @@
                             </select>
                             <input type="text" class="input_s" name="spouse_neighborhood_domi"> 
 							<span>鄰</span>
-                            <input type="text" class="input_m" name="spouse_address_domi">
+                            <input type="text" class="input_m input_wifs" name="spouse_address_domi">
                             <div class="error-msg"></div>
                         </div>
                     </div>
@@ -733,9 +737,10 @@
         </form>
 
         <div class="earth nopd">
-            <h3>注意事項:</h3>
-            <ol>
-                <li>若欲修改關係人資料，請關係人本人攜帶身分證正本及原留印鑑，至本行各<a href="" class="underblue" data-toggle="modal" data-target="#branches2">服務據點</a>辦理。</li>
+            <h3 class="casomTitle">注意事項:</h3>
+            <ol class="casom">
+               <!--  <li>若欲修改關係人資料，請關係人本人攜帶身分證正本及原留印鑑，至本行各<a href="" class="underblue" data-toggle="modal" data-target="#branches2">服務據點</a>辦理。</li> -->
+                <li>若欲修改關係人資料，請關係人本人攜帶身分證正本及原留印鑑，至本行各<a href="https://www.fubon.com/banking/locations/locations.htm" class="underblue" target="_blank">服務據點</a>辦理。</li>
                 <li>為符合「金融監督管理委員會指定非公務機關個人資料檔案安全維護辦法」之規定，本行就學貸款服務專區內，涉及個人資料之交易，部分資料將以遮蔽之方式進行保護，若導致您無法確認資料之正確性，請您至本行櫃檯辦理或洽客戶服務專線02-8751-6665按5將有專人竭誠為您服務。
                 </li>
             </ol>

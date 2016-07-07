@@ -54,7 +54,7 @@ public class ChangePwd3 implements ILogic {
         Vector<DataObject> ret = new Vector<DataObject>();
         dao.query(ret,studentUserProfileDetail,null);
 
-        String forgetPasswordResult = "success" , forgetPasswordDate = "" , forgetPasswordTime = "";
+        String forgetResult = "success" , forgetDate = "" , forgetTime = "";
 
         if(ret.size() != 0) {
             try{
@@ -76,8 +76,8 @@ public class ChangePwd3 implements ILogic {
                     String today = DateUtil.getTodayString();
                     today = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",today);
 
-                    forgetPasswordDate = today.substring(0,10);
-                    forgetPasswordTime = today.substring(11,19);
+                    forgetDate = today.substring(0,10);
+                    forgetTime = today.substring(11,19);
 
                     //清除草稿
                     FlowUtils.resetDraftData(userId,"changePwd",dao);
@@ -86,7 +86,7 @@ public class ChangePwd3 implements ILogic {
 
             }catch(Exception e) {
                 e.printStackTrace();
-                forgetPasswordResult = "fail";
+                forgetResult = "fail";
 
                 errorCode = "99";
                 errorMsg = "系統發生錯誤["+e.getMessage()+"]";
@@ -94,21 +94,21 @@ public class ChangePwd3 implements ILogic {
         }
 
         //寄發Email
-        String msg = forgetPasswordResult.equals("success") ? "成功" : "失敗";
+        String msg = forgetResult.equals("success") ? "成功" : "失敗";
         String mailTitle = MessageUtils.resetPwdTitle;
         mailTitle = StringUtils.replace(mailTitle, "{result}", msg);
 
         MailBean mailBean = new MailBean("changePwd");
         mailBean.setReceiver(email);
         mailBean.setTitle(mailTitle);
-        mailBean.addResultParam("result",(forgetPasswordResult.equals("success") ? "申請成功" : "申請失敗("+errorCode+")"+errorMsg));
-        mailBean.addResultParam("imgSrc",forgetPasswordResult.equals("success") ? "{host}/img/na-14.png" : "{host}/img/deny.png");
+        mailBean.addResultParam("result",(forgetResult.equals("success") ? "變更成功" : "變更失敗("+errorCode+")"+errorMsg));
+        mailBean.addResultParam("imgSrc",forgetResult.equals("success") ? "{host}/img/na-14.png" : "{host}/img/deny.png");
 
         MessageUtils.sendEmail(mailBean);
 
-        content.put("changePwdResult",forgetPasswordResult);
-        content.put("changePwdDate",forgetPasswordDate);
-        content.put("changePwdTime",forgetPasswordTime);
+        content.put("changePwdResult",forgetResult);
+        content.put("changePwdDate",forgetDate);
+        content.put("changePwdTime",forgetTime);
 
 
         //清除草稿資料

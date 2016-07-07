@@ -5,6 +5,7 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.dom4j.Document;
@@ -67,9 +68,43 @@ public class Apply3_2 implements ILogic {
 
             if(root.element("accordingToBill_sum_hidden") != null) accordingToBill_sum = root.element("accordingToBill_sum_hidden").getText();
             if(root.element("freedom_sum") != null) freedom_sum = root.element("freedom_sum").getText();
-
-
-
+        }
+        else {
+            //先取得「本學期」申請資料
+//            DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+//
+//            if(aplyMemberData != null) {
+//                loans = aplyMemberData.getValue("loanType");
+//                accordingToBillLoansSum = aplyMemberData.getValue("renderAmt_school");
+//
+//                if("1".equalsIgnoreCase(loans)) {
+//                    accordingToBillBook = aplyMemberData.getValue("renderAmt_book");
+//                    accordingToBillLive = aplyMemberData.getValue("renderAmt_lodging");
+//                    accordingToBillAbroad = aplyMemberData.getValue("renderAmt_study");
+//                    accordingToBillLife = aplyMemberData.getValue("renderAmt_living");
+//
+//                }
+//                else {
+//                    freedomBook = aplyMemberData.getValue("renderAmt_book");
+//                    freedomLive = aplyMemberData.getValue("renderAmt_lodging");
+//                    freedomAbroad = aplyMemberData.getValue("renderAmt_study");
+//                    freedomLife = aplyMemberData.getValue("renderAmt_living");
+//
+//                }
+//
+//                String scholarshipFlag = aplyMemberData.getValue("scholarshipFlag");
+//
+//                accordingToBillPublicExpense = "N".equals(scholarshipFlag) ? "0" : "1";
+//                freedomPublicExpense = "N".equals(scholarshipFlag) ? "0" : "1";
+//
+//                freedomCredit = aplyMemberData.getValue("renderAmt_education");
+//                freedomFPA = aplyMemberData.getValue("renderAmt_insurance");
+//                freedomPractice = aplyMemberData.getValue("renderAmt_practice");
+//
+//
+//                accordingToBill_sum = aplyMemberData.getValue("renderAmt");
+//                freedom_sum = aplyMemberData.getValue("renderAmt");
+//            }
         }
 
 

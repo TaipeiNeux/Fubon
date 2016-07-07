@@ -69,7 +69,7 @@ public class MessageUtils {
             content = StringUtils.replace(content,"{"+key+"}",mailBean.getResultParamMap().get(key));
         }
 
-        content = StringUtils.replace(content,"{date}",DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString()));
+        content = StringUtils.replace(content,"{date}",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
         content = StringUtils.replace(content,"{memo}",mailBean.getMemo());
         content = StringUtils.replace(content,"{host}",p.getProperty("host"));
 

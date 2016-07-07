@@ -5,6 +5,7 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -49,15 +50,24 @@ public class Apply6_1 implements ILogic {
 
 
         //申請完了，要直接寫入AplyMemberTuitionLoanDtl
-        String errorMsg = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo , dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,null,"1");
+        try{
+            DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo , dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,null,"1");
 
-        if(StringUtils.isNotEmpty(errorMsg)) throw new Exception("申請失敗："+errorMsg);
+            //依照申請人取得線上續貸資料
+            ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
 
-        //依照申請人取得線上續貸資料
-        ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
 
-        //清除我要申請的草稿資料
-        FlowUtils.resetDraftData(userId,"apply",dao);
+            //放是否借據
+            content.put("signBill","Y".equals(aplyMemberDataObject.getValue("signBill")) ? "Y" : "N");
+
+
+            //清除我要申請的草稿資料
+//            FlowUtils.resetDraftData(userId,"apply",dao);
+        }catch(Exception e) {
+            e.printStackTrace();
+
+            throw new Exception("申請失敗："+e.getMessage());
+        }
     }
 
     @Override
