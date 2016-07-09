@@ -164,12 +164,16 @@ function deferment_1_valid() {
                 var currentMonth = current.getMonth() + 1;        //現在的月
                 var currentDay = current.getDate();               //現在的日
                 var selectYearInput = $('[name="selectYear"]');       //輸入的年
+				var fullYearInput = parseInt(selectYearInput.val()) + 1911;
                 var selectMonthInput = $('[name="selectMonth"]');     //輸入的月
+                var monthInput = parseInt(selectMonthInput.val()) - 1;   
                 var selectDayInput = $('[name="selectDay"]');         //輸入的日
                 var eliIndex_hidden = $('[name="eliIndex"]');
-
+				var pass = new Date(current.getFullYear()-5, current.getMonth(), current.getDate());
+				var input = new Date(fullYearInput, monthInput, selectDayInput.val());
+				
                 //選項1、2、4、5，控管年月日不得早於系統日且只能晚於系統日十年內
-                if (eliIndex_hidden == '1' || eliIndex_hidden == '2' || eliIndex_hidden == '4' || eliIndex_hidden == '5') {
+                if (eliIndex_hidden.val() == '1' || eliIndex_hidden.val() == '2' || eliIndex_hidden.val() == '4' || eliIndex_hidden.val() == '5') {
                     if (selectYearInput.val() - currentYear > 10) {
                         customizeValidResult.push({
                             obj: $('[name="selectYear"]'),
@@ -192,11 +196,15 @@ function deferment_1_valid() {
                     }
                 }
                 //選項6、7，控管年月日不得早於系統日5年
-                else if (eliIndex_hidden == '6' || eliIndex_hidden == '7') {
-                    
+                else if (eliIndex_hidden.val() == '6' || eliIndex_hidden.val() == '7') {
+                    var divSec = Math.round((input-pass)/(1000*60*60*24));
+					if( divSec < 0 ){
+						customizeValidResult.push({
+                            obj: $('[name="selectYear"]'),
+                            msg: '只允許早於系統日五年內'
+                        });
+					}
                 }
-
-
             }
         });
 
@@ -719,9 +727,9 @@ function uploadEvent() {
         var fileType = selected_file_name.substr(-3, 3);
 
         fileType = fileType.toLowerCase();
-        console.debug(fileType);
+        //alert(fileType);
 
-        if (fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
+        if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
             $('#documentType').show();
             $('#documentLength').hide();
         } else {
@@ -1144,6 +1152,20 @@ function showUploadFiles(content, hasRadio) {
             }*/
         }
     });
+    
+    studentIdNegativeView.on('click', function() {
+        if (studentIdNegativeView.hasClass('active')) {
+
+            previewDocument($('#sNeg iframe').attr('src'));
+
+            /*if ($("#sNeg").is(":hidden")) {
+                clickView.hide();
+                $('#sNeg').show();
+            } else {
+                $('#sNeg').hide();
+            }*/
+        }
+    });
 }
 
 //額外需要上傳的資料
@@ -1172,8 +1194,8 @@ function additionItem(additionalFile, additionalFile_docId, additionalFileURL) {
 
     //按預覽按鈕
     additionalView.on('click', function() {
-
-        previewDocument($('#add iframe').attr('src'));
+        if (studentIdNegativeView.hasClass('active')) {
+            previewDocument($('#add iframe').attr('src'));
 
         /*if (additionalView.hasClass('active')) {
                   if ($("#add").is(":hidden")) {
@@ -1183,5 +1205,6 @@ function additionItem(additionalFile, additionalFile_docId, additionalFileURL) {
                       $('#add').hide();
                   }
               }*/
+        }
     });
 }

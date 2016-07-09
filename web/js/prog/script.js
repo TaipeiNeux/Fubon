@@ -62,9 +62,9 @@
         $('.navContent-' + navContent + '').addClass('active');
 
         controlHeader();
-
-
-        $('.navContent, .navArea ul li a').off('mouseenter').on('mouseenter', function() {
+    });
+	
+	$('.navContent, .navArea ul li a').off('mouseenter').on('mouseenter', function() {
 
             tmp_count++;
 
@@ -98,7 +98,6 @@
                 }
             }, 50);
         });
-    });
 
     /**  0622 主功能列 =>  不再focus則隱藏  **/
 
@@ -498,8 +497,18 @@
 
 
     $(document).on('click', '.lightWon .picabtn', function() {
+
         $(this).toggleClass('active');
         $(this).parent().find('.repayTableOuter').slideToggle(250);
+
+
+        if ($(this).hasClass('active')) {
+            $(this).html('收起&nbsp;<i class="fa fa-caret-up"></i>');
+
+        } else {
+
+            $(this).html('詳細資訊&nbsp;<i class="fa fa-caret-down"></i>');
+        }
     });
     //-----------------------------------------------------------------------------
 
@@ -860,60 +869,72 @@ function memberLogin() {
         errStr = '';
     } else {
         //登入
-        var result = modal.login(studentId, studentCode, studentPassword);
+		
+		if($('.ajax-loader').length == 0) {
+			$('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+		}
+		
+		
+		//顯示Ajax轉轉圖，另外讓主頁面hide	
+		$('.ajax-loader').show();
+		setTimeout(function(){
+			var result = modal.login(studentId, studentCode, studentPassword);
 
+			$('.ajax-loader').hide();
+			
+	        //判斷是否有重覆登入
+	        if (result.errorCode == '97') {
+	            GardenUtils.display.popup({
+	                title: '',
+	                content: '<p>您已於' + result.LastSignOn + '登入本服務專區,並且尚未登出。<br>若要繼續登入(捨棄上次登入)點選「確定」按鈕;<BR>若要取消本次登入(保留上次登入)請點選「取消｣按鈕。<br><div style="text-align: center;"><button type="button" class="btn btn-default cancel">取消</button><button type="button" class="btn btn-default continue">確定</button></div></p>',
+	                closeCallBackFn: function() {},
+	                showCallBackFn: function(popupView) {
 
-        //判斷是否有重覆登入
-        if (result.errorCode == '97') {
-            GardenUtils.display.popup({
-                title: '',
-                content: '<p>您已於' + result.LastSignOn + '登入本服務專區,並且尚未登出。<br>若要繼續登入(捨棄上次登入)點選「確定」按鈕;<BR>若要取消本次登入(保留上次登入)請點選「取消｣按鈕。<br><div style="text-align: center;"><button type="button" class="btn btn-default cancel">取消</button><button type="button" class="btn btn-default continue">確定</button></div></p>',
-                closeCallBackFn: function() {},
-                showCallBackFn: function(popupView) {
+	                    $('.modal-dialog .cancel').off('click').on('click', function(ev) {
+	                        ev.preventDefault();
 
-                    $('.modal-dialog .cancel').off('click').on('click', function(ev) {
-                        ev.preventDefault();
+	                        popupView.modal('hide');
+	                    });
 
-                        popupView.modal('hide');
-                    });
+	                    $('.modal-dialog .continue').off('click').on('click', function(ev) {
+	                        ev.preventDefault();
 
-                    $('.modal-dialog .continue').off('click').on('click', function(ev) {
-                        ev.preventDefault();
+	                        var result = modal.login(studentId, studentCode, studentPassword, 'Y');
+	                        window.location = 'index.jsp';
+	                    });
+	                },
+	                isShowSubmit: false,
+	                isShowClose: false
+	            });
+	        } else if (result.errorCode == '0') {
+	            //alert('success');
+	            window.location = result.loginSuccessPage;
+	        } else {
 
-                        var result = modal.login(studentId, studentCode, studentPassword, 'Y');
-                        window.location = 'index.jsp';
-                    });
-                },
-                isShowSubmit: false,
-                isShowClose: false
-            });
-        } else if (result.errorCode == '0') {
-            //alert('success');
-            window.location = result.loginSuccessPage;
-        } else {
+	            var failCount = result.failCount;
+	            var errorMsg = result.errorMsg;
+	            var failMsg = '';
+	            if (failCount == 1) {
+	                failMsg = '<p>使用者密碼輸入錯誤一次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
+	            } else if (failCount == 2) {
+	                failMsg = '<p>使用者密碼輸入錯誤二次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
+	            } else if (failCount >= 3) {
+	                failMsg = '<p>使用者密碼連續輸入錯誤三次，已被鎖定</br>(你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
+	            } else {
+	                failMsg = '<p>' + errorMsg + '</p>';
+	            }
 
-            var failCount = result.failCount;
-            var errorMsg = result.errorMsg;
-            var failMsg = '';
-            if (failCount == 1) {
-                failMsg = '<p>使用者密碼輸入錯誤一次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
-            } else if (failCount == 2) {
-                failMsg = '<p>使用者密碼輸入錯誤二次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
-            } else if (failCount >= 3) {
-                failMsg = '<p>使用者密碼連續輸入錯誤三次，已被鎖定</br>(你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
-            } else {
-                failMsg = '<p>' + errorMsg + '</p>';
-            }
+	            GardenUtils.display.popup({
+	                title: '',
+	                content: failMsg,
+	                closeCallBackFn: function() {},
+	                isShowSubmit: false
+	            });
 
-            GardenUtils.display.popup({
-                title: '',
-                content: failMsg,
-                closeCallBackFn: function() {},
-                isShowSubmit: false
-            });
-
-            //alert(result.errorMsg);
-        }
+	            //alert(result.errorMsg);
+	        }
+		},100);
+        
     }
 
 

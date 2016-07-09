@@ -367,7 +367,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'empty',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                     } else if(empty_groupArr.indexOf(number.group) == -1) {
                                         hasErrName.push(errName);
@@ -377,7 +378,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'empty',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                     }
 
@@ -411,7 +413,8 @@ var GardenUtils = {
                                         name : number.name,
                                         type : 'number',
                                         msg : number.msg,
-                                        obj : $this
+                                        obj : $this,
+										val : val
                                     });
                                 }
                                 else {
@@ -439,7 +442,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'number',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                     }
                                 }
@@ -465,7 +469,8 @@ var GardenUtils = {
                                         name : number.name,
                                         type : 'decimal',
                                         msg : number.msg,
-                                        obj : $this
+                                        obj : $this,
+										val : val
                                     });
                                 }
                                 else {
@@ -477,7 +482,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'decimal',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                     }
                                 }
@@ -577,7 +583,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'date',
                                             msg : number.msg,
-                                            obj : $this.length == 1 ? $this : $this[0]
+                                            obj : $this.length == 1 ? $this : $this[0],
+											val : val
                                         });
                                     }
                                 } else {
@@ -599,7 +606,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'date',
                                             msg : number.msg,
-                                            obj : $this.length == 1 ? $this : $this[0]
+                                            obj : $this.length == 1 ? $this : $this[0],
+											val : val
                                         });
                                     }
                                 }
@@ -639,7 +647,8 @@ var GardenUtils = {
                                         name : number.name,
                                         type : 'email',
                                         msg : number.msg,
-                                        obj : $this
+                                        obj : $this,
+										val : val
                                     });
                                 } else {
                                     if (val != "" && !checkHiddenCode(hiddenConf) ) {
@@ -649,7 +658,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'email',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                     }
                                 }
@@ -695,7 +705,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'identity',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                         //message.push("請輸入正確的身分證字號");
                                     }
@@ -708,7 +719,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'identity',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                         //message.push("身分證字號不得為空");
                                     } else if (!checkHiddenCode(hiddenConf)) {
@@ -718,7 +730,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'identity',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                         //message.push("請輸入正確的身分證字號");
                                     }
@@ -759,7 +772,8 @@ var GardenUtils = {
                                         name : number.name,
                                         type : 'mobile',
                                         msg : number.msg,
-                                        obj : $this
+                                        obj : $this,
+										val : val
                                     });
                                 } else {
                                     if (!checkHiddenCode(hiddenConf) && val != "") {
@@ -769,7 +783,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'mobile',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                     }
                                 }
@@ -809,7 +824,8 @@ var GardenUtils = {
                                         name : number.name,
                                         type : 'chinese',
                                         msg : number.msg,
-                                        obj : $this
+                                        obj : $this,
+										val : val
                                     });
                                 } else {
                                     if (!checkHiddenCode(hiddenConf) && val != "") {
@@ -819,7 +835,8 @@ var GardenUtils = {
                                             name : number.name,
                                             type : 'chinese',
                                             msg : number.msg,
-                                            obj : $this
+                                            obj : $this,
+											val : val
                                         });
                                     }
                                 }
@@ -849,6 +866,7 @@ var GardenUtils = {
                         var type = obj.type;
                         var msg = obj.msg;
                         var validObj = obj.obj;
+						var val = obj.val;
 
                         if(type == 'empty') {
                             if(validObj[0].tagName.toLowerCase() == 'input') {
@@ -868,7 +886,12 @@ var GardenUtils = {
                             msg = msg + '限輸入中文字';
                         }
                         else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
-                            msg = msg + '格式錯誤';
+							if(val.indexOf('*') != -1) {
+								msg = msg + '勿輸入遮掩字元，請重新輸入';
+							}
+							else {
+								msg = msg + '格式錯誤';
+							}
                         }
 
                         message.push(msg);
@@ -889,6 +912,7 @@ var GardenUtils = {
                         var type = obj.type;
                         var msg = obj.msg;
                         var validObj = obj.obj;
+						var val = obj.val;
 
                         if(type == 'empty') {
                             if(validObj[0].tagName.toLowerCase() == 'input') {
@@ -913,10 +937,16 @@ var GardenUtils = {
                             if(type == 'identity')
                                  msg = msg + '驗證錯誤';
                             
-                            else 
+                            else {
                             /** --end 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
-                                msg = msg + '格式錯誤';
-
+							
+								if(val.indexOf('*') != -1) {
+									msg = msg + '勿輸入遮掩字元，請重新輸入';
+								}
+								else {
+									msg = msg + '格式錯誤';
+								}
+							}
                             
                         }
 
@@ -1437,6 +1467,107 @@ var GardenUtils = {
                 });
             });
 			
+		},		
+		inputFocusBlurEventHandler : function(obj){
+		
+			console.debug(obj);
+		
+			/*
+			var obj = {
+				inputs : [
+								{
+									inputName : 'inputName1', //輸入框name
+									trimSpace : true, //是否離開輸入框過濾空白
+									convertFullWidth : true, //是否離開輸入框後半形轉全形
+									focusClearVal : true //是否點擊時清空值，離開後若沒改過則還原
+								},
+								{
+									inputName : 'inputName1',
+									trimSpace : true,
+									convertFullWidth : true,
+									focusClearVal : true
+								}
+						]
+			};
+			*/
+			
+			$.each(obj.inputs,function(i,obj){
+			
+				obj = $.extend({
+	                trimSpace: false,
+	                convertFullWidth: false,
+	                focusClearVal: false
+	            }, obj);
+			
+				console.debug(obj);
+			
+				var name = obj.inputName;
+				var trimSpace = obj.trimSpace;
+				var convertFullWidth = obj.convertFullWidth;
+				var focusClearVal = obj.focusClearVal;
+				
+				var input = $('input[name="'+name+'"][type="text"]');
+
+				//去掉disabled
+				if(!input.is(':disabled')) {
+				
+					console.debug(name + ':' + input.length);
+
+					
+					//如果有需要點擊空白，離開後判斷是否有修改過，就要綁onFocus事件
+					if(focusClearVal) {
+						input.on('focus',function(){
+							var val = input.val();
+							console.debug('val = ' + val);
+							
+							//先把值存下來
+							input.attr('original',val);
+							
+							//清空值
+							input.val('');
+						});
+					}
+
+	                input.on('blur',function(){
+	                    var val = input.val();
+						console.debug('val = ' + val);
+						
+						//如果有需要點擊空白，離開後判斷是否有修改過，就要綁onFocus事件
+						if(focusClearVal) {
+							var original = input.attr('original');
+							//如果空白，就帶回原本的值
+							if(val == '') {
+								val = original;
+							}
+						}
+						
+						//去掉空白
+						if(trimSpace) {
+							val = GardenUtils.valid.removeSpace(val);
+						}
+						
+						//半形轉全形
+						if(convertFullWidth) {
+							var after = '';
+						    for(i=0; i<val.length; i++) {
+						     if(val.charCodeAt(i)  >= 33 && val.charCodeAt(i) <= 270) {
+						      after += String.fromCharCode(val.charCodeAt(i) + 65248);
+						     } else if(val.charCodeAt(i) == 32) {
+						      after += String.fromCharCode(12288);
+						     }else {
+							  after += val.substring(i,i+1);
+							 }
+						    }
+							
+							val = after;
+						}
+						
+						
+						
+	                    input.val(val);
+	                });
+				}
+			});
 		},
 		convertThousandComma : function(number) {
 		

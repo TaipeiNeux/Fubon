@@ -15,6 +15,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import java.util.HashMap;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Titan
@@ -81,10 +83,12 @@ public class ApplyBranchLogic implements BranchsLogic {
                 //(2)同一學校:「學校名稱｣之公/私立跟學校值須與前次申請案件相同。
                 String studentIsNational = "";//公立私立
                 String studentName = "";//學校名稱
-
+                String loanAmt = "";//總申貸額度
                 if(draftRoot3_1.element("student_isNational") != null) studentIsNational = draftRoot3_1.element("student_isNational").getText();
                 if(draftRoot3_1.element("student_name") != null) studentName = draftRoot3_1.element("student_name").getText();
-
+                if(draftRoot3_1.element("student_name") != null) loanAmt = draftRoot3_1.element("loanAmt").getText();
+                //過濾半形逗點
+                loanAmt = StringUtils.replace(loanAmt,",","");
 
                 //(3)同一連帶保證人：連帶保證人之人數與身分證字號需與前次相同。
                 String faID = "" , maID = "" , thirdPartID = "",spouseId = "";
@@ -106,19 +110,19 @@ public class ApplyBranchLogic implements BranchsLogic {
                     String historyEduStageCode = aplyMemberHistory.getValue("schoolType3"); //之前的教育階段
                     String historySchoolType1 = aplyMemberHistory.getValue("schoolType1"); //之前的公立/私立
                     String historySchoolCode = aplyMemberHistory.getValue("schoolCode"); //之前的學校代碼
-                    String historyFaIdNo = aplyMemberHistory.getValue("Fa_IdNo"); //之前的父親id
-                    String historyMaIdNo = aplyMemberHistory.getValue("Ma_IdNo"); //之前的母親id
-                    String historyGd1IdNo = aplyMemberHistory.getValue("Gd1_IdNo"); //之前的監護人id
-                    String historyPaId = aplyMemberHistory.getValue("Pa_IdNo"); //之前的配偶id
+//                    String historyFaIdNo = aplyMemberHistory.getValue("Fa_IdNo"); //之前的父親id
+//                    String historyMaIdNo = aplyMemberHistory.getValue("Ma_IdNo"); //之前的母親id
+//                    String historyGd1IdNo = aplyMemberHistory.getValue("Gd1_IdNo"); //之前的監護人id
+//                    String historyPaId = aplyMemberHistory.getValue("Pa_IdNo"); //之前的配偶id
 
 
                     GardenLog.log(GardenLog.DEBUG, "historyEduStageCode = " + historyEduStageCode);
                     GardenLog.log(GardenLog.DEBUG, "historySchoolType1 = " + historySchoolType1);
                     GardenLog.log(GardenLog.DEBUG, "historySchoolCode = " + historySchoolCode);
-                    GardenLog.log(GardenLog.DEBUG, "historyFaIdNo = " + historyFaIdNo);
-                    GardenLog.log(GardenLog.DEBUG, "historyMaIdNo = " + historyMaIdNo);
-                    GardenLog.log(GardenLog.DEBUG, "historyGd1IdNo = " + historyGd1IdNo);
-                    GardenLog.log(GardenLog.DEBUG, "historyPaId = " + historyPaId);
+//                    GardenLog.log(GardenLog.DEBUG, "historyFaIdNo = " + historyFaIdNo);
+//                    GardenLog.log(GardenLog.DEBUG, "historyMaIdNo = " + historyMaIdNo);
+//                    GardenLog.log(GardenLog.DEBUG, "historyGd1IdNo = " + historyGd1IdNo);
+//                    GardenLog.log(GardenLog.DEBUG, "historyPaId = " + historyPaId);
 
                     if(studentEducationStage.equalsIgnoreCase(historyEduStageCode)
                             && studentIsNational.equalsIgnoreCase(historySchoolType1)
@@ -127,40 +131,48 @@ public class ApplyBranchLogic implements BranchsLogic {
 
                         //先抓這次跟之前的申請人數量
                         String[] now = new String[]{faID,maID,thirdPartID,spouseId};
-                        String[] history = new String[]{historyFaIdNo,historyMaIdNo,historyGd1IdNo,historyPaId};
+//                        String[] history = new String[]{historyFaIdNo,historyMaIdNo,historyGd1IdNo,historyPaId};
 
-                        //計算數量
-                        int nowCount = 0;
-                        int historyCount = 0;
-                        for(String t : now) {
-                            if(StringUtils.isNotEmpty(t)) nowCount ++;
+                        HashMap<String,String> signHM = ProjUtils.getSignData(dao,userId, studentName, loanAmt, studentEducationStage);
+                        String loanAcct = signHM.get("signLoanAcct");
+                        String yearTerm = signHM.get("signYearTerm");
+
+                        if(ProjUtils.isRelMatch(now, loanAcct, yearTerm)) {
+                            return "document_branch";
                         }
 
-                        for(String t : history) {
-                            if(StringUtils.isNotEmpty(t)) historyCount ++;
-                        }
-
-
-                        GardenLog.log(GardenLog.DEBUG, "nowCount = " + nowCount);
-                        GardenLog.log(GardenLog.DEBUG, "historyCount = " + historyCount);
-
-                        //如果數量都一樣，再來比ID
-                        if(nowCount == historyCount) {
-                            boolean isMatch = true;
-                            for(int i=0;i<now.length;i++) {
-                                String id = now[i];
-                                if(StringUtils.isNotEmpty(id)) {
-
-                                    GardenLog.log(GardenLog.DEBUG, "history[i] = " + history[i]);
-
-                                    if(!id.equalsIgnoreCase(history[i])) isMatch = false;
-                                }
-                            }
-
-                            if(isMatch) {
-                                 return "document_branch";
-                            }
-                        }
+//                        //計算數量
+//                        int nowCount = 0;
+//                        int historyCount = 0;
+//                        for(String t : now) {
+//                            if(StringUtils.isNotEmpty(t)) nowCount ++;
+//                        }
+//
+//                        for(String t : history) {
+//                            if(StringUtils.isNotEmpty(t)) historyCount ++;
+//                        }
+//
+//
+//                        GardenLog.log(GardenLog.DEBUG, "nowCount = " + nowCount);
+//                        GardenLog.log(GardenLog.DEBUG, "historyCount = " + historyCount);
+//
+//                        //如果數量都一樣，再來比ID
+//                        if(nowCount == historyCount) {
+//                            boolean isMatch = true;
+//                            for(int i=0;i<now.length;i++) {
+//                                String id = now[i];
+//                                if(StringUtils.isNotEmpty(id)) {
+//
+//                                    GardenLog.log(GardenLog.DEBUG, "history[i] = " + history[i]);
+//
+//                                    if(!id.equalsIgnoreCase(history[i])) isMatch = false;
+//                                }
+//                            }
+//
+//                            if(isMatch) {
+//                                 return "document_branch";
+//                            }
+//                        }
                     }
                 }
             }

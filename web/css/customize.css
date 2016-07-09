@@ -2082,7 +2082,7 @@ body.register_2 .wrapper .input_L {
     }
     
     body.apply_2 .left p.stringOrRadio {
-        padding-right: 25%;
+        padding-right: 5%;
     }
     
     .processInner table.mqua .file-photo {
@@ -2746,9 +2746,13 @@ text-decoration: underline;
 	body.index .personal .inputArea {
 		max-width: 380px;
 	}
+	/*2016-07-09 modify by titan
 	#body.index .personal .inputArea input {
+		
 		width: 100%;
+		
 	}
+	*/
 	
 	body.index .personal .insideArea {
 		width: 52%;
@@ -2758,8 +2762,12 @@ text-decoration: underline;
 		width: 55%;
 		max-width: 100%;
 	}
+	
+	/*2016-07-09 modify by titan
 	#body.index .personal .inputArea input {
+	
 		width: 60%;
+		*/
 	}
 	
 	.index .loginBtn {
@@ -2866,8 +2874,10 @@ body.index a.underline {
 @media (min-width:769px) {
     #body.index .personal .inputArea input,
     body.index .personal a[class^="pobtn-"] {
+		
         width: 100%;
         max-width: 235px;
+		/**/
     }
     #body.index .personal .inputArea .error {
         width: 103px;
@@ -2881,7 +2891,9 @@ body.index a.underline {
 @media (width:1024px) {
     #body.index .personal .inputArea input,
     body.index .personal a[class^="pobtn-"] {
+	/**/
         max-width: 190px;
+		
     }
 }
 
@@ -3038,4 +3050,70 @@ body#body .modal-content {
     body.apply_5_step1 .mather:before {
         top: -30px;
     }
+}
+
+@media (min-width:769px) {
+	.toggleBtn a.green {
+		margin-left: 44px;
+	}
+	
+	.apply_map .regionArea .regionPlace .regionText {
+		padding-left: 5px;
+		padding-right: 5px;
+		min-height: 100px;
+	}
+	
+	.apply_map .mapInput {
+		height: 40px;
+		border-radius: 4px;
+	}
+	
+	.apply_map .placeholder {
+		top: 0px;
+	}
+	
+	.regionArea .region {
+		padding-bottom: 20px;
+	}
+	
+	.personalin {
+		padding-top: 15px;
+	}
+	
+	.personalin p {
+		margin: 10px 0;
+	}
+	
+	.sub #triangleInput {
+		margin-top: 0;
+	}
+	
+	.sub #triangleInput {
+		margin-right: 360px;
+	}
+	
+	.sub .appHf {
+		width:42.5%;
+	}
+	
+	
+}
+
+/*2016-07-09 added by titan加上假日行事曆反灰*/
+body.apply_map .greyDeepgrey, body.apply_map .fc-sat,body.apply_map .greyDeepgrey, body.apply_map .fc-sun{
+	color: #828686;
+    background-color: #F0F0F0;
+}
+
+@media (max-width:769px) {
+	body.apply_map .fc-event span{
+		font-size: 6px;
+	}
+	
+	body.apply_map .fc-toolbar h2{
+		font-size: 18px;
+	}
+	body.apply_map .reservationArea .fc-view-container{
+	    padding: 0px 10px;
+	}
 }

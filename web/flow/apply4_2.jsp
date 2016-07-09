@@ -45,7 +45,7 @@
                         <li id="cityRegionIcon"></li>
                         <li id="zipRegionIcon"></li>
                     </ul>
-                    <h3 class="pen">選擇預約對保分行</h3>
+                    <h3 class="pen">請選擇預約對保分行</h3>
                     <ul class="regionPlace">
 
                     </ul>

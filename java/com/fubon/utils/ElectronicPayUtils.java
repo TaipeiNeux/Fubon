@@ -9,6 +9,7 @@ import com.neux.utility.utils.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.impl.code39.Code39Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
@@ -63,6 +64,7 @@ public class ElectronicPayUtils {
                             tmpjson.put("interest", d.getValue("INT_AMT" + i).trim());// 應繳利息
                             tmpjson.put("penalty", d.getValue("PNT_DLY_AMT" + i).trim());// 違約金/遲延息
                             tmpjson.put("payment", d.getValue("TOT_AMT" + i).trim());// 應繳金額
+                            tmpjson.put("accountBarcode",getBarCodeImg128(d.getValue("ACNO_SL" + i).trim()));
                             details.put(tmpjson);
                         }
 
@@ -75,7 +77,7 @@ public class ElectronicPayUtils {
                     String checkCode = "00";// 超商條碼檢碼 //TODO
 
                     jsonObject.put("isEtabs", isEtabs);
-                    jsonObject.put("name", d.getValue("NAME").trim());// 戶名
+                    jsonObject.put("name", ProjUtils.toNameMark(d.getValue("NAME").trim()));// 戶名
                     jsonObject.put("sex", d.getValue("SEX").trim());//性別
                     jsonObject.put("payment_date", formateDate(d.getValue("DATE_YM").trim(),5,"yyyy/MM"));// 繳款單年月(YYYMMDD)
                     jsonObject.put("balance", d.getValue("LOAN_BAL").trim());// 貸款餘額
@@ -95,14 +97,9 @@ public class ElectronicPayUtils {
                     String code3 = date.substring(2, 6) + checkCode + StringUtils.leftPad(sum, 9, "0");
 
                     Map<String, String> barcodeMap = new LinkedHashMap<String, String>();
-                    barcodeMap.put("barcode1", code1);
-                    barcodeMap.put("barcode2", code2);
-                    barcodeMap.put("barcode3", code3);
-
-                    for(String code : barcodeMap.keySet()){
-                        String msg = barcodeMap.get(code);
-                        barcodeMap.put(code, getBarCodeImg(msg));
-                    }
+                    barcodeMap.put("barcode1", getBarCodeImg(code1));
+                    barcodeMap.put("barcode2", getBarCodeImg(code2));
+                    barcodeMap.put("barcode3", getBarCodeImg(code3));
 
                     jsonObject.put("barcodeSrc", barcodeMap);
 
@@ -118,7 +115,8 @@ public class ElectronicPayUtils {
         return jsonObject;
     }
 
-    private static String getBarCodeImg(String msg) {
+    //產生39Code
+    public static String getBarCodeImg(String msg) {
         String barcode;
         String datahead = "data:image/png;base64,";
         int dpi = 150;//resolution
@@ -126,6 +124,31 @@ public class ElectronicPayUtils {
         Code39Bean bean = new Code39Bean();
         bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi));
         bean.setWideFactor(3);
+        bean.doQuietZone(false);
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            BitmapCanvasProvider canvas = new BitmapCanvasProvider(
+                    baos, "image/jpeg", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+            bean.generateBarcode(canvas, msg);
+            canvas.finish();
+            baos.close();
+            barcode = datahead + DatatypeConverter.printBase64Binary(baos.toByteArray());
+        } catch (IOException e) {
+            barcode = "error=>" + e.getMessage();
+        }
+        return barcode;
+    }
+
+    //產生128Code
+    public static String getBarCodeImg128(String msg) {
+        String barcode;
+        String datahead = "data:image/png;base64,";
+        int dpi = 150;//resolution
+
+        Code128Bean bean = new Code128Bean();
+        bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi));
+//        bean.setWideFactor(3);
         bean.doQuietZone(false);
 
         try {

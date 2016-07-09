@@ -1612,7 +1612,11 @@ public class DataServlet extends HttpServlet {
 
                 if(StringUtils.isEmpty(acnoSl)) continue;
 
-                JSONObject clientDetail = new JSONObject();
+                //是否為逾期帳號
+                boolean isDelay = false;
+
+                //分行名稱
+                String bankName = "";
 
                 String responses = null;
 
@@ -1626,8 +1630,18 @@ public class DataServlet extends HttpServlet {
                     if(rsBean.isSuccess()) {
                         responses = rsBean.getTxnString();
                     }
+
+                    isDelay = DBUtils.isDelayCustomer(acnoSl);
+
+                    //分行名稱用帳號前三碼去撈Oracle的branch name
+                    bankName = DBUtils.getPibBranchName(acnoSl.substring(0,3));
                 }
                 else {
+
+                    isDelay = true;
+
+                    bankName = "營業部";
+
                     responses = "<root>\n" +
                             "    <CRLN_AMT>800,000</CRLN_AMT>\n" +
                             "    <AVAIL_BAL>677,144</AVAIL_BAL>\n" +
@@ -1795,63 +1809,86 @@ public class DataServlet extends HttpServlet {
                 }
 
                 Document doc = DocumentHelper.parseText(responses);
-                Element root = doc.getRootElement();
-                String crlnAmt = root.element("CRLN_AMT").getText().trim();
-                String loanBalTot = root.element("LOAN_BAL_TOT").getText().trim();
-                String bankName = "";
-                String intRate = "";
-                String nextIntDate = "";
+//                Element root = doc.getRootElement();
 
-                //分行名稱用帳號前三碼去撈Oracle的branch name
-                bankName = DBUtils.getPibBranchName(acnoSl.substring(0,3));
+                //先找這個帳號學期別是1跟2的
+                Set<String> termSet = new HashSet<String>();
+                termSet.add("1");
+                termSet.add("2");
 
-                loanBalTot = loanBalTot.replaceAll(",", "");
+                System.out.println("search 1 and 2");
 
-                JSONArray detailArray = new JSONArray();
+                total += setMyLoanAccountDetail(termSet,doc,client_detail,isDelay,acnoSl,bankName);
 
-                for (Iterator i = root.elementIterator("TxRepeat"); i.hasNext();) {
-                    Element foo = (Element) i.next();
-                    String yrTerm = foo.elementText("YR_TERM").trim();
-                    if(yrTerm.equals("")) continue;
+                //再找0的
+                termSet = new HashSet<String>();
+                termSet.add("0");
 
-                    intRate = foo.elementText("INT_RATE").trim();
-                    String loanAmt = foo.elementText("LOAN_AMT").trim();
-                    String loanBal = foo.elementText("LOAN_BAL").trim();
-                    nextIntDate = foo.elementText("NEXT_INT_DATE").trim();
-                    String insAmt = foo.elementText("INS_AMT").trim();
+                System.out.println("search 0");
+                total += setMyLoanAccountDetail(termSet,doc,client_detail,isDelay,acnoSl,bankName);
 
-                    if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
-                            || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
-
-                    JSONObject jsonDetail = new JSONObject();
-                    jsonDetail.put("semister",yrTerm.substring(0, 3));
-                    jsonDetail.put("semister_state",yrTerm.substring(3, 4));
-                    jsonDetail.put("original_money",loanAmt.replace(",", ""));
-                    jsonDetail.put("balance_money", loanBal.replace(",", ""));
-                    jsonDetail.put("need_pay_month",insAmt.replace(",", ""));
-
-                    detailArray.put(jsonDetail);
-                }
-
-
-                clientDetail.put("state","normal");  //delay
-                clientDetail.put("num","");
-                clientDetail.put("account",acnoSl);
-                clientDetail.put("bank_name",bankName);
-                clientDetail.put("remain_money",loanBalTot);
-                clientDetail.put("rate",intRate);
-                clientDetail.put("pay_day",(StringUtils.isNotEmpty(nextIntDate) && nextIntDate.length() < 2) ? "" : nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
-                clientDetail.put("return_detail","repaymentInquiry.jsp");
-                clientDetail.put("my_detail","myElectronicPay_1.jsp");
-                clientDetail.put("detail", detailArray);
-
-                client_detail.put(clientDetail);
-
-
-                //加總
-                if(StringUtils.isNumeric(loanBalTot)) {
-                    total += Integer.parseInt(loanBalTot);
-                }
+//                String crlnAmt = root.element("CRLN_AMT").getText().trim();
+//                String loanBalTot = root.element("LOAN_BAL_TOT").getText().trim();
+//
+//                String intRate = "";
+//                String nextIntDate = "";
+//                String intDate = "";
+//
+//                loanBalTot = loanBalTot.replaceAll(",", "");
+//
+//                JSONArray detailArray = new JSONArray();
+//
+//                for (Iterator i = root.elementIterator("TxRepeat"); i.hasNext();) {
+//                    Element foo = (Element) i.next();
+//                    String yrTerm = foo.elementText("YR_TERM").trim();
+//                    if(yrTerm.equals("")) continue;
+//
+//                    intRate = foo.elementText("INT_RATE").trim();
+//                    String loanAmt = foo.elementText("LOAN_AMT").trim();
+//                    String loanBal = foo.elementText("LOAN_BAL").trim();
+//                    nextIntDate = foo.elementText("NEXT_INT_DATE").trim();
+//                    intDate = foo.elementText("INT_DATE").trim();
+//                    String insAmt = foo.elementText("INS_AMT").trim();
+//
+//                    if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
+//                            || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
+//
+//                    JSONObject jsonDetail = new JSONObject();
+//                    jsonDetail.put("semister",yrTerm.substring(0, 3));
+//                    jsonDetail.put("semister_state",yrTerm.substring(3, 4));
+//                    jsonDetail.put("original_money",loanAmt.replace(",", ""));
+//                    jsonDetail.put("balance_money", loanBal.replace(",", ""));
+//                    jsonDetail.put("need_pay_month",insAmt.replace(",", ""));
+//
+//                    detailArray.put(jsonDetail);
+//                }
+//
+//                //西元轉民國
+//                if(StringUtils.isNotEmpty(intDate)) {
+//                    intDate = ProjUtils.toYYYYBirthday(StringUtils.replace(intDate,"/",""));
+//
+//                    intDate = DateUtil.convert14ToDate("yyyy/MM/dd",intDate + "000000");
+//                }
+//
+//                clientDetail.put("state",isDelay ? "delay" : "normal");
+//                clientDetail.put("num","");
+//                clientDetail.put("account",acnoSl);
+//                clientDetail.put("bank_name",bankName);
+//                clientDetail.put("remain_money",loanBalTot);
+//                clientDetail.put("rate",intRate);
+//                clientDetail.put("pay_day",(StringUtils.isNotEmpty(nextIntDate) && nextIntDate.length() < 2) ? "" : nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
+//                clientDetail.put("intDate",intDate);
+//                clientDetail.put("return_detail","repaymentInquiry.jsp");
+//                clientDetail.put("my_detail","myElectronicPay_1.jsp");
+//                clientDetail.put("detail", detailArray);
+//
+//                client_detail.put(clientDetail);
+//
+//
+//                //加總
+//                if(StringUtils.isNumeric(loanBalTot)) {
+//                    total += Integer.parseInt(loanBalTot);
+//                }
             }
 
             jsonObject.put("total",total + "");
@@ -1860,5 +1897,86 @@ public class DataServlet extends HttpServlet {
         }catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int setMyLoanAccountDetail(Set<String> yearTermSet ,Document doc,JSONArray client_detail,boolean isDelay,String acnoSl,String bankName) throws Exception {
+
+        int total = 0;
+
+        JSONObject clientDetail = new JSONObject();
+
+        Element root = doc.getRootElement();
+        String crlnAmt = root.element("CRLN_AMT").getText().trim();
+        int loanBalTot = 0;
+//        String loanBalTot = root.element("LOAN_BAL_TOT").getText().trim();
+
+        String intRate = "";
+        String nextIntDate = "";
+        String intDate = "";
+
+//        loanBalTot = loanBalTot.replaceAll(",", "");
+
+        JSONArray detailArray = new JSONArray();
+
+        for (Iterator i = root.elementIterator("TxRepeat"); i.hasNext();) {
+            Element foo = (Element) i.next();
+            String yrTerm = foo.elementText("YR_TERM").trim();
+            if(yrTerm.equals("")) continue;
+
+            intRate = foo.elementText("INT_RATE").trim();
+            String loanAmt = foo.elementText("LOAN_AMT").trim();
+            String loanBal = foo.elementText("LOAN_BAL").trim();
+            nextIntDate = foo.elementText("NEXT_INT_DATE").trim();
+            intDate = foo.elementText("INT_DATE").trim();
+            String insAmt = foo.elementText("INS_AMT").trim();
+
+            if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
+                    || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
+
+            String semister = yrTerm.substring(0, 3);
+            String semisterState = yrTerm.substring(3, 4);
+            loanBal = loanBal.replace(",", "");
+
+            if(!yearTermSet.contains(semisterState)) continue;
+
+
+            loanBalTot += Integer.parseInt(loanBal);
+
+            JSONObject jsonDetail = new JSONObject();
+            jsonDetail.put("semister",semister);
+            jsonDetail.put("semister_state",semisterState);
+            jsonDetail.put("original_money",loanAmt.replace(",", ""));
+            jsonDetail.put("balance_money", loanBal);
+            jsonDetail.put("need_pay_month",insAmt.replace(",", ""));
+
+            detailArray.put(jsonDetail);
+        }
+
+        //西元轉民國
+        if(StringUtils.isNotEmpty(intDate)) {
+            intDate = ProjUtils.toYYYYBirthday(StringUtils.replace(intDate,"/",""));
+
+            intDate = DateUtil.convert14ToDate("yyyy/MM/dd",intDate + "000000");
+        }
+
+        clientDetail.put("state",isDelay ? "delay" : "normal");
+        clientDetail.put("num","");
+        clientDetail.put("account",acnoSl);
+        clientDetail.put("bank_name",bankName);
+        clientDetail.put("remain_money",loanBalTot);
+        clientDetail.put("rate",intRate);
+        clientDetail.put("pay_day",(StringUtils.isNotEmpty(nextIntDate) && nextIntDate.length() < 2) ? "" : nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
+        clientDetail.put("intDate",intDate);
+        clientDetail.put("return_detail","repaymentInquiry.jsp");
+        clientDetail.put("my_detail","myElectronicPay_1.jsp");
+        clientDetail.put("detail", detailArray);
+
+        client_detail.put(clientDetail);
+
+
+        //加總
+        total += loanBalTot;
+
+        return total;
     }
 }

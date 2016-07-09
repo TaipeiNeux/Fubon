@@ -114,6 +114,10 @@ function forgetPassword3_1(content){
 
     sendType_ele.text(sendType);
     sendType_val_ele.text(sendType_val);
+	
+	if ($(window).width() <= 768) {
+		$('.sendType').eq(0).after('<br>');
+	}
 
 } // end forgetPassword3_1 function
 
@@ -124,7 +128,7 @@ function forgetPassword3_2(content){
         modal_id: 'modal_forgetPassword_2_2',
         deadline_class: 'deadline' 
     });
-
+	
     // countdown({
     //     minute: 0,
     //     second: 10,

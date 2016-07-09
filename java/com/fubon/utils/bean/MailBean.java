@@ -35,8 +35,10 @@ public class MailBean {
 
     //要載入的mail文案html
     public MailBean(String htmlName) {
-        Properties p = PropertiesUtil.loadPropertiesByClassPath("/config.properties");
-        String emailFolder = p.getProperty("emailFolder");
+
+        String emailFolder = PropertiesUtil.getValue("/config.properties","emailFolder");
+//        Properties p = PropertiesUtil.loadPropertiesByClassPath("/config.properties");
+//        String emailFolder = p.getProperty("emailFolder");
 
         try{
             content = FileUtils.readFileToString(new File(emailFolder + "/" + htmlName + ".html"),"utf-8");

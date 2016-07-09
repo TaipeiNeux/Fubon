@@ -91,8 +91,6 @@ public class Apply6_2 implements ILogic {
 
             content.put("applicantAdult",applicantAdult);
             content.put("marryStatus",userMarriedHidden);
-            content.put("familyStatusLevel1",familyStatusLevel1);
-            content.put("familyStatusLevel2",familyStatusLevel2);
 
             content.put("reservation",reservation);
 

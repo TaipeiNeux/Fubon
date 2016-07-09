@@ -32,13 +32,13 @@
     String barcode1 = "";
     String barcode2 = "";
     String barcode3 = "";
-
+	
     JSONArray details = null;
     if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears)) {
-        request.getRequestDispatcher("noPermit.jsp?typeId=1&name=電子繳款單").forward(request,response);
+        request.getRequestDispatcher("noPermit.jsp?typeId=1&name=查詢「我的電子繳款單」").forward(request,response);
     }
     else if("N".equalsIgnoreCase(isEtabs)) {
-        request.getRequestDispatcher("noPermit.jsp?typeId=2&name=電子繳款單").forward(request,response);
+        request.getRequestDispatcher("noPermit.jsp?typeId=2&name=查詢「我的電子繳款單」").forward(request,response);
     }
     else {
             JSONObject jsonObject = ElectronicPayUtils.getElectronicPay(loginUserBean);
@@ -48,7 +48,7 @@
             out.println("-->");
 
             if("N".equalsIgnoreCase(jsonObject.getString("isSuccess"))) {
-                request.getRequestDispatcher("noPermit.jsp?typeId=1&name=電子繳款單").forward(request,response);
+                request.getRequestDispatcher("noPermit.jsp?typeId=1&name=查詢「我的電子繳款單」").forward(request,response);
             }
             else {
                   //繳款單明細
@@ -214,8 +214,7 @@
         <h4>繳款人收執聯</h4>
         <ul class="ibonbox wona">
             <li>
-                <h5>繳款
-                    <br>期限</h5>
+                <h5>繳款<br>期限</h5>
                 <p><%=deadline%></p>
             </li>
             <li>
@@ -223,13 +222,11 @@
                 <p><%=name%> <%=sex%></p>
             </li>
             <li>
-                <h5>繳款
-                    <br>編號</h5>
+                <h5>繳款<br>編號</h5>
                 <p>9998874496754799</p>
             </li>
             <li>
-                <h5>應繳
-                    <br>總金額</h5>
+                <h5>應繳<br>總金額</h5>
                 <p><%=sum%></p>
             </li>
             <li>
@@ -276,11 +273,11 @@
                 <thead>
                 <tr>
                     <th>繳款帳號</th>
-                    <th>應繳金額</th>
+                    <th>應繳<br />金額</th>
                     <th>繳款帳號</th>
-                    <th>應繳金額</th>
+                    <th>應繳<br />金額</th>
                     <th>繳款帳號</th>
-                    <th>應繳金額</th>
+                    <th>應繳<br />金額</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -288,15 +285,18 @@
                     <%
                         int tdCount = 0;
                         if(details != null) {
+
                             for(int i = 1;i<=details.length();i++) {
                                 JSONObject detail = details.getJSONObject(i-1);
                                 String account = detail.getString("account");
                                 String principal = detail.getString("principal");
+                                String accountBarcode = detail.getString("accountBarcode");
 
                                 tdCount ++;
 
-                                out.println("<td>"+account+"</td>");
-                                out.println("<td>"+principal+"</td>");
+//                                out.println("<td>"+account+"</td>");
+                                out.println("<td><img src=\""+accountBarcode+"\"/></td>");
+                                out.println("<td>"+ProjUtils.toComma(principal)+"</td>");
 
                                 if(i % 3 == 0) {
                                     out.println("</tr>");

@@ -367,7 +367,16 @@ $('#getBranch').on('click', function() { //按下'確認'鍵後的動作
         if (branchArray.length == 0) {
             console.debug(regionText);
             addressMap(regionText);
-        } else {
+        } else if(branchArray.length >= 2){   //如果有多個分行,則將zoom的參數調小
+            var addrArr = [];
+            $.each(branchArr, function(i, branchData) { //長分行資訊
+                addrArr.push(branchData.addr);
+            });
+            console.debug(addrArr);
+            //addressMap(addrArr);
+            addressMap(mapId, branchNameArray, branchAddrArray, branchTelArray, 14);
+        }
+        else{
             var addrArr = [];
             $.each(branchArr, function(i, branchData) { //長分行資訊
                 addrArr.push(branchData.addr);
@@ -399,9 +408,10 @@ $('#getBranch').on('click', function() { //按下'確認'鍵後的動作
 
             region.on('click', function() {
                 var currentLi = $(this).parent();
-                var currentName = currentLi.find('h4').text();
+                var currentNameAndTel = currentLi.find('h4').text();
+                var currentName = currentNameAndTel.split('T')[0];
                 var currentAddr = currentLi.find('.branchAddr:first').text();
-                var currentTel = currentLi.find('.branchTel:first').text();
+                var currentTel = 'T' + currentNameAndTel.split('T')[1];
 
                 //隨著找到的分行的數目增加高度
                 switch ($('.branchLi').length) {

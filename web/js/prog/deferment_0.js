@@ -45,10 +45,10 @@ $(document).ready(function() {
             if (isLogin == 'Y') { //有登入
 			
 				if(hasAccount == 'N' || isArrears == 'N') {
-                    redirectNoPermit('1','延期還款');
+                    redirectNoPermit('1','「延後/提前還款」');
                 }
                 else if(isEtabs == 'N') {
-                    redirectNoPermit('2','延期還款');
+                    redirectNoPermit('2','「延後/提前還款」');
                 }
 				else {
 					goNextStep = true;

@@ -59,9 +59,7 @@ var mapId = 'mapArea';
 addrCity.hide();
 addrZip.hide();
 
-var getDefaultAddress = modal.getDefaultAddress();
 
-addressMap(mapId, [getDefaultAddress.branchName], [getDefaultAddress.addr], [getDefaultAddress.tel]);
 
 $('.placeholder, .mapInput').on('click', function() {
     //地址
@@ -180,36 +178,7 @@ function addressMap(branchNameArray,branchAddrArray,branchTelArray) {
 }
 */
 
-//輪播最新消息
-modal.getNews(function(json) {
 
-    var newsArray = [];
-    $.each(json.news, function(i, newsData) {
-        newsArray.push('<div class="owl-item cloned" style="width: 100%; margin-right: 10px;"><div class="item"><h5 class="title">' + newsData.Title + '</h5><p class="news_content">' + newsData.Content + '</p></div></div>');
-    });
-
-    $('#owl-carousel_news').empty().append(newsArray.join(''));
-
-
-
-    $('#owl-carousel_news').owlCarousel({
-        items: 5,
-        loop: true,
-        margin: 10,
-        dots: true,
-        autoplay: true,
-        autoplayTimeout: 10000,
-        autoplayHoverPause: true,
-        smartSpeed: 600,
-        responsive: {
-            0: {
-                items: 1
-            }
-        }
-    });
-
-
-});
 
 /*
 //會員判斷是否已登入
@@ -463,5 +432,40 @@ g_ajax({
                 window.location = 'apply.jsp';
             });
         }
+		
+		var getDefaultAddress = modal.getDefaultAddress();
+
+		addressMap(mapId, [getDefaultAddress.branchName], [getDefaultAddress.addr], [getDefaultAddress.tel]);
+
+		//輪播最新消息
+		modal.getNews(function(json) {
+
+		    var newsArray = [];
+		    $.each(json.news, function(i, newsData) {
+		        newsArray.push('<div class="owl-item cloned" style="width: 100%; margin-right: 10px;"><div class="item"><h5 class="title">' + newsData.Title + '</h5><p class="news_content">' + newsData.Content + '</p></div></div>');
+		    });
+
+		    $('#owl-carousel_news').empty().append(newsArray.join(''));
+
+
+
+		    $('#owl-carousel_news').owlCarousel({
+		        items: 5,
+		        loop: true,
+		        margin: 10,
+		        dots: true,
+		        autoplay: true,
+		        autoplayTimeout: 10000,
+		        autoplayHoverPause: true,
+		        smartSpeed: 600,
+		        responsive: {
+		            0: {
+		                items: 1
+		            }
+		        }
+		    });
+
+
+		});
     }
 });

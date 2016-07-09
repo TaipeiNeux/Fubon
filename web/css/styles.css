@@ -3577,7 +3577,9 @@ margin-right: 4px;	}
     .inputArea {
       margin: 0 auto; } }
   .inputArea input {
-    width: 100%;
+    /*
+	width: 100%;
+	*/
     font-size: 15px;
     padding: 5px 10px;
     outline: none;
@@ -4514,7 +4516,6 @@ border-top: solid 1px #dddcdd;	}
   .subApplication .baelArea {
     background: #0394C7;
     padding-bottom: 0;
-    max-width: 350px;
     margin: 0 auto; }
   .subApplication .bael h3 {
     color: #fff; }
@@ -12715,7 +12716,9 @@ body.apply .processInner {
   height: 34px;
 }
 #body.index .personal .inputArea input {
+/* */
   width: 54%;
+ 
   vertical-align: text-bottom;
   height: 34px;
 }
@@ -15520,6 +15523,7 @@ h4.modal-title {
 
   body.apply_1_step2 .radioArea {
     margin: 5px 0;
+	padding-bottom: 5px;
   }
   body.apply_1_step2 .famillyStatusArea li {
     padding: 5px 0;
@@ -16148,9 +16152,12 @@ padding: 0 0 35px 0px;
 @media (max-width:769px) {
 
 	#body.index .personal .inputArea input {
+	/**/
 		width: 100%;
+		
 	} 
 	#body.index .personal .loginbtn {
+		
 		text-align: center;
 		margin-left: 0;
 	}
@@ -18210,7 +18217,7 @@ body.apply_00 .modal-dialog .modal-content .modal-body p {
     }
     
     .sub #mapInputS {
-        width: 100%;
+        width: 75%;
     }
 }
 
@@ -18347,7 +18354,8 @@ body.apply_00 .modal-dialog .modal-content .modal-body p {
     
     .deferment_2 td.file-photo img,
     .apply_4 td.file-photo img,
-    .deferment_3_step1 td.file-photo img {
+    .deferment_3_step1 td.file-photo img,
+	.apply_5_step1 td.file-photo img {
         width:34px;
         height: 34px;
     }
@@ -18634,8 +18642,42 @@ a.reservation:hover {
     }
     
     .myElectronicPay_1 .img img {
-        max-height: 90px;
+        max-height: 50px;
+		margin-bottom: 10px;
     }
+	
+	.ibonArea .sofiwan h5,
+	.ibonArea .ant h6 {
+		font-size:16px;
+		margin-bottom: 10px;
+	}
+	
+	.ibonArea .bottom .ibonbox td, .ibonArea .bottom .ibonbox th {
+		padding: 15px 0;
+	}
+	.ibonArea .wona li h5 {
+		width:60px;
+		padding: 15px 0;
+		font-size: 12px;
+	}
+	
+	body.myElectronicPay_1 .pomodal p {
+		font-size: 12px;
+		text-align: center;
+	}
+	
+	.ibonArea .bottom .ibonbox th {
+		padding: 5px 0;
+		font-size: 12px;
+	}
+	
+	.ibonArea .bottom .ibonbox td {
+		font-size: 12px;
+	}
+	
+	.ibonArea .left h4 {
+		text-align:center;
+	}
     
 }
 
@@ -18680,7 +18722,116 @@ a.reservation:hover {
 }
 
 @media (min-width:769px) {
+
+	body.myloan .casom .remind {
+		display: none;
+	}
 	.sp.gabymarginTop {
 		margin-left: 20px;
 	}
+	
+	input[type=checkbox].sqr-checkbox + label.sqr-label {
+		padding-left: 45px;
+	}
+	
+	#body.register_1 .moArea {
+		width: 95%;
+		float: right;
+	}
+	
+	.deg,
+	.psf {
+		padding-left: 62px;
+	}
+	
+	.titlesq {
+		font-size: 20px;
+	}
+	.regionArea .regionPlace .regionPlaceBtn a {
+		line-height: 50px;
+	}
+	
+	.apply_map .mapInput {
+		margin-top: 15px;
+	}
+	
+	.sub .regionArea .regionPlace .regionText {
+		width: 100%;
+	}
+	
+	.sub .regionArea .region {
+		background: none;
+	}
+	
+	.sub #mapInputS {
+		border-radius: 4px;
+		height: 40px;
+	}
+	
+	.sub .regionArea .region {
+		padding-left: 0;
+	}
+	
+	.sub .mapAreaS {
+		margin-left: 275px;
+	}
+	
+	.sub .placeholder {
+		top: -5px;
+		right: 5px;
+	}
+	
+	.sub .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+		width: 75%;
+	}
+	
+	.sub .subApplication .baelBtn {
+		padding-right: 120px;
+	}
+	
+	.sub .mapInput {
+		margin-top: 0;
+	}
+}
+@media (max-width:769px) {
+	body.myloan .repayTable ul.resa h5 {
+		font-size: 13px;
+		font-weight: bold;
+	}
+	
+	body.apply_5_step1 .dan h2.thirdParty {
+		padding-right: 30%;
+	}
+}
+
+
+@media (max-width:1024px) and (min-width:769px) {
+	.regionArea .regionPlace .regionPlaceBtn a {
+		font-size: 13px;
+	}
+}
+
+/*2016-07-08 added by titan 忘記密碼最後一步問題單：0004258*/
+body.forgetPassword_4 .nina {
+	width : inherit
+}
+
+/*2016-07-08 added by titan 我的貸款問題單：0004225*/
+@media (max-width:1024px) and (min-width:769px) {
+
+	body.myloan .lightWon .picabtn {
+		top:40px;
+		width:70px;
+		font-size:12px;
+	}
+
+}
+
+/*2016-07-08 added by titan 延期還款的問題單：4225*/
+@media (max-width:1024px) and (min-width:769px) {
+
+	body.deferment_3_step1 .joy p, .processInner table.mqua th {
+		font-size: 14px;
+	}
+
 }

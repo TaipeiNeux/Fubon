@@ -129,4 +129,44 @@ public class DBUtils {
         return null;
     }
 
+    //是否為逾期的客戶
+    public static boolean isDelayCustomer(String account) {
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+
+            conn = getConnection(PIBDataSource);
+
+            ps = conn.prepareStatement("select * from CUSTTOMER_LOAN_ACCOUNT where loan_acocunt = ?");
+            ps.setString(1,account);
+            rs = ps.executeQuery();
+            if(rs.next()) {
+                return true;
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
 }

@@ -182,7 +182,7 @@ public class PersonalInfo1 implements ILogic {
         content.put("isRecord",isRecord);
         content.put("id",ProjUtils.toIDMark(id));
         content.put("name",ProjUtils.toNameMark(name));
-        content.put("birthday",birthday);
+        content.put("birthday",ProjUtils.toBirthdayMark(birthday));
         content.put("marryStatus",marryStatus);
 
         JSONObject domicilePhone = new JSONObject();

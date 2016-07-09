@@ -37,28 +37,25 @@
             <div class="processOutBox">
                 <div class="processBox">
                     <form id="mainForm">
-                        <div class="processInner"/>
+                        <div class="processInner"></div>
                     </form>
+                    <div class="nextBtn"></div>
                 </div>
+
             </div>
         </div>
-        <div class="nextBtn">
-            
-        </div>
+
+
+
+
     </div>
 
-</div>
-
-
-
-
-<div class="sidebarArea">
-    <%@ include file="include/sidebarArea_QA.jsp" %>
-</div>
-<div class="footerArea">
-    <%@ include file="include/footerArea.jsp" %>
-</div>
-
+    <div class="sidebarArea">
+        <%@ include file="include/sidebarArea_QA.jsp" %>
+    </div>
+    <div class="footerArea">
+        <%@ include file="include/footerArea.jsp" %>
+    </div>
 </div>
 
 <!-- 各別流程才各別載入所需的js -->

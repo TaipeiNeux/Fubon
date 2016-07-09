@@ -20,11 +20,12 @@ var RepaymentInquiry_controller = (function(){
                 var hasAccount = loanAccount_data.hasAccount; //是否有貸款帳號
                 var isArrears = loanAccount_data.isArrears; //是否無欠款
 
+				
                 if(hasAccount == 'N' || isArrears == 'N') {
-                    redirectNoPermit('1','還款明細查詢');
+                    redirectNoPermit('1','查詢「還款明細查詢」');
                 }
                 else if(isEtabs == 'N') {
-                    redirectNoPermit('2','還款明細查詢');
+                    redirectNoPermit('2','查詢「還款明細查詢」');
                 }
 				else {
 					RepaymentInquiry_view.account_selection(loanAccount_data.data.client_detail);
@@ -66,6 +67,7 @@ var RepaymentInquiry_controller = (function(){
 			            locale: "zh-TW",
 			            format: 'YYYY/MM/DD',
 			            defaultDate: start_str,
+						ignoreReadonly: true,
 			            disabledDates: [
 			                moment(start_str),
 			                new Date(start_y, start_m - 1, start_d),
@@ -76,6 +78,7 @@ var RepaymentInquiry_controller = (function(){
 			        $('#datetimepicker2').datetimepicker({
 			            locale: "zh-TW",
 			            format: 'YYYY/MM/DD',
+						ignoreReadonly: true,
 			            defaultDate: end_str,
 			            disabledDates: [
 			                moment(end_str),

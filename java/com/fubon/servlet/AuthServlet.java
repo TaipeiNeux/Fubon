@@ -46,7 +46,7 @@ import java.util.*;
 public class AuthServlet extends HttpServlet {
 
     //每個帳號一個session只能登入一次
-    private static final Map<String,SessionLoginBean> sessionMap = new HashMap<String,SessionLoginBean>(); //身份證字號/sessionID
+    public static final Map<String,SessionLoginBean> sessionMap = new HashMap<String,SessionLoginBean>(); //身份證字號/sessionID
 
     public static void addLoginInfoToApplication(String id , SessionLoginBean sessionLoginBean) {
         GardenLog.log(GardenLog.DEBUG,"addLoginInfoToApplication = " + id + ",sessionID=" + sessionLoginBean.getSessionId());
@@ -454,6 +454,9 @@ public class AuthServlet extends HttpServlet {
                     //如果不在本學期的對保期間，也就不用查這學期的申請案件
                     DataObject aplyMemberData = queryMap != null ? ProjUtils.getAplyMemberTuitionLoanData(userId,queryMap,dao) : null;
 
+                    //撈1-2草稿
+                    String apply1_2DraftXML = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);
+
 
                     //撈申辦人相關資料
 
@@ -465,6 +468,27 @@ public class AuthServlet extends HttpServlet {
                     String tempCases = FlowUtils.isDraftData(userId, "apply", dao) ? "Y" : "N";//紀錄是否有暫存案件
                     String kindOfCases = aplyMemberData != null ? aplyMemberData.getValue("AplyCaseType") : "";//紀錄案件種類(1:線上續貸/2:分行對保);
                     String censor = "";//紀錄審核狀態 1:尚未審核;2:審核中;3:審核合完成通過;4:審核完成未通過
+
+                    String applicantAdult = "";//是否成年
+                    String userMarriedHidden = "";//婚姻狀態
+                    String familyStatusLevel1 = "";//家庭狀況1
+                    String familyStatusLevel2 = "";//家庭狀況2
+                    String signBill = aplyMemberData != null ? aplyMemberData.getValue("signBill") : "";//是否簽立借據
+
+                    if(StringUtils.isNotEmpty(apply1_2DraftXML)) {
+                        Document apply1_2Doc = DocumentHelper.parseText(apply1_2DraftXML);
+                        Element apply1_2Root = apply1_2Doc.getRootElement();
+
+                        applicantAdult = apply1_2Root.element("applicantAdult").getText();
+                        userMarriedHidden = apply1_2Root.element("userMarriedHidden").getText();
+                        familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
+                        familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
+                    }
+
+
+                    //預約分行紀錄
+                    String expectDate = aplyMemberData != null ? aplyMemberData.getValue("expectDate") : "";
+                    String expectTime = aplyMemberData != null ? aplyMemberData.getValue("expectTime") : "";
 
                     String firstSemesterStart = "";//上學期的對保開始時間
                     String firstSemesterEnd = "";//上學期的對保結束時間
@@ -514,19 +538,6 @@ public class AuthServlet extends HttpServlet {
                         draftAppHour = modifyTime14.substring(8,10);
                         draftAppMin = modifyTime14.substring(10,12);
                         draftAppSec = modifyTime14.substring(12,14);
-                    }
-
-                    //取6-2的草稿資料
-                    String draft6_2XML = FlowUtils.getDraftData(userId,"apply","apply_online_6",dao);
-                    String objListHidden = "";
-
-                    if(StringUtils.isNotEmpty(draft6_2XML)) {
-                        Document draft6_2Doc = DocumentHelper.parseText(draft6_2XML);
-                        Element draft6_2Root = draft6_2Doc.getRootElement();
-
-                        if(draft6_2Root.element("objListHidden") != null) {
-                            objListHidden = draft6_2Root.element("objListHidden").getText();
-                        }
                     }
 
                     //抓對保期間
@@ -614,8 +625,8 @@ public class AuthServlet extends HttpServlet {
                         String expectBranchId = aplyMemberData.getValue("expectBranchId");
                         if(StringUtils.isNotEmpty(expectBranchId)) {
 
-                            String expectDate = aplyMemberData.getValue("expectDate");
-                            String expectTime = aplyMemberData.getValue("expectTime");
+                            expectDate = aplyMemberData.getValue("expectDate");
+                            expectTime = aplyMemberData.getValue("expectTime");
 
                             Map<String,String> searchMap = new LinkedHashMap<String, String>();
                             searchMap.put("b.BranchId",expectBranchId);
@@ -689,11 +700,28 @@ public class AuthServlet extends HttpServlet {
 
                     content.put("branchName",branchName);
                     content.put("branchAddr",branchAddr);
+                    content.put("addr",branchAddr);
                     content.put("branchTel",branchTel);
+                    content.put("tel",branchTel);
                     content.put("carryObjArr",carryObjArr);
                     content.put("reservation",reservation);
 
-                    content.put("objListHidden",objListHidden);
+                    content.put("dateSelected",DateUtil.convert14ToDate("yyyy-MM-dd",expectDate + "000000"));
+                    content.put("timeSelected",expectTime);
+
+                    content.put("applicantAdult",applicantAdult);
+                    content.put("marryStatus",userMarriedHidden);
+                    content.put("familyStatusLevel1",familyStatusLevel1);
+                    content.put("familyStatusLevel2",familyStatusLevel2);
+
+                    content.put("reservation",reservation);
+
+
+                    //依照申請人取得線上續貸資料
+                    ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
+
+                    //放是否借據
+                    content.put("signBill",signBill);
                 }
 
 

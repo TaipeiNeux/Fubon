@@ -20,20 +20,23 @@ var Myloan_controller = (function(){
                 var isArrears = client_data.isArrears; //是否無欠款
 
                 if(hasAccount == 'N' || isArrears == 'N') {
-                    redirectNoPermit('1','我的貸款');
+                    redirectNoPermit('1','查詢「我的貸款」');
                 }
                 else if(isEtabs == 'N') {
-                    redirectNoPermit('2','我的貸款');
+                    redirectNoPermit('2','查詢「我的貸款」');
                 }
                 else {
-                    var remind = $('li.remind');
-                    remind.show();
-
+                    var isDelayFlag = isDelay(client_data);
+					
+					if(isDelayFlag) {
+						var remind = $('li.remind');
+	                    remind.show();
+					}
+					
                     //長總額
                     $('.morebig').text('$' + GardenUtils.format.convertThousandComma(client_data.total));
 
                     for(var i = 0;i<client_data.data.client_detail.length;i++){
-
                         dynamic_client_data(i,client_data.data.client_detail[i]);
 
                     }
@@ -41,17 +44,17 @@ var Myloan_controller = (function(){
                     //$('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>').insertbefore($('.casomTitle'));
                     $('.casomTitle').before('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>');
 
-                    $('.picabtn').off('mousedown').on('mousedown',function(){
+                    /*$('.picabtn').off('mousedown').on('mousedown',function(){
 
                         if($(this).hasClass('active')){
                             $(this).html('詳細資訊&nbsp;<i class="fa fa-caret-down"></i>');
                         }
                         else{
+			$(this).html('收起&nbsp;<i class="fa fa-caret-up"></i>');
+		
+			}
 
-                            $(this).html('收起&nbsp;<i class="fa fa-caret-up"></i>');
-                        }
-
-                    });
+                    });*/
                 }
 
 
@@ -60,6 +63,20 @@ var Myloan_controller = (function(){
 
     };	
 
+	var isDelay = function(client_data){
+		var isDelay = false;
+		
+		for(var i = 0;i<client_data.data.client_detail.length;i++){
+			var data = client_data.data.client_detail[i];
+			
+			if(data.state == 'delay') {
+				isDelay = true;
+			}
+		}
+
+		return isDelay;
+	}
+	
 	var dynamic_client_data = function(i,data){
 		Myloan_view.account_outline(data);
 		Myloan_view.account_detail(i,data);
@@ -94,7 +111,7 @@ var Myloan_view = (function(){
 			star = '**';
 		}
 
-		$('.casomTitle').before('<div class="lightWon"> <ul class="busus"> <li> <p>貸款帳號</p> <h3>'+data.account+star+'</h3> </li> <li> <p>分行名稱</p> <h3>'+data.bank_name+'</h3> </li> <li> <p>貸款餘額</p> <h3>'+GardenUtils.format.convertThousandComma(data.remain_money)+'</h3> </li> <li> <p>利率</p> <h3>'+rate_num +'%</h3> </li> <li> <p>每月應繳款日</p> <h3>'+data.pay_day+'日</h3> </li> </ul> <a href="javascript:;" class="picabtn ">詳細資訊&nbsp<i class="fa fa-caret-down"></i></a> <div class="repayTableOuter"> <div class="repayTableArea"> <div class="repayTable resaTable"> </div> </div>  </div> </div>');
+		$('.casomTitle').before('<div class="lightWon"> <ul class="busus"> <li> <p>貸款帳號</p> <h3>'+data.account+star+'</h3> </li> <li> <p>分行名稱</p> <h3>'+data.bank_name+'</h3> </li> <li> <p>貸款餘額</p> <h3>'+GardenUtils.format.convertThousandComma(data.remain_money)+'</h3> </li> <li> <p>利率</p> <h3>'+rate_num +'%</h3> </li> <li> <p>每月應繳款日</p> <h3>'+data.pay_day+'日</h3> </li> </ul> <a href="javascript:;" class="picabtn">詳細資訊&nbsp<i class="fa fa-caret-down"></i></a> <div class="repayTableOuter"> <div class="repayTableArea"> <div class="repayTable resaTable"> </div> </div>  </div> </div>');
 
 	}
 
@@ -127,6 +144,7 @@ var Myloan_view = (function(){
 			tmp_record.push({
 				tmp_semister : semister,
 				semister : find_semister,
+				semister_state : semister_state,
 			    original_money: original_money,
 				balance_money: balance_money,
 				need_pay_month: need_pay_month
@@ -144,12 +162,22 @@ var Myloan_view = (function(){
 
 
 		for(var k=0;k<tmp_record.length;k++){
-			var state='上';
-
-			if(tmp_record[k].semister.toString().indexOf('.') != -1)
-				state = '下';
-
-			type_1 += '<h5>'+tmp_record[k].tmp_semister+state+'學期</h5>';
+			
+			var text = '';
+			var semisterYear = tmp_record[k].tmp_semister;
+			var semister_state = tmp_record[k].semister_state;
+			if(semister_state == '0') {
+				text = semisterYear + '年學期';
+			}
+			else if(semister_state == '1'){
+				text = semisterYear + '年上學期';
+			}
+			else if(semister_state == '2'){
+				text = semisterYear + '年下學期';
+			}
+			
+			
+			type_1 += '<h5>'+text+'</h5>';
 			type_3 += '<h5>'+GardenUtils.format.convertThousandComma(tmp_record[k].original_money)+'</h5>';
 			type_4 += '<h5>'+GardenUtils.format.convertThousandComma(tmp_record[k].balance_money)+'</h5>';
 			type_5 += '<h5>'+GardenUtils.format.convertThousandComma(tmp_record[k].need_pay_month)+'</h5>';
@@ -175,9 +203,10 @@ var Myloan_view = (function(){
 	}
 
 	var show_star_and_number6 = function(state){
+	
 		var tmp= 0;
 		if(state == 'delay' && $('.delay_star').length ==0){
-			$('<li class="delay_star">※ 提醒您：請特別關心上列有「* *」標註記之貸款，是否已按時繳款成功！您可前往「【網路銀行>貸款應繳款項查詢】」功能查詢目前實際欠巧金額，或洽客戶服務專線 02-8751-6665。<br> ※ 如已完成繳款，請毋須理會此項提醒註記</li>').appendTo($('.casom'));
+			//$('<li class="delay_star">※ 提醒您：請特別關心上列有「* *」標註記之貸款，是否已按時繳款成功！您可前往「【網路銀行>貸款應繳款項查詢】」功能查詢目前實際欠巧金額，或洽客戶服務專線 02-8751-6665。<br> ※ 如已完成繳款，請毋須理會此項提醒註記</li>').appendTo($('.casom'));
 			tmp =1; 
 		}
 		else if(state == 'delay')

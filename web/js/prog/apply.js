@@ -32,6 +32,57 @@ $(document).ready(function() {
     if (jumpStep == 'null') {
         jumpStep = '';
     }
+	
+	//2016-07-08 added by titan ，填入每個步驟需要控制input的事件
+	var getInputEventHandler = {
+		"apply1_1": function(){
+			return {
+				DomicileNeighborhood : {
+					convertFullWidth : true
+				},
+				DomicileAddress : {
+					convertFullWidth : true,
+					focusClearVal : true
+				},
+				address : {
+					convertFullWidth : true,
+					focusClearVal : true
+				}
+			};
+		},     
+        "apply2": function (){
+			return {
+				father_neighborhood_domi : {
+					convertFullWidth : true
+				},
+				father_address_domi : {
+					convertFullWidth : true,
+					focusClearVal : true
+				},
+				mother_neighborhood_domi : {
+					convertFullWidth : true
+				},
+				mother_address_domi : {
+					convertFullWidth : true,
+					focusClearVal : true
+				},
+				thirdParty_neighborhood_domi : {
+					convertFullWidth : true
+				},
+				thirdParty_address_domi : {
+					convertFullWidth : true,
+					focusClearVal : true
+				},
+				spouse_neighborhood_domi : {
+					convertFullWidth : true
+				},
+				spouse_address_domi : {
+					convertFullWidth : true,
+					focusClearVal : true
+				}
+			};
+		}
+	};
 
     g_ajax({
         url: 'flow?action=continue&flowId=apply',
@@ -57,7 +108,7 @@ $(document).ready(function() {
              console.debug(nextEventHanlder);*/
 
             //開始長流程畫面
-            buildFlow(content, stepEventHandler, nextEventHanlder);
+            buildFlow(content, stepEventHandler, nextEventHanlder,undefined,getInputEventHandler);
         }
     });
 
@@ -190,47 +241,47 @@ function apply1_1_valid() {
         formId: ["mainForm"],
         validEmpty: validEmptyArray,
         validNumber: [{
-                name: 'birthday0',
-                msg: '生日',
-                allowEmpty: false,
-                group: 'birthday'
-            }, {
-                name: 'birthday2',
-                msg: '生日',
-                allowEmpty: false,
-                group: 'birthday'
-            }, {
-                name: 'birthday4',
-                msg: '生日',
-                allowEmpty: false,
-                group: 'birthday',
-                hasHiddenCode: true,
-                hiddenTarget: $('input[name="birthdayDay_hidden"]').val()
-            }, {
-                name: 'DomicileArea',
-                msg: '戶籍電話',
-                allowEmpty: false,
-                group: 'domicilePhone'
-            }, {
-                name: 'DomicilePhone',
-                msg: '戶籍電話',
-                allowEmpty: false,
-                group: 'domicilePhone',
-                hasHiddenCode: true,
-                hiddenTarget: $('input[name="d_phone"]').val()
-            }, {
-                name: 'areaTelephone',
-                msg: '通訊電話',
-                allowEmpty: false,
-                group: 'tel'
-            }, {
-                name: 'telephone',
-                msg: '通訊電話',
-                allowEmpty: false,
-                group: 'tel',
-                hasHiddenCode: true,
-                hiddenTarget: $('input[name="t_phone"]').val()
-            }
+            name: 'birthday0',
+            msg: '生日',
+            allowEmpty: false,
+            group: 'birthday'
+        }, {
+            name: 'birthday2',
+            msg: '生日',
+            allowEmpty: false,
+            group: 'birthday'
+        }, {
+            name: 'birthday4',
+            msg: '生日',
+            allowEmpty: false,
+            group: 'birthday',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="birthdayDay_hidden"]').val()
+        }, {
+            name: 'DomicileArea',
+            msg: '戶籍電話',
+            allowEmpty: false,
+            group: 'domicilePhone'
+        }, {
+            name: 'DomicilePhone',
+            msg: '戶籍電話',
+            allowEmpty: false,
+            group: 'domicilePhone',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="d_phone"]').val()
+        }, {
+            name: 'areaTelephone',
+            msg: '通訊電話',
+            allowEmpty: false,
+            group: 'tel'
+        }, {
+            name: 'telephone',
+            msg: '通訊電話',
+            allowEmpty: false,
+            group: 'tel',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="t_phone"]').val()
+        }
             /*因為現在測試機行動電話都是隱碼，所以傳出去都會被擋, 
              {
              name: 'cellPhone',
@@ -270,6 +321,32 @@ function apply1_1_valid() {
         }],
         errorDel: [],
         customizeFun: function(customizeValidResult) {
+			//檢查全部的地址字數是否為40個字以內
+			//戶籍地址
+			var domicileCityIdText = $('[name="domicileCityId"]').parent().find('button').attr('title');
+			var domicileZipCodeText = $('[name="domicileZipCode"]').parent().find('button').attr('title');
+			var domicileLinerText = $('[name="domicileLiner"]').parent().find('button').attr('title');
+			var dNeighborhoodText = $('[name="DomicileNeighborhood"]').val();
+			var dAddressText = $('[name="DomicileAddress"]').val();
+			var domiAllAddr = domicileCityIdText + domicileZipCodeText + domicileLinerText + dNeighborhoodText + dAddressText;
+			if( domiAllAddr.length > 40 ){
+				customizeValidResult.push({
+                    obj: $('[name="domicileCityId"]'),
+                    msg: '戶籍地址長度不可大於40位'
+                });
+			}
+			//通訊地址
+			var cityIdText = $('[name="cityId"]').parent().find('button').attr('title');
+			var zipCodeText = $('[name="zipCode"]').parent().find('button').attr('title');
+			var addressText = $('[name="address"]').val();
+			var allAddr = cityIdText + zipCodeText + addressText;
+			if( allAddr.length > 40 ){
+				customizeValidResult.push({
+                    obj: $('[name="cityId"]'),
+                    msg: '通訊地址長度不可大於40位'
+                });
+			}
+		
             var userName = $('[name="name"]').val();
             if (userName.length < 2 || userName.length > 20) {
                 customizeValidResult.push({
@@ -398,7 +475,7 @@ function apply2_valid() {
             validMobile_arr: [],
             validChinese_arr: []
         };
-    
+
     var radioResult = true; //檢查radio或checkbox有沒有點選
 
     for (var i = 0; i <= 3; i++) { //依序檢查父親,母親,第三人,配偶的表格是否有展開
@@ -409,19 +486,19 @@ function apply2_valid() {
                 if (foolproofFamily == '2' || foolproofFamily == '3') {
                     var adultTag = adultHidden.val();
                     var radio_Btn = $('[name="father_RadioBtn"]');
-                    
+
                     if (adultTag == 'N') { //未成年檢查連帶保證人的radio
                         if (radio_Btn.val() == '') {
-                                $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                                $('#tip' + i).show();
-                                radioResult = false;
-                            } 
-                            else {
-                                $('#tip' + i).hide();
-                                radioResult = true;
-                            }
-                        
-                    } 
+                            $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                            $('#tip' + i).show();
+                            radioResult = false;
+                        }
+                        else {
+                            $('#tip' + i).hide();
+                            radioResult = true;
+                        }
+
+                    }
                     else if (adultTag == 'Y') { //成年人檢查是否為合計對象的checkbox
                         var fCheckbox = $('[name="father_checkbox"]');
                         var mCheckbox = $('[name="mother_checkbox"]');
@@ -433,7 +510,7 @@ function apply2_valid() {
                             radioResult = false;
                         }
                     }
-                } 
+                }
                 if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'father_';
                     //familyName = '父親';
@@ -451,19 +528,19 @@ function apply2_valid() {
                 if (foolproofFamily == '2' || foolproofFamily == '3') {
                     var adultTag = adultHidden.val();
                     var radio_Btn = $('[name="mother_RadioBtn"]');
-                    
+
                     if (adultTag == 'N') { //未成年檢查連帶保證人的radio
                         if (radio_Btn.val() == '') {
-                                $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                                $('#tip' + i).show();
-                                radioResult = false;
-                            } 
-                            else {
-                                $('#tip' + i).hide();
-                                radioResult = true;
-                            }
-                        
-                    } 
+                            $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                            $('#tip' + i).show();
+                            radioResult = false;
+                        }
+                        else {
+                            $('#tip' + i).hide();
+                            radioResult = true;
+                        }
+
+                    }
                     else if (adultTag == 'Y') { //成年人檢查是否為合計對象的checkbox
                         var fCheckbox = $('[name="father_checkbox"]');
                         var mCheckbox = $('[name="mother_checkbox"]');
@@ -496,17 +573,17 @@ function apply2_valid() {
             case 2:
                 if (foolproofFamily == '2') {
                     var adultTag = adultHidden.val();
-                    var radio_Btn = $('[name="thirdParty_RadioBtn"]');          
+                    var radio_Btn = $('[name="thirdParty_RadioBtn"]');
                     if (radio_Btn.val() == '') {
-                                $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                                $('#tip' + i).show();
-                                radioResult = false;
-                            } 
-                            else {
-                                $('#tip' + i).hide();
-                                radioResult = true;
-                            }
-                        
+                        $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                        $('#tip' + i).show();
+                        radioResult = false;
+                    }
+                    else {
+                        $('#tip' + i).hide();
+                        radioResult = true;
+                    }
+
                 }
                 else if (foolproofFamily == '1' || foolproofFamily == '3') {
                     //console.debug(thirdPartyTitle.text());
@@ -529,17 +606,17 @@ function apply2_valid() {
             case 3:
                 if (foolproofFamily == '2') {
                     var adultTag = adultHidden.val();
-                    var radio_Btn = $('[name="spouse_RadioBtn"]');          
+                    var radio_Btn = $('[name="spouse_RadioBtn"]');
                     if (radio_Btn.val() == '') {
-                                $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                                $('#tip' + i).show();
-                                radioResult = false;
-                            } 
-                            else {
-                                $('#tip' + i).hide();
-                                radioResult = true;
-                            }
-                        
+                        $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                        $('#tip' + i).show();
+                        radioResult = false;
+                    }
+                    else {
+                        $('#tip' + i).hide();
+                        radioResult = true;
+                    }
+
                 }
                 else if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'spouse_';
@@ -575,46 +652,24 @@ function apply2_valid() {
         validChinese: validArr.validChinese_arr,
         errorDel: [],
         customizeFun: function(customizeValidResult) {
-
-            /*var adultTag = adultHidden.val();
-            var showArray = ['father', 'mother', 'thirdParty', 'spouse'];
-
-            if (adultTag == 'N') { //未成年檢查連帶保證人的radio
-                for (var i = 0; i <= 3; i++) {
-                    var currentTag = show.substr(i, 1);
-                    var radio_Btn = $('[name="'+showArray[i]+'_RadioBtn"]');
-                    if (currentTag == '2') { //需要檢查是否有點選radio
-                        if(radio_Btn.val() == ''){
-                            $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                            $('#tip' + i).show();
-                            radioResult = false;
-                        }
-                        else{
-                            $('#tip' + i).hide();
-                            radioResult = true;
-                        }
-                    } else {
-                        $('#tip' + i).hide();
-                    }
-                }
-            }*/
-
-
-            /*else if(adultTag == 'Y'){    //成年人檢查是否為合計對象的checkbox
-             var fCheckbox = $('[name="father_checkbox"]');
-             var mCheckbox = $('[name="mother_checkbox"]');
-             if(fCheckbox.val() == '1' || mCheckbox.val() == '1'){
-             $('#checkboxGroup').hide();
-             }
-             else{
-             $('#checkboxGroup').text('請勾選合計所得對象');
-             $('#checkboxGroup').show();
-             radioResult = false;
-             }
-             }*/
-
             $.each(family_arr, function(i, family) {
-                var areaTelephone = $('[name="' + family.input + 'regionCode"]').val();
+                //檢查全部的地址字數是否為40個字以內
+				//戶籍地址
+				var domicileCityIdText = $('[name="' + family.input + 'cityId_domi"]').parent().find('button').attr('title');
+				var domicileZipCodeText = $('[name="' + family.input + 'zipCode_domi"]').parent().find('button').attr('title');
+				var domicileLinerText = $('[name="' + family.input + 'liner_domi"]').parent().find('button').attr('title');
+				var dNeighborhoodText = $('[name="' + family.input + 'neighborhood_domi"]').val();
+				var dAddressText = $('[name="' + family.input + 'address_domi"]').val();
+				var domiAllAddr = domicileCityIdText + domicileZipCodeText + domicileLinerText + dNeighborhoodText + dAddressText;
+				//alert(domiAllAddr);
+				if( domiAllAddr.length > 40 ){
+					customizeValidResult.push({
+	                    obj: $('[name="' + family.input + 'cityId_domi"]'),
+	                    msg: '戶籍地址長度不可大於40位'
+	                });
+				}
+				
+				var areaTelephone = $('[name="' + family.input + 'regionCode"]').val();
                 if (areaTelephone.length < 2) {
                     customizeValidResult.push({
                         obj: $('[name="' + family.input + 'regionCode"]'),
@@ -895,7 +950,7 @@ function familyFoolproof(family, familyName, validArr) {
     if (family == guarantorName + '_') {
         id_numObj['hasHiddenCode'] = true;
         id_numObj['hiddenTarget'] = $('div#' + guarantorName + ' input[name="id_hidden"]').val()
-            //alert(family+';'+guarantorName+':'+ $('div#' + guarantorName + ' input[name="id_hidden"]').val());
+        //alert(family+';'+guarantorName+':'+ $('div#' + guarantorName + ' input[name="id_hidden"]').val());
     }
     validArr.validIdentity_arr.push(id_numObj);
 
@@ -933,72 +988,42 @@ function familyFoolproof(family, familyName, validArr) {
     validArr.validChinese_arr.push(nameObj);
 
 
-    if (isRecordHidden != 'Y' && isChangeHidden != 'N') {
-		var sameAddressHidden = $('[name="'+family+'sameAddrHidden"]');
-		if( sameAddressHidden.val() != 'Y' ){
-			console.debug(validArr.validEmpty_arr);
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'neighborhood_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'address_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'cityId_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'zipCode_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'liner_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-		}
+    if (isRecordHidden == 'Y' && isChangeHidden == 'N') {
     }
-	
-	console.debug('-----------------------------');
-	console.debug(validArr.validEmpty_arr);
-	
-	/*else{
-		var sameAddressHidden = $('[name="'+family+'_sameAddrHidden"]');
-		if( sameAddressHidden != 'Y' ){
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'neighborhood_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'address_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'cityId_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'zipCode_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-			validArr.validEmpty_arr.push({
-				name: '' + family + 'liner_domi',
-				msg: '' + familyName + '戶籍地址',
-				group: '' + family + 'domicileAddr'
-			});
-		}
-	}*/
+    else{
+        var sameAddressHidden = $('[name="'+family+'sameAddrHidden"]');
+        if( sameAddressHidden.val() != 'Y' ){
+            console.debug(validArr.validEmpty_arr);
+            validArr.validEmpty_arr.push({
+                name: '' + family + 'neighborhood_domi',
+                msg: '' + familyName + '戶籍地址',
+                group: '' + family + 'domicileAddr'
+            });
+            validArr.validEmpty_arr.push({
+                name: '' + family + 'address_domi',
+                msg: '' + familyName + '戶籍地址',
+                group: '' + family + 'domicileAddr'
+            });
+            validArr.validEmpty_arr.push({
+                name: '' + family + 'cityId_domi',
+                msg: '' + familyName + '戶籍地址',
+                group: '' + family + 'domicileAddr'
+            });
+            validArr.validEmpty_arr.push({
+                name: '' + family + 'zipCode_domi',
+                msg: '' + familyName + '戶籍地址',
+                group: '' + family + 'domicileAddr'
+            });
+            validArr.validEmpty_arr.push({
+                name: '' + family + 'liner_domi',
+                msg: '' + familyName + '戶籍地址',
+                group: '' + family + 'domicileAddr'
+            });
+        }
+    }
 
+    console.debug('-----------------------------');
+    console.debug(validArr.validEmpty_arr);
 
     return validArr;
 }
@@ -1030,18 +1055,18 @@ function apply3_1_valid() {
         showAllErr: false,
         formId: ["mainForm"],
         validEmpty: [{
-                name: '' + family + 'educationStage',
-                msg: '教育階段'
-            }, {
-                name: '' + family + 'isNational',
-                msg: '學校名稱 (公/私)'
-            }, {
-                name: '' + family + 'name',
-                msg: '學校名稱'
-            }, {
-                name: '' + family + 'isDay',
-                msg: '學校名稱 (日間/夜間)'
-            },
+            name: '' + family + 'educationStage',
+            msg: '教育階段'
+        }, {
+            name: '' + family + 'isNational',
+            msg: '學校名稱 (公/私)'
+        }, {
+            name: '' + family + 'name',
+            msg: '學校名稱'
+        }, {
+            name: '' + family + 'isDay',
+            msg: '學校名稱 (日間/夜間)'
+        },
             /*{
              name: '' + family + 'department',
              msg: '科系所'
@@ -1484,7 +1509,7 @@ function apply1_1(content) {
     var addr = content.teleAddress.address;
     var nei = content.teleAddress.neighborhood;
     var isRecord = content.isRecord;
-	var isPopUp = content.isPopUp;
+    var isPopUp = content.isPopUp;
     var isEtabs = content.isEtabs;
     var domiLinerName = content.domicileAddress.linerName;
     var lName = content.teleAddress.linerName;
@@ -1543,19 +1568,19 @@ function apply1_1(content) {
         'neighborhoodTele': neighborhood,
         'addressTele': address
     };
-	
-	//無簽訂線上服務註記且已有撥款紀錄且本學期沒有彈跳過訊息者要彈跳推廣訊息
+
+    //無簽訂線上服務註記且已有撥款紀錄且本學期沒有彈跳過訊息者要彈跳推廣訊息
     if (isEtabs == 'N' && isPopUp == 'N' && isRecord == 'Y') {
-		GardenUtils.display.popup({
+        GardenUtils.display.popup({
             title: '提醒您',
             content: '<p>為提供更加便捷的就學貸款服務，只要簽署「就學貸款網路服務契約條款」<a href="pdf/16.就學貸款業務網路服務申請書暨契約條款(DE50).pdf" class="passIcon passpdf" target="_blank"><img src="img/akk-04.png"></a>，將可透過本服務專區「我要申請｣功能完成線上續貸，還可享有免手續費優惠。</p><p>填寫完畢，請將紙本郵寄至104 臺北市中山區中山北路二段50號3樓 「台北富邦銀行就學貸款組收｣<br>如有疑問，請洽客戶服務專線02-8751-6665按5</p>',
             closeCallBackFn: function() {
-				modal.getUpdatePopupStatus();
-			},
+                modal.getUpdatePopupStatus();
+            },
             isShowSubmit: false
         });
-	}
-	
+    }
+
     name_hidden.val(name);
     birthdayDay_hidden.val(birthday.substr(5, 2));
     d_phone.val(domicilePhone);
@@ -1657,10 +1682,11 @@ function apply1_1(content) {
 
     //alert('test1');
     //2016-06-18 added by titan 綁半形轉全形
-    /**/
+    /*
     GardenUtils.format.inputConvertFullWidth({
         name: ['DomicileNeighborhood', 'DomicileAddress', 'address']
     });
+	*/
     //alert('test2');
 
     //hidden
@@ -1766,8 +1792,8 @@ function apply1_1(content) {
             zipSelect.find('option[value="' + zipCode + '"]').trigger('change');
             teleZipCodeHidden.val(zipCode);
 
-			//alert(liner);
-			
+            //alert(liner);
+
             if (liner !== '') { //顯示liner
                 var jsonLiner = modal.getLiner(zipCode);
                 console.debug(jsonLiner);
@@ -1782,7 +1808,7 @@ function apply1_1(content) {
                 linerSelect.empty();
                 linerSelect.append(linerArray.join(''));
                 linerSelect.selectpicker('refresh');
-				
+
                 linerSelect.find('option[value="' + liner + '"]').prop('selected', 'true');
                 linerSelect.find('option[value="' + liner + '"]').trigger('change');
                 teleLinerHidden.val(liner);
@@ -1843,7 +1869,7 @@ function apply1_1(content) {
     var sameAddr = content.sameAddr;
     if (sameAddr == 'Y') {
         $('#add').attr('checked', true);
-		$('[name="sameAddrHidden"]').val('Y');
+        $('[name="sameAddrHidden"]').val('Y');
         //鎖死通訊地址
         lockAddress(addressObj, true);
     }
@@ -1890,42 +1916,42 @@ function apply1_1(content) {
     });
 
     var changeObj = [{
-            'srcInput': 'domicileCityId',
-            'toInput': 'cityId',
-            'callback': function(select) {
-                console.debug('1:' + select.val());
-                select.selectpicker('refresh');
-                select.trigger('change');
-            }
-        }, {
-            'srcInput': 'domicileZipCode',
-            'toInput': 'zipCode',
-            'callback': function(select) {
-                console.debug('2:' + select.val());
-                select.selectpicker('refresh');
-                select.trigger('change');
-            }
-        }, {
-            'srcInput': 'domicileLiner',
-            'toInput': 'address',
-            'callback': function(select) {
-                /*console.debug('3:' + select.val());
-                 select.selectpicker('refresh');
-                 select.trigger('change');*/
-            }
-        }, {
-            'srcInput': 'DomicileNeighborhood',
-            'toInput': 'address',
-            'callback': function(select) {
-                //select.selectpicker('refresh');
-            }
-        }, {
-            'srcInput': 'DomicileAddress',
-            'toInput': 'address',
-            'callback': function(select) {
-                //select.selectpicker('refresh');
-            }
+        'srcInput': 'domicileCityId',
+        'toInput': 'cityId',
+        'callback': function(select) {
+            console.debug('1:' + select.val());
+            select.selectpicker('refresh');
+            select.trigger('change');
         }
+    }, {
+        'srcInput': 'domicileZipCode',
+        'toInput': 'zipCode',
+        'callback': function(select) {
+            console.debug('2:' + select.val());
+            select.selectpicker('refresh');
+            select.trigger('change');
+        }
+    }, {
+        'srcInput': 'domicileLiner',
+        'toInput': 'address',
+        'callback': function(select) {
+            /*console.debug('3:' + select.val());
+             select.selectpicker('refresh');
+             select.trigger('change');*/
+        }
+    }, {
+        'srcInput': 'DomicileNeighborhood',
+        'toInput': 'address',
+        'callback': function(select) {
+            //select.selectpicker('refresh');
+        }
+    }, {
+        'srcInput': 'DomicileAddress',
+        'toInput': 'address',
+        'callback': function(select) {
+            //select.selectpicker('refresh');
+        }
+    }
         /*, {
          'srcInput': 'domicileLinerName',
          'toInput': 'address',
@@ -1980,13 +2006,13 @@ function apply1_1(content) {
         var linerCurrent = $('#domicileAddr .liner_y button span').eq(0);
         linerCurrent.text('*');
     }
-	
-	//alert(sameAddrHidden.val());
-	
-	//帶"同戶籍地址"預設值
-	/*if(sameAddrHidden.val() == 'Y'){
-		$('#add').trigger('change');
-	}*/
+
+    //alert(sameAddrHidden.val());
+
+    //帶"同戶籍地址"預設值
+    /*if(sameAddrHidden.val() == 'Y'){
+     $('#add').trigger('change');
+     }*/
 }
 
 function apply1_2(content) {
@@ -2494,6 +2520,38 @@ function apply2(content) {
     isChangeHidden.val(isChanged);
     adultHidden.val(adultTag);
 
+	/* 必填的表格放上面, 選填的表格放下面 (start)*/
+    //2016-06-10 added by titan固定的在最上面，挑選才出來的放下面，順序還是以父/母/第三人/配偶來排
+    //作法是產生一塊空div，裡面有兩塊div分別放固定跟非固定最後讓這塊div的html長在第一塊parent
+    var tmpDiv = $('<div></div>');
+    var topDiv = $('<div></div>');
+    var optionDiv = $('<div></div>');
+
+     if (adultTag == 'N') {
+	     $.each(familyArray, function(i, family) {
+		     var identityStatus = familyStatus.substr(i, 1);
+		     if (identityStatus == '1' || identityStatus == '3') {
+				$('#' + family).appendTo(topDiv);
+		     } else if (identityStatus == '0' || identityStatus == '2') {
+			     $('#' + family).appendTo(optionDiv);
+		     }
+	     });
+     } else if (adultTag == 'Y') {
+	     $.each(familyArray, function(i, family) {
+		     var identityStatus = familyStatus.substr(i, 1);
+		     if (identityStatus == '1' || identityStatus == '3') {
+				$('#' + family).appendTo(topDiv);
+		     } else if (identityStatus == '0' || identityStatus == '2') {
+				$('#' + family).appendTo(optionDiv);
+		     }
+	     });
+     }
+     tmpDiv.append(topDiv.html());
+     tmpDiv.append(optionDiv.html());
+
+     $(tmpDiv.html()).insertAfter($('#incomeTaxRadio'));/**/
+    /* 必填的表格放上面, 選填的表格放下面 (end)*/
+	
     //使用bootstrap的selectpicker
     $('.selectpicker').selectpicker();
 
@@ -2532,39 +2590,6 @@ function apply2(content) {
     /*綁地址的下拉式選單之連動事件(end)*/
 
 
-    /* 必填的表格放上面, 選填的表格放下面 (start)*/
-    //2016-06-10 added by titan固定的在最上面，挑選才出來的放下面，順序還是以父/母/第三人/配偶來排
-    //作法是產生一塊空div，裡面有兩塊div分別放固定跟非固定最後讓這塊div的html長在第一塊parent
-    /*var tmpDiv = $('<div></div>');
-    var topDiv = $('<div></div>');
-    var optionDiv = $('<div></div>');
-
-    if (adultTag == 'N') {
-        $.each(familyArray, function(i, family) {
-            var identityStatus = familyStatus.substr(i, 1);
-            if (identityStatus == '1' || identityStatus == '3') {
-                $('#' + family).appendTo(topDiv);
-            } else if (identityStatus == '0' || identityStatus == '2') {
-                $('#' + family).appendTo(optionDiv);
-            }
-        });
-    } else if (adultTag == 'Y') {
-        $.each(familyArray, function(i, family) {
-            var identityStatus = familyStatus.substr(i, 1);
-            if (identityStatus == '1' || identityStatus == '3') {
-                $('#' + family).appendTo(topDiv);
-            } else if (identityStatus == '0' || identityStatus == '2') {
-                $('#' + family).appendTo(optionDiv);
-            }
-        });
-    }
-    tmpDiv.append(topDiv.html());
-    tmpDiv.append(optionDiv.html());
-
-    $(tmpDiv.html()).insertAfter($('#incomeTaxRadio'));*/
-    /* 必填的表格放上面, 選填的表格放下面 (end)*/
-
-
     /*塞全部關係人的資料(start)*/
     $.each(familyArray, function(index, value) {
         var div = $('#' + value + '');
@@ -2576,6 +2601,9 @@ function apply2(content) {
             if (isRecord == 'Y' && isChanged == 'N') {
                 determineAddReadonly(value, familyInfo);
             }
+			
+			//因為小版會被疊到(很怪)，所以先長完畫面後強制加width 100%後再拿掉
+			$(div).find('p.stringOrRadio').css('width','100%');
         });
     });
     /*塞全部關係人的資料(end)*/
@@ -2615,9 +2643,6 @@ function apply2(content) {
         $('[name="thirdParty_relationship"]').selectpicker('refresh');
     }
     /*決定要呈現誰的表格&要不要長radio or checkbox (end)*/
-
-
-    /*勾選'同申請人戶籍地 (end)*/
 
     /*點選連帶保證人的radiobox button (start)*/
     //更新hidden的值(未成年的radio: 若選"是"則顯示div,且為連帶保證人, 反之亦然)
@@ -2920,7 +2945,6 @@ function apply2(content) {
     /*如果之前有勾選"同戶籍地址"的checkbox, 則帶入預設 (start)*/
     /**/
     $.each(familyArray, function(i, familyStr) {
-
         var domiSelect = $('[name="' + familyStr + '_cityId_domi"]');
         var select = $('[name="' + familyStr + '_cityId"]');
         var domiZipSelect = $('[name="' + familyStr + '_zipCode_domi"]');
@@ -2953,6 +2977,7 @@ function apply2(content) {
 
         //如果之前已經有勾了，就將地址鎖定不得修改
         if (isSameAddr == 'Y') {
+            $('[name="' + familyStr + '_sameAddrHidden"]').val(isSameAddr);
             checkbox.attr('checked', true);
             lockAddress(addressObj, true);
         }
@@ -2979,7 +3004,6 @@ function apply2(content) {
             }
         });
     });
-
     /*如果之前有勾選"同戶籍地址"的checkbox, 則帶入預設 (end)*/
 
     /*帶radio button or checkbox的預設值 (start)*/
@@ -3136,9 +3160,11 @@ function apply2(content) {
     });
 
     //2016-06-18 added by titan 綁半形轉全形
+	/*
     GardenUtils.format.inputConvertFullWidth({
         name: ['father_neighborhood_domi', 'father_address_domi', 'mother_neighborhood_domi', 'mother_address_domi', 'thirdParty_neighborhood_domi', 'thirdParty_address_domi', 'spouse_neighborhood_domi', 'spouse_address_domi']
     });
+	*/
 }
 
 //限制input的長度for step 2, 跑迴圈套所有關係人的input
@@ -3363,9 +3389,9 @@ function determineAddReadonly(family, familyInfo) {
 
     //如果為連帶保證人,則通訊電話及行動電話都不能開放修改
     /*if (gauStr == '連帶保證人') {
-        inputToLabel(readonlyReCode);
-        inputToLabel(readonlyPhone);
-    }*/
+     inputToLabel(readonlyReCode);
+     inputToLabel(readonlyPhone);
+     }*/
 
     if (readonlyMobile.val() != '') {
         inputToLabel(readonlyReCode);
@@ -3435,20 +3461,20 @@ function sameDomiAddrWithApp(content, dCitySelect, dZipSelect, dlinerSelect) {
     //dZipSelect.find('option[value="' + dZipCode + '"]').trigger('change');
 
     //顯示liner
-	if(dLiner != ''){
-		var jLiner = modal.getLiner(dZipCode);
-		var lArr = jLiner.liners;
-		var lArray = [];
-		$.each(lArr, function(i, linerData) {
-			lArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
-		});
+    if(dLiner != ''){
+        var jLiner = modal.getLiner(dZipCode);
+        var lArr = jLiner.liners;
+        var lArray = [];
+        $.each(lArr, function(i, linerData) {
+            lArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
+        });
 
-		dlinerSelect.empty();
-		dlinerSelect.append(lArray.join(''));
-		dlinerSelect.selectpicker('refresh');
-		dlinerSelect.val(dLiner);
-		dlinerSelect.trigger('change');
-	}
+        dlinerSelect.empty();
+        dlinerSelect.append(lArray.join(''));
+        dlinerSelect.selectpicker('refresh');
+        dlinerSelect.val(dLiner);
+        dlinerSelect.trigger('change');
+    }
     //dlinerSelect.find('option[value="' + dLiner + '"]').prop('selected', 'true');
     //dlinerSelect.find('option[value="' + dLiner + '"]').trigger('change');
 }
@@ -4431,8 +4457,8 @@ function apply3_2(content) {
 
     $('#loansSum, #accordingToBillPlusOthers .input_f, #accordingToBill_publicExpense').on('blur', function() {
         var $thisValue = $(this);
-		var isInt = isInteger($thisValue.val());
-		
+        var isInt = isInteger($thisValue.val());
+
         if (isNaN(parseInt($thisValue.val())) || (!isInt)) {
             $thisValue.val('');
         }
@@ -4464,7 +4490,7 @@ function apply3_2(content) {
     $('#freedomPlusOthers .input_f, #freedom_publicExpense').on('blur', function() {
         var $thisValue = $(this);
         var isInt = isInteger($thisValue.val());
-		
+
         if (isNaN(parseInt($thisValue.val())) || (!isInt)) {
             $thisValue.val('');
         }
@@ -4750,9 +4776,9 @@ function apply4_1(content) {
         var inputFile = $(this);
         var tr = inputFile.parents('tr:first');
         var selected_file_name = $(this).val();
-		var files = inputFile.context.files[0].size;
-		
-		checkSize(files);
+        var files = inputFile.context.files[0].size;
+
+        checkSize(files);
 
         console.debug(selected_file_name);
         console.debug(selected_file_name.substr(-3, 3));
@@ -4765,7 +4791,7 @@ function apply4_1(content) {
         fileType = fileType.toLowerCase();
         console.debug(fileType);
 
-        if (fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
+        if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
             $('#documentType').show();
             $('#documentLength').hide();
         } else {
@@ -5053,8 +5079,11 @@ function apply4_2(content) {
                             });
                         }
                     });
-
-                    //長日曆
+					
+					//紀錄active的date
+					var activeDate;
+					
+                    //長日曆					
                     $('#calendar').fullCalendar({
                         header: {},
                         //height: 400,
@@ -5076,22 +5105,43 @@ function apply4_2(content) {
                         editable: false,
                         eventLimit: true, // allow "more" link when too many events
                         events: calendarArr,
-
+						dayRender : function(date, cell){
+							//console.debug(date);
+							//console.debug(cell);
+							
+							var data_date = cell.attr('data-date');
+							if(activeDate != undefined && activeDate == data_date) {
+	                            $('td [data-date="'+data_date+'"]').addClass('active');
+							}
+							
+						},
                         dayClick: function(date, jsEvent, view) {
                             var myDate = new Date();
-					
-							var data_date = $(this).attr('data-date');
-							console.debug(data_date);
+                            
+							//判斷是否星期六或日
+							var isHoliday = ($(this).hasClass('fc-sun') || $(this).hasClass('fc-sat'));
 							
-							//將選取的日期加上藍色樣式
-							$('.fc-day').removeClass('active');
-							$('.fc-day-number').removeClass('active');
-							$('td [data-date="'+data_date+'"]').addClass('active');
+							if(isHoliday) return false;
 							
-							//alert(date.format('YYYY-MM-DD'));
-							//alert(myDate);
+                            var data_date = $(this).attr('data-date');
+                            var chooseDate = new Date(data_date + ' 23:59:59');
+                            //alert(date.format('YYYY-MM-DD'));
+                            //alert(myDate);
+
+                            //2016-07-08 added by titan
+                            console.debug(date);
+                            console.debug(myDate);
+                            console.debug(chooseDate);
+
+                            if (chooseDate >= myDate) {
 							
-                            if (date >= myDate) {
+								//將選取的日期加上藍色樣式
+	                            $('.fc-day').removeClass('active');
+	                            $('.fc-day-number').removeClass('active');
+	                            $('td [data-date="'+data_date+'"]').addClass('active');
+								
+								activeDate = data_date;
+							
                                 //TRUE Clicked date smaller than today
                                 dateAppo = date.format();
 
@@ -5224,6 +5274,12 @@ function apply4_2(content) {
                         }
                     });
 
+					//小版時要把js的height拿掉
+					if ($(window).width() < 768) {
+						$('.fc-day-grid-container.fc-scroller').css('height','100%');
+					}
+
+					
                     $('#appointment').find('input').on('click', function() { //點選預約日期,右下方會產生日期和時間的資訊
                         var radioIndex = $(this).attr('id').substr(-1, 1);
                         var timeHour = $('#timeLabel' + radioIndex).text().substr(2, 2);
@@ -5244,14 +5300,14 @@ function apply4_2(content) {
 
 
                     /*$('table .fc-rigid .fc-bg tr td').css('background-color', '#FAFAFA');
-                    $('table .fc-body .fc-sun').css('background-color', '#F0F0F0');
-                    $('table .fc-body .fc-sat').css('background-color', '#F0F0F0');
+                     $('table .fc-body .fc-sun').css('background-color', '#F0F0F0');
+                     $('table .fc-body .fc-sat').css('background-color', '#F0F0F0');
 
-                    $('table .fc-today').css('background-color', '#0E89CB');
-                    $('table .fc-past').css('background-color', '#F0F0F0');
-                    $('table .fc-future').css('color', '#0E89CB');
-                    $('table .fc-body .fc-sun').css('color', '#DEDEDE');
-                    $('table .fc-body .fc-sat').css('color', '#DEDEDE');*/
+                     $('table .fc-today').css('background-color', '#0E89CB');
+                     $('table .fc-past').css('background-color', '#F0F0F0');
+                     $('table .fc-future').css('color', '#0E89CB');
+                     $('table .fc-body .fc-sun').css('color', '#DEDEDE');
+                     $('table .fc-body .fc-sat').css('color', '#DEDEDE');*/
                 });
 
 
@@ -5636,7 +5692,7 @@ function apply5_1_1(content) {
         var inputFile = $(this);
         var tr = inputFile.parents('tr:first');
         var selected_file_name = $(this).val();
-		var files = inputFile.context.files[0].size;
+        var files = inputFile.context.files[0].size;
 
         console.debug(selected_file_name);
         console.debug(selected_file_name.substr(-3, 3));
@@ -5649,7 +5705,7 @@ function apply5_1_1(content) {
         fileType = fileType.toLowerCase();
         console.debug(fileType);
 
-        if (fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
+        if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
             $('#documentType').show();
             $('#documentLength').hide();
         } else {
@@ -6571,7 +6627,7 @@ function apply6_2(content) {
     $('#SpecialStatus').on('click', function() {
         GardenUtils.display.popup({
             title: '',
-            content: '<p>若為失蹤:</p><p>需檢附警察機關報案「受(處)理查尋人口案件登記表」或戶籍謄本登載失蹤。</p><br><p>若為重病或精神錯亂:</p><p>需檢附合格醫院最近六個月內所核發重病或精神錯亂之證明文件。</p><br><p>若為在監服刑:</p><p>需檢附在監服刑執行證明文件。</p><br><p>若為家庭暴力:</p><p>需檢附法院所核發有效之通常保護令(未指定暫時監護權項目)或各地方政府出具之受暴證明。</p>',
+            content: '<p>‧若為失蹤:</p><p>需檢附警察機關報案「受(處)理查尋人口案件登記表」或戶籍謄本登載失蹤。</p><br><p>‧若為重病或精神錯亂:</p><p>需檢附合格醫院最近六個月內所核發重病或精神錯亂之證明文件。</p><br><p>‧若為在監服刑:</p><p>需檢附在監服刑執行證明文件。</p><br><p>‧若為家庭暴力:</p><p>需檢附法院所核發有效之通常保護令(未指定暫時監護權項目)或各地方政府出具之受暴證明。</p>',
             closeCallBackFn: function() {},
             isShowSubmit: false
         });

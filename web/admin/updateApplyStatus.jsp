@@ -72,5 +72,5 @@
 %>
 
 <script>
-    window.location = 'apply.jsp';
+    window.location = 'apply_log.jsp';
 </script>

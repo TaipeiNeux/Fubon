@@ -107,7 +107,7 @@ function g_ajax(config) {
     
 }
 
-function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanlder) {
+function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanlder,getInputEventHandler) {
 
     //長body的class
     $('body').attr('class','').addClass(Content.flow.bodyClass).addClass(Content.flow.flowId);
@@ -217,7 +217,7 @@ function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanld
                             callback : function(content) {
 
                                 //開始長流程畫面
-                                buildFlow(content, stepEventHandler, nextEventHanlder,nextEventErrorHanlder);
+                                buildFlow(content, stepEventHandler, nextEventHanlder,nextEventErrorHanlder,getInputEventHandler);
                             }
                         });
                     }
@@ -268,22 +268,54 @@ function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanld
 						errorHandler : ajaxErrorFn,
                         callback : function(content) {
                             //開始長流程畫面
-                            buildFlow(content, stepEventHandler, nextEventHanlder,nextEventErrorHanlder);
+                            buildFlow(content, stepEventHandler, nextEventHanlder,nextEventErrorHanlder,getInputEventHandler);
                         }
                     });
                 }
             });
+						
+			//2016-07-08 added by titan 綁全站input的事件(預設帶入input都去掉空白)
+			var getInputEvent = getInputEventHandler != undefined ? getInputEventHandler[stepId] : undefined;
 			
+			var stepInputObj = {};
+			if(getInputEvent != undefined) {
+				stepInputObj = getInputEvent.apply(window,[]);
+			}
 			
-			//2016-06-10 added by titan 綁全站input有name的輸入完後過濾空白
-			var trimSpaceName = [];
+			var inputs = [];
 			$('input[name]').each(function(){
 				var $this = $(this);
-				trimSpaceName.push($this.attr('name'));
+				var name = $this.attr('name');
+				var trimSpace = true;
+				var convertFullWidth = false;
+				var focusClearVal = false;
+				
+				console.debug(stepInputObj);
+				
+				if (stepInputObj.hasOwnProperty(name)) {
+			       var stepObj = stepInputObj[name];
+				   
+				   if(stepObj['convertFullWidth']) {
+						convertFullWidth = true;
+				   }
+				   
+				   if(stepObj['focusClearVal']) {
+						focusClearVal = true;
+				   }
+				}
+
+				inputs.push({
+					inputName : name,
+					trimSpace : trimSpace,
+					convertFullWidth : convertFullWidth,
+					focusClearVal : focusClearVal
+				});
 			});
 			
-			GardenUtils.format.inputTrimSpace({
-				name : trimSpaceName
+			console.debug(inputs);
+			
+			GardenUtils.format.inputFocusBlurEventHandler({
+				inputs : inputs
 			});
         }
 

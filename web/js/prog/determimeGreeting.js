@@ -129,7 +129,7 @@ function eightGreeting() {
 
             "message_4": '<h4>Hi,<span>' + appName + '</span> 你好!</h4><p>您已於' + onlineYear + '/' + onlineMonth + '/' + onlineDay + '完成線上送出申請資料，目前審核狀態為「審核中｣。如有疑問，請洽客戶服務專線02-8751-6665 按5。</p>',
 
-            "message_5": '<h4>Hi,<span>' + appName + '</span> 你好!</h4><p>您已於' + onlineYear + '/' + onlineMonth + '/' + onlineDay + '完成線上送出申請資料，審核結果為「通過｣。<br>請您自行下載<a href="#" class="passIcon passpdf pdfImg" target="_blank"><img src="img/akk-044.png"></a>或列印<a href="#" class="passIcon passpd printerImgf" target="_blank"><img src="img/akk-033.png"></a>申請書(收執聯)後交付學校，方可完成就學貸款申請。</div><br>如有疑問，請洽客戶服務專線02-8751-6665 按5。</p>',
+            "message_5": '<h4>Hi,<span>' + appName + '</span> 你好!</h4><p>您已於' + onlineYear + '/' + onlineMonth + '/' + onlineDay + '完成線上送出申請資料，審核結果為「通過｣。<br>請您自行下載<a href="print/print.jsp" class="passIcon passpdf pdfImg" target="_blank"><img src="img/akk-044.png"></a>或列印<a href="print/print.jsp" class="passIcon passpd printerImgf" target="_blank"><img src="img/akk-033.png"></a>申請書(收執聯)後交付學校，方可完成就學貸款申請。</div><br>如有疑問，請洽客戶服務專線02-8751-6665 按5。</p>',
 
             "message_6": '<h4>Hi,<span>' + appName + '</span> 你好!</h4><p>您已於' + onlineYear + '/' + onlineMonth + '/' + onlineDay + '完成線上送出申請資料，審核結果為「未通過｣，請您儘速修改並重新送出申請。如有疑問，請洽客戶服務專線02-8751-6665按5。</p><a href="apply.jsp?step=apply_document_5_1" class="pobtn-srb">修改資料</a>',
 

@@ -1,5 +1,7 @@
 package com.fubon.filter;
 
+import com.fubon.listener.SessionLoginBean;
+import com.fubon.servlet.AuthServlet;
 import com.fubon.utils.ProjUtils;
 import com.neux.garden.authorization.LoginUserBean;
 import com.neux.garden.log.GardenLog;
@@ -41,16 +43,19 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+        String uri = request.getRequestURI();
+
+        System.out.println("uri = " + uri);
+        String page = uri.substring(uri.lastIndexOf("/")+1);
+
+        System.out.println("page = " + page);
+
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(request.getSession());
         if(loginUserBean == null) {
-            String uri = request.getRequestURI();
 
-            System.out.println("uri = " + uri);
-
-            String page = uri.substring(uri.lastIndexOf("/")+1);
             if(needLoginSet.contains(page)) {
 
-                System.out.println("page = " + page);
+                System.out.println("into needLoginSet");
 
                 //紀錄要去哪一頁
                 GardenLog.log(GardenLog.DEBUG,"set loginSuccessPage = " + page);
@@ -65,7 +70,44 @@ public class LoginFilter implements Filter {
             }
         }
         else {
-            filterChain.doFilter(servletRequest,servletResponse);
+
+            //判斷是否有重覆登入
+            String userId = loginUserBean.getUserId();
+            GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
+
+            SessionLoginBean sessionLoginBean = AuthServlet.sessionMap.get(userId);
+            String sessionId = sessionLoginBean.getSessionId();
+
+            GardenLog.log(GardenLog.DEBUG,"current = " + request.getSession().getId());
+            GardenLog.log(GardenLog.DEBUG,"sessionId = " + sessionId);
+
+            //如果驗證的sessionid跟目前的不同，則踢除
+            if(!request.getSession().getId().equals(sessionId)) {
+                GardenLog.log(GardenLog.DEBUG,"not match....kick!!");
+                request.getSession().removeAttribute("loginUserBean");
+
+                if(needLoginSet.contains(page)) {
+
+                    System.out.println("page = " + page);
+
+                    //紀錄要去哪一頁
+                    GardenLog.log(GardenLog.DEBUG,"set loginSuccessPage = " + page);
+                    request.getSession().setAttribute("loginSuccessPage",page);
+
+//                GardenLog.log(GardenLog.DEBUG,"page = " + request.getSession().getAttribute("loginSuccessPage"));
+
+                    response.sendRedirect("memberLogin.jsp");
+                }
+                else {
+                    filterChain.doFilter(servletRequest,servletResponse);
+                }
+            }
+            else {
+                filterChain.doFilter(servletRequest,servletResponse);
+            }
+
+
+
         }
 
 

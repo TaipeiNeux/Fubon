@@ -5,7 +5,7 @@
 <script src="js/jquery-ui.min.js"></script>
 <body class="index">
 
-
+<div class="ajax-loader" style="display: block;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>
 
 <div class="mobileMenu">
     <%@ include file="include/mobile_menu.jsp" %>

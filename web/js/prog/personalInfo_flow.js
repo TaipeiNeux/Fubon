@@ -23,6 +23,25 @@ $(document).ready(function() {
     if (jumpStep == 'null') {
         jumpStep = '';
     }
+	
+	//2016-07-08 added by titan ，填入每個步驟需要控制input的事件
+	var getInputEventHandler = {
+		"personalInfo1": function(){
+			return {
+				DomicileNeighborhood : {
+					convertFullWidth : true
+				},
+				DomicileAddress : {
+					convertFullWidth : true,
+					focusClearVal : true
+				},
+				address : {
+					convertFullWidth : true,
+					focusClearVal : true
+				}
+			};
+		}
+	};
 
     g_ajax({
         url: 'flow?action=continue&flowId=personalInfo',
@@ -40,7 +59,7 @@ $(document).ready(function() {
             console.debug(nextEventHanlder);
 
             //開始長流程畫面
-            buildFlow(content, stepEventHandler, nextEventHanlder);
+            buildFlow(content, stepEventHandler, nextEventHanlder,undefined,getInputEventHandler);
         }
     });
 
@@ -139,6 +158,14 @@ function personalInfo_1(content) {
     var email_hidden = $('[name="email_hidden"]');
     var domicileAddress_hidden = $('[name="domicileAddress_hidden"]');
     var teleAddress_hidden = $('[name="teleAddress_hidden"]');
+	
+	
+	var addressObj = {
+        'citySelectTele': citySelect,
+        'zipSelectTele': zipSelect,
+        'addressTele': address
+    };
+
 
     d_phone.val(domicilePhone);
     t_phone.val(phone);
@@ -242,9 +269,11 @@ function personalInfo_1(content) {
     }
 
     //2016-06-18 added by titan 綁半形轉全形
+	/*
     GardenUtils.format.inputConvertFullWidth({
         name: ['DomicileNeighborhood', 'DomicileAddress', 'address']
     });
+	*/
 
     //有撥款紀錄者,不開放修改,將input轉為label
     if (isRecord == 'Y') { //續貸
@@ -462,7 +491,7 @@ function personalInfo_1(content) {
                 }
             }*/
     ];
-
+	
     //勾選'同戶籍地'
     $('#add').change(function() {
         var srcTemp = '';
@@ -494,6 +523,12 @@ function personalInfo_1(content) {
                     obj.callback.apply(window, [to]);
                 }
             });
+			//鎖死通訊地址
+            lockAddress(addressObj, true);
+        }
+		else {
+            //不要鎖死通訊地址
+            lockAddress(addressObj, false);
         }
     });
 
@@ -907,8 +942,8 @@ function personalInfo_2_1(content) {
 function personalInfo_2_2(content) {
 
     var imgSrc = content.code_img;
-    var email = content.email;
-    var mobile = content.mobile;
+    var emailValue = content.email;
+    var mobileValue = content.mobile;
     var mobileNumber = content.mobile;
     var hasAppropriation = content.hasAppropriation;
     var img = $('#img');
@@ -917,10 +952,10 @@ function personalInfo_2_2(content) {
     var tipMsg = [];
     
     if (hasAppropriation == 'N'){
-        tipMsg.push('<h4 class="mipa">請輸入本行寄發到您&nbsp;Email<div class="mipa" id="email">&nbsp;' + email + '</div></h4><h4 class="mipa">的六位數交易驗證碼;<div>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</div></h4>');
+        tipMsg.push('<h4 class="mipa">請輸入本行寄發到您&nbsp;Email<div class="mipa" id="email">&nbsp;' + emailValue + '</div></h4><h4 class="mipa">的六位數交易驗證碼;<div>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</div></h4>');
     }
     else if (hasAppropriation == 'Y'){
-        tipMsg.push('<h4 class="mipa">請輸入本行寄發到您&nbsp;手機號碼<div class="mipa" id="mobile">&nbsp;' + mobile + '</div></h4><h4 class="mipa">的六位數交易驗證碼;<br/>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</h4>');
+        tipMsg.push('<h4 class="mipa">請輸入本行寄發到您&nbsp;手機號碼<div class="mipa" id="mobile">&nbsp;' + mobileValue + '</div></h4><h4 class="mipa">的六位數交易驗證碼;<br/>如有疑問,請洽客戶服務專線 02-8751-6665 按 5。</h4>');
     }
     $('.tip').append(tipMsg.join(''));    
 
@@ -1295,7 +1330,32 @@ function personalInfo_1_valid() {
         }],
         errorDel: [],
         customizeFun: function(customizeValidResult) {
-
+			//檢查全部的地址字數是否為40個字以內
+			//戶籍地址
+			var domicileCityIdText = $('[name="domicileCityId"]').parent().find('button').attr('title');
+			var domicileZipCodeText = $('[name="domicileZipCode"]').parent().find('button').attr('title');
+			var domicileLinerText = $('[name="domicileLiner"]').parent().find('button').attr('title');
+			var dNeighborhoodText = $('[name="DomicileNeighborhood"]').val();
+			var dAddressText = $('[name="DomicileAddress"]').val();
+			var domiAllAddr = domicileCityIdText + domicileZipCodeText + domicileLinerText + dNeighborhoodText + dAddressText;
+			if( domiAllAddr.length > 40 ){
+				customizeValidResult.push({
+                    obj: $('[name="domicileCityId"]'),
+                    msg: '戶籍地址長度不可大於40位'
+                });
+			}
+			//通訊地址
+			var cityIdText = $('[name="cityId"]').parent().find('button').attr('title');
+			var zipCodeText = $('[name="zipCode"]').parent().find('button').attr('title');
+			var addressText = $('[name="address"]').val();
+			var allAddr = cityIdText + zipCodeText + addressText;
+			if( allAddr.length > 40 ){
+				customizeValidResult.push({
+                    obj: $('[name="cityId"]'),
+                    msg: '通訊地址長度不可大於40位'
+                });
+			}
+			
             var domicilePhoneVal = $('[name="Domicile_Phone"]').val();
             var domicileAreaVal = $('[name="DomicileArea"]').val();
             if (domicileAreaVal.length < 2 || domicilePhoneVal.length < 7) {
@@ -1822,4 +1882,26 @@ function isSubstr(src, targetArr) {
         return '不可為「' + errMsg + '」的子字串';
     }
     return errMsg;
+}
+
+//鎖死通訊地址or解開地址的輸入
+function lockAddress(addressObj, isLock) {
+    console.debug(addressObj.citySelectTele.attr('class'));
+    console.debug(addressObj.citySelectTele.parent().attr('class'));
+
+    addressObj.citySelectTele.attr("disabled", isLock);
+    addressObj.zipSelectTele.attr("disabled", isLock);
+    addressObj.addressTele.attr("disabled", isLock);
+
+    if (isLock) { //鎖
+        addressObj.citySelectTele.parent().addClass("disabled");
+        addressObj.zipSelectTele.parent().addClass("disabled");
+        addressObj.citySelectTele.parent().find('button').addClass("disabled");
+        addressObj.zipSelectTele.parent().find('button').addClass("disabled");
+    } else { //解鎖
+        addressObj.citySelectTele.parent().removeClass("disabled");
+        addressObj.zipSelectTele.parent().removeClass("disabled");
+        addressObj.citySelectTele.parent().find('button').removeClass("disabled");
+        addressObj.zipSelectTele.parent().find('button').removeClass("disabled");
+    }
 }

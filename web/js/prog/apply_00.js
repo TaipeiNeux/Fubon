@@ -61,7 +61,7 @@ g_ajax({
                         case '5':
                             var name = msg.split(",")[0];
                             var time = msg.split(",")[1];
-                            msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，審核結果為「通過｣。<br>請您自行下載<a href="#" class="passIcon passpdf pdfImg" target="_blank"><img src="img/akk-04.png"></a>或列印<a href="#" class="passIcon passpdf printerImg" target="_blank"><img src="img/akk-03.png"></a>申請書(收執聯)後交付學校，方可完成就學貸款申請。<br>如有疑問，請洽<span class="blue">客戶服務專線 02-8751-6665 按5。</p></div>');
+                            msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，審核結果為「通過｣。<br>請您自行下載<a href="print/print.jsp" class="passIcon passpdf pdfImg" target="_blank"><img src="img/akk-04.png"></a>或列印<a href="print/print.jsp" class="passIcon passpdf printerImg" target="_blank"><img src="img/akk-03.png"></a>申請書(收執聯)後交付學校，方可完成就學貸款申請。<br>如有疑問，請洽<span class="blue">客戶服務專線 02-8751-6665 按5。</p></div>');
                             break;
 
                         case '6':
@@ -157,7 +157,7 @@ g_ajax({
                 case '5':
                     var name = msg.split(";")[0];
                     var time = msg.split(";")[1];
-                    msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，審核結果為「通過｣。<br>請您自行下載<a href="#" class="passIcon passpdf pdfImg" target="_blank"><img src="img/akk-04.png"></a>或列印<a href="#" class="passIcon passpdf printerImg" target="_blank"><img src="img/akk-03.png"></a>申請書(收執聯)後交付學校，方可完成就學貸款申請。<br>如有疑問，請洽<span class="blue">客戶服務專線 02-8751-6665 按5。</p></div>');
+                    msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，審核結果為「通過｣。<br>請您自行下載<a href="print/print.jsp" class="passIcon passpdf pdfImg" target="_blank"><img src="img/akk-04.png"></a>或列印<a href="print/print.jsp" class="passIcon passpdf printerImg" target="_blank"><img src="img/akk-03.png"></a>申請書(收執聯)後交付學校，方可完成就學貸款申請。<br>如有疑問，請洽<span class="blue">客戶服務專線 02-8751-6665 按5。</p></div>');
                     break;
                 case '6':
 					reasonTag = true;
