@@ -596,7 +596,7 @@
             <div class="maya">
                 <div class="joy swataX bgfff">
                     <div class="left noob">
-                        <p>申請教育補助費或享有公費</p>
+                        <p>應扣除教育補助費或助學公費</p>
                         <p class="student_publicExpense">0</p>
                     </div>
                 </div>
@@ -604,7 +604,7 @@
         </div>
         <div class="dan jam">
             <div class="appcont">本次申貸金額
-                <span class="student_sum"></span><span class="bill">元</span>
+                <span class="student_sum totalMoney"></span><span class="bill">元</span>
             </div>
         </div>
 
@@ -612,8 +612,9 @@
     <div class="wrap">
         <h3 class="snopy pen mt40">上傳文件
             </h3>
-            <div class="error-msg" id="documentType" style="display:none">只允許上傳jpg、png、pdf、tif或gif影像檔</div>
+            <div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
             <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
+			<div class="error-msg" id="documentSize" style="display:none">上傳檔案大小合計限10MB</div>
         <table class="mqua">
             <thead>
                 <tr>

@@ -4,12 +4,12 @@
 
     //boolean isLogin = loginUserBean != null;
 
-
-
     String nav = "index";
+    String loginSuccessPage = "";
+    String funcName = "";
     //如果沒登入的話，才判斷session中有沒有預計前往的網頁
     if(!isLogin) {
-        String loginSuccessPage = String.valueOf(session.getAttribute("loginSuccessPage"));
+        loginSuccessPage = String.valueOf(session.getAttribute("loginSuccessPage"));
 
 		out.println("<!--");
 		out.println(loginSuccessPage);
@@ -17,24 +17,31 @@
 		
         if("apply_00.jsp".equalsIgnoreCase(loginSuccessPage) || "apply.jsp".equalsIgnoreCase(loginSuccessPage)) {
             nav = "apply";
+            funcName = "我要申請";
         }
         else if("myloan.jsp".equalsIgnoreCase(loginSuccessPage)) {
             nav = "myloan";
+            funcName = "我的貸款";
         }
         else if("repaymentInquiry.jsp".equalsIgnoreCase(loginSuccessPage)) {
             nav = "repaymentInquiry";
+            funcName = "還款明細查詢";
         }
         else if("deferment.jsp".equalsIgnoreCase(loginSuccessPage)) {
             nav = "deferment";
+            funcName = "延後/提前還款";
         }
         else if("myElectronicPay_1.jsp".equalsIgnoreCase(loginSuccessPage)) {
             nav = "myElectronicPay";
+            funcName = "我的貸款";
         }
         else if("personalInfo_start.jsp".equalsIgnoreCase(loginSuccessPage) || "personalInfo_flow".equalsIgnoreCase(loginSuccessPage)) {
             nav = "personalInfo";
+            funcName = "變更基本資料";
         }
         else if("changePwd.jsp".equalsIgnoreCase(loginSuccessPage)) {
             nav = "changePwd";
+            funcName = "變更代碼/密碼";
         }
 
     }

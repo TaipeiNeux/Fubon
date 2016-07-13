@@ -108,7 +108,8 @@
                     民國
                     <input type="text" class="input_s" name="student_year_enter"> 年
                     <input type="text" class="input_s" name="student_month_enter"> 月
-					<div class="error-msg"></div>
+					<div class="error-msg" id="ori-msg"></div>
+                    <div class="error-msg" id="overYear-msg" style="display:none">入學日期錯誤</div>
                 </div>
             </div>
             <div class="joy swata">

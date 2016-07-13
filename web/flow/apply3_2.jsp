@@ -37,7 +37,7 @@
                         <div class="baka dollars">
                             <div class="left">
                                 <h4 class="">1.書籍費
-<!--                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>-->
+                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>
                     </h4>
                             </div>
                             <div class="right">
@@ -48,7 +48,7 @@
                         <div class="baka dollars">
                             <div class="left">
                                 <h4 class="">2.住宿費
-<!--                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>-->
+                      <span class="hig">(如已含在可貸金額，請勿填寫)</span>
                     </h4>
                             </div>
                             <div class="right">
@@ -59,7 +59,7 @@
                         <div class="baka dollars">
                             <div class="left">
                                 <h4>3.海外研習費
-<!--                      <span class="hig">(限學海飛颺或學海惜珠得獎)</span>-->
+                      <span class="hig">(限學海飛颺或學海惜珠得獎)</span>
                     </h4>
                             </div>
                             <div class="right">
@@ -70,7 +70,7 @@
                         <div class="baka dollars">
                             <div class="left">
                                 <h4>4.生活費
-<!--                      <span class="hig">(限低收入戶或中低收入戶)</span>-->
+                      <span class="hig">(限低收入戶或中低收入戶)</span>
                     </h4>
                             </div>
                             <div class="right">

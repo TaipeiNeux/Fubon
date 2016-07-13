@@ -43,7 +43,7 @@ public class PersonalInfo3 implements ILogic {
         String errorCode = "" , errorMsg = "";
         String registerResult = "fail", registerDate = today.substring(0,10), registerTime = today.substring(11);
 
-        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",birth_year = "" , birth_month = "", birth_day = "",marryStatus = "",cellPhone = "", email = "";
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
         String domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
@@ -58,10 +58,8 @@ public class PersonalInfo3 implements ILogic {
             Element root = personalInfo1Doc.getRootElement();
             if(root.element("id") != null) id = root.element("id").getText();
             if(root.element("name") != null) name = root.element("name").getText();
-            if(root.element("birth_year") != null) birth_year = root.element("birth_year").getText();
-            if(root.element("birth_month") != null) birth_month = root.element("birth_month").getText();
-            if(root.element("birth_day") != null) birth_day = root.element("birth_day").getText();
 
+            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
             if(root.element("cellPhone") != null) cellPhone = root.element("cellPhone").getText();
 
             if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
@@ -84,13 +82,6 @@ public class PersonalInfo3 implements ILogic {
             if(root.element("cityId") != null) teleAddressCityId = root.element("cityId").getText();
             if(root.element("zipCode") != null) teleAddressZipCode = root.element("zipCode").getText();
             if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
-
-            if(StringUtils.isNotEmpty(birth_year) && StringUtils.isNotEmpty(birth_month) && StringUtils.isNotEmpty(birth_day)) {
-                birth_year = StringUtils.leftPad(birth_year,3,"0");
-                birth_month = StringUtils.leftPad(birth_month,2,"0");
-                birth_day = StringUtils.leftPad(birth_day,2,"0");
-                birthday = birth_year + birth_month + birth_day;
-            }
 
 
             //半形轉全形

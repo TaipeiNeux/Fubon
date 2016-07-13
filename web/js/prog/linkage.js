@@ -93,6 +93,30 @@ var linkage = {
         }
         
     },
+	changeBranchZipByCity: function(citySelect, cityArr, zipSelect) {
+        if(citySelect == undefined){
+            return false;
+        }
+        else{
+            citySelect.on('change', function() {
+	            var cityId = $(this).val();
+	            var jsonZip = modal.getZip(cityId);
+	            //console.debug(jsonZip);
+
+				var zipArray = [];
+				zipArray.push('<option value="">請選擇</option>');
+				
+				$.each(jsonZip.zipcodes, function(i, zipData) {
+					zipArray.push('<option value=' + zipData.zipcode + '>' + zipData.areaName + '</option>');
+				});
+				
+				zipSelect.empty();
+		        zipSelect.append(zipArray.join(''));
+		        zipSelect.selectpicker('refresh');
+			});
+        }
+        
+    },
     changeDomicileLinerByZip: function(domicileZipSelect, zipArr, domicileLinerSelect) {
         if(domicileZipSelect == undefined){
             return false;

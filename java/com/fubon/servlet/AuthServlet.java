@@ -256,7 +256,7 @@ public class AuthServlet extends HttpServlet {
                                                 GardenLog.log(GardenLog.DEBUG,"actSts = " + actSts);
                                                 String specSts = foo.elementText("SPEC_STS").trim();
                                                 GardenLog.log(GardenLog.DEBUG,"specSts = " + specSts);
-                                                if(Integer.valueOf(actSts)>1 && !specSts.equals("")) isArrearChk++;
+                                                if(Integer.valueOf(actSts)>1 || StringUtils.isNotEmpty(specSts)) isArrearChk++;
                                             }
                                         }
                                     }
@@ -628,6 +628,8 @@ public class AuthServlet extends HttpServlet {
                             expectDate = aplyMemberData.getValue("expectDate");
                             expectTime = aplyMemberData.getValue("expectTime");
 
+                            expectDate = expectDate + "000000";
+
                             Map<String,String> searchMap = new LinkedHashMap<String, String>();
                             searchMap.put("b.BranchId",expectBranchId);
                             Vector<DataObject> ret = ProjUtils.getBranch(searchMap, dao);
@@ -644,7 +646,7 @@ public class AuthServlet extends HttpServlet {
                             String endTime = (Integer.parseInt(expectTime.substring(0,2)) + 1) + "00";
                             endTime = StringUtils.leftPad(endTime,4,"0");
 
-                            reservation = DateUtil.convert14ToDate("yyyy/MM/dd",expectDate + "000000") + " " +(isAM ? "AM" : "PM") + expectTime.substring(0,2) + ":" + expectTime.substring(2) + "-" + endTime.substring(0,2) + ":" + endTime.substring(2); //預約對保分行的時間
+                            reservation = DateUtil.convert14ToDate("yyyy/MM/dd",expectDate) + " " +(isAM ? "AM" : "PM") + expectTime.substring(0,2) + ":" + expectTime.substring(2) + "-" + endTime.substring(0,2) + ":" + endTime.substring(2); //預約對保分行的時間
                         }
 
                     }
@@ -706,7 +708,7 @@ public class AuthServlet extends HttpServlet {
                     content.put("carryObjArr",carryObjArr);
                     content.put("reservation",reservation);
 
-                    content.put("dateSelected",DateUtil.convert14ToDate("yyyy-MM-dd",expectDate + "000000"));
+                    content.put("dateSelected",DateUtil.convert14ToDate("yyyy-MM-dd",expectDate));
                     content.put("timeSelected",expectTime);
 
                     content.put("applicantAdult",applicantAdult);

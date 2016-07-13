@@ -20,10 +20,10 @@
 
     if(dao.querySingle(aplyMemberTuitionLoanDtl,null)) {
 
-        if("DELETE".equalsIgnoreCase(aplyStatus)) {
-            dao.delete(aplyMemberTuitionLoanDtl);
-        }
-        else {
+//        if("DELETE".equalsIgnoreCase(aplyStatus)) {
+//            dao.delete(aplyMemberTuitionLoanDtl);
+//        }
+//        else {
 
             aplyMemberTuitionLoanDtl.setValue("AplyStatus",aplyStatus);
             dao.update(aplyMemberTuitionLoanDtl);
@@ -67,7 +67,7 @@
 
 
 
-        }
+//        }
     }
 %>
 

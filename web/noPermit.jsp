@@ -19,7 +19,7 @@
     else if("查詢「我的貸款」".equalsIgnoreCase(name)) {
         bodyClass = "myloan";
     }
-    else if("查詢「我的電子繳款單」".equalsIgnoreCase(name)) {
+    else {
         bodyClass = "myElectronicPay_1";
     }
 %>
@@ -59,6 +59,17 @@
                                 {
                                 %>
                                 <p>為提供更加便捷的就學貸款服務，只要簽署「就學貸款網路服務契約條款」<a href="pdf/16.就學貸款業務網路服務申請書暨契約條款(DE50).pdf" class="passIcon passpdf" target="_blank"><img src="img/akk-04.png"></a>，將可透過本服務專區<%=name%>。</p><p>填寫完畢，請將紙本郵寄至104 臺北市中山區中山北路二段50號3樓 「台北富邦銀行就學貸款組收｣<br>如有疑問，請洽客戶服務專線02-8751-6665按5</p>
+                                <%
+                                }
+                                else if("3".equalsIgnoreCase(typeId)) {
+                                %>
+                                <p>你好，可能因為以下原因無法使用本服務；如有疑問，請洽客服專線02-8751-6665按5</p>
+                                <br>
+                                <p>1.查無你的貸款或繳款資料</p>
+                                <br>
+                                <p>2.你的貸款狀態為特殊註記</p>
+                                <br>
+                                <p>3.你已約定就學貸款自動扣繳</p>
                                 <%
                                     }
                                 %>

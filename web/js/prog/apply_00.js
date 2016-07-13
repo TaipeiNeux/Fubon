@@ -14,8 +14,10 @@ g_ajax({
         var msgArr = contentArr[1];
         var msg = msgArr[0];
         var st = contentArr[2];
+		var obj = contentArr[3];
         var msgArr = [];
 		var reasonTag = false;   //判斷是否要顯示未通過的原因
+		var carryTag = false;   //判斷是否要顯示攜帶的文件
 	
 		console.debug(st);
         console.debug(st.length);
@@ -74,7 +76,7 @@ g_ajax({
 							var reasonOption = reasonText.split("&");
 							
 							for(var i = 0; i <= reasonOption.length-2; i ++){
-								reasonArr.push('<p>' + reasonText.split("&")[(i+1)] + '</p>');
+								reasonArr.push('<p>• ' + reasonText.split("&")[(i+1)] + '</p>');
 							}
 							
 							console.debug(reasonArr);
@@ -82,21 +84,16 @@ g_ajax({
 							msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，審核結果為「未通過｣，請您儘速修改並重新送出申請。<p>未通過原因如下:<p class=reasonText></p></p>如有疑問，請洽客戶服務專線02-8751-6665按5。</p><a href="apply.jsp?step=apply_document_5_1" class="pobtn-srb">修改資料</a>');
 							break;
                         case '7':
-                            var name = msg.split(",")[0];
-                            var time = msg.split(",")[1];
-                            //var carryObj = msg.split(",")[2];
-                            var bName = msg.split(",")[2];
-                            var bAddr = msg.split(",")[3];
-                            var bTel = msg.split(",")[4];
-                            var reservation = msg.split(",")[5];
-                            
-                            msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，提醒您攜帶以下證件至預約對保分行辦理。</p><ul class="nasiBtn" id="carryObjList"></ul></div><div class="tonypan"><p>預約對保分行:' + bName + ' ' + bTel + '</p><p>(' + bAddr + ')</p><p>預約對保時間:' + reservation + '</p></div>');
-
-                            //將需要攜帶的文件顯示在網頁上
-                            var list = $('#carryObjList');
-                            //list.append(objList.join(''));     Titan值加好後,再把註解拿掉
-
-                            break;
+							var name = msg.split(";")[0];
+		                    var time = msg.split(";")[1];
+		                    //var carryObj = msg.split(",")[2];
+		                    var bName = msg.split(";")[2];
+		                    var bAddr = msg.split(";")[3];
+		                    var bTel = msg.split(";")[4];
+		                    var reservation = msg.split(";")[5];
+							carryTag = true;              
+		                    msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，提醒您攜帶以下證件至預約對保分行辦理。</p><ul class="nasiBtn" id="carryObjList"></ul></div><div class="tonypan"><p>預約對保分行:' + bName + ' ' + bTel + '</p><p>(' + bAddr + ')</p><p>預約對保時間:' + reservation + '</p></div>');
+		                    break;                        
                     }
                     $('.talkwall').empty();
                     $('.talkwall').append(msgArr.join(''));
@@ -169,7 +166,7 @@ g_ajax({
 					var reasonOption = reasonText.split("&");
 					
 					for(var i = 0; i <= reasonOption.length-2; i ++){
-						reasonArr.push('<p>' + reasonText.split("&")[(i+1)] + '</p>');
+						reasonArr.push('<p>• ' + reasonText.split("&")[(i+1)] + '</p>');
 					}
 					
 					console.debug(reasonArr);
@@ -184,30 +181,8 @@ g_ajax({
                     var bAddr = msg.split(";")[3];
                     var bTel = msg.split(";")[4];
                     var reservation = msg.split(";")[5];
-                    /*var resYear = res.substr(0, 4);
-                     var resMonth = res.substr(5, 2);
-                     var resDay = res.substr(8, 2);
-                     var resTimeStart = res.substr(11, 5);
-                     var resTimeStartHour = resTimeStart.substr(2, 2);
-                     var resTimeEnd;
-
-                     var timeStart = parseInt(resTimeStartHour);
-                     var timeEnd = timeStart + 1;
-                     timeEnd = '' + timeEnd;
-
-                     if (timeEnd.length < 2) {
-                     resTimeEnd = '0' + timeEnd + ':00';
-                     } else {
-                     resTimeEnd = timeEnd + ':00';
-                     }
-                     if (resTimeStart.length != 4) {
-                     timeStart = '0' + timeStart.toString();
-                     timeEnd = '0' + timeEnd;
-                     }*/
-
+					carryTag = true;              
                     msgArr.push('<p>Hi,<span>' + name + '</span> 你好!</p><div class="tonypan"><p>您已於' + time + '完成線上送出申請資料，提醒您攜帶以下證件至預約對保分行辦理。</p><ul class="nasiBtn" id="carryObjList"></ul></div><div class="tonypan"><p>預約對保分行:' + bName + ' ' + bTel + '</p><p>(' + bAddr + ')</p><p>預約對保時間:' + reservation + '</p></div>');
-                    //list.append(objList.join(''));   Titan值加好後,再把註解拿掉
-
                     break;
             }
 
@@ -216,7 +191,24 @@ g_ajax({
             $('.talkwall').empty();
             $('.talkwall').append(msgArr.join(''));
 			
-			if(reasonTag == true){
+			if(carryTag){
+				//將需要攜帶的文件顯示在網頁上
+                var list = $('#carryObjList');   
+				list.append(obj.join(''));
+				
+				//若點選"特殊情形證明文件"
+			    $('#SpecialStatus').on('click', function() {
+			        GardenUtils.display.popup({
+			            title: '',
+			            content: '<p>‧若為失蹤:</p><p>需檢附警察機關報案「受(處)理查尋人口案件登記表」或戶籍謄本登載失蹤。</p><br><p>‧若為重病或精神錯亂:</p><p>需檢附合格醫院最近六個月內所核發重病或精神錯亂之證明文件。</p><br><p>‧若為在監服刑:</p><p>需檢附在監服刑執行證明文件。</p><br><p>‧若為家庭暴力:</p><p>需檢附法院所核發有效之通常保護令(未指定暫時監護權項目)或各地方政府出具之受暴證明。</p>',
+			            closeCallBackFn: function() {},
+			            isShowSubmit: false
+			        });
+			    });
+	
+			}
+			
+			if(reasonTag){
 				$('.reasonText').append(reasonArr.join(''));
 			}
         }
@@ -229,3 +221,5 @@ g_ajax({
         });
     }
 });
+
+

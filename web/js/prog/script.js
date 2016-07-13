@@ -1,8 +1,5 @@
-﻿$(document).ready(function() {
-
-
-
-    $('body').attr('id', 'body');
+$(document).ready(function() {
+	$('body').attr('id', 'body');
     $('.scrollToTop').click(function(ev) {
         ev.preventDefault();
         GardenUtils.plugin.screenMoveToDiv({
@@ -738,11 +735,13 @@ $('#loginMobile').on('click', function(ev) {
 
 });
 
+/*
 $('#registerMobile').on('click', function(ev) {
     ev.preventDefault();
     //alert('系統建置中');
     window.location = 'memberLogin.jsp';
 });
+*/
 
 //會員登入防呆
 var logInBtn = $('.loginBtn');
@@ -1148,6 +1147,7 @@ function previewDocument(src) {
 
 
 // start global countdown function
+var countdownid;
 function g_countdown(conf) {
     // g_countdown({
     //     minute: 4,
@@ -1158,7 +1158,7 @@ function g_countdown(conf) {
 
     var countdownnumber = conf.second;
     var countdownnumber_min = conf.minute;
-    var countdownid;
+    //var countdownid;
     clearTimeout(countdownid);
 
     _acorssDay();
@@ -1290,7 +1290,11 @@ function checkSize(size) {
 
     if (explorer.indexOf("MSIE 9.0") == -1) {
         if (size >= 10000000) {
-            alert('圖片上限10MB!!'); //顯示警告!!
+            //alert('圖片上限10MB!!'); //顯示警告!!
+			$('#documentSize').show();
+        }
+        else{
+            $('#documentSize').hide();
         }
 
         //console.debug($this);
@@ -1324,4 +1328,414 @@ function checkSize(size) {
             alert('您的檔案總和超過30MB');
         }*/
     }
+}
+
+//判斷不同狀況下,分析需要攜帶的文件之狀況
+function getCarryObj(content) {
+    var appoName = content.appoName;
+    var fatherName = content.fatherName;
+    var motherName = content.motherName;
+    var thirdPartyName = content.thirdPartyName;
+    var spouseName = content.spouseName;
+    var loansPrice = content.loanPrice;
+    var freedomLife = content.freedom.life;
+    var accordingLife = content.accordingToBill.life;
+    var adult = content.applicantAdult;
+    //var isGuarantor = content.isGuarantor;
+    var marryStatus = content.marryStatus;
+    var level1Picked = content.familyStatusLevel1;
+    var level2Picked = content.familyStatusLevel2;
+    var thirdPartyTitle = content.thirdPartyTitleHidden
+    var gaurantorTitle = ["父親", "母親", thirdPartyTitle, "配偶"]; //放父親, 母親, 第三人, 配偶 的字串 
+    var gaurantorName = ['(' + fatherName + ')', '(' + motherName + ')', '(' + thirdPartyName + ')', '(' + spouseName + ')']; //放父親, 母親, 第三人, 配偶的名字的字串
+    var carryObjArr = []; //放1~6
+    /*
+     1.	(依判斷塞其他關係人名即可)之身分證及印章，包含本人(吳*名)
+     2.	戶籍謄本或新式戶口名簿【需為最近三個月且記事欄需詳載，包含本人(吳*名)、(依判斷塞其他關係人名即可)，如戶籍不同者，需分別檢附】
+     3.	(依判斷塞其他關係人名即可)之特殊情形證明文件
+     4.	(依判斷塞其他關係人名即可)之除戶謄本或死亡證明
+     5.	連帶保證人(塞c的關係人名)之扣繳憑單、財力證明或在職證明
+     6.  生活費>0的人 要再增加攜帶政府機關出具之低收入戶或中低收入戶證明
+     	註冊繳費單/住宿費用單據，必加
+     */
+    var gaurantorObjArr = []; //a,b,c,d  (有幾個就產生幾個關係人的字串)
+    /*
+     a.父親(吳*爸)
+     b.母親(吳*媽)
+     c.監護權人(林*明)
+     d.配偶(林*女)
+     */
+
+    //判斷需要攜帶的物件為何by婚姻狀況,成年與否,step1-2選擇的項目為何
+    if (marryStatus == 'N') {
+        if (adult == 'N') { //未成年未婚
+            switch (level1Picked) {
+                case '1':
+                    if (level2Picked == '1' || level2Picked == '4') {
+                        carryObjArr.push(1, 2);
+                    } else if (level2Picked == '2' || level2Picked == '3') {
+                        carryObjArr.push(1, 2, 3);
+                    }
+                    break;
+                case '2':
+                    carryObjArr.push(1, 2);
+                    break;
+                case '3':
+                    if (level2Picked == '1' || level2Picked == '2') {
+                        carryObjArr.push(1, 2, 4);
+                    } else if (level2Picked == '3') {
+                        carryObjArr.push(1, 2);
+                    }
+                    break;
+                case '4':
+                    carryObjArr.push(1, 2);
+                    break;
+            }
+        } else if (adult == 'Y') { //已成年未婚
+            switch (level1Picked) {
+                case '1':
+                    if (level2Picked == '1' || level2Picked == '2' || level2Picked == '3') {
+                        carryObjArr.push(1, 2);
+                    } else if (level2Picked == '4') {
+                        carryObjArr.push(1, 2, 5);
+                    }
+                    break;
+                case '2':
+                    if (level2Picked == '1' || level2Picked == '2' || level2Picked == '3') {
+                        carryObjArr.push(1, 2);
+                    } else if (level2Picked == '4') {
+                        carryObjArr.push(1, 2, 5);
+                    }
+                    break;
+                case '3':
+                    if (level2Picked == '1' || level2Picked == '2') {
+                        carryObjArr.push(1, 2, 4);
+                    } else if (level2Picked == '3' || level2Picked == '4') {
+                        carryObjArr.push(1, 2, 4, 5);
+                    }
+                    break;
+                case '4':
+                    carryObjArr.push(1, 2, 4, 5);
+                    break;
+            }
+        }
+    } else if (marryStatus == 'Y') { //已婚
+        switch (level1Picked) {
+            case '1':
+                if (level2Picked == '1' || level2Picked == '2' || level2Picked == '3') {
+                    carryObjArr.push(1, 2);
+                } else if (level2Picked == '4') {
+                    carryObjArr.push(1, 2, 5);
+                }
+                break;
+            case '2':
+                if (level2Picked == '1' || level2Picked == '2') {
+                    carryObjArr.push(1, 2);
+                } else if (level2Picked == '3') {
+                    carryObjArr.push(1, 2, 5);
+                }
+                break;
+            case '3':
+                if (level2Picked == '1' || level2Picked == '2') {
+                    carryObjArr.push(1, 2);
+                } else if (level2Picked == '3') {
+                    carryObjArr.push(1, 2, 5);
+                }
+                break;
+            case '4':
+                if (level2Picked == '1' || level2Picked == '2') {
+                    carryObjArr.push(1, 2);
+                } else if (level2Picked == '3') {
+                    carryObjArr.push(1, 2, 5);
+                }
+                break;
+        }
+    }
+
+    //判斷是否需要攜帶"政府機關出具之低收入戶或中低收入戶證明"
+    if (loansPrice == '1') {
+        if (accordingLife > 0) {
+            carryObjArr.push(6);
+        }
+    } else if (loansPrice == '2') {
+        if (freedomLife > 0) {
+            carryObjArr.push(6);
+        }
+    }
+    console.debug('carryObjArr:' + carryObjArr);
+
+    //判斷哪些關係人是連帶保證人,需要帶文件
+    if (marryStatus == 'N') {
+        if (adult == 'N') { //未成年未婚
+            switch (level1Picked) {
+                case '1':
+                    if (level2Picked == '1') {
+                        gaurantorObjArr.push('ab', 'ab');
+                    } else if (level2Picked == '2') {
+                        gaurantorObjArr.push('b', 'ab', 'a');
+                    } else if (level2Picked == '3') {
+                        gaurantorObjArr.push('a', 'ab', 'b');
+                    } else if (level2Picked == '4') {
+                        gaurantorObjArr.push('c', 'c');
+                    }
+                    break;
+                case '2':
+                    if (level2Picked == '1') {
+                        gaurantorObjArr.push('ab', 'ab');
+                    } else if (level2Picked == '2') {
+                        gaurantorObjArr.push('a', 'a');
+                    } else if (level2Picked == '3') {
+                        gaurantorObjArr.push('b', 'b');
+                    } else if (level2Picked == '4') {
+                        gaurantorObjArr.push('c', 'c');
+                    }
+                    break;
+                case '3':
+                    if (level2Picked == '1') {
+                        gaurantorObjArr.push('a', 'a', 'b');
+                    } else if (level2Picked == '2') {
+                        gaurantorObjArr.push('b', 'b', 'a');
+                    } else if (level2Picked == '3') {
+                        gaurantorObjArr.push('c', 'c');
+                    }
+                    break;
+                case '4':
+                    gaurantorObjArr.push('c', 'c');
+                    break;
+            }
+        } else if (adult == 'Y') { //已成年未婚
+            switch (level1Picked) {
+                case '1':
+                    if (level2Picked == '1') {
+                        gaurantorObjArr.push('ab', 'ab');
+                    } else if (level2Picked == '2') {
+                        gaurantorObjArr.push('a', 'a');
+                    } else if (level2Picked == '3') {
+                        gaurantorObjArr.push('b', 'b');
+                    } else if (level2Picked == '4') {
+                        gaurantorObjArr.push('c', 'abc', 'c');
+                    }
+                    break;
+                case '2':
+                    if (level2Picked == '1') {
+                        gaurantorObjArr.push('ab', 'ab');
+                    } else if (level2Picked == '2') {
+                        gaurantorObjArr.push('a', 'a');
+                    } else if (level2Picked == '3') {
+                        gaurantorObjArr.push('b', 'b');
+                    } else if (level2Picked == '4') {
+                        gaurantorObjArr.push('c', 'abc', 'c');
+                    }
+                    break;
+                case '3':
+                    if (level2Picked == '1') {
+                        gaurantorObjArr.push('a', 'a', 'b');
+                    } else if (level2Picked == '2') {
+                        gaurantorObjArr.push('b', 'b', 'a');
+                    } else if (level2Picked == '3') {
+                        gaurantorObjArr.push('c', 'ac', 'b', 'c');
+                    } else if (level2Picked == '4') {
+                        gaurantorObjArr.push('c', 'bc', 'a', 'c');
+                    }
+                    break;
+                case '4':
+                    gaurantorObjArr.push('c', 'ab', 'c', 'c');
+                    break;
+            }
+        }
+    } else if (marryStatus == 'Y') { //已婚
+        switch (level1Picked) {
+            case '1':
+                if (level2Picked == '1') {
+                    gaurantorObjArr.push('d', 'd');
+                } else if (level2Picked == '2') {
+                    gaurantorObjArr.push('a', 'ad');
+                } else if (level2Picked == '3') {
+                    gaurantorObjArr.push('b', 'bd');
+                } else if (level2Picked == '4') {
+                    gaurantorObjArr.push('c', 'cd', 'c');
+                }
+                break;
+            case '2':
+                if (level2Picked == '1') {
+                    gaurantorObjArr.push('a', 'ad');
+                } else if (level2Picked == '2') {
+                    gaurantorObjArr.push('b', 'bd');
+                } else if (level2Picked == '3') {
+                    gaurantorObjArr.push('c', 'cd', 'c');
+                }
+                break;
+            case '3':
+                if (level2Picked == '1') {
+                    gaurantorObjArr.push('a', 'a');
+                } else if (level2Picked == '2') {
+                    gaurantorObjArr.push('b', 'b');
+                } else if (level2Picked == '3') {
+                    gaurantorObjArr.push('c', 'c', 'c');
+                }
+                break;
+            case '4':
+                if (level2Picked == '1') {
+                    gaurantorObjArr.push('a', 'a');
+                } else if (level2Picked == '2') {
+                    gaurantorObjArr.push('b', 'b');
+                } else if (level2Picked == '3') {
+                    gaurantorObjArr.push('c', 'c', 'c');
+                }
+                break;
+        }
+    }
+    console.debug('gaurantorObjArr:' + gaurantorObjArr);
+
+    pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName);
+    return (pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName));
+}
+
+//依function getCarryObj所分析的狀況塞需要攜帶的文件,連帶保證人的字串
+function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gaurantorTitleArray, gaurantorNameArray) {
+    var titleName;
+    var allObjArr = [];
+    var numberOfGaurantors = []; //要帶相同物件的連帶保證人有幾位
+    //var allCarryObjArr = [];  //放所有需要攜帶的物件之全部結果
+    var allGaurantorsArr = []; //放所有需要攜帶物件的連帶保證人之全部結果
+
+    //塞連帶保證人的"title"和"name"的字串到allGaurantorsArr.
+    var GaurantorsTitleName = 0;
+    for (var j = 0; j <= gaurantorObjArray.length - 1; j++) {
+        for (var i = 0; i <= gaurantorObjArray[j].length - 1; i++) {
+            var currentCharacter = gaurantorObjArray[j].substr(i, 1);
+            numberOfGaurantors[j] = gaurantorObjArray[j].length;
+            switch (currentCharacter) {
+                case 'a': //father
+                    allGaurantorsArr[GaurantorsTitleName] = gaurantorTitleArray[0] + gaurantorNameArray[0];
+                    GaurantorsTitleName += 1;
+                    break;
+                case 'b': //mother
+                    allGaurantorsArr[GaurantorsTitleName] = gaurantorTitleArray[1] + gaurantorNameArray[1];
+                    GaurantorsTitleName += 1;
+                    break;
+                case 'c': //thirdparty
+                    allGaurantorsArr[GaurantorsTitleName] = gaurantorTitleArray[2] + gaurantorNameArray[2];
+                    GaurantorsTitleName += 1;
+                    break;
+                case 'd': //spouse
+                    allGaurantorsArr[GaurantorsTitleName] = gaurantorTitleArray[3] + gaurantorNameArray[3];
+                    GaurantorsTitleName += 1;
+                    break;
+            }
+        }
+    }
+    console.debug('allGaurantorsArr:' + allGaurantorsArr);
+
+    //將要攜帶的文件之字串塞進allObjArr.
+    var gaurantorIndex = 0;
+    for (var k = 0; k <= carryObjArray.length - 1; k++) {
+        var carryObj = carryObjArray[k];
+        //console.debug(carryObjArray);
+        switch (carryObj) {
+            case 1: //(依判斷塞連帶保證人)之身分證及印章
+                var sameObj = '';
+                for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
+                    if (g != gaurantorObjArray[k].length - 1) {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex] + '、';
+                        gaurantorIndex += 1;
+                    } else {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
+                        gaurantorIndex += 1;
+                    }
+                    allObjArr[k] = '本人(' + appoName + ')、' + sameObj + '之身分證及印章';
+                }
+                break;
+            case 2: //戶籍謄本或新式戶口名簿【需為最近三個月且記事欄需詳載，包含本人(吳*名)、(依判斷塞連帶保證人)，如戶籍不同者，需分別檢附】
+                var sameObj = '';
+                for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
+                    //alert(gaurantorIndex);
+                    if (g != gaurantorObjArray[k].length - 1) {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex] + '、';
+                        gaurantorIndex += 1;
+                    } else {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
+                        gaurantorIndex += 1;
+                    }
+                    allObjArr[k] = '戶籍謄本或新式戶口名簿<p id="carryObjTip"><img src="img/pk-01-small.png" id="carryObjTip">需為最近三個月且記事欄需詳載，包含本人(' + appoName + ')、' + sameObj + '如戶籍不同者，需分別檢附</p>';
+                }
+                break;
+            case 3: //(依判斷塞連帶保證人)之特殊情形證明文件
+                var sameObj = '';
+                for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
+                    if (g != gaurantorObjArray[k].length - 1) {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex] + '、';
+                        gaurantorIndex += 1;
+                    } else {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
+                        gaurantorIndex += 1;
+                    }
+                    allObjArr[k] = sameObj + '之<a href="#" class="underblue" id="SpecialStatus">特殊情形證明文件</a>';
+                }
+                break;
+            case 4: //(依判斷塞連帶保證人)之除戶謄本或死亡證明
+                var sameObj = '';
+                for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
+                    if (g != gaurantorObjArray[k].length - 1) {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex] + '、';
+                        gaurantorIndex += 1;
+                    } else {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
+                        gaurantorIndex += 1;
+                    }
+
+                    sameObj = sameObj.split('(')[0];
+                    allObjArr[k] = sameObj + '之除戶謄本或死亡證明';
+                }
+                break;
+            case 5: //連帶保證人(塞c的關係人名)之扣繳憑單、財力證明或在職證明
+                allObjArr[k] = gaurantorTitleArray[2] + gaurantorNameArray[2] + '之扣繳憑單、財力證明或在職證明';
+                gaurantorIndex += 1;
+                break;
+            case 6: //政府機關出具之低收入戶或中低收入戶證明
+                allObjArr[k] = '政府機關出具之低收入戶或中低收入戶證明';
+                break;
+        }
+    }
+
+    console.debug(allObjArr);
+
+    return allObjArr;
+}
+
+function determineCarryObj(content){
+console.debug(content);
+	var signIOU = content.content.signBill; //是否需要簽立借據(須同時符合同一學程/同一學校/同一連帶保證人/同一申貸額度)
+    var appoName = content.content.appoName; //本人姓名
+    var loansPrice = content.content.loanPrice;
+    var freedomLife = content.content.freedom.life;
+    var accordingLife = content.content.accordingToBill.life;
+	
+	var objList = []; //要攜帶的物品
+
+    if (signIOU == 'N') { //不需要簽立借據者
+        objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li>' +
+            '<li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>');
+
+        //判斷是否需要攜帶"政府機關出具之低收入戶或中低收入戶證明"
+        if (loansPrice == '1') {
+            if (accordingLife > 0) {
+                objList.push('<li><p class="nasi">政府機關出具之低收入戶或中低收入戶證明</p></li>');
+            }
+        } else if (loansPrice == '2') {
+            if (freedomLife > 0) {
+                objList.push('<li><p class="nasi">政府機關出具之低收入戶或中低收入戶證明</p></li>');
+            }
+        }
+
+    } else { //需要簽立借據者
+        allObj = getCarryObj(content.content);
+        //必帶註冊繳費單/住宿繳費單,所以先塞進array中
+        objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li>');
+        $.each(allObj, function(i, obj) {
+            objList.push('<li><p class="nasi">' + obj + '</p></li>');
+        });
+    }
+
+	return objList;
 }

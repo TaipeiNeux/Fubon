@@ -1496,7 +1496,12 @@ public class DataServlet extends HttpServlet {
                     if("CURRATE".equalsIgnoreCase(column)) {
                         value = "臺幣";
                     }
-                    else {
+                    else if("TX_DATE".equalsIgnoreCase(column)) {
+                        value = foo.elementText(column).trim();
+                        value = StringUtils.replace(value,"/","");
+                        value = ProjUtils.toYYYYBirthday(value);
+                        value = DateUtil.convert14ToDate("yyyy/MM/dd",value + "000000");
+                    } else {
                         value = foo.elementText(column).trim();
                     }
 
@@ -1591,6 +1596,7 @@ public class DataServlet extends HttpServlet {
         JSONObject jsonObject = new JSONObject();
         JSONObject data = new JSONObject();
         JSONArray client_detail = new JSONArray();
+        JSONArray accounts = new JSONArray();
 
         try{
 
@@ -1816,7 +1822,7 @@ public class DataServlet extends HttpServlet {
                 termSet.add("1");
                 termSet.add("2");
 
-                System.out.println("search 1 and 2");
+//                System.out.println("search 1 and 2");
 
                 total += setMyLoanAccountDetail(termSet,doc,client_detail,isDelay,acnoSl,bankName);
 
@@ -1824,9 +1830,10 @@ public class DataServlet extends HttpServlet {
                 termSet = new HashSet<String>();
                 termSet.add("0");
 
-                System.out.println("search 0");
+//                System.out.println("search 0");
                 total += setMyLoanAccountDetail(termSet,doc,client_detail,isDelay,acnoSl,bankName);
 
+                accounts.put(acnoSl);
 //                String crlnAmt = root.element("CRLN_AMT").getText().trim();
 //                String loanBalTot = root.element("LOAN_BAL_TOT").getText().trim();
 //
@@ -1891,6 +1898,7 @@ public class DataServlet extends HttpServlet {
 //                }
             }
 
+            jsonObject.put("accounts",accounts);
             jsonObject.put("total",total + "");
 
             JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
@@ -1923,12 +1931,12 @@ public class DataServlet extends HttpServlet {
             String yrTerm = foo.elementText("YR_TERM").trim();
             if(yrTerm.equals("")) continue;
 
-            intRate = foo.elementText("INT_RATE").trim();
-            String loanAmt = foo.elementText("LOAN_AMT").trim();
-            String loanBal = foo.elementText("LOAN_BAL").trim();
-            nextIntDate = foo.elementText("NEXT_INT_DATE").trim();
-            intDate = foo.elementText("INT_DATE").trim();
-            String insAmt = foo.elementText("INS_AMT").trim();
+            intRate = foo.element("INT_RATE").getText().trim();
+            String loanAmt = foo.element("LOAN_AMT").getText().trim();
+            String loanBal = foo.element("LOAN_BAL").getText().trim();
+            nextIntDate = foo.element("NEXT_INT_DATE").getText().trim();
+            intDate = foo.element("INT_DATE").getText().trim();
+            String insAmt = foo.element("INS_AMT").getText().trim();
 
             if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
                     || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
@@ -1959,19 +1967,22 @@ public class DataServlet extends HttpServlet {
             intDate = DateUtil.convert14ToDate("yyyy/MM/dd",intDate + "000000");
         }
 
-        clientDetail.put("state",isDelay ? "delay" : "normal");
-        clientDetail.put("num","");
-        clientDetail.put("account",acnoSl);
-        clientDetail.put("bank_name",bankName);
-        clientDetail.put("remain_money",loanBalTot);
-        clientDetail.put("rate",intRate);
-        clientDetail.put("pay_day",(StringUtils.isNotEmpty(nextIntDate) && nextIntDate.length() < 2) ? "" : nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
-        clientDetail.put("intDate",intDate);
-        clientDetail.put("return_detail","repaymentInquiry.jsp");
-        clientDetail.put("my_detail","myElectronicPay_1.jsp");
-        clientDetail.put("detail", detailArray);
+        if(detailArray.length() != 0) {
+            clientDetail.put("state",isDelay ? "delay" : "normal");
+            clientDetail.put("num","");
+            clientDetail.put("account",acnoSl);
+            clientDetail.put("bank_name",bankName);
+            clientDetail.put("remain_money",loanBalTot);
+            clientDetail.put("rate",intRate);
+            clientDetail.put("pay_day",(StringUtils.isNotEmpty(nextIntDate) && nextIntDate.length() < 2) ? "" : nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
+            clientDetail.put("intDate",intDate);
+            clientDetail.put("return_detail","repaymentInquiry.jsp");
+            clientDetail.put("my_detail","myElectronicPay_1.jsp");
+            clientDetail.put("detail", detailArray);
 
-        client_detail.put(clientDetail);
+            client_detail.put(clientDetail);
+        }
+
 
 
         //加總

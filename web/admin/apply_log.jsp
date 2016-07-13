@@ -128,7 +128,7 @@
                     <option value="VERIFYING" <%="VERIFYING".equalsIgnoreCase(aplyStatus) ? "selected" : ""%>>審核中</option>
                     <option value="VERIFIED" <%="VERIFIED".equalsIgnoreCase(aplyStatus) ? "selected" : ""%>>審核完成</option>
                     <option value="REJECT" <%="REJECT".equalsIgnoreCase(aplyStatus) ? "selected" : ""%>>審核未通過</option>
-                    <option value="DELETE">取消對保</option>
+                    <option value="DELETE" <%="DELETE".equalsIgnoreCase(aplyStatus) ? "selected" : ""%>>取消對保</option>
                 </select>
             </form>
         </td>

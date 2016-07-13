@@ -8,6 +8,7 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.mark.MarkBean;
 import com.fubon.utils.ProjUtils;
+import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.PropertiesUtil;
@@ -174,6 +175,10 @@ public class PersonalInfo1 implements ILogic {
         markBean.addCode("DomicileAddress",domicileAddressAddress,ProjUtils.toAddressMark(domicileAddressAddress));
         markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressMark(teleAddressAddress));
         markBean.addCode("birthday",birthday,ProjUtils.toBirthdayMark(birthday));
+
+        GardenLog.log(GardenLog.DEBUG,"------------birthday--------------");
+        GardenLog.log(GardenLog.DEBUG,"------------"+birthday+"--------------");
+        GardenLog.log(GardenLog.DEBUG,"------------"+ProjUtils.toBirthdayMark(birthday)+"--------------");
 
         queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
 

@@ -16,6 +16,7 @@
         <input type="hidden" name="familyStatusLevel2Text" value="" />
         <input type="hidden" name="applicantAdult" value="" />
         <input type="hidden" name="userMarriedHidden" value="" />
+		<input type="hidden" name="isSpouseForeignerHidden" value="" />
         
         <div class="unMarried">
             <ul class="famillyStatusArea" id="famillyStatusAreaUnmarried">

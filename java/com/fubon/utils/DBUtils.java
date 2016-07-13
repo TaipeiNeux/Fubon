@@ -139,7 +139,7 @@ public class DBUtils {
 
             conn = getConnection(PIBDataSource);
 
-            ps = conn.prepareStatement("select * from CUSTTOMER_LOAN_ACCOUNT where loan_acocunt = ?");
+            ps = conn.prepareStatement("select * from CUSTOMER_LOAN_ACCOUNT where loan_account = ?");
             ps.setString(1,account);
             rs = ps.executeQuery();
             if(rs.next()) {

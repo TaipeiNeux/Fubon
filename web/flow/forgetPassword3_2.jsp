@@ -5,7 +5,7 @@
 	<span class="death"></span>
 </h5>
 <br>
-<h4 class="mipa">請輸入本行寄發到您<br /><span class="sendType"></span> <span class="sendType_val"></span> 的六位數交易驗證碼；
+<h4 class="mipa">請輸入本行寄發到您<span class="sendType"></span> <span class="sendType_val"></span> 的六位數交易驗證碼；
 	<br>如有疑問，請洽客戶服務專線02-8751-6665按5。
 </h4>
 <div class="parents">
@@ -34,6 +34,7 @@
 <div class="modal fade pomodal forgetPassword" id="modal_forgetPassword_2_2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 	    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	      <span aria-hidden="true">&times;</span>
 	    </button>-->

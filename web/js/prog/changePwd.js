@@ -103,6 +103,14 @@ function changePwd2_1(content){
 } // end changePwd2_1 function
 
 function changePwd2_2(content){
+    /*var nextBtn = $('div.nextBtn');
+    var prev = nextBtn.find('.prev');
+    prev.off('click').on('click', function(ev) {
+        alert('test');
+        ev.preventDefault();
+        window.location = 'changePwd.jsp?step=changePwd2_1';
+    });*/
+    
 
     g_countdown({
         minute: 4,

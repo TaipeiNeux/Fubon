@@ -538,7 +538,7 @@
             <div class="maya">
                 <div class="joy swataX bgfff">
                     <div class="left noob">
-                        <p>申請教育補助費或享有公費</p>
+                        <p>應扣除教育補助費或助學公費</p>
                         <p class="student_publicExpense">0元</p>
                     </div>
                 </div>
@@ -546,13 +546,14 @@
         </div>
         <div class="dan jam">
             <div class="appcont">本次申貸金額
-                <span class="student_sum"></span><span class="bill"></span>
+                <span class="student_sum totalMoney"></span><span class="bill"></span>
             </div>
         </div>
     </div>
     <div class="wrap">
-        <div class="dan">
-            <h3 class="snopy pen lastTitle">對保分行</h3>
+       <h3 class="snopy pen lastTitle">對保分行</h3>
+        <div class="dan bankSelect">
+           <h2 style="text-indent:-9999px">對保</h2>
             <div class="editBtnBoxbottom lastBtn">
                 <a href="apply.jsp?step=apply_online_4" class="editBtn">修改</a>
             </div>

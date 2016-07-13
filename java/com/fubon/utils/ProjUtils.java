@@ -1254,7 +1254,8 @@ public class ProjUtils {
                     for(Element element : txRepeats) {
                         String guarId = element.element("GUAR_ID").getText();
 
-                        GardenLog.log(GardenLog.DEBUG,"guarId = " + guarId);
+                        guarId = guarId.trim();
+                        GardenLog.log(GardenLog.DEBUG,"guarId = [" + guarId + "]");
 
                         if(StringUtils.isNotEmpty(guarId)) {
                             txIdSet.add(guarId);
@@ -1265,6 +1266,7 @@ public class ProjUtils {
                 Set<String> nowIdSet = new HashSet<String>();
                 for(String id : nowIds) {
                     if(StringUtils.isNotEmpty(id)) {
+                        GardenLog.log(GardenLog.DEBUG,"id = [" + id + "]");
                         nowIdSet.add(id);
                     }
                 }
@@ -2059,6 +2061,22 @@ public class ProjUtils {
             return ret.get(0).getValue("SchoolName");
         }
         else return schoolCode;
+    }
+
+    //讀取HtmlContent
+    public static String getHtmlContent(IDao dao,String htmlId) throws Exception {
+
+        String content = "";
+
+        DataObject htmlContent = DaoFactory.getDefaultDataObject("HtmlContent");
+        if(htmlContent != null && StringUtils.isNotEmpty(htmlId)) {
+            htmlContent.setValue("HtmlId",htmlId);
+            if(dao.querySingle(htmlContent,null)) {
+                content = htmlContent.getValue("Content");
+            }
+        }
+
+        return content;
     }
 }
 

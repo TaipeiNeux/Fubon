@@ -42,6 +42,8 @@ public class Apply2 implements ILogic {
 
         String father_RadioBtn = "" , mother_RadioBtn = "" ,thirdParty_RadioBtn = "" , spouse_RadioBtn = "", father_checkbox = "", mother_checkbox = "";
 
+        String isSpouseForeignerHidden = "";
+
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
             Element root = draftData.getRootElement();
@@ -100,6 +102,8 @@ public class Apply2 implements ILogic {
         if(step2Root.element("applicantAdult") != null) applicantAdult = step2Root.element("applicantAdult").getText();
 
         if(step2Root.element("guarantorText") != null) guarantorText = step2Root.element("guarantorText").getText();
+        if(step2Root.element("isSpouseForeignerHidden") != null) isSpouseForeignerHidden = step2Root.element("isSpouseForeignerHidden").getText();
+
 
         //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
         DataObject aplyMemberData = null;
@@ -149,6 +153,7 @@ public class Apply2 implements ILogic {
         content.put("relationship",thirdParty_relationship);
         content.put("thirdPartyTitle",thirdPartyTitle);
 
+        content.put("isSpouseForeignerHidden",isSpouseForeignerHidden);
 
         content.put("father_sameAddr",father_sameAddrHidden);
         content.put("mother_sameAddr",mother_sameAddrHidden);

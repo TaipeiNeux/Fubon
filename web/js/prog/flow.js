@@ -198,9 +198,37 @@ function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanld
 
                     var $this = $(this);
                     var isBack = false;
+                    
+                    //如果是簡訊驗證步驟, 要clearTimeout倒數的function(countdownid()) by Foi 2016/07/12
+                    var currentObj = [{
+                        jsp: 'personalInfo',
+                        step: '_2_2.jsp'
+                    },{
+                        jsp: 'changePwd',
+                        step: '2_2.jsp'
+                    },{
+                        jsp: 'forgetPassword',
+                        step: '3_2.jsp'
+                    }];
+                    var currentViewURL = '';
+                    var jumpViewURL = '';
+                    
+                    $.each(currentObj, function(index, value){
+                        currentViewURL = 'flow/' + value.jsp + value.step;
+                        if(Content.flow.viewURL == currentViewURL ){
+                            //window.location = jumpViewURL;
+                            clearTimeout(countdownid);
+                        }
+                    });
+                    
 					
 					//只有我要申請才要跳confirm
                     if($this.hasClass('confirm') && Content.flow.flowId == 'apply') {
+                        //如果是"我要申請"第5_2步驟(簡訊驗證), 要clearTimeout倒數的function(countdownid()) by Foi 2016/07/12
+                        if(Content.flow.viewURL == "flow/apply5_1_2.jsp"){   
+                            //window.location = 'apply.jsp?step=apply_document_5_1';
+                            clearTimeout(countdownid);
+                        }
                         isBack = confirm('是否確定要取消？');
                     }
                     else {

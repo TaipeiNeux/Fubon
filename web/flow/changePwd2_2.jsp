@@ -34,6 +34,7 @@
 <div class="modal fade pomodal changePwd" id="modal_changePwd_2_2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 	    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	      <span aria-hidden="true">&times;</span>
 	    </button>

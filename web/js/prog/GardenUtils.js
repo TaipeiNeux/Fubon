@@ -869,12 +869,14 @@ var GardenUtils = {
 						var val = obj.val;
 
                         if(type == 'empty') {
-                            if(validObj[0].tagName.toLowerCase() == 'input') {
+                            /*if(validObj[0].tagName.toLowerCase() == 'input') {
                                 msg = '請輸入' + msg;
                             }
                             else {
                                 msg = '請選擇' + msg;
-                            }
+                            }*/
+                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
+                            msg = '請輸入' + msg;    
                         }
                         else if(type == 'number') {
                             msg = msg + '限輸入數字';
@@ -915,12 +917,14 @@ var GardenUtils = {
 						var val = obj.val;
 
                         if(type == 'empty') {
-                            if(validObj[0].tagName.toLowerCase() == 'input') {
+                            /*if(validObj[0].tagName.toLowerCase() == 'input') {
                                 msg = '請輸入' + msg;
                             }
                             else {
                                 msg = '請選擇' + msg;
-                            }
+                            }*/
+                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
+                            msg = '請輸入' + msg;
                         }
                         else if(type == 'number') {
                             msg = msg + '限輸入數字';
@@ -1256,7 +1260,7 @@ var GardenUtils = {
             // 檢核外國人統一證號(AA12345675)
             // 第一碼：縣市別代碼；第二碼：性別；第三～九碼：流水號；第十碼：檢核碼
             function isValidFrgnID(s) {
-
+			
                 s = s.toUpperCase();
                 if (!s.match(/^[A-Z]{1}[A-D]{1}[0-9]{8}$/)) return false;
 

@@ -19,7 +19,7 @@ var RepaymentInquiry_controller = (function(){
 				var isEtabs = loanAccount_data.isEtabs; //是否有貸款帳號
                 var hasAccount = loanAccount_data.hasAccount; //是否有貸款帳號
                 var isArrears = loanAccount_data.isArrears; //是否無欠款
-
+				var accounts = loanAccount_data.accounts;//accounts
 				
                 if(hasAccount == 'N' || isArrears == 'N') {
                     redirectNoPermit('1','查詢「還款明細查詢」');
@@ -28,7 +28,7 @@ var RepaymentInquiry_controller = (function(){
                     redirectNoPermit('2','查詢「還款明細查詢」');
                 }
 				else {
-					RepaymentInquiry_view.account_selection(loanAccount_data.data.client_detail);
+					RepaymentInquiry_view.account_selection(accounts,loanAccount_data.data.client_detail);
 
 			        /** Query Date **/
 			        var today = new Date();
@@ -49,6 +49,9 @@ var RepaymentInquiry_controller = (function(){
 			            else{
 			                $this.addClass('active');
 			            }
+						
+						$('#customizeQuery label').trigger('click');					
+						
 			        });
 
 			        $('#datetimepicker2 .input-group-addon').off('click').on('click',function(ev){
@@ -61,6 +64,8 @@ var RepaymentInquiry_controller = (function(){
 			            else{
 			                $this.addClass('active');
 			            }
+						
+						$('#customizeQuery label').trigger('click');
 			        });
 
 			        $('#datetimepicker1').datetimepicker({
@@ -316,9 +321,22 @@ var RepaymentInquiry_controller = (function(){
 
 var RepaymentInquiry_view = (function(){
 
-    var account_selection = function(data){
+    var account_selection = function(accounts,data){
 
+			var options = '';
+
+            for(var i =0;i<accounts.length;i++) {
+                options += '<option>'+accounts[i]+'</option>';			
+			}
+			
+            //var final_select = '<select class="selectpicker input_m" placeholder="請選擇">'+options+'</select>';
+
+			$('#accounts').append(options);
+			
+            //$(final_select).appendTo($('.right').eq(0));
+	
         //console.log(data.length);
+		/*
         if(data.length == 1)
             $('<button style="border: none; background: none;"><span>'+data[0].account+'</span></button>').appendTo($('.right.account').eq(0));
         else if(data.length > 1){
@@ -332,6 +350,7 @@ var RepaymentInquiry_view = (function(){
 
             $(final_select).appendTo($('.right').eq(0));
         }
+		*/
     }; // end account_selection function
 
     var createTable = function(config) {

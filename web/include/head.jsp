@@ -29,6 +29,7 @@
   <link rel="shortcut icon" href="img/favicon.ico?v=2">
   <link rel="shortcut icon" href="http://garden.decoder.com.tw/portal/demo/fubon/img/favicon.ico">
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  
   <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
   <link rel="stylesheet" href="css/styles.css">

@@ -34,17 +34,16 @@
                             <div class="left">
                                 <p>貸款帳號</p>
                             </div>
-                            <div class="right account"></div>
-                            <!-- <form role="form">
-                                <div class="form-group">
+                            <div class="right account">
+							
+								<div class="form-group">
                                     <label for="sel1"></label>
-                                    <select class="form-control" id="sel1">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
+                                    <select class="form-control input_m" id="accounts">
+                                        
                                     </select>
-                              </form>     -->
+									</div>
+							</div>
+                             
                         </div>
                         <div class="joy nina">
                             <div class="left">
@@ -69,7 +68,7 @@
                             <div class="left">
                             </div>
                             <div class="right">
-                                <div class="radioArea">
+                                <div class="radioArea" id="customizeQuery">
                                     <input type="radio" name="near" id="near0" class="css-checkbox_c">
                                     <label for="near0" class="css-label_c radGroup2">自訂查詢</label>
                                 </div>

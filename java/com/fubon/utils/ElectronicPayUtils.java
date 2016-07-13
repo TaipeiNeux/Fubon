@@ -156,6 +156,7 @@ public class ElectronicPayUtils {
             BitmapCanvasProvider canvas = new BitmapCanvasProvider(
                     baos, "image/jpeg", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
             bean.generateBarcode(canvas, msg);
+
             canvas.finish();
             baos.close();
             barcode = datahead + DatatypeConverter.printBase64Binary(baos.toByteArray());

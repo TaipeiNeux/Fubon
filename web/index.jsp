@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=utf-8" %>
+<%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
 <% request.setCharacterEncoding("utf-8"); %>
 

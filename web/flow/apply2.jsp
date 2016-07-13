@@ -29,6 +29,8 @@
             
             <input type="hidden" name="father_checkbox" value="" />
             <input type="hidden" name="mother_checkbox" value="" />
+			
+            <input type="hidden" name="isSpouseForeignerHidden" value="" />
 
             <div class="incomeTaxRadio" id="incomeTaxRadio" style="display:none">
                 <span class="oneLine">
@@ -54,7 +56,7 @@
                     <img class="closeBtn" src="img/phoneclose.png" alt="close">
                     <img class="openBtn" src="img/phoneopen.png" alt="open">
                 </a>
-                <h3 class="snopy father"><span class="oneLine">父親</span>
+                <h3 class="snopy father"><span class="oneLine" id="fatherTitle">父親</span>
                         <span class="oneLine">
                            <div class="left">
                              <p class="stringOrRadio"></p>
@@ -218,7 +220,7 @@
                     <img class="closeBtn" src="img/phoneclose.png" alt="close">
                     <img class="openBtn" src="img/phoneopen.png" alt="open">
                 </a>
-                <h3 class="snopy mather"><span class="oneLine">母親</span>
+                <h3 class="snopy mather"><span class="oneLine" id="motherTitle">母親</span>
                <span class="sspy">
                        <div class="oneLine">
                         <div class="left">
@@ -573,7 +575,7 @@
                     <img class="closeBtn" src="img/phoneclose.png" alt="close">
                     <img class="openBtn" src="img/phoneopen.png" alt="open">
                 </a>
-                <h3 class="snopy spouse"><span class="oneLine">配偶</span>
+                <h3 class="snopy spouse"><span class="oneLine" id="spouseTitle">配偶</span>
                  <span class="sspy">
                        <span class="oneLine">
                         <div class="left">

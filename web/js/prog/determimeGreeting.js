@@ -2,7 +2,10 @@
 function eightGreeting() {
     var jsonLoginStatus = modal.getLoginStatus();
     console.debug(jsonLoginStatus);
-
+	if(jsonLoginStatus.content.appCases == 'Y' && jsonLoginStatus.content.kindOfCases == '2'){
+		var allObj = determineCarryObj(jsonLoginStatus);
+	}
+	
     if (jsonLoginStatus.isLogin == 'Y') {
 
         var isPeriod = jsonLoginStatus.content.isPeriod; //紀錄是否為對保期間
@@ -154,7 +157,7 @@ function eightGreeting() {
 
             "message_6": appName + ';' + onlineYear + '/' + onlineMonth + '/' + onlineDay + ';' + reasonTexts,
 
-            "message_7": appName + ';' + documentYear + '/' + documentMonth + '/' + documentDay + ';' + branchName + ';' + branchAddr + ';' + branchTel + ';' + reservation,
+            "message_7": appName + ';' + documentYear + '/' + documentMonth + '/' + documentDay + ';' + branchName + ';' + branchAddr + ';' + branchTel + ';' + reservation
         };
         
         var contentMessage = []; //首頁的灰色框框的訊息
@@ -262,7 +265,7 @@ function eightGreeting() {
             }
         }
     }
-    return [contentMessage, pageMessage, determineStstus];
+    return [contentMessage, pageMessage, determineStstus, allObj];
 }
 
 

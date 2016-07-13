@@ -48,7 +48,7 @@
             out.println("-->");
 
             if("N".equalsIgnoreCase(jsonObject.getString("isSuccess"))) {
-                request.getRequestDispatcher("noPermit.jsp?typeId=1&name=查詢「我的電子繳款單」").forward(request,response);
+                request.getRequestDispatcher("noPermit.jsp?typeId=3&name=查詢「我的電子繳款單」").forward(request,response);
             }
             else {
                   //繳款單明細
@@ -233,7 +233,7 @@
                 <span>收迄章</span>
             </li>
         </ul>
-        <p>※為保障您的權益，繳款後，請保留繳款證明，以供備查。</p>
+        <p class="copy">※為保障您的權益，繳款後，請保留繳款證明，以供備查。</p>
     </div>
     <div class="right">
         <div class=" top">

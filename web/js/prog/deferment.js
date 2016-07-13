@@ -169,30 +169,26 @@ function deferment_1_valid() {
                 var monthInput = parseInt(selectMonthInput.val()) - 1;   
                 var selectDayInput = $('[name="selectDay"]');         //輸入的日
                 var eliIndex_hidden = $('[name="eliIndex"]');
+                
+                var future = new Date(current.getFullYear()+10, current.getMonth(), current.getDate());
 				var pass = new Date(current.getFullYear()-5, current.getMonth(), current.getDate());
 				var input = new Date(fullYearInput, monthInput, selectDayInput.val());
 				
                 //選項1、2、4、5，控管年月日不得早於系統日且只能晚於系統日十年內
                 if (eliIndex_hidden.val() == '1' || eliIndex_hidden.val() == '2' || eliIndex_hidden.val() == '4' || eliIndex_hidden.val() == '5') {
-                    if (selectYearInput.val() - currentYear > 10) {
+                    var divFuture = Math.round((future-input)/(1000*60*60*24));
+                    var divCurrent = Math.round((input-current)/(1000*60*60*24));
+                    if( divFuture < 0 ){
+						customizeValidResult.push({
+                            obj: $('[name="selectYear"]'),
+                            msg: '不得晚於系統日十年'
+                        });
+					}
+                    else if( divCurrent < -1 ){
                         customizeValidResult.push({
                             obj: $('[name="selectYear"]'),
-                            msg: '只允許晚於系統日十年內'
+                            msg: '不得早於系統日'
                         });
-                    } else if (selectYearInput.val() - currentYear == 10) {
-                        if (selectMonthInput.val() - currentMonth > 0) {
-                            customizeValidResult.push({
-                                obj: $('[name="selectYear"]'),
-                                msg: '只允許晚於系統日十年內'
-                            });
-                        } else if (selectMonthInput.val() - currentMonth == 0) {
-                            if (selectDayInput.val() - currentDay > 0) {
-                                customizeValidResult.push({
-                                    obj: $('[name="selectYear"]'),
-                                    msg: '只允許晚於系統日十年內'
-                                });
-                            }
-                        }
                     }
                 }
                 //選項6、7，控管年月日不得早於系統日5年
@@ -201,7 +197,7 @@ function deferment_1_valid() {
 					if( divSec < 0 ){
 						customizeValidResult.push({
                             obj: $('[name="selectYear"]'),
-                            msg: '只允許早於系統日五年內'
+                            msg: '不得早於系統日五年'
                         });
 					}
                 }
@@ -282,6 +278,24 @@ function deferment_2_valid() {
                 result = true;
             }
         }
+    }
+    
+    //檢查上傳文件合計大小是否超過10MB
+    var size = $('.fileSize');
+    var sizeSum = 0;
+    for(var i = 0; i <= size.length -1; i++){
+        var thisSize = size.eq(i).val();
+        if(thisSize != ''){
+            sizeSum = sizeSum + parseInt(thisSize);
+        }
+    }
+    if(sizeSum > 10000000){
+       $('#documentSize').show();
+        result = false;
+    }
+    else{
+        $('#documentSize').hide();
+        result = true;
     }
 
     if (result == true && radioResult == true) {
@@ -497,7 +511,7 @@ function deferment_3_1(content) {
     var prev = nextBtn.find('.prev');
     prev.off('click').on('click', function(ev) {
         ev.preventDefault();
-        window.location = 'deferment_0.jsp';
+        window.location = 'deferment.jsp?step=deferment1';
     });
 
     var eligibilityText = content.eligibilityText;
@@ -535,7 +549,7 @@ function deferment_3_2(content) {
     var prev = nextBtn.find('.prev');
     prev.off('click').on('click', function(ev) {
         ev.preventDefault();
-        window.location = 'deferment_0.jsp';
+        window.location = 'deferment.jsp?step=deferment1';
     });
 
     var imgSrc = content.code_img;
@@ -712,13 +726,17 @@ function uploadEvent() {
         ev.preventDefault();
 		
         var inputFile = $(this);
+        var inputFileName = inputFile.attr('name');
+        var inputTitle = inputFileName.split('F')[0];
+        var inputHidden = $('[name="'+inputTitle+'_hidden"]');
         var tr = inputFile.parents('tr:first');
         var selected_file_name = $(this).val();
-		var files = inputFile.context.files[0].size;
+		var fileSize = inputFile.context.files[0].size;
 		
-		checkSize(files);
+        //checkSize(fileSize);
+        
 
-        console.debug(files);
+        console.debug(fileSize);
         console.debug(selected_file_name.substr(-3, 3));
 
         var selectedFileArr = selected_file_name.split("\\");
@@ -755,6 +773,7 @@ function uploadEvent() {
                     console.debug(response);
 
                     if (response.isSuccess == 'Y') {
+						inputHidden.val(fileSize);
                         tr.find('td.file-upload a').text('修改檔案');
                         tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
                         tr.find('td.file-en').text(response.src);

@@ -17,6 +17,7 @@ import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.json.JSONObject;
@@ -75,6 +76,9 @@ public class Apply1_1 extends MarkFlow {
 
             if(root.element("sameAddrHidden") != null) sameAddrHidden = root.element("sameAddrHidden").getText();
 
+            if(StringUtils.isNotEmpty(birthday)) {
+                birthday = StringUtils.replace(birthday,"/","");
+            }
         }
         else {
 
@@ -84,6 +88,7 @@ public class Apply1_1 extends MarkFlow {
             birthday = loginUserBean.getCustomizeValue("AplyBirthday");
             cellPhone = loginUserBean.getCustomizeValue("AplyCellPhoneNo");
             email = loginUserBean.getCustomizeValue("AplyEmail");
+            marryStatus = ProjUtils.toMarryName(loginUserBean.getCustomizeValue("Marriage"));
 
             domicilePhoneRegionCode = loginUserBean.getCustomizeValue("AplyTelNo1_1");
             domicilePhonePhone = loginUserBean.getCustomizeValue("AplyTelNo1_2");

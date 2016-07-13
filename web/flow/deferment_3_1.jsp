@@ -2,6 +2,11 @@
     <% request.setCharacterEncoding( "utf-8"); %>
         
         <input type="hidden" name="date" value="">
+		<input type="hidden" class="fileSize" name="isPositive_hidden" value="">
+       <input type="hidden" class="fileSize" name="isNegative_hidden" value="">
+       <input type="hidden" class="fileSize" name="studentIdPositive_hidden" value="">
+       <input type="hidden" class="fileSize" name="studentIdNegative_hidden" value="">
+       <input type="hidden" class="fileSize" name="additional_hidden" value="">
 
         <h3 class="snopy pen">申請原因
                 <div class="editBtnBoxbottom">
@@ -30,8 +35,9 @@
                 <div class="editBtnBoxbottom">
                 </div>
               </h3>
-              <div class="error-msg" id="documentType" style="display:none">只允許上傳jpg、png、pdf、tif或gif影像檔</div>
+              <div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
             <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
+			<div class="error-msg" id="documentSize" style="display:none">上傳檔案大小合計限10MB</div>
         <table class="mqua">
             <thead>
                 <tr>

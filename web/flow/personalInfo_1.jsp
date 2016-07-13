@@ -1,23 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <% request.setCharacterEncoding("utf-8"); %>
-
-              <input type="hidden" name="id" value=""/>
-<input type="hidden" name="name" value=""/>
-<input type="hidden" name="birthday" value=""/>
-        
-<input type="hidden" name="d_phone" value=""/>
-<input type="hidden" name="t_phone" value=""/>
-<input type="hidden" name="email_hidden" value=""/>
-<input type="hidden" name="domicileAddress_hidden" value=""/>
-<input type="hidden" name="teleAddress_hidden" value=""/>
-
         <div class="joy midd">
             <input type="hidden" name="marryStatus" value="" />
-			
             <input type="hidden" class="userAddress" name="domiCityIdHidden" value="" />
             <input type="hidden" class="userAddress" name="domiZipCoodeHidden" value="" />
             <input type="hidden" class="userAddress" name="domiLinerHidden" value="" />
-		
+			<input type="hidden" name="id" value=""/>
+			<input type="hidden" name="name" value=""/>
+			<input type="hidden" name="birthday" value=""/>
+			<input type="hidden" name="birthday_year" value=""/>
+			<input type="hidden" name="birthday_month" value=""/>
+			<input type="hidden" name="birthday_day" value=""/>
+			<input type="hidden" name="d_phone" value=""/>
+			<input type="hidden" name="t_phone" value=""/>
+			<input type="hidden" name="email_hidden" value=""/>
+			<input type="hidden" name="domicileAddress_hidden" value=""/>
+			<input type="hidden" name="teleAddress_hidden" value=""/>
 			
             <div class="sandy">
                 <p>身分證字號</p>

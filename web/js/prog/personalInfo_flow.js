@@ -65,29 +65,7 @@ $(document).ready(function() {
 
 });
 
-
 function personalInfo_1(content) {
-
-    // $("input").blur(function(){
-
-    // var input_tmp = $(this).val();
-
-    // function trans_fullwidth (ine){
-    // var oute = '';
-    // for(i=0; i<ine.length; i++) {
-    // if(ine.charCodeAt(i)  >= 33 && ine.charCodeAt(i) <= 270) {
-    // oute += String.fromCharCode(ine.charCodeAt(i) + 65248);
-    // } else if(ine.charCodeAt(i) == 32) {
-    // oute += String.fromCharCode(12288);
-    // }
-    // }
-    // return oute;
-    // }
-
-    // console.log(trans_fullwidth(input_tmp));
-
-    // });
-
     console.debug(content);
 
     //把得到的資料塞進畫面中
@@ -96,13 +74,10 @@ function personalInfo_1(content) {
     var id = content.id;
     var name = content.name;
     var birthday = content.birthday;
-    //user_birthday = content.birthday;
     var domicileCityId = content.domicileAddress.cityId;
     var domicileZipCode = content.domicileAddress.zipCode;
-
     var domicileCityName = content.domicileAddress.cityName;
     var domicileZipCodeName = content.domicileAddress.zipCodeName;
-
     var domicileLiner = content.domicileAddress.liner;
     var cityId = content.teleAddress.cityId;
     var zipCode = content.teleAddress.zipCode;
@@ -145,33 +120,44 @@ function personalInfo_1(content) {
     var domicileZipSelect = $('[name="domicileZipCode"]');
     var linerSelect = $('[name="liner"]');
     var domicileLinerSelect = $('[name="domicileLiner"]');
+    
+    //Hidden
     var marryHidden = $('[name="marryStatus"]');
-    domiLinerHidden = $('[name="domiLinerHidden"]');
-    domiCityIdHidden = $('[name="domiCityIdHidden"]');
-    domiZipCoodeHidden = $('[name="domiZipCoodeHidden"]');
-    teleLinerHidden = $('[name="teleLinerHidden"]');
-    teleZipCodeHidden = $('[name="teleZipcodeHidden"]');
-    teleCityIdHidden = $('[name="teleCityIdHidden"]');
-
+    var domiLinerHidden = $('[name="domiLinerHidden"]');
+    var domiCityIdHidden = $('[name="domiCityIdHidden"]');
+    var domiZipCoodeHidden = $('[name="domiZipCoodeHidden"]');
+    var teleLinerHidden = $('[name="teleLinerHidden"]');
+    var teleZipCodeHidden = $('[name="teleZipcodeHidden"]');
+    var teleCityIdHidden = $('[name="teleCityIdHidden"]');
     var d_phone = $('[name="d_phone"]');
     var t_phone = $('[name="t_phone"]');
     var email_hidden = $('[name="email_hidden"]');
     var domicileAddress_hidden = $('[name="domicileAddress_hidden"]');
+    var id_hidden = $('[name="id"]');
+    var name_hidden = $('[name="name"]');
     var teleAddress_hidden = $('[name="teleAddress_hidden"]');
-	
-	
+    var birthday_hidden = $('[name="birthday"]');
+    
 	var addressObj = {
         'citySelectTele': citySelect,
         'zipSelectTele': zipSelect,
         'addressTele': address
     };
 
-
+    //塞hidden
+    id_hidden.val(id);
+    name_hidden.val(name);
     d_phone.val(domicilePhone);
     t_phone.val(phone);
     email_hidden.val(email);
     domicileAddress_hidden.val(domiAddr);
     teleAddress_hidden.val(addr);
+	if(birthday.length == 7){
+		var yy = birthday.substr(0, 3);
+		var mm = birthday.substr(3, 2);
+		var dd = birthday.substr(5, 2);
+		birthday_hidden.val( yy + mm +dd );
+	}
 
     //限制輸入的長度
     userDomiCode.attr('maxlength', '3');
@@ -182,49 +168,37 @@ function personalInfo_1(content) {
     dAddress.attr('maxlength', '93');
     address.attr('maxlength', '93');
 
-    //hidden
-    $('[name="id"]').val(id);
-    $('[name="name"]').val(name);
-    $('[name="birthday"]').val(birthday);
-
+    //先塞身分證和姓名的字串
     userId.text(id);
     userName.text(name);
     
     $('.selectpicker').selectpicker();
     
+    //長縣市的選項
     var jsonCity = modal.getCity();
     console.debug(jsonCity);
     cityArr = jsonCity.cities;
     var cityArray = [];
-
-    //先把city的選項全塞進cityArray
     cityArray.push('<option value="">請選擇</option>');
     $.each(cityArr, function(i, cityData) {
         cityArray.push('<option value=' + cityData.cityId + '>' + cityData.cityName + '</option>');
     });
+    domicileCitySelect.append(cityArray.join(''));
+    domicileCitySelect.selectpicker('refresh');
+    domicileCitySelect.trigger('change');
+    citySelect.append(cityArray.join(''));
+    citySelect.selectpicker('refresh');
+    citySelect.trigger('change');
     
+    //綁連動事件
+    linkage.changeDomicileZipByCity(domicileCitySelect, cityArr, domicileZipSelect);
+    domicileZipSelect.trigger('change');
+    linkage.changeZipByCity(citySelect, cityArr, zipSelect);
+    zipSelect.trigger('change');
+    linkage.changeDomicileLinerByZip(domicileZipSelect, cityArr, domicileLinerSelect);
+    zipSelect.trigger('change');
     
-    var domicileCitySelectpicker = $('[name="domicileCityId"]');
-    var domicileZipSelectpicker = $('[name="domicileZipCode"]');
-    var domicileLinerSelectpicker = $('[name="domicileLiner"]');
-    var citySelectpicker = $('[name="cityId"]');
-    var zipSelectpicker = $('[name="zipCode"]');
-    domicileCitySelectpicker.append(cityArray.join(''));
-    domicileCitySelectpicker.selectpicker('refresh');
-    domicileCitySelectpicker.trigger('change');
-    citySelectpicker.append(cityArray.join(''));
-    citySelectpicker.selectpicker('refresh');
-    citySelectpicker.trigger('change');
-    
-    linkage.changeDomicileZipByCity(domicileCitySelectpicker, cityArr, domicileZipSelectpicker);
-    domicileZipSelectpicker.trigger('change');
-    linkage.changeZipByCity(citySelectpicker, cityArr, zipSelectpicker);
-    zipSelectpicker.trigger('change');
-    linkage.changeDomicileLinerByZip(domicileZipSelectpicker, cityArr, domicileLinerSelectpicker);
-    zipSelectpicker.trigger('change');
-    
-    
-
+    //將生日拆成三塊,並放在hidden
     var b_year = birthday.substring(0, 3);
     var b_month = birthday.substring(3, 5);
     var b_day = birthday.substring(5, 7);
@@ -238,11 +212,71 @@ function personalInfo_1(content) {
         $('[name=birth_year]').val(b_year);
         $('[name=birth_month]').val(b_month);
         $('[name=birth_day]').val(b_day);
-
     }
+	$('[name=birthday_year]').val(b_year);
+    $('[name=birthday_month]').val(b_month);
+    $('[name=birthday_day]').val(b_day);
 
-    userMobile.val(mobile);
+	//及時更新生日
+	var birthday0 = $('[name="birth_year"]');
+	var birthday2 = $('[name="birth_month"]');
+	var birthday4 = $('[name="birth_day"]');
+    birthday0.on('blur', function() {
+        var y = birthday0.val();
+        var m = birthday2.val();
+        var d = birthday4.val();
+        if (y.length != 3) {
+            y = '0' + y;
+            $(this).val(y);
+        }
+        if (m.length != 2) {
+            m = '0' + m;
+        }
+        if (d.length != 2) {
+            d = '0' + d;
+        }
+
+        $('input[name="birthday"]').val(y +  m + d);
+    });
+
+    birthday2.on('blur', function() {
+        var y = birthday0.val();
+        var m = birthday2.val();
+        var d = birthday4.val();
+        if (y.length != 3) {
+            y = '0' + y;
+        }
+        if (m.length != 2) {
+            m = '0' + m;
+        }
+        if (d.length != 2) {
+            d = '0' + d;
+        }
+        
+		$('input[name="birthday"]').val(y +  m + d);
+    });
+
+    birthday4.on('blur', function() {
+        var y = birthday0.val();
+        var m = birthday2.val();
+        var d = birthday4.val();
+        if (y.length != 3) {
+            y = '0' + y;
+        }
+        if (m.length != 2) {
+            m = '0' + m;
+        }
+        if (d.length != 2) {
+            d = '0' + d;
+        }
+        
+		$('input[name="birthday"]').val(y +  m + d);
+    });
+    
     $('.processInner').prepend('<input type="hidden" value="' + content.mobile + '" name="mobile_hidden"/>');
+    
+    //塞預設值
+    userMobile.val(mobile);
     userEmail.val(email);
     userDomiCode.val(domicileCode);
     userDomiPhone.val(domicilePhone);
@@ -258,11 +292,13 @@ function personalInfo_1(content) {
     //抓結婚狀況的預設
     if (content.marryStatus == 'Y') {
         userMarry.attr('checked', true);
-        userSingle.attr('checked', false);
+		userSingle.parent().find('label').hide();
+        //userSingle.attr('checked', false);
         marryHidden.val('Y');
     } else if (content.marryStatus == 'N') {
         userSingle.attr('checked', true);
-        userMarry.attr('checked', false);
+		userMarry.parent().find('label').hide();
+        //userMarry.attr('checked', false);
         marryHidden.val('N');
     } else if (content.marryStatus == '') {
         marryHidden.val('');
@@ -277,16 +313,11 @@ function personalInfo_1(content) {
 
     //有撥款紀錄者,不開放修改,將input轉為label
     if (isRecord == 'Y') { //續貸
-        //alert('123');
         inputToLabel(dNeighborhood);
         inputToLabel(dAddress);
         inputToLabel(userMobile);
         inputToLabel(dLinerName);
-        /**
-        domicileCitySelect.attr("disabled", true);
-        domicileZipSelect.attr("disabled", true);
-        domicileLinerSelect.attr("disabled", true);
-		**/
+        
         userSingle.attr("disabled", true);
         userMarry.attr("disabled", true);
 
@@ -466,9 +497,6 @@ function personalInfo_1(content) {
             'srcInput': 'domicileLiner',
             'toInput': 'address',
             'callback': function(select) {
-                /*console.debug('3:' + select.val());
-                select.selectpicker('refresh');
-                select.trigger('change');*/
             }
         }, {
             'srcInput': 'DomicileNeighborhood',
@@ -483,13 +511,6 @@ function personalInfo_1(content) {
                 //select.selectpicker('refresh');
             }
         }
-        /*, {
-                'srcInput': 'domicileLinerName',
-                'toInput': 'address',
-                'callback': function(select) {
-                    //select.selectpicker('refresh');
-                }
-            }*/
     ];
 	
     //勾選'同戶籍地'
@@ -531,322 +552,8 @@ function personalInfo_1(content) {
             lockAddress(addressObj, false);
         }
     });
-
-    /*var PersonalInfo_controller = (function() {
-
-        var show_data = [];
-
-        var main = function() {
-
-            var Show_data_1 = new Show_data();
-
-            if (content.isRecord == 'Y') {
-                Show_data_1.setStraegy(new have_record_client());
-                Show_data_1.getCheck(content);
-
-            } else {
-                Show_data_1.setStraegy(new no_record_client());
-                Show_data_1.getCheck(content);
-
-            }
-
-            // Output_data(content.isRecord,content);
-
-            PersonalInfo_view.main_down(content);
-
-        }
-
-        var have_record_client = function() {}
-        have_record_client.prototype.check = function(content) {
-
-            console.log('has record');
-            var birthday_tmp = '民國' + content.birthday.substr(0, 2) + '年' + content.birthday.substr(2, 2) + '月' + content.birthday.substr(4, 6) + '日';
-            var marrage;
-
-            if (content.marryStatus == 'Y')
-                marrage = '已婚';
-            else
-                marrage = '未婚';
-
-
-            var obj = {
-                'id': content.id,
-                "name": content.name,
-                "birthday": birthday_tmp,
-                "marryStatus": marrage,
-                "domicilePhone": '(' + content.domicilePhone.regionCode + ')' + content.domicilePhone.phone,
-                "telePhone": '(' + content.telePhone.regionCode + ')' + content.telePhone.phone,
-                "mobile": content.mobile,
-                "email": content.email,
-                "domicileAddress": content.domicileAddress.address,
-                "teleAddress": content.teleAddress.address
-            };
-            PersonalInfo_view.show_input(content.isRecord, obj);
-            //PersonalInfo_view.insert_data(data.Content.isRecord,obj);
-            // show_data.push(obj);
-        };
-
-        var no_record_client = function() {}
-        no_record_client.prototype.check = function(content) {
-
-            console.log('no record');
-
-            // --start input 長出與否的狀態  
-            var obj = {
-                'id': content.id,
-                "name": content.name,
-                "birthday": content.birthday,
-                "marryStatus": "",
-                "domicilePhone": "",
-                "telePhone": "",
-                "email": content.email,
-                "mobile": content.mobile,
-                "domicileAddress": "",
-                "teleAddress": ""
-            };
-            PersonalInfo_view.show_input(content.isRecord, obj);
-            //  --end input 長出與否的狀態  
-
-        };
-
-        // var Output_data = function (Record,content){
-
-        //     $('.blu').off('click').on('click',function(){
-
-        //         var return_data;
-        //         if(Record=='Y'){
-
-        //             var domicilePhone = { "regionCode": $('.tmp_domicilePhone_s').val()  , "phone": $('.tmp_domicilePhone_m').val() };
-        //             var telePhone = { "regionCode": $('.tmp_telePhone_s').val()  , "phone": $('.tmp_telePhone_m').val() };
-        //             var tmp_birth = $('.tmp_birth').html().substr(2,3)+$('.tmp_birth').html().substr(5,6)+$('.tmp_birth').html().substr(8,9);
-        //             var tmp_teleAddress =  { "cityId" : $('.tmp_teleAddress').find('.pull-left').eq(0).html() , "zipCode" : $('.tmp_teleAddress').find('.pull-left').eq(1).html(),  "address" : $('.tmp_teleAddress').find('input').eq(0).val() };
-
-        //             return_data ={'id':$('.tmp_id').html(),'name': $('.tmp_name').html(), 'birthday': content.birthday , 'marryStatus':content.marryStatus , "domicilePhone": domicilePhone , "telePhone":telePhone , "mobile": $('.tmp_mobile').html(), 'email': $('.tmp_email').children().val() , "domicileAddress" : content.domicileAddress , "teleAddress": tmp_teleAddress} ;
-
-        //         }
-        //         else {  
-        //             var tmp_birth = $('.birth_y')+$('.birth_m')+$('.birth_d');
-        //             var domicilePhone = { "regionCode": $('.tmp_domicilePhone_s').val()  , "phone": $('.tmp_domicilePhone_m').val() };
-        //             var telePhone = { "regionCode": $('.tmp_telePhone_s').val()  , "phone": $('.tmp_telePhone_m').val() };
-        //             var tmp_domicileAddress = { "cityId" : $('.tmp_domicileAddress').find('.pull-left').eq(0).html() , "zipCode" : $('.tmp_domicileAddress').find('.pull-left').eq(1).html(),  "address" : $('.tmp_domicileAddress').find('input').eq(0).val() };
-        //             var tmp_teleAddress =  { "cityId" : $('.tmp_teleAddress').find('.pull-left').eq(0).html() , "zipCode" : $('.tmp_teleAddress').find('.pull-left').eq(1).html(),  "address" : $('.tmp_teleAddress').find('input').eq(0).val() };
-
-        //             return_data ={'id':$('.tmp_id').children().val(),'name': $('.tmp_name').children().val(), 'birthday': tmp_birth , 'marryStatus':'' , "domicilePhone": domicilePhone , "telePhone":telePhone , "mobile": $('.tmp_mobile').children().val(), 'email': $('.tmp_email').children().val() , "domicileAddress" : tmp_domicileAddress , "teleAddress": tmp_teleAddress} ;
-
-        //         }
-        //         alert('123');
-        //         console.log(return_data);
-        //         // return return_data;
-        //     });
-
-        // }
-
-        var Show_data = function() {
-            this.strategy = null;
-        }
-        Show_data.prototype.setStraegy = function(strategy) {
-            // body...
-            this.strategy = strategy;
-        };
-        Show_data.prototype.getCheck = function(content) {
-            // body...
-            return this.strategy.check(content);
-        };
-
-
-        return {
-            main: main
-
-        };
-
-    })();
-
-    var PersonalInfo_view = (function() {
-
-        var main_down = function(content) {
-
-
-            $('<div class="earth">' + content.notice_text + '</div>').appendTo($('.processOutBox'));
-
-
-        }
-
-        //--start  show_input   
-        var show_input = function(Record, data) {
-
-                obj = {
-                    id: "",
-                    name: "",
-                    birthday_y: "",
-                    birthday_m: "",
-                    birthday_d: "",
-                    marryStatus: "",
-                    domicilePhone: "",
-                    telePhone: "",
-                    mobile: "",
-                    email: "",
-                    domicileAddress: "",
-                    teleAddress: ""
-                };
-
-                if (Record == 'N') {
-
-
-                     //no record  
-                    $.each(data, function(index, value) {
-
-                        console.log(value);
-                        switch (index) {
-                            case "id":
-                                $('.tmp_id').html('<input class="input_m" type="text"  name="id">');
-                                $('.tmp_id').after('<div class="error-msg"/>');
-                                $('input[name="id"]').val(value);
-                                obj.id = value;
-                                break;
-                            case "name":
-                                $('.tmp_name').html('<input class="input_m" type="text" name="name">');
-                                $('.tmp_name').after('<div class="error-msg"/>');
-                                $('input[name="name"]').val(value);
-                                obj.name = value;
-                                break;
-                            case "birthday":
-                                $('.tmp_birth').html('<input class="input_s birth_y" type="text" value="' + value.substr(0, 2) + '" name="birthday_y">年&nbsp<input class="input_s "birth_m" type="text" value="' + value.substr(2, 2) + '" name="birthday_m">月&nbsp<input class="input_s birth_d" type="text" value="' + value.substr(4, 6) + '" name="birthday_d">日');
-                                $('.tmp_birth').after('<div class="error-msg"/>');
-                                obj.birthday_y = value.substr(0, 2);
-                                obj.birthday_m = value.substr(2, 2);
-                                obj.birthday_d = value.substr(4, 6);
-                                break;
-                            case "marryStatus":
-                                $('.tmp_marrage').html('<div class="radioArea"> <input type="radio" name="marry" id="single" class="css-checkbox_c" > <label for="single" class="css-label_c radGroup2">未婚</label> </div> <div class="radioArea"> <input type="radio" name="marry" id="married" class="css-checkbox_c" > <label for="married" class="css-label_c radGroup2">已婚(含離婚或配偶過世)</label> </div><div class="error-msg"/>');
-
-                                // if(value == 'N')
-                                //     $( "#single" ).prop( "checked", true );
-                                // else
-                                //     $( "#married" ).prop( "checked", true );
-
-                                obj.marryStatus = value;
-
-                                break;
-                            case "domicilePhone":
-
-                                $('.tmp_domicilePhone_m').after('<div class="error-msg"/>');
-                                //obj.domicilePhone = 
-                                break;
-                            case "telePhone":
-
-                                $('.tmp_telePhone_m').after('<div class="error-msg"/>');
-                                break;
-                            case "mobile":
-                                $('.tmp_mobile').html('<input class="input_m" type="text" value="' + value + '" name="mobile"><div class="error-msg"/>');
-                                obj.mobile = value;
-
-                                break;
-                            case "email":
-                                $('.tmp_email').html('<input class="input_m" type="text" placeholder="****254@gmail.com" value="' + value + '" name="email"><div class="error-msg"/>');
-                                obj.email = value;
-                                break;
-                            case "domicileAddress":
-                                //$('.tmp_domicileAddress').html('<div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" ><span class="filter-option pull-left">基隆市</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="-1"><a tabindex="0" class="" style="" data-tokens="null">  <span class="text">請選擇</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li> <li data-original-index="0" class="selected"><a tabindex="0" class="" style="" data-tokens="null">  <span class="text">基隆市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">雲林縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">高雄市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">苗栗市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">屏東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台中市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南投市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">桃園市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="13"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="14"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台南市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="15"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">花蓮市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" tabindex="-98"> <option>基隆市</option> <option>新竹市</option> <option>雲林縣</option> <option>高雄市</option> <option>台北市</option> <option>苗栗市</option> <option>宜蘭市</option> <option>屏東縣</option> <option>新北市</option> <option>台中市</option> <option>南投市</option> <option>台東縣</option> <option>桃園市</option> <option>嘉義市</option> <option>台南市</option> <option>花蓮市</option> </select></div> <div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="北投區"><span class="filter-option pull-left">北投區</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="-1" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">請選擇</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="0" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">北投區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">大同區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">文山區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">中正區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">士林區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">內湖區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">信義區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">松山區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">中山區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">萬華區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南港區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">大安區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" tabindex="-98"> <option>北投區</option> <option>大同區</option> <option>文山區</option> <option>中正區</option> <option>士林區</option> <option>內湖區</option> <option>信義區</option> <option>松山區</option> <option>中山區</option> <option>萬華區</option> <option>南港區</option> <option>大安區</option> </select></div> <input type="text" class="input_m" name="domicileAddress"><div class="error-msg"/>');
-
-                                $('.tmp_domicileAddress').html('<div class="btn-group bootstrap-select input_y "><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="宜蘭縣" aria-expanded="false"><span class="filter-option pull-left">宜蘭縣</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open" style="max-height: 457px; overflow: hidden; min-height: 92px;"><ul class="dropdown-menu inner" role="menu" style="max-height: 445px; overflow-y: auto; min-height: 80px;"><li data-original-index="0"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇縣市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">基隆市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">桃園市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">苗栗縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台中市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">彰化縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南投縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="13"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="14"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">雲林縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="15"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台南市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="16"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">高雄市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="17"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">澎湖縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="18"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">屏東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="19"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="20"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">花蓮縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="21"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">金門縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="22"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">連江縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="domicileCityId" tabindex="-98"> <option value="">選擇縣市</option><option value="01">台北市</option><option value="02">基隆市</option><option value="03">新北市</option><option value="04">宜蘭縣</option><option value="05">新竹市</option><option value="06">新竹縣</option><option value="07">桃園市</option><option value="08">苗栗縣</option><option value="09">台中市</option><option value="11">彰化縣</option><option value="12">南投縣</option><option value="13">嘉義市</option><option value="14">嘉義縣</option><option value="15">雲林縣</option><option value="16">台南市</option><option value="18">高雄市</option><option value="20">澎湖縣</option><option value="21">屏東縣</option><option value="22">台東縣</option><option value="23">花蓮縣</option><option value="24">金門縣</option><option value="25">連江縣</option></select></div> <div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="礁溪鄉" aria-expanded="false"><span class="filter-option pull-left">礁溪鄉</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open" style="max-height: 251px; overflow: hidden; min-height: 92px;"><ul class="dropdown-menu inner" role="menu" style="max-height: 239px; overflow-y: auto; min-height: 80px;"><li data-original-index="0" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇鄉鎮市區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">頭城鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">礁溪鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">壯圍鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">員山鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">羅東鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">三星鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">大同鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">五結鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">冬山鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">蘇澳鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南澳鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="domicileZipCode" tabindex="-98"><option value="">選擇鄉鎮市區</option><option value="260">宜蘭市</option><option value="261">頭城鎮</option><option value="262">礁溪鄉</option><option value="263">壯圍鄉</option><option value="264">員山鄉</option><option value="265">羅東鎮</option><option value="266">三星鄉</option><option value="267">大同鄉</option><option value="268">五結鄉</option><option value="269">冬山鄉</option><option value="270">蘇澳鎮</option><option value="272">南澳鄉</option></select></div> <div class="btn-group bootstrap-select input_y "><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="村" aria-expanded="false"><span class="filter-option pull-left">村</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open" style="max-height: 216px; overflow: hidden; min-height: 0px;"><ul class="dropdown-menu inner" role="menu" style="max-height: 204px; overflow-y: auto; min-height: 0px;"><li data-original-index="0" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇村/里</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">村</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">里</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="domicileLiner" tabindex="-98"><option value="">選擇村/里</option><option value="村">村</option><option value="里">里</option></select></div> <input type="text" name="DomicileNeighborhood" id="dNeighborhood" class="input_s"> 鄰 <input type="text" name="DomicileAddress" id="dAddress" class="input_m" maxlength="93"> <div class="error-msg"></div>');
-                                obj.domicileAddress = value;
-
-                                break;
-                            case "teleAddress":
-                                //$('.tmp_teleAddress').html('<div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" ><span class="filter-option pull-left">基隆市</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="-1"><a tabindex="0" class="" style="" data-tokens="null">  <span class="text">請選擇</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="0" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">基隆市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">雲林縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">高雄市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">苗栗市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">屏東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台中市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南投市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">桃園市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="13"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="14"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台南市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="15"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">花蓮市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" tabindex="-98"> <option>基隆市</option> <option>新竹市</option> <option>雲林縣</option> <option>高雄市</option> <option>台北市</option> <option>苗栗市</option> <option>宜蘭市</option> <option>屏東縣</option> <option>新北市</option> <option>台中市</option> <option>南投市</option> <option>台東縣</option> <option>桃園市</option> <option>嘉義市</option> <option>台南市</option> <option>花蓮市</option> </select></div> <div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="北投區"><span class="filter-option pull-left">北投區</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="-1" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">請選擇</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="0" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">北投區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">大同區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">文山區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">中正區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">士林區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">內湖區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">信義區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">松山區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">中山區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">萬華區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南港區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">大安區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" tabindex="-98"> <option>北投區</option> <option>大同區</option> <option>文山區</option> <option>中正區</option> <option>士林區</option> <option>內湖區</option> <option>信義區</option> <option>松山區</option> <option>中山區</option> <option>萬華區</option> <option>南港區</option> <option>大安區</option> </select></div> <input type="text" class="input_m"  name="teleAddress"><div class="error-msg"/>');
-
-                                $('.tmp_teleAddress').html('<div class="sp"> <input type="checkbox" name="purchaser" id="add" class="css-checkbox"> <label for="add" class="css-label">同戶籍地址</label> </div> <div class="btn-group bootstrap-select input_y "><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="宜蘭縣" aria-expanded="false"><span class="filter-option pull-left">宜蘭縣</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open" style="max-height: 519px; overflow: hidden; min-height: 92px;"><ul class="dropdown-menu inner" role="menu" style="max-height: 507px; overflow-y: auto; min-height: 80px;"><li data-original-index="0"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇縣市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">基隆市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">桃園市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">苗栗縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台中市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">彰化縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南投縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="13"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="14"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">雲林縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="15"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台南市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="16"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">高雄市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="17"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">澎湖縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="18"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">屏東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="19"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="20"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">花蓮縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="21"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">金門縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="22"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">連江縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="cityId" tabindex="-98"> <option value="">選擇縣市</option><option value="01">台北市</option><option value="02">基隆市</option><option value="03">新北市</option><option value="04">宜蘭縣</option><option value="05">新竹市</option><option value="06">新竹縣</option><option value="07">桃園市</option><option value="08">苗栗縣</option><option value="09">台中市</option><option value="11">彰化縣</option><option value="12">南投縣</option><option value="13">嘉義市</option><option value="14">嘉義縣</option><option value="15">雲林縣</option><option value="16">台南市</option><option value="18">高雄市</option><option value="20">澎湖縣</option><option value="21">屏東縣</option><option value="22">台東縣</option><option value="23">花蓮縣</option><option value="24">金門縣</option><option value="25">連江縣</option></select></div> <div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="礁溪鄉"><span class="filter-option pull-left">礁溪鄉</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="0"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇鄉鎮市區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">頭城鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">礁溪鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">壯圍鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">員山鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">羅東鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">三星鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">大同鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">五結鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">冬山鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">蘇澳鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南澳鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="zipCode" tabindex="-98"><option value="">選擇鄉鎮市區</option><option value="260">宜蘭市</option><option value="261">頭城鎮</option><option value="262">礁溪鄉</option><option value="263">壯圍鄉</option><option value="264">員山鄉</option><option value="265">羅東鎮</option><option value="266">三星鄉</option><option value="267">大同鄉</option><option value="268">五結鄉</option><option value="269">冬山鄉</option><option value="270">蘇澳鎮</option><option value="272">南澳鄉</option></select></div> <div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="村"><span class="filter-option pull-left">村</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="0"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇村/里</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">村</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">里</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="liner" tabindex="-98"><option value="">選擇村/里</option><option value="村">村</option><option value="里">里</option></select></div> <input type="text" class="input_s" id="neighborhood" name="neighborhood"> 鄰 <input type="text" class="input_m" id="address" name="address" maxlength="93"> <div class="error-msg"></div> ');
-
-                                obj.teleAddress = value;
-                                break;
-                        }
-
-                    });
-                } else if (Record == 'Y') {
-                    // no record  
-                    $.each(data, function(index, value) {
-                        console.log(value);
-                        switch (index) {
-                            case "id":
-                                obj.id = value;
-                                $('.tmp_id').html(value);
-                                break;
-                            case "name":
-                                // value = value.replaceAt(1, "*");
-                                $('.tmp_name').html(value);
-                                obj.name = value;
-                                break;
-                            case "birthday":
-                                $('.tmp_birth').html(value);
-                                obj.birthday_y = value.substr(0, 2);
-                                obj.birthday_m = value.substr(2, 2);
-                                obj.birthday_d = value.substr(4, 6);
-                                break;
-                            case "marryStatus":
-                                $('.tmp_marrage').html(value);
-                                break;
-                            case "domicilePhone":
-                                $('.tmp_domicilePhone_s').val(value.substr(1, 2));
-                                $('.tmp_domicilePhone_m').val(value.substr(4, 11));
-                                $('.tmp_domicilePhone_m').after('<div class="error-msg"/>');
-
-                                obj.domicilePhone = value.substr(4, 11);
-
-                                break;
-                            case "telePhone":
-
-                                $('.tmp_telePhone_s').val(value.substr(1, 2));
-                                $('.tmp_telePhone_m').val(value.substr(4, 11));
-                                $('.tmp_telePhone_m').after('<div class="error-msg"/>');
-
-                                obj.telePhone = value.substr(4, 11);
-                                break;
-                            case "mobile":
-
-                                $('.tmp_mobile').html(value);
-                                obj.mobile = value;
-                                break;
-                            case "email":
-                                $('.tmp_email').html('<input class="input_m" type="text" placeholder="****254@gmail.com" value="' + value + '" name="email"><div class="error-msg"/>');
-                                obj.email = value;
-                                break;
-                            case "domicileAddress":
-                                $('.tmp_domicileAddress').html(value);
-                                obj.domicileAddress = value;
-                                break;
-                            case "teleAddress":
-                                // $('.tmp_teleAddress').html(value);
-                                $('.tmp_teleAddress').html('<div class="sp"> <input type="checkbox" name="purchaser" id="add" class="css-checkbox"> <label for="add" class="css-label">同戶籍地址</label> </div> <div class="btn-group bootstrap-select input_y "><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="宜蘭縣" aria-expanded="false"><span class="filter-option pull-left">宜蘭縣</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open" style="max-height: 519px; overflow: hidden; min-height: 92px;"><ul class="dropdown-menu inner" role="menu" style="max-height: 507px; overflow-y: auto; min-height: 80px;"><li data-original-index="0"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇縣市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">基隆市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新北市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">新竹縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">桃園市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">苗栗縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台中市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">彰化縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南投縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="13"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">嘉義縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="14"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">雲林縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="15"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台南市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="16"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">高雄市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="17"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">澎湖縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="18"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">屏東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="19"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">台東縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="20"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">花蓮縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="21"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">金門縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="22"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">連江縣</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="cityId" tabindex="-98"> <option value="">選擇縣市</option><option value="01">台北市</option><option value="02">基隆市</option><option value="03">新北市</option><option value="04">宜蘭縣</option><option value="05">新竹市</option><option value="06">新竹縣</option><option value="07">桃園市</option><option value="08">苗栗縣</option><option value="09">台中市</option><option value="11">彰化縣</option><option value="12">南投縣</option><option value="13">嘉義市</option><option value="14">嘉義縣</option><option value="15">雲林縣</option><option value="16">台南市</option><option value="18">高雄市</option><option value="20">澎湖縣</option><option value="21">屏東縣</option><option value="22">台東縣</option><option value="23">花蓮縣</option><option value="24">金門縣</option><option value="25">連江縣</option></select></div> <div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="礁溪鄉"><span class="filter-option pull-left">礁溪鄉</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="0"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇鄉鎮市區</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">宜蘭市</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">頭城鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="3" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">礁溪鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="4"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">壯圍鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="5"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">員山鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="6"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">羅東鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="7"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">三星鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="8"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">大同鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="9"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">五結鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="10"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">冬山鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="11"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">蘇澳鎮</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="12"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">南澳鄉</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="zipCode" tabindex="-98"><option value="">選擇鄉鎮市區</option><option value="260">宜蘭市</option><option value="261">頭城鎮</option><option value="262">礁溪鄉</option><option value="263">壯圍鄉</option><option value="264">員山鄉</option><option value="265">羅東鎮</option><option value="266">三星鄉</option><option value="267">大同鄉</option><option value="268">五結鄉</option><option value="269">冬山鄉</option><option value="270">蘇澳鎮</option><option value="272">南澳鄉</option></select></div> <div class="btn-group bootstrap-select input_y"><button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="村"><span class="filter-option pull-left">村</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open"><ul class="dropdown-menu inner" role="menu"><li data-original-index="0"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">選擇村/里</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1" class="selected"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">村</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" style="" data-tokens="null"><span class="text">里</span><span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="selectpicker input_y" name="liner" tabindex="-98"><option value="">選擇村/里</option><option value="村">村</option><option value="里">里</option></select></div> <input type="text" class="input_s" id="neighborhood" name="neighborhood"> 鄰 <input type="text" class="input_m" id="address" name="address" maxlength="93"> <div class="error-msg"></div>');
-
-                                $('.tmp_teleAddress_top').show();
-                                obj.teleAddress = value;
-                                break;
-                        }
-
-                        //tmp_index++;
-                    });
-                }
-
-                $('<input type="text" value="' + obj.domicilePhone + '" name="domicilePhone_hidden" style="display:none;">').appendTo($('.processInner'));
-                $('<input type="text" value="' + obj.telePhone + '" name="telePhone_hidden" style="display:none;">').appendTo($('.processInner'));
-                $('<input type="text" value="' + obj.id + '" name="id_hidden" style="display:none;">').appendTo($('.processInner'));
-                $('<input type="text" value="' + obj.mobile + '" name="mobile_hidden" style="display:none;">').appendTo($('.processInner'));
-                $('<input type="text" value="' + obj.name + '" name="name_hidden" style="display:none;">').appendTo($('.processInner'));
-                $('<input type="text" value="' + obj.email + '" name="email_hidden" style="display:none;">').appendTo($('.processInner'));
-            }
-            // --end  show_input   
-
-        return {
-            show_input: show_input,
-            main_down: main_down
-        };
-
-    })();
-
-    PersonalInfo_controller.main();
-*/
-
 } // end personalInfo_1 function
+
 
 function personalInfo_2_1(content) {
     var PersonalInfo_controller = (function() {
@@ -1180,11 +887,7 @@ function personalInfo_3(content) {
 /** Register Valid **/
 
 function personalInfo_1_valid() {
-    var res = GardenUtils.valid.validForm({
-        type: "show",
-        showAllErr: false,
-        formId: ["mainForm"],
-        validEmpty: [{
+	var validEmptyArray = [{
                 name: 'birth_year',
                 msg: '生日',
                 group: 'birth',
@@ -1196,9 +899,7 @@ function personalInfo_1_valid() {
                 name: 'birth_day',
                 msg: '生日',
                 group: 'birth',
-            },
-
-            {
+            },{
                 name: 'email',
                 msg: 'Email'
             }, {
@@ -1221,34 +922,10 @@ function personalInfo_1_valid() {
                 name: 'cellPhone',
                 msg: '行動電話'
             }, {
-                name: 'DomicileNeighborhood',
-                msg: '戶籍地址',
-                group: 'domicileAddr'
-            }, {
-                name: 'DomicileAddress',
-                msg: '戶籍地址',
-                group: 'domicileAddr'
-            }, {
-                name: 'neighborhood',
-                msg: '通訊地址',
-                group: 'addr'
-            }, {
                 name: 'address',
                 msg: '通訊地址',
                 group: 'addr'
-            }, {
-                name: 'domicileCityId',
-                msg: '戶籍地址',
-                group: 'domicileAddr'
-            }, {
-                name: 'domicileZipCode',
-                msg: '戶籍地址',
-                group: 'domicileAddr'
-            }, {
-                name: 'domicileLiner',
-                msg: '戶籍地址',
-                group: 'domicileAddr'
-            }, {
+            },  {
                 name: 'cityId',
                 msg: '通訊地址',
                 group: 'addr'
@@ -1256,24 +933,61 @@ function personalInfo_1_valid() {
                 name: 'zipCode',
                 msg: '通訊地址',
                 group: 'addr'
-            }, {
-                name: 'liner',
-                msg: '通訊地址',
-                group: 'addr'
             }
-        ],
+        ];
+
+    //Foolproof
+    var isRecord = $('[name="isRecord"]').val();
+    if (isRecord == 'N') {
+        validEmptyArray.push({
+            name: 'DomicileNeighborhood',
+            msg: '戶籍地址',
+            group: 'domicileAddr'
+        });
+        validEmptyArray.push({
+            name: 'DomicileAddress',
+            msg: '戶籍地址',
+            group: 'domicileAddr'
+        });
+        validEmptyArray.push({
+            name: 'domicileCityId',
+            msg: '戶籍地址',
+            group: 'domicileAddr'
+        });
+        validEmptyArray.push({
+            name: 'domicileZipCode',
+            msg: '戶籍地址',
+            group: 'domicileAddr'
+        });
+        validEmptyArray.push({
+            name: 'domicileLiner',
+            msg: '戶籍地址',
+            group: 'domicileAddr'
+        });
+    }
+
+    var res = GardenUtils.valid.validForm({
+        type: "show",
+        showAllErr: false,
+        formId: ["mainForm"],
+        validEmpty: validEmptyArray,
         validNumber: [{
                 name: 'birth_year',
                 msg: '生日',
+				allowEmpty: false,
                 group: 'birth',
             }, {
                 name: 'birth_month',
                 msg: '生日',
+				allowEmpty: false,
                 group: 'birth',
             }, {
                 name: 'birth_day',
                 msg: '生日',
+				allowEmpty: false,
                 group: 'birth',
+				hasHiddenCode: true,
+				hiddenTarget: $('input[name="birthday_day"]').val()
             }, {
                 name: 'DomicileArea',
                 msg: '戶籍電話',
@@ -1320,7 +1034,9 @@ function personalInfo_1_valid() {
             splitEle: '/',
             format: 'ch',
             allowEmpty: false,
-            group: 'birth'
+            group: 'birth',
+			hasHiddenCode: true,
+			hiddenTarget: $('input[name="birthday"]').val()
         }],
         validMobile: [{
             name: 'cellPhone',
@@ -1338,7 +1054,7 @@ function personalInfo_1_valid() {
 			var dNeighborhoodText = $('[name="DomicileNeighborhood"]').val();
 			var dAddressText = $('[name="DomicileAddress"]').val();
 			var domiAllAddr = domicileCityIdText + domicileZipCodeText + domicileLinerText + dNeighborhoodText + dAddressText;
-			if( domiAllAddr.length > 40 ){
+			if( domiAllAddr.length > 39 ){
 				customizeValidResult.push({
                     obj: $('[name="domicileCityId"]'),
                     msg: '戶籍地址長度不可大於40位'

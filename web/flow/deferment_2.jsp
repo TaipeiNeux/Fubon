@@ -2,6 +2,11 @@
     <% request.setCharacterEncoding( "utf-8"); %>
 
        <input type="hidden" name="RadioClicked" value="">
+	   <input type="hidden" class="fileSize" name="isPositive_hidden" value="">
+       <input type="hidden" class="fileSize" name="isNegative_hidden" value="">
+       <input type="hidden" class="fileSize" name="studentIdPositive_hidden" value="">
+       <input type="hidden" class="fileSize" name="studentIdNegative_hidden" value="">
+       <input type="hidden" class="fileSize" name="additional_hidden" value="">
        
         <div class="joy swataX" id="studentIdCardRadio" style="display:none">
             <div class="left">
@@ -28,6 +33,7 @@
 								<div class="error-msg" id="hasDocument" style="display:none">請上傳文件</div>
 								<div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
 								<div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
+								<div class="error-msg" id="documentSize" style="display:none">上傳檔案大小合計限10MB</div>
         </div>
         <table class="mqua">
             <thead>

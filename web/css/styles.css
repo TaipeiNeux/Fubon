@@ -3577,9 +3577,7 @@ margin-right: 4px;	}
     .inputArea {
       margin: 0 auto; } }
   .inputArea input {
-    /*
 	width: 100%;
-	*/
     font-size: 15px;
     padding: 5px 10px;
     outline: none;
@@ -7871,7 +7869,7 @@ font-weight: bold;	}
       .may .joy .left {
         text-align: left; } }
   .may .right p {
-    font-weight: 100;
+    font-weight: 500;
     color: #0872bb; }
   @media (max-width: 769px) {
     .may .inputArea {
@@ -10576,7 +10574,7 @@ section {
 .path ul li a:after {
   width: 5px;
   height: 16px;
-  top: 4px;
+  top: 5px;
 }
 .path ul li:nth-child(2) a {
   padding: 2px 10px 2px 35px;
@@ -12145,7 +12143,7 @@ body.apply_1_step1 [class^='apply_1_'] .processBox {
 }
 .personalinfo_1 .joy .susi {
    padding-left: 0;
-   color: #2b2c2c; 
+/*   color: #2b2c2c; */
 }
 .personalinfo_1 .sandy .susi {
    color: #0E89CB;
@@ -12684,7 +12682,7 @@ body.apply_2 .processBox {
 body.memberLogin_1 .QRLink {
     text-align: center;
     display: block;
-    width: 20%;
+    width: 120px;
     margin: 20px auto 0 auto;
     min-width: 75px;
 }
@@ -12716,9 +12714,7 @@ body.apply .processInner {
   height: 34px;
 }
 #body.index .personal .inputArea input {
-/* */
   width: 54%;
- 
   vertical-align: text-bottom;
   height: 34px;
 }
@@ -13184,7 +13180,7 @@ body.personalInfo .processBox {
     width: 73%;
     margin: 0 auto;
     padding-left: 0;
-    max-width: initial;
+    max-width: 100%;
 }
 
 .path_home {
@@ -13596,7 +13592,7 @@ body.apply_3_step2 .vic h5 {
 }
 
 body.apply_3_step2 input[name="freedom_publicExpense"] {
-    max-width: initial;
+    max-width: inherit;
     width: 100px;
     padding: 3px 12px;
     margin-left: 5px;
@@ -13678,7 +13674,7 @@ body.apply_5_step1 .editBtn {
 body.apply_5_step1 div.noob p.student_publicExpense {
     display: inline-block;
     float: right;
-    margin-right: 85px;
+    margin-right: 100px;
 }
 
 body.apply_5_step1 .appcont span.bill {
@@ -13723,13 +13719,17 @@ body.apply_5_step1 .may {
     margin-right: 0;
 }
 
+/*
 body.apply_5_step1 .lastTitle {
     margin-bottom: 48px;
 }
+*/
 
+/*
 body.apply_5_step1 .lastBtn {
     top: 96px;
 }
+*/
 
 body.apply_00 .processInner {
     width: 73%;
@@ -13768,11 +13768,11 @@ body.forgetPassword_4 .loginBtn {
 }
 
 body.apply_5_step1 div.noob {
-    text-align: right;
+    text-align: left;
 }
 
 body.apply_5_step1 div.noob p {
-    margin-right: 22.5%;
+    margin-right: 0;
 }
 
 
@@ -14162,7 +14162,7 @@ body.apply_2 p.stringOrRadio {
     padding: 0 0 0 22px;
   }
   body.personalinfo_1 .wrapper .input_address {
-    max-width: 327px;
+    max-width: 432px;
   }
   body.personalinfo_1 .wrapper .input_addr {
     max-width: 243px;
@@ -16152,7 +16152,6 @@ padding: 0 0 35px 0px;
 @media (max-width:769px) {
 
 	#body.index .personal .inputArea input {
-	/**/
 		width: 100%;
 		
 	} 
@@ -17151,6 +17150,7 @@ body.personalInfo .processInner {
 		position: relative;
 		left: 0;
 		top: 10px;
+        margin-bottom: 15px;
 	}
 	body.apply_2 .mather:before {
 		top: 5px;
@@ -18606,7 +18606,7 @@ a.reservation:hover {
     }
     
     .kim, .cate {
-        max-height: 380px;
+        max-height: 500px;
     }
     
     .register_3 .abon .left {
@@ -18835,3 +18835,214 @@ body.forgetPassword_4 .nina {
 	}
 
 }
+
+/* 陳拓0711 mentis3908 */
+
+.talkwall p {
+    padding-bottom: 0;
+    padding-top: 0;
+    margin-bottom: 10px;
+}
+
+/* 陳拓0711 mentis3980 */
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+    #body .nextBtn a:visited {
+        color: #fff!important;
+    }
+    
+    .nextBtn a:hover,
+    .nextBtn a:focus {
+        color: #fff;
+    }
+    
+    .mapInput {
+        padding: 0;
+    }
+    
+    input[type=radio].css-checkbox_c + label.css-label_c {
+        height: 18.1px;
+    }
+    
+    input[type=checkbox]:checked.css-checkbox + label.css-label {
+        background-position: 0.1-18px;
+    }
+    
+    .thirdParty::before, .spouse::before {
+        background-size: cover;
+    }
+    
+    body.apply_map .calendarArea {
+        height: auto;
+    }
+}
+
+/* mentis4244 陳拓 */
+
+@media (max-width:769px) {
+    .bankSelect.dan:after {
+        display: none;
+    }
+}
+
+.apply_2 input[type=checkbox].sqr-checkbox:checked + label.sqr-label {
+    background: url(../img/csscheckbox_584715bec9b728f21a7a9ecb1b4eecf96.png);
+    background-repeat: no-repeat;
+}
+
+.moArea ol li b {
+    font-weight: 500;
+}
+
+@media (min-width:769px) {
+    .PaymentloanUL .jubif {
+        overflow: visible;
+        -webkit-line-clamp: initial;
+    }
+    
+    .PaymentInstructions .qusp .quspitem {
+        padding-bottom: 40px;
+    }
+    
+    #body .earth ol {
+        padding-left: 30px;
+    }
+    
+    .apply_2 input[type=checkbox].sqr-checkbox + label.sqr-label {
+        padding-left: 25px;
+    }
+    
+    .appcont {
+        font-size: 20px;
+    }
+    
+    .appcont span {
+        font-size: 20px;
+    }
+    
+    .appcont .totalMoney {
+        font-size: 55px;
+    }
+    
+    body.apply_5_step1 div.noob p.student_publicExpense {
+        margin-right: 84px;
+    }
+    
+    body.apply_5_step1 div.noob {
+        text-align: right;
+    }
+    
+    body.apply_5_step1 div.noob p {
+        margin-right: 23.3%;
+    }
+    
+    body.apply_6_step1 .nike:before {
+        left: 0;
+    }
+    
+    body.apply_6_step1 .nike {
+        padding-left: 25px;
+    }
+    
+    body.apply_6_step1 .joy .left {
+        width: 110px;
+    }
+    
+    body.apply_6_step1 .joy .left p {
+        text-align: right;
+    }
+}
+
+@media (min-width:769px) {
+    
+    .ibonArea .bottom .ibonbox td img {
+        max-height: 50px;
+    }
+    
+    body#body.myElectronicPay_1 .casom > li {
+        margin-left: 20px;
+    }
+    
+    body.myElectronicPay_1 .pomodal p.copy {
+        text-align: left;
+    }
+    .raby {
+        margin: 0;
+        margin-left: 60px;
+        margin-bottom: 50px;
+    }
+    
+    .barniv {
+        margin: 0;
+    }
+    
+    .barniv p {
+        margin-left: 15px;
+        font-size: 15px;
+    }
+    
+    .barniv img {
+        margin: 0;
+    }
+    
+    .repaymentInquiry_ .nextBtn a {
+        margin-right: 2%;
+    }
+    
+    #body .earth .casom {
+        padding-left: 30px;
+    }
+    
+    .talkwall {
+        padding: 2% 5%;
+    }
+    
+    .talkwall p {
+        margin-bottom: 5px;
+    }
+    
+    .talkwall:before {
+        background: url(../img/fu-11.png);
+        top: 0;
+        height: 387px;
+        width: 120px;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        
+    }
+    
+    .apply_map .regionText.active {
+        background: #fafafa;
+    }
+}
+
+/* mentis 4198 */
+@media (max-width:1024px) and (min-width:768px) {
+    .apply_3_step2 .processInner {
+        padding: 10px 2%;
+    }
+    
+    body.apply_3_step2 .baka,
+    body.apply_3_step2 .zoe {
+        padding-left: 35px;
+    }
+    
+    body.apply_3_step2 .famy,
+    body.apply_3_step2 .hell {
+        width: 305px;
+    }
+    
+    body.apply_3_step2 #freedom .baka > .left {
+        width: 115px;
+    }
+    
+    body.apply_3_step2 #freedom .excla {
+        padding-left: 0;
+    }
+}
+
+.bootstrap-datetimepicker-widget table td.today {
+    background-color: #337ab7!important;
+    color: #ffffff!important;
+}
+
