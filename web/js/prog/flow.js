@@ -229,13 +229,18 @@ function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanld
                             //window.location = 'apply.jsp?step=apply_document_5_1';
                             clearTimeout(countdownid);
                         }
-                        isBack = confirm('是否確定要取消？');
+                        isBack = confirm('是否確認「取消」本交易? 提醒您，當您確認「取消」本交易後，本行將不保留您本次所填寫的資料；若您僅是要修改部分資料，請點選頁面上的「修改」按鈕，即可更新資料。');
                     }
                     else {
                         isBack = true;
                     }
 
                     if(isBack) {
+                        if(Content.flow.viewURL == "flow/apply5_1_1.jsp" || Content.flow.viewURL == "flow/apply5_2.jsp"){   
+                            modal.resetApply();
+                            window.location = 'apply.jsp?step=apply1_1';
+                        }
+                        
 						//move top
 						$('body').scrollTop(0);
 					

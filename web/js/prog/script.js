@@ -589,11 +589,13 @@ function getHeaderHeight() {
     }
 }
 
-//會員判斷是否已登入
+$(document).ready(function() {
+	//會員判斷是否已登入
 modal.getLoginInfo(function(json) {
 
     window.loginInfo = json;
 
+	
     if (json.isLogin == 'N') { //還沒有登入
         //$('#isNotLogin').removeClass('personalin');
         //$('#isLogin').addClass('personalin');
@@ -629,12 +631,11 @@ modal.getLoginInfo(function(json) {
         });
 
 
-
     } else { //已經登入
         $('.smbtnArea').hide();
         $('#isNotLogin').hide();
-        $('#isLogin').show();
-        $('.loginArea').show();
+        //$('#isLogin').show();
+        //$('.loginArea').show();
 
         $('a.apply').click(function(ev) {
             ev.preventDefault();
@@ -701,7 +702,11 @@ modal.getLoginInfo(function(json) {
                 } //時間到了的function
         });
     }
+	
+	
 });
+});
+
 
 //首頁：登入綁身份證轉大寫
 $('[name="studentId"]').on('blur', function(ev) {
@@ -1278,7 +1283,7 @@ function noHistoryDataAndTranInfo() {
 //1：沒有貸款帳號或有轉催/轉呆之情事或戶況有協商註記，則客戶無法於本平台進行查詢，將導至提示頁面
 //2.未簽署者點選本服務
 function redirectNoPermit(typeId, name) {
-    var form = $('<form action="noPermit.jsp" method="post"><input type="hidden" value="' + typeId + '" name="typeId"></input><input type="hidden" name="name" value="' + name + '"></input></form>');
+    var form = $('<form action="noPermit.jsp" method="post"><input type="hidden" value="' + typeId + '" name="typeId"></input><input type="hidden" name="name" value="' + name + '"></input></form>').appendTo($('body'));
     form.submit();
 }
 
@@ -1463,6 +1468,8 @@ function getCarryObj(content) {
         }
     }
     console.debug('carryObjArr:' + carryObjArr);
+    
+    var isAddParents = '';
 
     //判斷哪些關係人是連帶保證人,需要帶文件
     if (marryStatus == 'N') {
@@ -1503,15 +1510,18 @@ function getCarryObj(content) {
                     gaurantorObjArr.push('c', 'c');
                     break;
             }
-        } else if (adult == 'Y') { //已成年未婚
+        } 
+        else if (adult == 'Y') { //已成年未婚
             switch (level1Picked) {
                 case '1':
                     if (level2Picked == '1') {
                         gaurantorObjArr.push('ab', 'ab');
                     } else if (level2Picked == '2') {
                         gaurantorObjArr.push('a', 'a');
+                        isAddParents = 'mom';
                     } else if (level2Picked == '3') {
                         gaurantorObjArr.push('b', 'b');
+                        isAddParents = 'dad';
                     } else if (level2Picked == '4') {
                         gaurantorObjArr.push('c', 'abc', 'c');
                     }
@@ -1587,12 +1597,12 @@ function getCarryObj(content) {
     }
     console.debug('gaurantorObjArr:' + gaurantorObjArr);
 
-    pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName);
+    pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName, isAddParents);
     return (pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName));
 }
 
 //依function getCarryObj所分析的狀況塞需要攜帶的文件,連帶保證人的字串
-function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gaurantorTitleArray, gaurantorNameArray) {
+function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gaurantorTitleArray, gaurantorNameArray, isAddParents) {
     var titleName;
     var allObjArr = [];
     var numberOfGaurantors = []; //要帶相同物件的連帶保證人有幾位
@@ -1648,6 +1658,7 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
                 break;
             case 2: //戶籍謄本或新式戶口名簿【需為最近三個月且記事欄需詳載，包含本人(吳*名)、(依判斷塞連帶保證人)，如戶籍不同者，需分別檢附】
                 var sameObj = '';
+                var addParents = '';
                 for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
                     //alert(gaurantorIndex);
                     if (g != gaurantorObjArray[k].length - 1) {
@@ -1657,6 +1668,17 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
                         sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
                         gaurantorIndex += 1;
                     }
+                    
+                    //父母雙方健在且婚姻關係持續中
+                    //父親擔任連帶保證人
+                    /*if(isAddParents == 'mom'){
+                        sameObj = sameObj + '、母親';
+                    }
+                    //母親擔任連帶保證人
+                    else if(isAddParents == 'dad'){
+                        sameObj = sameObj + '、父親';
+                    }*/
+                
                     allObjArr[k] = '戶籍謄本或新式戶口名簿<p id="carryObjTip"><img src="img/pk-01-small.png" id="carryObjTip">需為最近三個月且記事欄需詳載，包含本人(' + appoName + ')、' + sameObj + '如戶籍不同者，需分別檢附</p>';
                 }
                 break;

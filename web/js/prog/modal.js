@@ -5,7 +5,7 @@ var modal = {
         var jsonCity;
         $.ajax({
             async: false,
-            url: 'options?action=getCity&bindBranch=' + bindBranch,
+            url: 'options?action=getCity&bindBranch=' + bindBranch + '&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonCity = json;
@@ -19,7 +19,7 @@ var modal = {
         var jsonZip;
         $.ajax({
             async: false,
-            url: 'options?action=getZipCode&cityId=' + zipPara + '&bindBranch=' + bindBranch,
+            url: 'options?action=getZipCode&cityId=' + zipPara + '&bindBranch=' + bindBranch + '&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonZip = json;
@@ -35,7 +35,7 @@ var modal = {
         var jsonLiner;
         $.ajax({
             async: false,
-            url: 'options?action=getLiner&zipCode=' + zipCode,
+            url: 'options?action=getLiner&zipCode=' + zipCode + '&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonLiner = json;
@@ -52,7 +52,7 @@ var modal = {
 		
         g_ajax({
             //url: 'json/getFamilyInfo.json',
-			url: 'data?action=getFamilyInfo',
+			url: 'data?action=getFamilyInfo&v=' + new Date().getTime(),
             data: {
                 type: type,
 				convert : convert,
@@ -77,7 +77,7 @@ var modal = {
         $.ajax({
             async: false,
             //url: 'json/branch.json',
-            url: 'options?action=getBranch&zipcode=' + zipcode,
+            url: 'options?action=getBranch&zipcode=' + zipcode + '&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonBranch = json;
@@ -90,7 +90,7 @@ var modal = {
 		
 		$.ajax({
 			async: false,
-            url: 'data?action=getDefaultAddress',
+            url: 'data?action=getDefaultAddress&v=' + new Date().getTime(),
             success: function(json) {
                 jsonBranch = json;
             }
@@ -117,7 +117,7 @@ var modal = {
         var jsonStage;
         $.ajax({
             async: false,
-            url: 'options?action=getSchoolType3',
+            url: 'options?action=getSchoolType3&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonStage = json;
@@ -130,7 +130,7 @@ var modal = {
         var jsonNational;
         $.ajax({
             async: false,
-            url: 'options?action=getSchoolType1',
+            url: 'options?action=getSchoolType1&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonNational = json;
@@ -144,7 +144,7 @@ var modal = {
         var jsonSchoolName;
         $.ajax({
             async: false,
-            url: 'options?action=getSchool&type1=' + national +'&type2=' + day +'&type3=' + stage +'',
+            url: 'options?action=getSchool&type1=' + national +'&type2=' + day +'&type3=' + stage + '&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonSchoolName = json;
@@ -159,7 +159,7 @@ var modal = {
         var jsonIsDay;
         $.ajax({
             async: false,
-            url: 'options?action=getSchoolType2',
+            url: 'options?action=getSchoolType2&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonIsDay = json;
@@ -173,7 +173,7 @@ var modal = {
         var jsonDepartment;
         $.ajax({
             async: false,
-            url: 'options?action=getSchoolType3&type2=' + type,
+            url: 'options?action=getSchoolType3&type2=' + type + '&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonDepartment = json;
@@ -203,7 +203,7 @@ var modal = {
 		
 		$.ajax({
             async : false,
-            url: 'auth?action=login',
+            url: 'auth?action=login&v=' + new Date().getTime(),
             data: {
 				id : studentId,
 				userId : studentCode,
@@ -240,7 +240,7 @@ var modal = {
 	logout: function() {
         $.ajax({
             async: false,
-            url: 'auth?action=logout',
+            url: 'auth?action=logout&v=' + new Date().getTime(),
             datatype: 'json',
 			type : 'post',
             success: function() {
@@ -251,7 +251,7 @@ var modal = {
 	setGuest: function(callback) {
         $.ajax({
             async: false,
-            url: 'auth?action=setGuest',
+            url: 'auth?action=setGuest&v=' + new Date().getTime(),
             datatype: 'json',
 			type : 'post',
             success: function() {
@@ -290,7 +290,7 @@ var modal = {
 	getNews: function(callback) {
         
         $.ajax({
-            url: 'data?action=getNews',
+            url: 'data?action=getNews&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
 				
@@ -304,7 +304,7 @@ var modal = {
         
         $.ajax({
 			async : true,
-            url: 'data?action=getQA',
+            url: 'data?action=getQA&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
 				
@@ -316,7 +316,7 @@ var modal = {
 	getDocument: function(callback) {
         
         $.ajax({
-            url: 'data?action=getDocument',
+            url: 'data?action=getDocument&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
 				
@@ -372,7 +372,7 @@ var modal = {
         var jsonLoginStatus;
         $.ajax({
             async: false,
-			//Json´ú¸Õ¥Î
+			//Jsonï¿½ï¿½Õ¥ï¿½
             //url: 'json/loginSuccess.json',
 			url: 'auth?action=getLoginInfo&v=' + new Date().getTime(),
             datatype: 'json',
@@ -412,11 +412,11 @@ var modal = {
 
         return jsonEligibility;
     },
-	//­«·s¥Ó½Ð-¥ý©I¥sflowªºreset¦A¶i¤Japply.jsp
+	//ï¿½ï¿½ï¿½sï¿½Ó½ï¿½-ï¿½ï¿½Iï¿½sflowï¿½ï¿½resetï¿½Aï¿½iï¿½Japply.jsp
     resetApply: function() {
         $.ajax({
             async: false,
-            url: 'flow?action=reset&flowId=apply',
+            url: 'flow?action=reset&flowId=apply&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
 			
@@ -428,7 +428,7 @@ var modal = {
 		var jsondeferment;
         $.ajax({
             async: false,
-            url: 'data?action=saveDeferment0',  
+            url: 'data?action=saveDeferment0&v=' + new Date().getTime(),  
 			data : form.serialize(),
             //url: 'json/deferment.json',  
             datatype: 'json',
@@ -446,7 +446,7 @@ var modal = {
         $.ajax({
             async: false,
             //url: 'json/myElectronicPay_1.json',
-			url: 'data?action=myElectronicPay',
+			url: 'data?action=myElectronicPay&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonPay = json;
@@ -460,8 +460,8 @@ var modal = {
 		var jsonIbon;
         $.ajax({
             async: false,
-            //url: 'json/myElectronicPay_1.json',     //¤§«á­n´«¦¨Ãº´Ú³æªºurl!!!!!!!!!!!!!!!!!!!
-			url: 'data?action=myElectronicPay',
+            //url: 'json/myElectronicPay_1.json',     //ï¿½ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ï¿½Ãºï¿½Ú³æªºurl!!!!!!!!!!!!!!!!!!!
+			url: 'data?action=myElectronicPay&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonIbon = json;
@@ -474,7 +474,7 @@ var modal = {
         var jsonStatus;
         $.ajax({
             async: false,
-            url: 'data?action=updatePopupEtag',
+            url: 'data?action=updatePopupEtag&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonStatus = json;

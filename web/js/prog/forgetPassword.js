@@ -128,6 +128,10 @@ function forgetPassword3_2(content){
         modal_id: 'modal_forgetPassword_2_2',
         deadline_class: 'deadline' 
     });
+    
+    $('#modal_forgetPassword_2_2').on('hide.bs.modal', function () {
+        window.location = 'forgetPassword.jsp?step=forgetPassword3_1';
+    });
 	
     // countdown({
     //     minute: 0,

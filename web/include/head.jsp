@@ -32,9 +32,9 @@
   
   <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/customize.css">
-  <link rel="stylesheet" href="css/processBar.css">
+  <link rel="stylesheet" href="css/styles.css?v=<%=System.currentTimeMillis()%>">
+  <link rel="stylesheet" href="css/customize.css?v=<%=System.currentTimeMillis()%>">
+  <link rel="stylesheet" href="css/processBar.css?v=<%=System.currentTimeMillis()%>">
   <link rel="stylesheet" href="css/jquery.mmenu.all.css">
  
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -153,10 +153,10 @@ if(typeof String.prototype.trim !== 'function') {
     <script src="js/bootstrap.js"></script>
     <script src="js/bootstrap-select.min.js"></script>
     <script src="js/jquery.mmenu.all.min.js"></script>
-    <script src="js/prog/modal.js"></script>
-    <script src="js/prog/GardenUtils.js"></script>
-    <script src="js/prog/flow.js"></script>
-    <script src="js/prog/linkage.js"></script>
+    <script src="js/prog/modal.js?v=<%=System.currentTimeMillis()%>"></script>
+    <script src="js/prog/GardenUtils.js?v=<%=System.currentTimeMillis()%>"></script>
+    <script src="js/prog/flow.js?v=<%=System.currentTimeMillis()%>"></script>
+    <script src="js/prog/linkage.js?v=<%=System.currentTimeMillis()%>"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/prog/bootstrap_select_arrow.js"></script>
 	<!--

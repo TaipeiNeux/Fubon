@@ -70,6 +70,10 @@ public class PersonalInfo2_1 implements ILogic {
 
         if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
 
+        if(StringUtils.isNotEmpty(birthday)) {
+            birthday = StringUtils.replace(birthday,"/","");
+        }
+
         if(StringUtils.isNotEmpty(domicileAddressCityId)) {
             domicileAddressCityId = ProjUtils.toCityName(domicileAddressCityId,dao);
         }

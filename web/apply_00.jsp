@@ -1,5 +1,6 @@
 <%@ page import="com.neux.utility.utils.jsp.info.JSPQueryStringInfo" %>
 <%@ page import="com.neux.utility.utils.jsp.JSPUtils" %>
+<%@ page import="org.apache.commons.lang3.StringEscapeUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
 <%
@@ -9,6 +10,8 @@
     String loginMsg = queryStringInfo.getParam("loginMsg");
     String determineStstus = queryStringInfo.getParam("determineStstus");
 
+    loginMsg = StringEscapeUtils.escapeHtml4(loginMsg);
+    determineStstus = StringEscapeUtils.escapeHtml4(determineStstus);
 %>
 <script src="js/jquery-ui.min.js"></script>
 <script>

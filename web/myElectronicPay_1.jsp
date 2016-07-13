@@ -35,7 +35,7 @@
 	
     JSONArray details = null;
     if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears)) {
-        request.getRequestDispatcher("noPermit.jsp?typeId=1&name=查詢「我的電子繳款單」").forward(request,response);
+        request.getRequestDispatcher("noPermit.jsp?typeId=4&name=查詢「我的電子繳款單」").forward(request,response);
     }
     else if("N".equalsIgnoreCase(isEtabs)) {
         request.getRequestDispatcher("noPermit.jsp?typeId=2&name=查詢「我的電子繳款單」").forward(request,response);

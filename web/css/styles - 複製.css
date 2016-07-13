@@ -4957,10 +4957,7 @@ border-top: solid 1px #dddcdd;	}
   display: none; }
   @media (max-width: 769px) {
     .QAArea_s {
-      display: block; 
-	  
-
-	} }
+      display: block; } }
 
 .QAList .dowContent {
   background: #5EC1CA;
@@ -14026,10 +14023,7 @@ body.apply_2 p.stringOrRadio {
 }    
 
 /* 0620 by Wade 我的貸款 */
-body.myloan span.blu {
-    color: #0E89CB;
-    
-  }
+
 @media screen and (min-width: 769px) {
 
   body.myloan .lightWon .busus li h3 {
@@ -14049,7 +14043,7 @@ body.myloan span.blu {
     padding: 18px;
   }
   body.myloan span.blu {
-    /*color: #0E89CB;*/
+    color: #0E89CB;
     font-weight: 600;
   }
   body.myloan ul.busus li:nth-child(2) p {
@@ -19122,6 +19116,3 @@ body.forgetPassword_4 .nina {
 /*body.sub .QAList ul > li a {
   border-radius: 5px;
 }*/
-
-
-

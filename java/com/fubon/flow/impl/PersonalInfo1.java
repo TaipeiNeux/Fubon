@@ -172,13 +172,23 @@ public class PersonalInfo1 implements ILogic {
         markBean.addCode("telephone",telePhonePhone,ProjUtils.toTelMark(telePhonePhone));
         markBean.addCode("cellPhone",cellPhone,ProjUtils.toTelMark(cellPhone));
         markBean.addCode("email",email,ProjUtils.toEMailMark(email));
-        markBean.addCode("DomicileAddress",domicileAddressAddress,ProjUtils.toAddressMark(domicileAddressAddress));
-        markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressMark(teleAddressAddress));
-        markBean.addCode("birthday",birthday,ProjUtils.toBirthdayMark(birthday));
 
-        GardenLog.log(GardenLog.DEBUG,"------------birthday--------------");
-        GardenLog.log(GardenLog.DEBUG,"------------"+birthday+"--------------");
-        GardenLog.log(GardenLog.DEBUG,"------------"+ProjUtils.toBirthdayMark(birthday)+"--------------");
+        markBean.addCode("DomicileNeighborhood",domicileAddressNeighborhood,ProjUtils.toAddressAllMark(domicileAddressNeighborhood));
+        domicileAddressNeighborhood = ProjUtils.toAddressAllMark(domicileAddressNeighborhood);
+
+        markBean.addCode("DomicileAddress",domicileAddressAddress,ProjUtils.toAddressAllMark(domicileAddressAddress));
+        domicileAddressAddress = ProjUtils.toAddressAllMark(domicileAddressAddress);
+
+        markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressAllMark(teleAddressAddress));
+        teleAddressAddress = ProjUtils.toAddressAllMark(teleAddressAddress);
+
+        String noMarkYear = birthday.substring(0,3);
+        String noMarkMM = birthday.substring(0,3);
+        String noMarkDD = birthday.substring(0,3);
+        String markYear = ProjUtils.toBirthdayMark(birthday).substring(0,3);
+        String markMM = ProjUtils.toBirthdayMark(birthday).substring(3,5);
+        String markDD = ProjUtils.toBirthdayMark(birthday).substring(5,7);
+        markBean.addCode("birthday",birthday,markYear + "/" + markMM + "/" + markDD);
 
         queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
 
@@ -209,7 +219,7 @@ public class PersonalInfo1 implements ILogic {
         domicileAddress.put("linerName",domicileLinerName);
         domicileAddress.put("liner",domicileAddressLiner);
         domicileAddress.put("neighborhood",domicileAddressNeighborhood);
-        domicileAddress.put("address",ProjUtils.toAddressMark(domicileAddressAddress));
+        domicileAddress.put("address",domicileAddressAddress);
 
         domicileAddress.put("cityName",domicileAddressCityName);
         domicileAddress.put("zipCodeName",domicileAddressZipCodeName);
@@ -219,7 +229,7 @@ public class PersonalInfo1 implements ILogic {
         JSONObject teleAddress = new JSONObject();
         teleAddress.put("cityId",teleAddressCityId);
         teleAddress.put("zipCode",teleAddressZipCode);
-        teleAddress.put("address",ProjUtils.toAddressMark(teleAddressAddress));
+        teleAddress.put("address",teleAddressAddress);
         content.put("teleAddress",teleAddress);
 
     }

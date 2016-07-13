@@ -1803,6 +1803,18 @@ function apply1_1(content) {
                 domicileLinerSelect.find('option[value="' + domicileLiner + '"]').prop('selected', 'true');
                 domicileLinerSelect.find('option[value="' + domicileLiner + '"]').trigger('change');
                 domiLinerHidden.val(domicileLiner);
+                
+                
+                //如果生日有隱碼,表示村里要從明碼轉成隱碼
+                var hasHidden = '';
+                if(birthday4.val() != ''){
+                    hasHidden = birthday4.val().substr(1,1);
+                }
+                if( hasHidden.indexOf("*") != -1 ){
+                    if(domicileLinerSelect.val() != ''){
+                        hideLinerName(domicileLinerSelect);
+                    }
+                }
             }
         }
     }
@@ -1850,7 +1862,6 @@ function apply1_1(content) {
             }
         }
     }
-
 
     $('.selectpicker').selectpicker();
     citySelect.selectpicker('refresh');
@@ -2048,6 +2059,15 @@ function apply1_1(content) {
     /*if(sameAddrHidden.val() == 'Y'){
      $('#add').trigger('change');
      }*/
+}
+
+//將村里改為隱碼
+function hideLinerName(selector){
+    var parent = selector.parent();
+    var btn = parent.find('button');
+    var span = btn.find('span:first');
+    
+    span.text('*');
 }
 
 function apply1_2(content) {
@@ -4539,6 +4559,13 @@ function computeMoney(loansItem, radioIndex) {
 function apply4_1(content) {
 
     showUploadFiles(content, '4');
+    
+     $('input[type="file"]').on('click', function(ev) {
+        if ($('.ajax-loader').length == 0) {
+            $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+        }
+        $('.ajax-loader').show();
+    });
 
     //綁上傳事件
     $('input[type="file"]').on('change', function(ev) {
@@ -4565,11 +4592,15 @@ function apply4_1(content) {
         if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
             $('#documentType').show();
             $('#documentLength').hide();
-        } else {
+            $('.ajax-loader').hide();
+        } 
+        else {
             $('#documentType').hide();
+            $('.ajax-loader').hide();
             if (thisFileName.length > 24) {
                 $('#documentLength').show();
                 $('#documentType').hide();
+                $('.ajax-loader').hide();
             }
             // not click cancel
             else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
@@ -4602,10 +4633,14 @@ function apply4_1(content) {
 
                         tr.next('tr').find('iframe').attr("src", newURL);
                         tr.find('td.file-photo img').attr("src", newURL);
+                        
+                        $('.ajax-loader').hide();
 
                     } else {
                         if (selected_file_name != '') alert('Upload Fail!!');
                         form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
+                        
+                        $('.ajax-loader').hide();
                     }
                 });
             }
@@ -5170,8 +5205,14 @@ function apply4_2(content) {
 	//日期
 	if(datePicked != ''){
 		var dDateTemp = $('#bDate');
-		$('[name="dateSelected"]').val(datePicked);
-		dDateTemp.text(datePicked);
+        var pickYY, pickMM, pickDD;
+        if(datePicked.length == 10){
+            pickYY = datePicked.substr(0,4);
+            pickMM = datePicked.substr(5,2);
+            pickDD = datePicked.substr(8,2);
+        }
+		$('[name="dateSelected"]').val(pickYY + '/' + pickMM + '/' + pickDD);
+		dDateTemp.text(pickYY + '/' + pickMM + '/' + pickDD);
 		$('td [data-date="'+datePicked+'"]').addClass('active');
 		appointment.show();
 	}
@@ -5556,6 +5597,13 @@ function apply5_1_1(content) {
         setLoanInformation(priceObj, elementObj);
     }
     /*申貸金額 (end)*/
+    
+    $('input[type="file"]').on('click', function(ev) {
+        if ($('.ajax-loader').length == 0) {
+            $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+        }
+        $('.ajax-loader').show();
+    });
 
     showUploadFiles(content, '5');
 
@@ -5582,11 +5630,15 @@ function apply5_1_1(content) {
         if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
             $('#documentType').show();
             $('#documentLength').hide();
-        } else {
+            $('.ajax-loader').hide();
+        } 
+        else {
             $('#documentType').hide();
+            $('.ajax-loader').hide();
             if (thisFileName.length > 24) {
                 $('#documentLength').show();
                 $('#documentType').hide();
+                $('.ajax-loader').hide();
             }
             // not click cancel
             else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
@@ -5619,10 +5671,14 @@ function apply5_1_1(content) {
 
                         tr.next('tr').find('iframe').attr("src", newURL);
                         tr.find('td.file-photo img').attr("src", newURL);
+                        
+                        $('.ajax-loader').hide();
 
                     } else {
                         if (selected_file_name != '') alert('Upload Fail!!');
                         form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
+                        
+                        $('.ajax-loader').hide();
                     }
                 });
             }
@@ -5878,6 +5934,10 @@ function apply5_1_2(content) {
         second: 59,
         modal_id: 'modal_apply_5_1_2',
         deadline_class: 'applyDate'
+    });
+    
+    $('#modal_apply_5_1_2').on('hide.bs.modal', function () {
+        window.location = 'apply.jsp?step=apply_document_5_1';
     });
 
     /*var imgSrc = content.code_img;

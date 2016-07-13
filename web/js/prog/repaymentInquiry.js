@@ -78,7 +78,10 @@ var RepaymentInquiry_controller = (function(){
 			                new Date(start_y, start_m - 1, start_d),
 			                start_str
 			            ]
-			        });
+			        }).on('dp.show',function(e){
+						$('#datetimepicker1 [data-action="pickerSwitch"]').removeAttr('data-action');
+						
+					});
 
 			        $('#datetimepicker2').datetimepicker({
 			            locale: "zh-TW",
@@ -90,7 +93,10 @@ var RepaymentInquiry_controller = (function(){
 			                new Date(end_y, end_m - 1, end_d),
 			                end_str
 			            ]
-			        });
+			        }).on('dp.show',function(e){
+						$('#datetimepicker2 [data-action="pickerSwitch"]').removeAttr('data-action');
+						
+					});
 
 
 			        $('.mydatetimepicker').on('click',function(){
@@ -166,34 +172,41 @@ var RepaymentInquiry_controller = (function(){
 
 
 			            if( isAcceptedSearch ) {
-			                var account = $('.searchArea .account button span').text();
+			                var account = $('#accounts').val();
 
-			                //alert(account+'\n'+start_str+'\n'+end_str);
-			                var result = RepaymentInquiry_modal.listRepaymentDetail({
-			                    account: account,
-			                    start_date: start_str,
-			                    end_date: end_str
-			                });
+							//顯示Ajax轉轉圖，另外讓主頁面hide	
+							$('.ajax-loader').show();
+							setTimeout(function(){
+								//alert(account+'\n'+start_str+'\n'+end_str);
+				                var result = RepaymentInquiry_modal.listRepaymentDetail({
+				                    account: account,
+				                    start_date: start_str,
+				                    end_date: end_str
+				                });
 
-			                if( result.data != '' ) {
+								$('.ajax-loader').hide();
+								
+				                if( result.data != '' ) {
 
-			                    $('.nextBtn.outerBtn').css('display', 'none');
-			                    $('.nextBtn.innerBtn').css('display', 'block');
+				                    $('.nextBtn.outerBtn').css('display', 'none');
+				                    $('.nextBtn.innerBtn').css('display', 'block');
 
-			                    if(result.data.repayment_detail.length == 0) {
-			                        GardenUtils.display.popup({
-			                            title: '',
-			                            content: '<p>很抱歉，您所選擇的查詢條件無相關資料。</p>',
-			                            closeCallBackFn: function() {},
-			                            isShowSubmit: false
-			                        });
-			                    }
-			                    else {
-			                        RepaymentInquiry_controller.listResult( result.data.repayment_detail );
-			                    }
-			                } else {
-			                    errorMsg.text('查詢失敗，請稍候再試！');
-			                }
+				                    if(result.data.repayment_detail.length == 0) {
+				                        GardenUtils.display.popup({
+				                            title: '',
+				                            content: '<p>很抱歉，您所選擇的查詢條件無相關資料。</p>',
+				                            closeCallBackFn: function() {},
+				                            isShowSubmit: false
+				                        });
+				                    }
+				                    else {
+				                        RepaymentInquiry_controller.listResult( result.data.repayment_detail );
+				                    }
+				                } else {
+				                    errorMsg.text('查詢失敗，請稍候再試！');
+				                }
+							},100);
+			                
 			            } // end if: accepted search
 			        }); // end click: search
 

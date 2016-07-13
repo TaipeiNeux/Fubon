@@ -48,6 +48,19 @@ public class Register4 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
+        //取得第一步的草稿資料
+        String draftXML1 = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute("register_register1"));
+        String memberTermsNo = "";
+        String obligationsNo = "";
+
+        if(StringUtils.isNotEmpty(draftXML1)) {
+            Document step1Doc = DocumentHelper.parseText(draftXML1);
+            Element step1Root = step1Doc.getRootElement();
+
+            memberTermsNo = step1Root.element("memberTermsNo").getText();
+            obligationsNo = step1Root.element("obligationsNo").getText();
+        }
+
         //取得第二步的草稿資料
         String draftXML = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute("register_register2"));
         Document step2Doc = DocumentHelper.parseText(draftXML);
@@ -105,6 +118,10 @@ public class Register4 implements ILogic {
             studentUserProfileDetail.setValue("ModifyTime", today);
             studentUserProfileDetail.setValue("IP",studentUserProfile.getValue("IP"));
             studentUserProfileDetail.setValue("AplyIdNo",studentUserProfile.getValue("IdNo"));
+
+            //2016-07-13 added by titan 加入同意條款版號
+            studentUserProfileDetail.setValue("MemberTermsNo",memberTermsNo);
+            studentUserProfileDetail.setValue("ObligationsNo",obligationsNo);
 
             //檢核該用戶是否存在
             if(!checkExist(dao,id)) {

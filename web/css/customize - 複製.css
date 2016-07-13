@@ -3250,13 +3250,4 @@ h4.modal-title {
         margin-right: 22.4%;
     }
 }
-
-@media (max-width:320px) {
-    .QAList {
-	  overflow : scroll;
-	  height: 800px !important
-	}
-}
-
-
      

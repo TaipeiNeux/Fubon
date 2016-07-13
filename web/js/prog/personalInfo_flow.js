@@ -156,7 +156,7 @@ function personalInfo_1(content) {
 		var yy = birthday.substr(0, 3);
 		var mm = birthday.substr(3, 2);
 		var dd = birthday.substr(5, 2);
-		birthday_hidden.val( yy + mm +dd );
+		birthday_hidden.val( yy + '/'+ mm + '/' +dd );
 	}
 
     //限制輸入的長度
@@ -236,7 +236,7 @@ function personalInfo_1(content) {
             d = '0' + d;
         }
 
-        $('input[name="birthday"]').val(y +  m + d);
+        $('input[name="birthday"]').val(y + '/' +  m + '/'+ d);
     });
 
     birthday2.on('blur', function() {
@@ -253,7 +253,7 @@ function personalInfo_1(content) {
             d = '0' + d;
         }
         
-		$('input[name="birthday"]').val(y +  m + d);
+		$('input[name="birthday"]').val(y + '/' +  m + '/'+ d);
     });
 
     birthday4.on('blur', function() {
@@ -270,7 +270,7 @@ function personalInfo_1(content) {
             d = '0' + d;
         }
         
-		$('input[name="birthday"]').val(y +  m + d);
+		$('input[name="birthday"]').val(y + '/' +  m + '/'+ d);
     });
     
     $('.processInner').prepend('<input type="hidden" value="' + content.mobile + '" name="mobile_hidden"/>');
@@ -388,6 +388,17 @@ function personalInfo_1(content) {
                 domicileLinerSelect.find('option[value="' + domicileLiner + '"]').prop('selected', 'true');
                 domicileLinerSelect.find('option[value="' + domicileLiner + '"]').trigger('change');
                 domiLinerHidden.val(domicileLiner);
+                
+                //如果生日有隱碼,表示村里要從明碼轉成隱碼
+                var hasHidden = '';
+                if(birthday4.val() != ''){
+                    hasHidden = birthday4.val().substr(1,1);
+                }
+                if( hasHidden.indexOf("*") != -1 ){
+                    if(domicileLinerSelect.val() != ''){
+                        hideLinerName(domicileLinerSelect);
+                    }
+                }
             }
         }
     }
@@ -554,6 +565,14 @@ function personalInfo_1(content) {
     });
 } // end personalInfo_1 function
 
+//將村里改為隱碼
+function hideLinerName(selector){
+    var parent = selector.parent();
+    var btn = parent.find('button');
+    var span = btn.find('span:first');
+    
+    span.text('*');
+}
 
 function personalInfo_2_1(content) {
     var PersonalInfo_controller = (function() {
@@ -677,6 +696,11 @@ function personalInfo_2_2(content) {
         modal_id: 'myModal_person_2',
         deadline_class: 'applyDate'
     });
+    
+    $('#myModal_person_2').on('hide.bs.modal', function () {
+        window.location = 'personalInfo_flow.jsp?step=personalInfo_2_1';
+    });
+   
 
     /*var imgSrc = content.code_img;
     var mobile = content.mobile;

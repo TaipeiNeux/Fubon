@@ -413,15 +413,15 @@
                         <div class="right">
                             <select class="selectpicker input_y relationship_y" name="thirdParty_relationship">
                                 <option value="">請選擇</option>
-                                <option value="1">兄弟</option>
-                                <option value="2">姊妹</option>
-                                <option value="3">姊弟</option>
-                                <option value="4">兄妹</option>
-                                <option value="5">祖孫</option>
-                                <option value="6">外祖</option>
-                                <option value="7">外婆</option>
-                                <option value="8">他親</option>
-                                <option value="9">朋友</option>
+                                <option value="4A">兄弟</option>
+                                <option value="4B">姊妹</option>
+                                <option value="4C">姊弟</option>
+                                <option value="4D">兄妹</option>
+                                <option value="5A">祖孫</option>
+                                <option value="5B">外祖</option>
+                                <option value="5C">外婆</option>
+                                <option value="7A">他親</option>
+                                <option value="8A">朋友</option>
                             </select>
                             <div class="error-msg"></div>
                         </div>

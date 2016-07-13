@@ -146,6 +146,8 @@ public class AuthServlet extends HttpServlet {
         JSONObject jsonObject = new JSONObject();
         boolean sendEmail = true;
         String email = null;
+        int failCount = 0;
+
         try{
 
             jsonObject.put("errorCode","98");
@@ -159,6 +161,8 @@ public class AuthServlet extends HttpServlet {
             DataObject studentUserProfileDetail = DaoFactory.getDefaultDataObject("Student_UserProfileDetail");
             studentUserProfileDetail.setValue("AplyIdNo",id);
 
+            //錯誤次數
+
             if(dao.querySingle(studentUserProfile,null) && dao.querySingle(studentUserProfileDetail,null)) {
 
                 String dbUserId = studentUserProfile.getValue("UserId");
@@ -167,22 +171,33 @@ public class AuthServlet extends HttpServlet {
                 email = studentUserProfileDetail.getValue("AplyEmail");
 
                 if(StringUtils.isEmpty(dbLoginFailCount)) dbLoginFailCount = "0";
-                int failCount = Integer.parseInt(dbLoginFailCount);
+                failCount = Integer.parseInt(dbLoginFailCount);
 
-                //如果登入失敗超過3次就直接擋掉
-                if(failCount >= 3) {
-                    jsonObject.put("failCount", failCount + "");
-                    jsonObject.put("errorMsg", "使用者密碼連續輸入錯誤三次，已被鎖定 ");
+                //TODO 待HSM開欄位
+                if("Y".equalsIgnoreCase(studentUserProfile.getValue("IS_HSM"))) {
+
                 }
                 else {
-                    //TODO 待HSM開欄位
-                    if("Y".equalsIgnoreCase(studentUserProfile.getValue("IS_HSM"))) {
+                    String s = id + "-" + userPwd;
+                    String md5Password = DigestUtils.md5Hex(s.toUpperCase());
 
+                    //如果登入失敗超過3次就直接擋掉
+                    if(failCount >= 3) {
+
+                        jsonObject.put("errorMsg", "使用者密碼連續輸入錯誤三次，已被鎖定 ");
+
+                        //如果帳密還是不對，次數往上加，超過5次要額外發信
+                        if(!md5Password.equalsIgnoreCase(dbPassword)) {
+                            //密碼錯誤時，要回寫DB記錄次數
+                            failCount++;
+
+                            studentUserProfile.setValue("LoginFailCount",failCount + "");
+                            dao.update(studentUserProfile);
+                        }
+
+                        jsonObject.put("failCount", failCount + "");
                     }
                     else {
-                        String s = id + "-" + userPwd;
-                        String md5Password = DigestUtils.md5Hex(s.toUpperCase());
-
                         if(userId.equalsIgnoreCase(dbUserId)) {
 
                             if(md5Password.equalsIgnoreCase(dbPassword)) {
@@ -329,6 +344,7 @@ public class AuthServlet extends HttpServlet {
                                     jsonObject.put("errorMsg", "使用者密碼連續輸入錯誤三次，已被鎖定");
                                 }
 
+
                                 jsonObject.put("failCount", failCount + "");
 
                             }
@@ -337,9 +353,12 @@ public class AuthServlet extends HttpServlet {
                         else {
                             jsonObject.put("errorMsg", "身分證字號或使用者代碼錯誤");
                         }
-
                     }
+
+
+
                 }
+//                }
 
 
             }
@@ -372,6 +391,18 @@ public class AuthServlet extends HttpServlet {
                 mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
 
                 MessageUtils.sendEmail(mailBean);
+
+                //錯誤超過5次時，額外發送
+                if(failCount >= 5) {
+                    mailBean = new MailBean("login");
+                    mailBean.setReceiver(email);
+                    mailBean.setTitle(MessageUtils.loginFailTitle);
+                    mailBean.addResultParam("errorCode","98");
+                    mailBean.addResultParam("result","使用者代碼輸入錯誤五次");
+                    mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
+
+                    MessageUtils.sendEmail(mailBean);
+                }
             }catch(Exception e) {
                 e.printStackTrace();
             }
@@ -444,15 +475,12 @@ public class AuthServlet extends HttpServlet {
                     boolean hasPreiod = (Long.parseLong(today) >= Long.parseLong(applySDate) && Long.parseLong(today) <= Long.parseLong(applyEDate));
 
                     //先取得「本學期」申請資料
-                    Map<String,String> queryMap = null;
-                    if(hasPreiod) {
-                        queryMap = new HashMap<String,String>();
-                        queryMap.put("EduYear",eduYearInfo.get("eduYear"));
-                        queryMap.put("Semester",eduYearInfo.get("semester"));
-                    }
+                    Map<String,String> queryMap = new HashMap<String,String>();
+                    queryMap.put("EduYear",eduYearInfo.get("eduYear"));
+                    queryMap.put("Semester",eduYearInfo.get("semester"));
 
-                    //如果不在本學期的對保期間，也就不用查這學期的申請案件
-                    DataObject aplyMemberData = queryMap != null ? ProjUtils.getAplyMemberTuitionLoanData(userId,queryMap,dao) : null;
+                    //查這學期的申請案件
+                    DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanData(userId,queryMap,dao);
 
                     //撈1-2草稿
                     String apply1_2DraftXML = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);

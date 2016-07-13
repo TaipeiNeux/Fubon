@@ -1,4 +1,4 @@
-
+<%@ page import="org.apache.commons.lang3.StringUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
 <%
@@ -11,6 +11,21 @@
 <div class="mobileMenu">
     <%@ include file="include/mobile_menu.jsp" %>
 </div>
+
+<%
+    String hasAccount = StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
+    String isArrears = loginUserBean.getCustomizeValue("isArrear"); //是否不欠款
+    String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N"; //有無線上註記
+
+    if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears)) {
+        request.getRequestDispatcher("noPermit.jsp?typeId=1&name=查詢「我的貸款」").forward(request,response);
+    }
+    else if("N".equalsIgnoreCase(isEtabs)) {
+        request.getRequestDispatcher("noPermit.jsp?typeId=2&name=查詢「我的貸款」").forward(request,response);
+    }
+    else{
+
+%>
 
   <div class="wrapper">
 
@@ -63,3 +78,7 @@
   </div>
 </body>
 <script src="js/prog/myloan.js"></script>
+
+<%
+    }
+%>

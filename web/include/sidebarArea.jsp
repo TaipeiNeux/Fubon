@@ -15,7 +15,7 @@
   </ul>
 </div>
 
-<div class="QandAtab"><a href="sub_1.jsp?target=4" target="_blank" class="underline">Q <br>& <br>A</a></div>
+<div class="QandAtab"><a href="sub_1.jsp?target=4" target="_blank" class="">Q <br>& <br>A</a></div>
 <!-- Edit by JiaRu 160604：另開分頁
 <div class="QandAContent">
   <div class="QAListArea">

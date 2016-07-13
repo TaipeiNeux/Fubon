@@ -46,9 +46,11 @@ $(document).ready(function() {
 			
 				if(hasAccount == 'N' || isArrears == 'N') {
                     redirectNoPermit('1','「延後/提前還款」');
+					goNextStep = false;
                 }
                 else if(isEtabs == 'N') {
                     redirectNoPermit('2','「延後/提前還款」');
+					goNextStep = false;
                 }
 				else {
 					goNextStep = true;

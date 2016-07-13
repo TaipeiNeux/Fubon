@@ -36,7 +36,7 @@ if($('.QAListTab').length != 0) {
 			
 			if ($(window).width() < 768) {
 				$('.QAArea_s').hide();
-								
+				
 				if(isActive) {
 					$this.removeClass('active');
 					$('.QAArea_s.' + target).hide();

@@ -160,31 +160,30 @@ function deferment_1_valid() {
             errorDel: [],
             customizeFun: function(customizeValidResult) {
                 var current = new Date();
-                var currentYear = current.getFullYear() - 1911;   //現在的年
-                var currentMonth = current.getMonth() + 1;        //現在的月
-                var currentDay = current.getDate();               //現在的日
-                var selectYearInput = $('[name="selectYear"]');       //輸入的年
-				var fullYearInput = parseInt(selectYearInput.val()) + 1911;
-                var selectMonthInput = $('[name="selectMonth"]');     //輸入的月
-                var monthInput = parseInt(selectMonthInput.val()) - 1;   
-                var selectDayInput = $('[name="selectDay"]');         //輸入的日
+                var currentYear = current.getFullYear() - 1911; //現在的年
+                var currentMonth = current.getMonth() + 1; //現在的月
+                var currentDay = current.getDate(); //現在的日
+                var selectYearInput = $('[name="selectYear"]'); //輸入的年
+                var fullYearInput = parseInt(selectYearInput.val()) + 1911;
+                var selectMonthInput = $('[name="selectMonth"]'); //輸入的月
+                var monthInput = parseInt(selectMonthInput.val()) - 1;
+                var selectDayInput = $('[name="selectDay"]'); //輸入的日
                 var eliIndex_hidden = $('[name="eliIndex"]');
-                
-                var future = new Date(current.getFullYear()+10, current.getMonth(), current.getDate());
-				var pass = new Date(current.getFullYear()-5, current.getMonth(), current.getDate());
-				var input = new Date(fullYearInput, monthInput, selectDayInput.val());
-				
+
+                var future = new Date(current.getFullYear() + 10, current.getMonth(), current.getDate());
+                var pass = new Date(current.getFullYear() - 5, current.getMonth(), current.getDate());
+                var input = new Date(fullYearInput, monthInput, selectDayInput.val());
+
                 //選項1、2、4、5，控管年月日不得早於系統日且只能晚於系統日十年內
                 if (eliIndex_hidden.val() == '1' || eliIndex_hidden.val() == '2' || eliIndex_hidden.val() == '4' || eliIndex_hidden.val() == '5') {
-                    var divFuture = Math.round((future-input)/(1000*60*60*24));
-                    var divCurrent = Math.round((input-current)/(1000*60*60*24));
-                    if( divFuture < 0 ){
-						customizeValidResult.push({
+                    var divFuture = Math.round((future - input) / (1000 * 60 * 60 * 24));
+                    var divCurrent = Math.round((input - current) / (1000 * 60 * 60 * 24));
+                    if (divFuture < 0) {
+                        customizeValidResult.push({
                             obj: $('[name="selectYear"]'),
                             msg: '不得晚於系統日十年'
                         });
-					}
-                    else if( divCurrent < -1 ){
+                    } else if (divCurrent < -1) {
                         customizeValidResult.push({
                             obj: $('[name="selectYear"]'),
                             msg: '不得早於系統日'
@@ -193,13 +192,13 @@ function deferment_1_valid() {
                 }
                 //選項6、7，控管年月日不得早於系統日5年
                 else if (eliIndex_hidden.val() == '6' || eliIndex_hidden.val() == '7') {
-                    var divSec = Math.round((input-pass)/(1000*60*60*24));
-					if( divSec < 0 ){
-						customizeValidResult.push({
+                    var divSec = Math.round((input - pass) / (1000 * 60 * 60 * 24));
+                    if (divSec < 0) {
+                        customizeValidResult.push({
                             obj: $('[name="selectYear"]'),
                             msg: '不得早於系統日五年'
                         });
-					}
+                    }
                 }
             }
         });
@@ -279,21 +278,20 @@ function deferment_2_valid() {
             }
         }
     }
-    
+
     //檢查上傳文件合計大小是否超過10MB
     var size = $('.fileSize');
     var sizeSum = 0;
-    for(var i = 0; i <= size.length -1; i++){
+    for (var i = 0; i <= size.length - 1; i++) {
         var thisSize = size.eq(i).val();
-        if(thisSize != ''){
+        if (thisSize != '') {
             sizeSum = sizeSum + parseInt(thisSize);
         }
     }
-    if(sizeSum > 10000000){
-       $('#documentSize').show();
+    if (sizeSum > 10000000) {
+        $('#documentSize').show();
         result = false;
-    }
-    else{
+    } else {
         $('#documentSize').hide();
         result = true;
     }
@@ -570,90 +568,10 @@ function deferment_3_2(content) {
         deadline_class: 'applyDate'
     });
 
-    /*checkArr.push(applyMonth, applyDay, applyHours, applyMinutes, applySeconds);
-    $.each(checkArr, function(index, value) {
-        if (value < 10) {
-            value = "0" + value;
-            switch (index) {
-                case 0:
-                    applyMonth = value;
-                    break;
-                case 1:
-                    applyDay = value;
-                    break;
-                case 2:
-                    applyHours = value;
-                    break;
-                case 3:
-                    applyMinutes = value;
-                    break;
-                case 4:
-                    applySeconds = value;
-                    break;
-            }
-        }
+    $('#modal_deferment_3_2').on('hide.bs.modal', function() {
+        window.location = 'deferment.jsp?step=deferment3_1';
     });
 
-
-    var date = applyYear + '/' + applyMonth + '/' + applyDay + ' ' + applyHours + ':' + (applyMinutes + 5) + ':' + applySeconds;
-
-    var min = $('#mins').text();
-    var sec = $('#sec').text();
-    var img = $('#img');
-
-    $('#applyDate').text(date);
-    $('#mobile').text(mobile);
-
-    $('[name="codeInput"]').attr('maxlength', '6');
-
-    img.attr('src', imgSrc);
-
-    //倒數
-    var countdown = function() {
-        $('#sec').text($('#sec').text() - 1);
-		if( $('#sec').text() < 10 && $('#sec').text() > 0 ){
-			
-			$('#sec').text('0' + $('#sec').text());
-		}
-        if ($('#sec').text() == 0) {
-            $('#sec').text(59);
-            $('#mins').text($('#mins').text() - 1);
-            min = min - 1;
-            if (min < 0) {
-                $('#mins').text(0);
-                $('#sec').text('00');
-	*/
-    /*GardenUtils.display.popup({
-					title : '我是標題',
-	                content : '哈哈哈',
-	                closeCallBackFn : function(){
-					
-						alert('我被關了！');
-						 clearInterval(start);
-						window.location = 'deferment.jsp?step=deferment3_1';
-					},
-	                showCallBackFn : function(){},
-	                isShowSubmit : true,
-	                isShowClose : true
-				});*/
-
-
-    /*			$("#modal_deferment_3_2").modal('show');
-
-				//按下確定後,關掉彈跳訊息及轉導到前一步驟
-	            $("#modal_deferment_3_2 a.submitBtn").on('click', function(){
-	                $("#modal_deferment_3_2").modal('hide');
-					
-					window.location = 'deferment.jsp?step=deferment3_1';
-	            }); 
-		
-                clearInterval(start);
-				
-            }
-        }
-    }
-
-    var start = setInterval(countdown, 1000);*/
 }
 
 function deferment_4(content) {
@@ -722,19 +640,26 @@ function deferment_4(content) {
 
 //綁上傳事件
 function uploadEvent() {
+    $('input[type="file"]').on('click', function(ev) {
+        if ($('.ajax-loader').length == 0) {
+            $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+        }
+        $('.ajax-loader').show();
+    });
+
     $('input[type="file"]').on('change', function(ev) {
         ev.preventDefault();
-		
+
         var inputFile = $(this);
         var inputFileName = inputFile.attr('name');
         var inputTitle = inputFileName.split('F')[0];
-        var inputHidden = $('[name="'+inputTitle+'_hidden"]');
+        var inputHidden = $('[name="' + inputTitle + '_hidden"]');
         var tr = inputFile.parents('tr:first');
         var selected_file_name = $(this).val();
-		var fileSize = inputFile.context.files[0].size;
-		
+        var fileSize = inputFile.context.files[0].size;
+
         //checkSize(fileSize);
-        
+
 
         console.debug(fileSize);
         console.debug(selected_file_name.substr(-3, 3));
@@ -750,11 +675,14 @@ function uploadEvent() {
         if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
             $('#documentType').show();
             $('#documentLength').hide();
+            $('.ajax-loader').hide();
         } else {
             $('#documentType').hide();
+            $('.ajax-loader').hide();
             if (thisFileName.length > 24) {
                 $('#documentLength').show();
                 $('#documentType').hide();
+                $('.ajax-loader').hide();
             }
             // not click cancel
             else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
@@ -773,7 +701,7 @@ function uploadEvent() {
                     console.debug(response);
 
                     if (response.isSuccess == 'Y') {
-						inputHidden.val(fileSize);
+                        inputHidden.val(fileSize);
                         tr.find('td.file-upload a').text('修改檔案');
                         tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
                         tr.find('td.file-en').text(response.src);
@@ -787,11 +715,15 @@ function uploadEvent() {
                         tr.next('tr').find('iframe').attr("src", newURL);
                         tr.find('td.file-photo img').attr("src", newURL);
 
+                        $('.ajax-loader').hide();
+
                     } else {
                         if (selected_file_name != '') alert('Upload Fail!!');
                         form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
+
+                        $('.ajax-loader').hide();
                     }
-                 });
+                });
             }
         }
 
@@ -1171,7 +1103,7 @@ function showUploadFiles(content, hasRadio) {
             }*/
         }
     });
-    
+
     studentIdNegativeView.on('click', function() {
         if (studentIdNegativeView.hasClass('active')) {
 
@@ -1216,14 +1148,14 @@ function additionItem(additionalFile, additionalFile_docId, additionalFileURL) {
         if (studentIdNegativeView.hasClass('active')) {
             previewDocument($('#add iframe').attr('src'));
 
-        /*if (additionalView.hasClass('active')) {
-                  if ($("#add").is(":hidden")) {
-                      clickView.hide();
-                      $('#add').show();
-                  } else {
-                      $('#add').hide();
-                  }
-              }*/
+            /*if (additionalView.hasClass('active')) {
+                      if ($("#add").is(":hidden")) {
+                          clickView.hide();
+                          $('#add').show();
+                      } else {
+                          $('#add').hide();
+                      }
+                  }*/
         }
     });
 }

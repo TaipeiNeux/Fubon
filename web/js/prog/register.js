@@ -35,6 +35,9 @@ function register1(content){
 
     $('.memberTerms').append( content.memberTerms );
     $('.obligations').append( content.obligations );
+	
+	$('[name="memberTermsNo"]').val( content.memberTermsNo );
+    $('[name="obligationsNo"]').val( content.obligationsNo );
     
     /** toogle click **/
     $('.toggleBtn a.green').on('click', function(ev){

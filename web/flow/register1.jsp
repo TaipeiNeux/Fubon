@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <% request.setCharacterEncoding("utf-8"); %>
 
+<input type="hidden" name="memberTermsNo" value=""/>
+<input type="hidden" name="obligationsNo" value=""/>
+
 <h3 class="snopy deg gabymargin0">台北富邦商業銀行股份有限公司高級中等以上學校學生就學貸款會員條款</h3>
 <div class="moArea memberTerms"></div>
 <div class="toggleBtn" toggleTarget="memberTerms">

@@ -28,21 +28,21 @@
         <img src="img/fu-08.png" alt="">
       </span>
       <input name="studentId" placeholder="身分證字號" type="text" maxlength="10">
-	  <label class="error-msg"></label>
+	  <label class="error error-msg"></label>
     </div>
     <div class="inputArea">
       <span>
         <img src="img/fu-09.png" alt="">
       </span>
       <input name="studentCode" placeholder="使用者代碼" type="password" maxlength="10">
-	  <label class="error-msg"></label>
+	  <label class="error error-msg"></label>
     </div>
     <div class="inputArea">
       <span>
         <img src="img/fu-10.png" alt="">
       </span>
       <input name="studentPassword" placeholder="使用者密碼" type="password" maxlength="16">
-	  <label class="error-msg"></label>
+	  <label class="error error-msg"></label>
     </div>
     <div class="loginBtn">
       <a href="javascript:;" class="pobtn-srb">登入</a>

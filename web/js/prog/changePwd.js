@@ -119,6 +119,10 @@ function changePwd2_2(content){
         deadline_class: 'deadline' 
     });
     
+    $('#modal_changePwd_2_2').on('hide.bs.modal', function () {
+        window.location = 'changePwd.jsp?step=changePwd2_1';
+    });
+    
     /*countdown({
         minute: 4,
         second: 59,

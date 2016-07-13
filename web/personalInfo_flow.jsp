@@ -1,11 +1,14 @@
 <%@ page import="com.neux.utility.utils.jsp.info.JSPQueryStringInfo" %>
 <%@ page import="com.neux.utility.utils.jsp.JSPUtils" %>
+<%@ page import="org.apache.commons.lang3.StringEscapeUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%@ include file="include/head.jsp" %>
 <%
     request.setCharacterEncoding("utf-8");
     JSPQueryStringInfo queryStringInfo = JSPUtils.setParams(request,false);
     String step = queryStringInfo.getParam("step");
+
+    step = StringEscapeUtils.escapeHtml4(step);
 %>
 <script src="js/jquery-ui.min.js"></script>
 <body class="apply_1_step1">

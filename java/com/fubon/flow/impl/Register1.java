@@ -3,6 +3,7 @@ package com.fubon.flow.impl;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.ProjUtils;
 import com.neux.garden.dbmgr.DaoFactory;
+import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.dom4j.Document;
@@ -24,9 +25,16 @@ public class Register1 implements ILogic {
 //        String obligations = "<ol> <li> 台北富邦商業銀行（以下稱本行）依據個人資料保護法（下稱個資法）規定，應向台端告知下列事項，請台端詳閱： </li> <li> <div class=\\\"left\\\"><b>一、蒐集之目的：</b></div> <div class=\\\"right\\\"><ol> <li> 核貸與授信業務（088）、授信業務（106）、徵信（154）、存款與匯款（036）、行銷（包含金控共同行銷業務）（040）、金融服務業依法令規定及金融監理需要，所為之蒐集處理及利用（059）、金融爭議處理（060）、非公務機關依法定義務所進行個人資料之蒐集處理及利用（063）、契約、類似契約或其他法律關係事務（069）、借款戶與存款戶存借作業綜合管理（082）、消費者、客戶管理與服務（090）、消費者保護（091）、帳務管理及債權交易業務（104）、會計與相關服務（129）、資（通）訊與資料庫管理（136）、調查、統計與研究分析（157）、其他金融管理業務（177）、其他經營合於營業登記項目或組織章程所定之業務（181）、其他諮詢與顧問服務（182）等。 </li> </ol> </li> <li> <div class=\\\"left\\\"><div class=\\\"left\\\"><b>二、蒐集之個人資料類別：</b></div> <div class=\\\"right\\\"><ol> <li> 識別類（C001辨識個人者、C002辨識財務者、C003政府資料中之辨識者）；特徵類（C011個人描述）；家庭情形（C021家庭情形、C023家庭其他成員之細節）；社會情況（C032財產、C038職業）；教育、考選、技術或其他專業（C052資格或技術）；受僱情形（C061現行之受僱情形、C068薪資與預扣款）；財務細節（C081收入、所得、資產與投資、C082負債與支出、C083信用評等、C084貸款、C086票據信用）等，具體事項如姓名、身分證統一編號、聯絡方式等基本資料，及詳如各業務申請書及契約書等內容，並包括台端往來之帳務資料、交易資料、信用資料、保險資料、投資資料及親屬資料。 </li> </ol> </li> <li> <div class=\\\"left\\\"><b>三、個人資料利用之期間、地區、對象、方式及本行蒐集個人資料之來源：</b></div> <div class=\\\"right\\\"><ol> <li> （一）期間：個人資料蒐集之特定目的存續期間/依相關法令規定或契約約定之保存年限（如：商業會計法等）/本行因執行業務所必須之保存期間。 </li> <li> （二）地區：本國、本行海外分支機構所在地、通匯行所在地、未受中央目的事業主管機關限制之國際傳輸個人資料之接收者所在地、本行業務委外機構所在地、與本行有業務往來之機構營業處所所在地。 </li> <li> （三）對象：本行、本行海外分支機構、通匯行、金融聯合徵信中心、財金資訊公司、信用保證機構、業務委外機構、未受中央目的事業主管機關限制之際傳輸個人資料之接收者、本行所屬金控公司、本行之共同行銷或交互運用客戶資料之公司、本行合作推廣之單位、其他與本行有業務往來之機構、依法有調查權機關或金融監理機關。 </li> <li> （四）方式：以自動化機器或其他非自動化之利用方式。 </li> <li> （五）前開（三）所列個人資料利用之對象，亦為本行蒐集個人資料之來源。 </li> </ol> </li> <li> <div class=\\\"left\\\"><b>四、依據個資法第三條規定，台端就本行保有台端之個人資料得行使下列權利：</b></div> <div class=\\\"right\\\"><ol> <li> （一）得向本行查詢、請求閱覽或請求製給複製本，而本行依法得酌收必要成本費用。 </li> <li> （二）得向本行請求補充或更正，惟依法台端應為適當之釋明。 </li> <li> （三）得向本行請求停止蒐集、處理或利用及請求刪除，惟依法本行因執行業務所必須者，得不依台端請求為之。 </li> </ol> </li> <li> <div class=\\\"left\\\"><b>五、台端不提供個人資料所致權益之影響：</b></div> <div class=\\\"right\\\"><ol> <li> 台端得自由選擇是否提供相關個人資料，惟台端若拒絕提供相關個人資料，本行將無法進行必要之審核及處理作業，致無法提供台端相關服務。 </li> </ol> </li> <li> <div class=\\\"left\\\"><b>六、台端可以隨時撥打服務專線0800-099-799或（02）8751-1313，要求拒絕接受行銷。 </b></div> </li> <li> <div class=\\\"left\\\"><b>七、有關本行基於「行銷(包含金控共同行銷業務)」之目的對台端姓名或地址以外之其他資料外之個人資料所為之行銷建檔、揭露、轉介或交互運用，本行將依照「金融控股公司子公司間共同行銷管理辦法」，另行與台端約定，並由台端自行選擇是否同意。 </b></div> </li> <li> 經 貴行向本人告知上開事項，本人已清楚瞭解 貴行蒐集、處理、利用本人個人資料之來源、目的及用途。 </li> </ol>";
 
         IDao dao = DaoFactory.getDefaultDao();
-        String memberTerms = ProjUtils.getHtmlContent(dao,"memberTerms");
-        String obligations = ProjUtils.getHtmlContent(dao,"obligations");
+        DataObject memberTermsObject = ProjUtils.getHtmlContent(dao,"memberTerms");
+        DataObject obligationsObject = ProjUtils.getHtmlContent(dao,"obligations");
 
+        String memberTerms = memberTermsObject.getValue("Content");
+        String obligations = obligationsObject.getValue("Content");
+        String memberTermsNo = memberTermsObject.getValue("No");
+        String obligationsNo = obligationsObject.getValue("No");
+
+        content.put("memberTermsNo",memberTermsNo);
+        content.put("obligationsNo",obligationsNo);
         content.put("memberTerms",memberTerms);
         content.put("obligations",obligations);
 

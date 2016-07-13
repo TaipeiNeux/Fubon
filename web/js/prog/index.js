@@ -431,6 +431,9 @@ g_ajax({
                 modal.resetApply();
                 window.location = 'apply.jsp';
             });
+			
+			$('#isLogin').show();
+			$('.loginArea').show();
         }
 		
 		var getDefaultAddress = modal.getDefaultAddress();

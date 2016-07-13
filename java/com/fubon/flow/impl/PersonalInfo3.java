@@ -83,6 +83,9 @@ public class PersonalInfo3 implements ILogic {
             if(root.element("zipCode") != null) teleAddressZipCode = root.element("zipCode").getText();
             if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
 
+            if(StringUtils.isNotEmpty(birthday)) {
+                birthday = StringUtils.replace(birthday,"/","");
+            }
 
             //半形轉全形
             name = ProjUtils.toChanisesFullChar(name);

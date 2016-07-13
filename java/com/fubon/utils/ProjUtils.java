@@ -802,11 +802,11 @@ public class ProjUtils {
 
             aplyMemberDataObject.setValue("FamilyStatus",familyStatusLevel1 + "_" + familyStatusLevel2);
 
-            if(isFaGuarantor) {
+            if(StringUtils.isNotEmpty(faID)) {
 
                 String faBirthday = ProjUtils.toDraftBirthday(apply2Root.element("father_birthday0").getText(),apply2Root.element("father_birthday2").getText(),apply2Root.element("father_birthday4").getText());
 
-                aplyMemberDataObject.setValue("Fa_Status", "");                           // 父親-現況
+                aplyMemberDataObject.setValue("Fa_Status", "1");                           // 父親-現況
                 aplyMemberDataObject.setValue("Fa_Name", apply2Root.element("father_name") != null ? apply2Root.element("father_name").getText() : "");     // 父親-姓名
                 aplyMemberDataObject.setValue("Fa_IdNo", apply2Root.element("father_id") != null ? apply2Root.element("father_id").getText().toUpperCase() : "");
                 aplyMemberDataObject.setValue("Fa_FrgnFlag", isForeignId(aplyMemberDataObject.getValue("Fa_IdNo")) ? "Y" : "N");                           // 父親-外籍人士註記// 父親-身分證字號
@@ -823,10 +823,10 @@ public class ProjUtils {
             }
 
 
-            if(isMaGuarantor) {
+            if(StringUtils.isNotEmpty(maID)) {
                 String maBirthday = ProjUtils.toDraftBirthday(apply2Root.element("mother_birthday0").getText(),apply2Root.element("mother_birthday2").getText(),apply2Root.element("mother_birthday4").getText());
 
-                aplyMemberDataObject.setValue("Ma_Status", "");                           // 母親-現況
+                aplyMemberDataObject.setValue("Ma_Status", "1");                           // 母親-現況
                 aplyMemberDataObject.setValue("Ma_Name", apply2Root.element("mother_name") != null ? apply2Root.element("mother_name").getText() : "");                               // 母親-姓名
                 aplyMemberDataObject.setValue("Ma_IdNo", apply2Root.element("mother_id") != null ? apply2Root.element("mother_id").getText().toUpperCase() : "");                               // 母親-身分證字號
                 aplyMemberDataObject.setValue("Ma_FrgnFlag", isForeignId(aplyMemberDataObject.getValue("Ma_IdNo")) ? "Y" : "N");                           // 母親-外籍人士註記
@@ -843,10 +843,11 @@ public class ProjUtils {
             }
 
 
-            if(isGdGuarantor) {
+            if(StringUtils.isNotEmpty(thirdPartID)) {
                 String gdBirthday = ProjUtils.toDraftBirthday(apply2Root.element("thirdParty_birthday0").getText(),apply2Root.element("thirdParty_birthday2").getText(),apply2Root.element("thirdParty_birthday4").getText());
+                String thirdPartyRelationship = apply2Root.element("thirdParty_relationship") != null ? apply2Root.element("thirdParty_relationship").getText() : "";
 
-                aplyMemberDataObject.setValue("Gd1_Rel", "");                           // 監護人-現況
+                aplyMemberDataObject.setValue("Gd1_Rel",thirdPartyRelationship);
                 aplyMemberDataObject.setValue("Gd1_Name", apply2Root.element("thirdParty_name") != null ? apply2Root.element("thirdParty_name").getText() : "");                               // 監護人-姓名
                 aplyMemberDataObject.setValue("Gd1_IdNo", apply2Root.element("thirdParty_id") != null ? apply2Root.element("thirdParty_id").getText().toUpperCase() : "");                               // 監護人-身分證字號
                 aplyMemberDataObject.setValue("Gd1_FrgnFlag", isForeignId(aplyMemberDataObject.getValue("Gd1_IdNo")) ? "Y" : "N");                           // 監護人-外籍人士註記
@@ -863,7 +864,7 @@ public class ProjUtils {
 
             }
 
-            if(isPaGuarantor) {
+            if(StringUtils.isNotEmpty(spouseId)) {
                 String paBirthday = ProjUtils.toDraftBirthday(apply2Root.element("spouse_birthday0").getText(),apply2Root.element("spouse_birthday2").getText(),apply2Root.element("spouse_birthday4").getText());
 
                 aplyMemberDataObject.setValue("Pa_Name", apply2Root.element("spouse_name") != null ? apply2Root.element("spouse_name").getText() : "");                               // 配偶-姓名
@@ -2064,19 +2065,17 @@ public class ProjUtils {
     }
 
     //讀取HtmlContent
-    public static String getHtmlContent(IDao dao,String htmlId) throws Exception {
-
-        String content = "";
+    public static DataObject getHtmlContent(IDao dao,String htmlId) throws Exception {
 
         DataObject htmlContent = DaoFactory.getDefaultDataObject("HtmlContent");
         if(htmlContent != null && StringUtils.isNotEmpty(htmlId)) {
             htmlContent.setValue("HtmlId",htmlId);
             if(dao.querySingle(htmlContent,null)) {
-                content = htmlContent.getValue("Content");
+                return htmlContent;
             }
         }
 
-        return content;
+        return null;
     }
 }
 

@@ -1,9 +1,10 @@
 //八種招呼語的判斷
 function eightGreeting() {
     var jsonLoginStatus = modal.getLoginStatus();
+    var allObj;
     console.debug(jsonLoginStatus);
 	if(jsonLoginStatus.content.appCases == 'Y' && jsonLoginStatus.content.kindOfCases == '2'){
-		var allObj = determineCarryObj(jsonLoginStatus);
+		allObj = determineCarryObj(jsonLoginStatus);
 	}
 	
     if (jsonLoginStatus.isLogin == 'Y') {
@@ -72,6 +73,7 @@ function eightGreeting() {
         var currentDateM = currentDate.getMonth() + 1;
         var currentDateD = currentDate.getDate();
         var overTwoMonth;
+        
 
         if (semester == '1') { //上學期
             if (currentDateM - firstMonthEnd > 2) {
