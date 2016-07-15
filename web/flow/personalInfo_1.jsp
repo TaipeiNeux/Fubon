@@ -16,6 +16,7 @@
 			<input type="hidden" name="email_hidden" value=""/>
 			<input type="hidden" name="domicileAddress_hidden" value=""/>
 			<input type="hidden" name="teleAddress_hidden" value=""/>
+			<input type="hidden" name="isRecord_hidden" value=""/>
 			
             <div class="sandy">
                 <p>身分證字號</p>
@@ -23,7 +24,8 @@
             </div>
             <div class="sandy twoDiv">
                 <p>姓名</p>
-                <p class="susi" id="joyName"></p>
+				<input type="text" class="input_m" name="joyName" id="joyName" maxlength="20">
+       
             </div>
            <div class="sandy threeDiv" id="birth_tmp_1" style='display:none;'>
                 <p>生日</p>

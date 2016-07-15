@@ -91,7 +91,7 @@
                                     <span class="star star_1"> 起 </span>
                                     <div class="input_date">
                                         <div class='input-group date mydatetimepicker' id='datetimepicker1'>
-                                            <input type="text" class="form-control" placeholder="YYYY/MM/DD" readonly/>
+                                            <input type="text" class="form-control" placeholder="YYYY/MM/DD"/>
                         <span class="input-group-addon">
                           <span class="datIcon"></span>
                         </span>
@@ -102,7 +102,7 @@
                                     <span class="star star_2"> 至 </span>
                                     <div class="input_date">
                                         <div class='input-group date mydatetimepicker' id='datetimepicker2'>
-                                            <input type="text" class="form-control" placeholder="YYYY/MM/DD" readonly/>
+                                            <input type="text" class="form-control" placeholder="YYYY/MM/DD"/>
                         <span class="input-group-addon">
                           <span class="datIcon"></span>
                         </span>

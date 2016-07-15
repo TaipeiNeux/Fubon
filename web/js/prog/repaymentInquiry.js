@@ -37,6 +37,14 @@ var RepaymentInquiry_controller = (function(){
 			            end_d = today_d, end_m = today_m, end_y = today_y;
 			        var start_str = start_y+"/"+start_m+"/"+start_d,
 			            end_str = end_y+"/"+end_m+"/"+end_d;
+						
+					//小網時,不可自行查詢日期
+					if ($(window).width() <= 768) {
+						$('#datetimepicker1 .form-control').attr('readonly', true);
+						$('#datetimepicker2 .form-control').attr('readonly', true);
+					}
+						
+						
 
 			        //綁定點選小日曆的事件讓它變藍色
 			        $('#datetimepicker1 .input-group-addon').off('click').on('click',function(ev){
@@ -336,7 +344,7 @@ var RepaymentInquiry_view = (function(){
 
     var account_selection = function(accounts,data){
 
-			var options = '';
+			var options = '<option>請選擇</option>';
 
             for(var i =0;i<accounts.length;i++) {
                 options += '<option>'+accounts[i]+'</option>';			

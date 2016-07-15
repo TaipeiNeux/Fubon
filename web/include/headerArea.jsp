@@ -48,6 +48,7 @@
 
 %>
 
+<p id="tokenKey" style="display:none;"></p>
 
 <div class="navIcon">
     <!--<a href="#left_menu_area"></a>-->

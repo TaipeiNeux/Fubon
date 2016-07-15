@@ -1,10 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
 
-        <input type="hidden" name="idCardPositionHidden" value="" />
+        <!--<input type="hidden" name="idCardPositionHidden" value="" />
         <input type="hidden" name="idCardNegativeHidden" value="" />
         <input type="hidden" name="registrationHidden" value="" />
-        <input type="hidden" name="lowIncomeHidden" value="" />
+        <input type="hidden" name="lowIncomeHidden" value="" />-->
+		
+		<input type="hidden" class="fileSize" name="idCardPosition_hidden" value="">
+       <input type="hidden" class="fileSize" name="idCardNegative_hidden" value="">
+       <input type="hidden" class="fileSize" name="registration_hidden" value="">
+       <input type="hidden" class="fileSize" name="lowIncome_hidden" value="">
+	   
+	   <input type="hidden" name="idCardPositionViewName_hidden" value="">
+       <input type="hidden" name="idCardNegativeViewName_hidden" value="">
+       <input type="hidden" name="registrationViewName_hidden" value="">
+       <input type="hidden" name="lowIncomeViewName_hidden" value="">
 
         <h4 class="bsc">請上傳以下文件
             <a href="" data-toggle="modal" data-target="#pleaseUpload">

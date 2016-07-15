@@ -7,6 +7,12 @@
        <input type="hidden" class="fileSize" name="studentIdPositive_hidden" value="">
        <input type="hidden" class="fileSize" name="studentIdNegative_hidden" value="">
        <input type="hidden" class="fileSize" name="additional_hidden" value="">
+	   
+	   <input type="hidden" name="idPositiveViewName_hidden" value="">
+       <input type="hidden" name="idNegativeViewName_hidden" value="">
+       <input type="hidden" name="studentIdPositiveViewName_hidden" value="">
+       <input type="hidden" name="studentIdNegativeViewName_hidden" value="">
+       <input type="hidden" name="additionalViewName_hidden" value="">
 
         <h3 class="snopy pen">申請原因
                 <div class="editBtnBoxbottom">

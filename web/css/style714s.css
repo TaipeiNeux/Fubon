@@ -3659,11 +3659,10 @@ a[class^="pobtn-"]:hover {
 }
 
 body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
-    width: 40px\9\0;
-    /* for ie9 */
+    width: 40px\9\0;       /* for ie9 */
     padding: 6px 0\9\0;
-    text-align: center;
-}
+    text-align: center;  
+} 
 
 .wrapper .input_f {
     max-width: 105px;
@@ -6456,16 +6455,18 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
 
 .QAListArea {
     padding: 0;
-    max-height: none!important;
 }
 
-.QAListTab {}
+.QAListTab {
+   
+}
 
 .QAListTab > ul {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     padding: 0 15px;
+   
 }
 
 .QAListTab > ul:after {
@@ -22450,17 +22451,22 @@ body.forgetPassword_4 .nina {
         padding: 10px 1%;
     }
 }
+
 .kim div:nth-child(3) a {
     cursor: default;
 }
+
 body.apply_00 .modal-dialog .modal-content .modal-body .left p {
     text-align: left;
 }
+
+
 @media (min-width:769px) {
     .kim div:nth-child(3) a img,
     .kim div:nth-child(3) a {
         position: relative;
     }
+    
     .kim .whiteLine hr {
         height: 15px;
         background: #fff;
@@ -22471,6 +22477,7 @@ body.apply_00 .modal-dialog .modal-content .modal-body .left p {
         border: none;
     }
 }
+
 @media (max-width:1024px) and (min-width:769px) {
     .kim .whiteLine hr {
         top: 5%;
@@ -22478,6 +22485,7 @@ body.apply_00 .modal-dialog .modal-content .modal-body .left p {
 }
 
 /* very important don't touch please!!!!!!!!!!!!! */
+
 .modal-body a.hyperlink {
     color:#0E89CB;
     background: none;
@@ -22486,18 +22494,10 @@ body.apply_00 .modal-dialog .modal-content .modal-body .left p {
 
 /* enddddddddddddd */
 
+
 /*
 .ibonArea {
     margin-top: 0;
 }
 */
 
-@media (max-width:1024px) and (min-width:769px) {
-    .personalInfo_1 .wrapper .input_m#joyName {
-        width: 120px;
-    }
-    
-    #body.personalInfo_1 .processInner {
-        padding: 10px 1%;
-    }
-}

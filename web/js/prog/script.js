@@ -631,11 +631,12 @@ modal.getLoginInfo(function(json) {
         });
 
 
-    } else { //已經登入
+    } 
+	else { //已經登入
         $('.smbtnArea').hide();
         $('#isNotLogin').hide();
         //$('#isLogin').show();
-        //$('.loginArea').show();
+        $('.loginArea').show();
 
         $('a.apply').click(function(ev) {
             ev.preventDefault();
@@ -1136,10 +1137,18 @@ function isMobileWidth() {
     return $(window).width() < 768;
 }
 
-function previewDocument(src) {
+function previewDocument(src, name) {
+	var kindOfTag = '';
+	if(name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif'){
+		kindOfTag = '<img src="' + src + '"/>';
+	}
+	else if(name == 'pdf' || name == 'tif'){
+		kindOfTag = '<iframe src="' + src + '" style="width: 100%; height: 100%;"><frame/>'
+	}
+
     GardenUtils.display.popup({
         title: '預覽',
-        content: '<img src="' + src + '"/>',
+        content: kindOfTag,
         closeCallBackFn: function() {},
         showCallBackFn: function() {},
         isShowSubmit: false,

@@ -93,14 +93,14 @@ var linkage = {
         }
         
     },
-	changeBranchZipByCity: function(citySelect, cityArr, zipSelect) {
+	changeBranchZipByCity: function(citySelect, cityArr, zipSelect, bindBranch) {
         if(citySelect == undefined){
             return false;
         }
         else{
             citySelect.on('change', function() {
 	            var cityId = $(this).val();
-	            var jsonZip = modal.getZip(cityId);
+	            var jsonZip = modal.getZip(cityId,bindBranch);
 	            //console.debug(jsonZip);
 
 				var zipArray = [];

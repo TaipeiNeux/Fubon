@@ -268,17 +268,17 @@ addressMap(mapId, [getDefaultAddress.branchName], [getDefaultAddress.addr], [get
 //addressMap('台北市中山區中山北路二段50號');
 
 regionArea.hide();
-cityArray.push('<option value="">選擇縣市</option>');
+cityArray.push('<option value="">請選擇</option>');
 $.each(cityArr, function(i, cityData) {
     cityArray.push('<option value=' + cityData.cityId + '>' + cityData.cityName + '</option>');
 });
 citySelect.append(cityArray.join(''));
 
-linkage.changeZipByCity(citySelect, cityArr, zipSelect, 'Y');
+linkage.changeBranchZipByCity(citySelect, cityArr, zipSelect, 'Y');
 
 $('#zipSelectpicker').on('click', function() {
     citySelectpicked = $('#citySelectpicker button').attr('title');
-    if (citySelectpicked == '選擇縣市') {
+    if (citySelectpicked == '請選擇') {
         var zipMsg = $('#zipSelectpicker').find('.error-message');
         zipMsg.text('請先選擇縣市');
     }
@@ -338,7 +338,7 @@ $('#getBranch').on('click', function() { //按下'確認'鍵後的動作
     var selectors = $('.baelArea');
     var regionText = citySelectpicked + ',' + zipSelectpicked; //放所在地區的字串
 
-    if (zipSelectpicked != '選擇鄉鎮市區' && citySelectpicked != '選擇縣市') {
+    if (zipSelectpicked != '請選擇' && citySelectpicked != '請選擇') {
         selectBranch.hide();
         regionArea.show();
 
@@ -450,20 +450,20 @@ $('#getBranch').on('click', function() { //按下'確認'鍵後的動作
             branchArray = [];
         });
     }
-    if (citySelectpicked == '選擇縣市') {
+    if (citySelectpicked == '請選擇') {
         var zipMsg = $('#zipSelectpicker').find('.error-message');
         var cityMsg = $('#citySelectpicker').find('.error-message');
         cityMsg.text('請選擇縣市');
-        if (zipSelectpicked == '選擇鄉鎮市區') {
+        if (zipSelectpicked == '請選擇') {
             zipMsg.text('請選擇區域');
         } else {
             zipMsg.text('');
         }
-    } else if (zipSelectpicked == '選擇鄉鎮市區') {
+    } else if (zipSelectpicked == '請選擇') {
         var cityMsg = $('#citySelectpicker').find('.error-message');
         var zipMsg = $('#zipSelectpicker').find('.error-message');
         zipMsg.text('請選擇區域');
-        if (citySelectpicked == '選擇縣市') {
+        if (citySelectpicked == '請選擇') {
             cityMsg.text('請選擇縣市');
         } else {
             cityMsg.text('');

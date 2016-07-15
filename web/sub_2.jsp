@@ -23,7 +23,7 @@
                     <h2 class="zh">就學貸款介紹</h2>
                     <h4 class="en">Introduction</h4>
                     <section class="imm">
-                        <a class="applyBtn">立即申請</a>
+                        <a href="apply_00.jsp" class="applyBtn">立即申請</a>
                     </section>
                 </div>
                 <ul class="loanUL list">
@@ -57,7 +57,7 @@
                                 <p class="titlep">親臨對保分行辦理:</p>
                                 <p class="subp">每次申貸之對保手續費新臺幣100元</p>
                                 <p class="titlep">線上續貸:</p>
-                                <p class="subp">免收對保手續費<a href="#" class="underblue" onclick="alert('系統建置中');return false;">查詢線上續貸資格</a></p>
+                                <p class="subp">免收對保手續費<a href="sub_1.jsp?target=4" class="underblue">查詢線上續貸資格</a></p>
                             </div>
                         </div>
                     </li>
@@ -105,7 +105,7 @@
                             <div class="textbox">
                                 <p class="titlep">開始還款日:</p>
                                 <p class="subp">於最後教育階段學業完成後滿一年之次日開始還款 </p>
-                                <p class="subp"><a href="" class="underblue" onclick="alert('系統建置中');return false;">查詢延後/提前還款資格</a></p>
+                                <p class="subp"><a href="sub_1.jsp?target=4" class="underblue">查詢延後/提前還款資格</a></p>
                                 <p class="titlep">還款期間:</p>
                                 <p class="subp">同一教育階段的就學貸款，以借款一學期得有一年償還期限</p>
                                 <div class="bidy">

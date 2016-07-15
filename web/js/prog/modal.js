@@ -201,6 +201,9 @@ var modal = {
 	login: function(studentId,studentCode,studentPassword,isForce) {
         var jsonGrade;
 		
+		
+		//var token = window.top.getToken();
+		//alert(token);
 		$.ajax({
             async : false,
             url: 'auth?action=login&v=' + new Date().getTime(),

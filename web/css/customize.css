@@ -393,7 +393,7 @@ a.scrollToTop i {
     }
 
     .QandAContent {
-        max-height:500px;
+        /* max-height:500px; */
         overflow-y:scroll;
     }
 
@@ -614,14 +614,14 @@ padding-top: 127px ;
 
 @media (max-width: 320px){
  .QandAContent {
-     max-height: 422px;
+     /* max-height: 422px; */
      top: 146px;
      padding-bottom: 44px;
  }
 
  .QAListArea {
-    max-height: 378px;
-    //overflow-y: scroll;
+    /* max-height: 378px; */
+    /* overflow-y: scroll; */
  }
 }
 @media (max-width: 769px){
@@ -2134,7 +2134,7 @@ body.register_2 .wrapper .input_L {
 	}
 
     body.apply_1_step1 .twoDiv {
-         width: 250px;   
+         width: 270px;   
     }
     
     body.apply_1_step1 .wrapper .input_m {
@@ -2143,10 +2143,6 @@ body.register_2 .wrapper .input_L {
     
     body.apply_1_step1 .wrapper .input_L {
         max-width: 356px;
-    }
-    
-    body.apply_1_step1 .twoDiv {
-        width: 280px;
     }
     
     body.apply_1_step1 .joy .right.right_name {
@@ -2439,6 +2435,12 @@ body.register_2 .wrapper .input_L {
 
 .apply_6_step1 .modal-dialog .modal-content .modal-body p {
 /*    text-align: center;*/
+}
+
+/* mentis 3568 */
+
+.apply_00 .modal-dialog .modal-content .modal-body p {
+    text-align: left;
 }
 
 @media (max-width:769px) {
@@ -3254,9 +3256,23 @@ h4.modal-title {
 @media (max-width:320px) {
     .QAList {
 	  overflow : scroll;
-	  height: 800px !important
+      max-height:none;
 	}
 }
 
+@media (max-width:769px) {
+    .repaymentInquiry_ .searchResult .repayTable .rema th {
+        font-size: 14px;
+    }
+    
+    .repaymentInquiry_ .searchResult .repayTable .rema td {
+        padding: 15px 5px;
+    }
+}
 
+@media (max-width:1024px) and (min-width:769px) {
+    body.apply_1_step1 .nameArea.twoDiv {
+        width: 213px;
+    }
+}
      

@@ -6,6 +6,7 @@ import com.fubon.flow.ILogic;
 import com.fubon.utils.ProjUtils;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.json.JSONObject;
@@ -32,7 +33,8 @@ public class Deferment1 implements ILogic {
         String eligibilityText0 = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute("eligibilityText0"));
         String selectYear = "",selectMonth = "",selectDay = "";
 
-        if(draftData != null) {
+        //當有草稿但沒有強制退到第一步，才要撈輸入的資料
+        if(draftData != null && StringUtils.isEmpty(queryStringInfo.getParam("step"))) {
             Element root = draftData.getRootElement();
             if(root.element("selectYear") != null) selectYear = root.element("selectYear").getText();
             if(root.element("selectMonth") != null) selectMonth = root.element("selectMonth").getText();

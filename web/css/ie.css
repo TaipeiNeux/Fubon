@@ -119,3 +119,37 @@ body.repaymentInquiry_ .detail:before {
     }
 
 }
+
+/*---------------------------ie9--------------------------------*/
+
+body.personalinfo_0 .editBtnBoxTop {
+    right: 0\9\0;
+}
+
+.path ul li a:after {
+    top: 7px\9\0;
+}
+
+body.personalinfo_1 .sandy {
+    width: 200px\9\0;
+    padding-right: 0\9\0;
+    padding-top: 10px\9\0;
+}
+
+body.personalinfo_1 .twoDiv {
+    width: 280px\9\0;
+    padding-right:0\9\0;
+}
+body.personalinfo_1 .nina .left_name {
+    width: 50px\9\0;
+}
+body.personalinfo_1 .nina .right_name {
+    width: 225px\9\0;
+}
+body.personalinfo_1 .joy p {
+    font-size: 15px\9\0;
+}
+
+body.personalinfo_1 #birth_tmp_1 {
+    width: 225px\9\0;
+}

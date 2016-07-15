@@ -43,7 +43,7 @@
                     </div>
                     <div id="circleBtn">
                         <a href="#"><img src="img/de-01.png" alt="會員申請"></a>
-                        <a href="#"><img src="img/de-02.png" alt="會員登入"></a>
+                        <a href="#" class="whiteLine"><hr /><img src="img/de-02.png" alt="會員登入"></a>
                         <a href="#"><img src="img/de-03.png" alt="申請就學貸款"></a>
                     </div>
                     <div class="padaBtn" id="registerBtn">
@@ -75,18 +75,21 @@
                   <img src="img/fu-08.png" alt="">
                 </span>
                             <input name="studentId" placeholder="身分證字號" type="text">
+							<label class="error error-msg"></label>
                         </div>
                         <div class="inputArea">
                                             <span>
                   <img src="img/fu-09.png" alt="">
                 </span>
                             <input name="studentCode" placeholder="使用者代碼" type="password">
+							<label class="error error-msg"></label>
                         </div>
                         <div class="inputArea">
                                             <span>
                   <img src="img/fu-10.png" alt="">
                 </span>
                             <input name="studentPassword" placeholder="使用者密碼" type="password">
+							<label class="error error-msg"></label>
                         </div>
                         <div class="loginBox">
                             <a href="forgetPassword.jsp">忘記代碼/密碼</a>

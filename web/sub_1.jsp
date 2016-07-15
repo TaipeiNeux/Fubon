@@ -118,13 +118,13 @@
                                                 <div class="selectBranch">
                                                     <div class="bael" id="citySelectpicker">
                                                         <h3 class="select_a">選擇縣市</h3>
-                                                        <select class="selectpicker" title="選擇縣市" id="citySelector" value="" data-dropup-auto="false">
+                                                        <select class="selectpicker" title="請選擇" id="citySelector" value="" data-dropup-auto="false">
                                                         </select>
                                                         <div class="error-message"></div>
                                                     </div>
                                                     <div class="bael" id="zipSelectpicker">
                                                         <h3 class="select_b">選擇區域</h3>
-                                                        <select class="selectpicker" title="選擇鄉鎮市區" id="zipSelector" value="" data-dropup-auto="false">
+                                                        <select class="selectpicker" title="請選擇" id="zipSelector" value="" data-dropup-auto="false">
                                                         </select>
                                                         <div class="error-message"></div>
                                                     </div>

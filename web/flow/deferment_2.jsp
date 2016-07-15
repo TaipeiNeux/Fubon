@@ -7,6 +7,12 @@
        <input type="hidden" class="fileSize" name="studentIdPositive_hidden" value="">
        <input type="hidden" class="fileSize" name="studentIdNegative_hidden" value="">
        <input type="hidden" class="fileSize" name="additional_hidden" value="">
+	   
+	   <input type="hidden" name="idPositiveViewName_hidden" value="">
+       <input type="hidden" name="idNegativeViewName_hidden" value="">
+       <input type="hidden" name="studentIdPositiveViewName_hidden" value="">
+       <input type="hidden" name="studentIdNegativeViewName_hidden" value="">
+       <input type="hidden" name="additionalViewName_hidden" value="">
        
         <div class="joy swataX" id="studentIdCardRadio" style="display:none">
             <div class="left">
@@ -48,7 +54,8 @@
                 <tr>
                     <td class="file-photo">
                         <a>
-                            <img id="idPositivePhoto" src="">
+                            <img id="idPositivePhoto_img" src="">
+                            <!--<iframe id="idPositivePhoto_iframe" src="">-->
                         </a>
                     </td>
                     <td class="file-zh">身分證正面影本</td>

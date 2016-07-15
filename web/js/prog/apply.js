@@ -2559,6 +2559,12 @@ function apply2(content) {
     var isRecordHidden = $('[name="isRecordHidden"]');
     var isChangeHidden = $('[name="isChangeHidden"]');
     var isSpouseForeignerHidden = $('[name="isSpouseForeignerHidden"]');
+	
+    var father_String = $('[name="father_String"]');
+    var mother_String = $('[name="mother_String"]');
+    var thirdParty_String = $('[name="thirdParty_String"]');
+    var spouse_String = $('[name="spouse_String"]');
+	
 
     //用於跑迴圈抓每個關係人的input, selecpicker等元素
     var familyArray = ['father', 'mother', 'thirdParty', 'spouse'];
@@ -2797,15 +2803,18 @@ function apply2(content) {
                     incomeTax = parseInt(incomeTax) + 1000;
                     isFatherTax = '1';
                     $('#father .stringOrRadio').text(' (為連帶保證人/合計所得對象)');
+					$('[name="father_String"]').val(' (為連帶保證人/合計所得對象)');
                 }
             } else if (isFatherShowTag == '3') { //是連帶保證人
                 incomeTax = parseInt(incomeTax) + 1000;
                 $('#father .stringOrRadio').text(' (為連帶保證人/合計所得對象)');
+				$('[name="father_String"]').val(' (為連帶保證人/合計所得對象)');
             } else { //不是連帶保證人
                 if (isFatherTax != '1' && isFatherTax != '3') {
                     incomeTax = parseInt(incomeTax) + 1000;
                     isFatherTax = '1';
                     $('#father .stringOrRadio').text(' (為合計所得對象)');
+					$('[name="father_String"]').val(' (為合計所得對象)');
                 }
             }
 
@@ -2851,6 +2860,7 @@ function apply2(content) {
             if (isFatherShowTag == '1' || isFatherShowTag == '3') {
                 //$('#father').hide();
                 $('#father .stringOrRadio').text('(為連帶保證人)');
+				$('[name="father_String"]').val(' (為連帶保證人)');
             }
             if (isFatherShow != '1' && isFatherShow != '3') {
                 $('#father').hide();
@@ -2896,6 +2906,7 @@ function apply2(content) {
                     }
                     isMotherTax = '1';
                     $('#mother .stringOrRadio').text(' (為連帶保證人/合計所得對象)');
+					$('[name="mother_String"]').val(' (為連帶保證人/合計所得對象)');
                 }
             } else if (isMotherShowTag == '3') { //是連帶保證人
                 incomeTax = parseInt(incomeTax) + 100;
@@ -2905,6 +2916,7 @@ function apply2(content) {
                     console.debug(incomeTax);
                 }
                 $('#mother .stringOrRadio').text(' (為連帶保證人/合計所得對象)');
+				$('[name="mother_String"]').val(' (為連帶保證人/合計所得對象)');
             } else {
                 incomeTax = parseInt(incomeTax) + 100;
                 incomeTax = incomeTax.toString();
@@ -2914,6 +2926,7 @@ function apply2(content) {
                 }
                 isMotherTax = '1';
                 $('#mother .stringOrRadio').text(' (為合計所得對象)');
+				$('[name="mother_String"]').val(' (為合計所得對象)');
             }
 
             //更新紀錄需要填寫表格的人的值
@@ -2955,6 +2968,7 @@ function apply2(content) {
             if (isMotherShowTag == '1' || isMotherShowTag == '3') {
                 //$('#mother').hide();
                 $('#mother .stringOrRadio').text('(為連帶保證人)');
+				$('[name="mother_String"]').val(' (為連帶保證人)');
             }
             if (isMotherShow != '1' && isMotherShow != '3') {
                 $('#mother').hide();
@@ -3326,10 +3340,12 @@ function setFamilyString(determineTagObj, value) {
     var familyString = '';
     var familyArr = ['father', 'mother', 'thirdParty', 'spouse'];
     var DivIndex;
+	var who = '';
 
     for (var i = 0; i <= 3; i++) {
         if (value == familyArr[i]) {
             DivIndex = i;
+			who = familyArr[i];
             break;
         }
     }
@@ -3351,7 +3367,7 @@ function setFamilyString(determineTagObj, value) {
         familyString = '擔任連帶保證人';
     }
 
-
+	$('[name="'+who+'_String"]').val(familyString);
     text.append(familyString);
 }
 
@@ -4435,7 +4451,7 @@ function apply3_2(content) {
     $('#loansSum, #accordingToBillPlusOthers .input_f, #accordingToBill_publicExpense').on('blur', function() {
         var $thisValue = $(this);
         var isInt = isInteger($thisValue.val());
-
+		
         if (isNaN(parseInt($thisValue.val())) || (!isInt)) {
             $thisValue.val('');
         }
@@ -4520,7 +4536,11 @@ function apply3_2(content) {
 }
 
 function isInteger(obj) {
-    return obj%1 === 0
+	var isInt = true;
+	if(obj%1 !== 0 || obj.indexOf('.') !== -1){
+		isInt = false;
+	}
+    return isInt;
 }
 
 function computeMoney(loansItem, radioIndex) {
@@ -4878,6 +4898,7 @@ function apply4_2(content) {
                         hasBookingObj[date] = bookingObj;
                     });
 
+					var times = 0;
                     $.each(jsonBranch, function(index, value) {
                         console.debug(index + '/' + value);
                         if (index == 'booking') {
@@ -4887,17 +4908,22 @@ function apply4_2(content) {
                                     console.debug(objI + '/' + objV);
                                     if (objI == 'isFull') {
                                         if (objV == 'Y') {
-                                            calFull = '已滿';
-                                            $.each(objValue, function(objI, objV) {
-                                                if (objI == 'date') {
-                                                    calDate = objV;
-                                                    calendarArr.push({
-                                                        "title": calFull,
-                                                        "start": calDate
-                                                    });
-                                                    console.debug(calendarArr);
-                                                }
-                                            });
+											times++;
+											if(times == 4){   //如果四個時段都滿了
+											
+												calFull = '已滿';
+												
+												$.each(objValue, function(objI, objV) {
+	                                                if (objI == 'date') {
+	                                                    calDate = objV;
+	                                                    calendarArr.push({
+	                                                        "title": calFull,
+	                                                        "start": calDate
+	                                                    });
+	                                                    console.debug(calendarArr);
+	                                                }
+	                                            });
+											}
                                         } else {
                                             calFull = '';
                                         }
@@ -5221,7 +5247,7 @@ function apply4_2(content) {
 		var dTimeTemp = $('#bTime');
 		$('[name="timeSelected"]').val(timePicked);
 		if(timePicked == '0100'){
-			timePicked = 'PM 0100-0200';
+			timePicked = 'PM 01:00-02:00';
 			dTimeTemp.text(timePicked);
 		}
 		else{
@@ -5286,6 +5312,11 @@ function apply5_1_1(content) {
     var student_month_graduation = $('[name="student_month_graduation"]');
     var tipTel = $('.tip_tel');
     var thirdPartyTitleText = $('.thirdParty');
+	
+	var isGuarantorString_father = $('#isGuarantor_father');
+	var isGuarantorString_mother = $('#isGuarantor_mother');
+	var isGuarantorString_thirdParty = $('#isGuarantor_thirdParty');
+	var isGuarantorString_spouse = $('#isGuarantor_spouse');
 
     fatherDiv = $('#father');
     motherDiv = $('#mother');
@@ -5326,6 +5357,13 @@ function apply5_1_1(content) {
     var graduationYear = content.graduationDate.year;
     var applicant_mobile = content.mobile;
     var thirdPartyText = content.thirdPartyTitle;
+	
+	/*等titan給我值,就把注解拿掉 7/14
+	var isGuarantor_father = content.isGuarantor_father;
+	var isGuarantor_mother =  content.isGuarantor_mother;
+	var isGuarantor_thirdParty =  content.isGuarantor_thirdParty;
+	var isGuarantor_spouse =  content.isGuarantor_spouse;
+	*/
 
     //家庭狀況
 	if(familyStatusLevel2Text == ''){
@@ -5533,6 +5571,13 @@ function apply5_1_1(content) {
         }
     }
 
+	/*等titan給我值,就把注解拿掉 7/14
+	isGuarantorString_father.text(isGuarantor_father);
+    isGuarantorString_mother.text(isGuarantor_mother);
+	isGuarantorString_thirdParty.text(isGuarantor_thirdParty);
+	isGuarantorString_spouse.text(isGuarantor_spouse);
+	*/
+	
     /*申貸金額 (start)*/
     if (loans == '1') {
         var loansPrice = content.accordingToBill_sum;
@@ -6063,6 +6108,11 @@ function apply5_2(content) {
     var branchPh = $('#branchPh');
     var branchDateTime = $('#branchDateTime');
     var thirdPartyTitleText = $('.thirdParty');
+	
+	var isGuarantorString_father = $('#isGuarantor_father');
+	var isGuarantorString_mother = $('#isGuarantor_mother');
+	var isGuarantorString_thirdParty = $('#isGuarantor_thirdParty');
+	var isGuarantorString_spouse = $('#isGuarantor_spouse');
 
 
     fatherDiv = $('#father');
@@ -6104,6 +6154,13 @@ function apply5_2(content) {
     var graduationMonth = content.graduationDate.month;
     var graduationYear = content.graduationDate.year;
     var thirdPartyText = content.thirdPartyTitle;
+	
+	/*等titan給我值,就把注解拿掉 7/14
+	var isGuarantor_father = content.isGuarantor_father;
+	var isGuarantor_mother =  content.isGuarantor_mother;
+	var isGuarantor_thirdParty =  content.isGuarantor_thirdParty;
+	var isGuarantor_spouse =  content.isGuarantor_spouse;
+	*/
 
     //家庭狀況
 	if(familyStatusLevel2Text == ''){
@@ -6283,6 +6340,13 @@ function apply5_2(content) {
         }
     }
 
+	/*等titan給我值,就把注解拿掉 7/14
+	isGuarantorString_father.text(isGuarantor_father);
+    isGuarantorString_mother.text(isGuarantor_mother);
+	isGuarantorString_thirdParty.text(isGuarantor_thirdParty);
+	isGuarantorString_spouse.text(isGuarantor_spouse);
+	*/
+	
     //顯示預約分行資訊
     var branchName = $('[name="branchName"]');
     var branchAddr = $('[name="branchAddr"]');
@@ -6939,45 +7003,7 @@ function showFamilyInformation(adult, show, gua, itax, change, record) {
     console.debug(stringStatus_m);
     console.debug(stringStatus_t);
     console.debug(stringStatus_s);
-
-    /*var tempArr = [stringStatus_f, stringStatus_m, stringStatus_t, stringStatus_s];
-     for( var i = 0; i <= 3; i++ ){
-     if( tempArr[i] != '' ){
-     switch(i){
-     case 0:    //塞父親的hidden
-     father_id_hidden.val
-     father_name_hidden
-     father_mobile_hidden
-     father_phone_hidden
-     father_address_hidden
-     break;
-     case 1:
-     mother_id_hidden
-     mother_name_hidden
-     mother_mobile_hidden
-     mother_phone_hidden
-     mother_address_hidden
-
-     break;
-     case 2:
-     thirdParty_id_hidden
-     thirdParty_name_hidden
-     thirdParty_mobile_hidden
-     thirdParty_phone_hidden
-     thirdParty_address_hidden
-
-     break;
-     case 3:
-     spouse_id_hidden
-     spouse_name_hidden
-     spouse_mobile_hidden
-     spouse_phone_hidden
-     spouse_address_hidden
-     break;
-     }
-     }
-     }*/
-
+	
     //父親的字串
     if (stringStatus_f[0] == true) {
         if (stringStatus_f[1] == true) { //連帶保證人&&合計對象

@@ -1,5 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
+	
+	<input type="hidden" class="fileSize" name="idCardPosition_hidden" value="">
+       <input type="hidden" class="fileSize" name="idCardNegative_hidden" value="">
+       <input type="hidden" class="fileSize" name="registration_hidden" value="">
+       <input type="hidden" class="fileSize" name="lowIncome_hidden" value="">
+	   
+	   <input type="hidden" name="idCardPositionViewName_hidden" value="">
+       <input type="hidden" name="idCardNegativeViewName_hidden" value="">
+       <input type="hidden" name="registrationViewName_hidden" value="">
+       <input type="hidden" name="lowIncomeViewName_hidden" value="">
+	
 	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">

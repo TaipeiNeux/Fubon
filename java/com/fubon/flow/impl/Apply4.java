@@ -30,6 +30,17 @@ public class Apply4 implements ILogic {
         String loanPrice = "",loans = "" , freedomLife = "", accordingToBillLife = "",uploadFileIdCardPosition = "img/dh.jpg", uploadFileIdCardNegative = "img/dh.jpg",uploadFileRegistration = "img/dh.jpg",uploadFileLowIncome = "";
         String uploadFileIdCardPosition_docId = "", uploadFileIdCardNegative_docId = "", uploadFileRegistration_docId = "", uploadFileLowIncome_docId = "";
 
+        String idCardPosition_hidden = "",idCardNegative_hidden = "",registration_hidden = "",lowIncome_hidden = "";
+
+        if(draftData != null) {
+            Element root = draftData.getRootElement();
+            if(root.element("idCardPosition_hidden") != null) idCardPosition_hidden = root.element("idCardPosition_hidden").getText();
+            if(root.element("idCardNegative_hidden") != null) idCardNegative_hidden = root.element("idCardNegative_hidden").getText();
+            if(root.element("registration_hidden") != null) registration_hidden = root.element("registration_hidden").getText();
+            if(root.element("lowIncome_hidden") != null) lowIncome_hidden = root.element("lowIncome_hidden").getText();
+
+        }
+
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         String userId = loginUserBean.getUserId();
 
@@ -100,6 +111,10 @@ public class Apply4 implements ILogic {
         content.put("accordingToBill",accordingToBill);
         content.put("uploadFile",uploadFile);
 
+        content.put("idCardPosition_hidden",idCardPosition_hidden);
+        content.put("idCardNegative_hidden",idCardNegative_hidden);
+        content.put("registration_hidden",registration_hidden);
+        content.put("lowIncome_hidden",lowIncome_hidden);
     }
 
     @Override

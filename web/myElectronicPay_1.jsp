@@ -336,6 +336,10 @@
 </div>
 </div>
 </div>
+<div class="barCode">
+    <a href="#">產生條碼</a>
+    <p class="barCodewords">提醒您，產生條碼後即可至全省7-11便利超商出示條碼進行繳款。</p>
+</div>
 <p class="casomTitle">注意事項:</p>
 <ol class="casom">
     <li>本貸款自起息日起，每月(或半年)攤還本息一次，逾期加收延遲息及違約金，如屆期未接獲通知，仍請依貸款契約約定，自行到本行繳納。 </li>

@@ -147,6 +147,7 @@ public class AuthServlet extends HttpServlet {
         boolean sendEmail = true;
         String email = null;
         int failCount = 0;
+        int userIdNotMatchCount = 0;
 
         try{
 
@@ -168,10 +169,15 @@ public class AuthServlet extends HttpServlet {
                 String dbUserId = studentUserProfile.getValue("UserId");
                 String dbPassword = studentUserProfile.getValue("Password");
                 String dbLoginFailCount = studentUserProfile.getValue("LoginFailCount");
+                String dbUserIdNotMatchCount = studentUserProfile.getValue("UserIdNotMatchCount");
+
                 email = studentUserProfileDetail.getValue("AplyEmail");
 
                 if(StringUtils.isEmpty(dbLoginFailCount)) dbLoginFailCount = "0";
                 failCount = Integer.parseInt(dbLoginFailCount);
+
+                if(StringUtils.isEmpty(dbUserIdNotMatchCount)) dbUserIdNotMatchCount = "0";
+                userIdNotMatchCount = Integer.parseInt(dbUserIdNotMatchCount);
 
                 //TODO 待HSM開欄位
                 if("Y".equalsIgnoreCase(studentUserProfile.getValue("IS_HSM"))) {
@@ -186,12 +192,12 @@ public class AuthServlet extends HttpServlet {
 
                         jsonObject.put("errorMsg", "使用者密碼連續輸入錯誤三次，已被鎖定 ");
 
-                        //如果帳密還是不對，次數往上加，超過5次要額外發信
-                        if(!md5Password.equalsIgnoreCase(dbPassword)) {
+                        //如果使用者代碼不對，次數往上加，超過5次要額外發信
+                        if(!userId.equalsIgnoreCase(dbUserId)) {
                             //密碼錯誤時，要回寫DB記錄次數
-                            failCount++;
+                            userIdNotMatchCount++;
 
-                            studentUserProfile.setValue("LoginFailCount",failCount + "");
+                            studentUserProfile.setValue("UserIdNotMatchCount",userIdNotMatchCount + "");
                             dao.update(studentUserProfile);
                         }
 
@@ -351,6 +357,12 @@ public class AuthServlet extends HttpServlet {
 
                         }
                         else {
+                            //密碼錯誤時，要回寫DB記錄次數
+                            userIdNotMatchCount++;
+
+                            studentUserProfile.setValue("UserIdNotMatchCount",userIdNotMatchCount + "");
+                            dao.update(studentUserProfile);
+
                             jsonObject.put("errorMsg", "身分證字號或使用者代碼錯誤");
                         }
                     }
@@ -393,7 +405,7 @@ public class AuthServlet extends HttpServlet {
                 MessageUtils.sendEmail(mailBean);
 
                 //錯誤超過5次時，額外發送
-                if(failCount >= 5) {
+                if(userIdNotMatchCount >= 5) {
                     mailBean = new MailBean("login");
                     mailBean.setReceiver(email);
                     mailBean.setTitle(MessageUtils.loginFailTitle);

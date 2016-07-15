@@ -202,22 +202,29 @@ function buildFlow(Content,stepEventHandler,nextEventHanlder,nextEventErrorHanld
                     //如果是簡訊驗證步驟, 要clearTimeout倒數的function(countdownid()) by Foi 2016/07/12
                     var currentObj = [{
                         jsp: 'personalInfo',
-                        step: '_2_2.jsp'
+                        step: '_2_2.jsp',
+						jump: '1'
                     },{
                         jsp: 'changePwd',
-                        step: '2_2.jsp'
+                        step: '2_2.jsp',
+						jump: '1'
                     },{
                         jsp: 'forgetPassword',
-                        step: '3_2.jsp'
+                        step: '3_2.jsp',
+						jump: '1'
                     }];
                     var currentViewURL = '';
                     var jumpViewURL = '';
                     
                     $.each(currentObj, function(index, value){
                         currentViewURL = 'flow/' + value.jsp + value.step;
+                        jumpViewURL = value.jsp +'.jsp?step='+ value.jsp + value.jump;
                         if(Content.flow.viewURL == currentViewURL ){
-                            //window.location = jumpViewURL;
                             clearTimeout(countdownid);
+							if(currentViewURL == 'flow/personalInfo_2_2.jsp'){
+								jumpViewURL = value.jsp +'_flow.jsp?step='+ value.jsp + value.jump;
+							}
+							window.location = jumpViewURL;
                         }
                     });
                     

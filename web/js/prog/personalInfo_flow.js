@@ -4,9 +4,6 @@ String.prototype.replaceAt = function(index, character) {
 
 
 $(document).ready(function() {
-
-
-
     //定義每個步驟要對應的javascript function
     var stepEventHandler = {
         "personalInfo1": personalInfo_1,
@@ -137,6 +134,7 @@ function personalInfo_1(content) {
     var name_hidden = $('[name="name"]');
     var teleAddress_hidden = $('[name="teleAddress_hidden"]');
     var birthday_hidden = $('[name="birthday"]');
+	var isRecord_hidden = $('[name="isRecord_hidden"]');
     
 	var addressObj = {
         'citySelectTele': citySelect,
@@ -145,6 +143,7 @@ function personalInfo_1(content) {
     };
 
     //塞hidden
+	isRecord_hidden.val(isRecord);
     id_hidden.val(id);
     name_hidden.val(name);
     d_phone.val(domicilePhone);
@@ -170,7 +169,12 @@ function personalInfo_1(content) {
 
     //先塞身分證和姓名的字串
     userId.text(id);
-    userName.text(name);
+    userName.val(name);
+	
+	userName.on('blur', function(){
+		var $thisName = $(this).val();
+		name_hidden.val($thisName);
+	});
     
     $('.selectpicker').selectpicker();
     
@@ -317,6 +321,7 @@ function personalInfo_1(content) {
         inputToLabel(dAddress);
         inputToLabel(userMobile);
         inputToLabel(dLinerName);
+        inputToLabel(userName);
         
         userSingle.attr("disabled", true);
         userMarry.attr("disabled", true);
@@ -961,7 +966,7 @@ function personalInfo_1_valid() {
         ];
 
     //Foolproof
-    var isRecord = $('[name="isRecord"]').val();
+    var isRecord = $('[name="isRecord_hidden"]').val();
     if (isRecord == 'N') {
         validEmptyArray.push({
             name: 'DomicileNeighborhood',

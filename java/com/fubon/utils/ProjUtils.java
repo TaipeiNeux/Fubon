@@ -728,7 +728,7 @@ public class ProjUtils {
             //先判斷是否已有申請過案件
             String id = apply1_1Root.element("id").getText().toUpperCase();
 
-            SQLCommand check = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ? and APLYSTATUS = 'UNVERIFIED'");
+            SQLCommand check = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ?");
 //            SQLCommand check = new SQLCommand("select AplyNo from AplyMemberTuitionLoanDtl where AplyIdNo = ? and eduYear = ? and semester = ?");
             check.addParamValue(id);
 //            check.addParamValue(eduYear);

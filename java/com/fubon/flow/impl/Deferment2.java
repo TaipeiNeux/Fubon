@@ -35,7 +35,27 @@ public class Deferment2 implements ILogic {
         String id = loginUserBean.getCustomizeValue("IdNo") , eliIndex="";
         String isPositiveFile = "", isNegativeFile = "", studentIdPositiveFile = "", studentIdNegativeFile = "", additionalFile = "",
         		isPositiveFile_docId = "", isNegativeFile_docId = "", studentIdPositiveFile_docId = "", studentIdNegativeFile_docId = "", additionalFile_docId = "";
-        
+
+        String idPositiveViewName_hidden = "",idNegativeViewName_hidden = "",studentIdPositiveViewName_hidden = "",studentIdNegativeViewName_hidden = "",additionalViewName_hidden = "";
+
+        String isPositive_hidden = "",isNegative_hidden = "",studentIdPositive_hidden = "",studentIdNegative_hidden = "",additional_hidden = "";
+
+        //若有草稿就裝到content
+        if(draftData != null) {
+            Element root = draftData.getRootElement();
+            if(root.element("idPositiveViewName_hidden") != null) idPositiveViewName_hidden = root.element("idPositiveViewName_hidden").getText();
+            if(root.element("idNegativeViewName_hidden") != null) idNegativeViewName_hidden = root.element("idNegativeViewName_hidden").getText();
+            if(root.element("studentIdPositiveViewName_hidden") != null) studentIdPositiveViewName_hidden = root.element("studentIdPositiveViewName_hidden").getText();
+            if(root.element("studentIdNegativeViewName_hidden") != null) studentIdNegativeViewName_hidden = root.element("studentIdNegativeViewName_hidden").getText();
+            if(root.element("additionalViewName_hidden") != null) additionalViewName_hidden = root.element("additionalViewName_hidden").getText();
+
+            if(root.element("isPositive_hidden") != null) isPositive_hidden = root.element("isPositive_hidden").getText();
+            if(root.element("isNegative_hidden") != null) isNegative_hidden = root.element("isNegative_hidden").getText();
+            if(root.element("studentIdPositive_hidden") != null) studentIdPositive_hidden = root.element("studentIdPositive_hidden").getText();
+            if(root.element("studentIdNegative_hidden") != null) studentIdNegative_hidden = root.element("studentIdNegative_hidden").getText();
+            if(root.element("additional_hidden") != null) additional_hidden = root.element("additional_hidden").getText();
+        }
+
         //從第1步取eliIndex
         String draftXML = FlowUtils.getDraftData(userId, "deferment", "deferment1", dao);
         Document step1Doc = DocumentHelper.parseText(draftXML);
@@ -91,15 +111,25 @@ public class Deferment2 implements ILogic {
         uploadFile.put("studentIdPositiveFile_docId",studentIdPositiveFile_docId);
         uploadFile.put("studentIdNegativeFile_docId",studentIdNegativeFile_docId);
         uploadFile.put("additionalFile_docId",additionalFile_docId);
-        
+
+
         content.put("isRecord",isRecord);
         content.put("id",id);
         content.put("eliIndex",eliIndex);
         content.put("uploadFile",uploadFile);
         content.put("eligibilityText",eligibilityText);
 
+        content.put("idPositiveViewName_hidden",idPositiveViewName_hidden);
+        content.put("idNegativeViewName_hidden",idNegativeViewName_hidden);
+        content.put("studentIdPositiveViewName_hidden",studentIdPositiveViewName_hidden);
+        content.put("studentIdNegativeViewName_hidden",studentIdNegativeViewName_hidden);
+        content.put("additionalViewName_hidden",additionalViewName_hidden);
 
-
+        content.put("isPositive_hidden",isPositive_hidden);
+        content.put("isNegative_hidden",isNegative_hidden);
+        content.put("studentIdPositive_hidden",studentIdPositive_hidden);
+        content.put("studentIdNegative_hidden",studentIdNegative_hidden);
+        content.put("additional_hidden",additional_hidden);
     }
 
     @Override

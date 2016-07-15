@@ -868,33 +868,40 @@ var GardenUtils = {
                         var validObj = obj.obj;
 						var val = obj.val;
 
-                        if(type == 'empty') {
+						if(val.indexOf('*') != -1) {
+							msg = msg + '勿輸入遮掩字元，請重新輸入';
+						}
+						else {
+							if(type == 'empty') {
                             /*if(validObj[0].tagName.toLowerCase() == 'input') {
-                                msg = '請輸入' + msg;
-                            }
-                            else {
-                                msg = '請選擇' + msg;
-                            }*/
-                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
-                            msg = '請輸入' + msg;    
-                        }
-                        else if(type == 'number') {
-                            msg = msg + '限輸入數字';
-                        }
-                        else if(type == 'decimal') {
-                            msg = msg + '限輸入數字';
-                        }
-                        else if(type == 'chinese') {
-                            msg = msg + '限輸入中文字';
-                        }
-                        else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
-							if(val.indexOf('*') != -1) {
-								msg = msg + '勿輸入遮掩字元，請重新輸入';
-							}
-							else {
-								msg = msg + '格式錯誤';
-							}
-                        }
+	                                msg = '請輸入' + msg;
+	                            }
+	                            else {
+	                                msg = '請選擇' + msg;
+	                            }*/
+	                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
+	                            msg = '請輸入' + msg;    
+	                        }
+	                        else if(type == 'number') {
+	                            msg = msg + '限輸入數字';
+	                        }
+	                        else if(type == 'decimal') {
+	                            msg = msg + '限輸入數字';
+	                        }
+	                        else if(type == 'chinese') {
+	                            msg = msg + '限輸入中文字';
+	                        }
+	                        else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
+								if(val.indexOf('*') != -1) {
+									msg = msg + '勿輸入遮掩字元，請重新輸入';
+								}
+								else {
+									msg = msg + '格式錯誤';
+								}
+	                        }
+						}
+						
+                       
 
                         message.push(msg);
                     });
@@ -916,43 +923,44 @@ var GardenUtils = {
                         var validObj = obj.obj;
 						var val = obj.val;
 
-                        if(type == 'empty') {
-                            /*if(validObj[0].tagName.toLowerCase() == 'input') {
-                                msg = '請輸入' + msg;
-                            }
-                            else {
-                                msg = '請選擇' + msg;
-                            }*/
-                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
-                            msg = '請輸入' + msg;
-                        }
-                        else if(type == 'number') {
-                            msg = msg + '限輸入數字';
-                        }
-                        else if(type == 'decimal') {
-                            msg = msg + '限輸入數字';
-                        }
-                        else if(type == 'chinese') {
-                            msg = msg + '限輸入中文字';
-                        }
-                        else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
-                           
-                            /** --start 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
-                            if(type == 'identity')
-                                 msg = msg + '驗證錯誤';
-                            
-                            else {
-                            /** --end 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
-							
-								if(val.indexOf('*') != -1) {
-									msg = msg + '勿輸入遮掩字元，請重新輸入';
+						if(val.indexOf('*') != -1) {
+							msg = msg + '勿輸入遮掩字元，請重新輸入';
+						}
+						else {
+							if(type == 'empty') {
+	                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
+	                            msg = '請輸入' + msg;
+	                        }
+	                        else if(type == 'number') {
+	                            msg = msg + '限輸入數字';
+	                        }
+	                        else if(type == 'decimal') {
+	                            msg = msg + '限輸入數字';
+	                        }
+	                        else if(type == 'chinese') {
+	                            msg = msg + '限輸入中文字';
+	                        }
+	                        else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
+	                           
+	                            /** --start 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
+	                            if(type == 'identity')
+	                                 msg = msg + '驗證錯誤';
+	                            
+	                            else {
+	                            /** --end 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
+								
+									if(val.indexOf('*') != -1) {
+										msg = msg + '勿輸入遮掩字元，請重新輸入';
+									}
+									else {
+										msg = msg + '格式錯誤';
+									}
 								}
-								else {
-									msg = msg + '格式錯誤';
-								}
-							}
-                            
-                        }
+	                            
+	                        }
+						}
+						
+                        
 
                         var validObjParent = validObj.parents('div.right:first');
 

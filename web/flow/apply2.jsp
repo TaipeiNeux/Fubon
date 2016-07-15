@@ -31,6 +31,11 @@
             <input type="hidden" name="mother_checkbox" value="" />
 			
             <input type="hidden" name="isSpouseForeignerHidden" value="" />
+			
+			<input type="hidden" name="father_String" value="" />
+            <input type="hidden" name="mother_String" value="" />
+            <input type="hidden" name="thirdParty_String" value="" />
+            <input type="hidden" name="spouse_String" value="" />
 
             <div class="incomeTaxRadio" id="incomeTaxRadio" style="display:none">
                 <span class="oneLine">

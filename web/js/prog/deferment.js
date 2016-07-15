@@ -481,28 +481,52 @@ function deferment_1(content) {
     selectMonth.val(seMonth);
     selectDay.val(seDay);
 
-    /*reasonSelector.on('change', function() {
-		var thisOption = reasonSelector.parent().find('button span');
-		//alert(thisOption.length);
-        var thisOptionText = thisOption.text();
-		
-		//alert(thisOptionText);
-        //var eligibilityIndex = $('[name="eligibilityIndex"]');
-        var eligibilityText = $('[name="eligibilityText"]');
-
-        //將選取的項目之字串存起來
-        eligibilityText.val(thisOptionText);
-    });*/
-
 }
 
 //上傳證明文件須依上步驟學生所選定的申請原因，連動帶出以下學生要上傳的證明文件名稱
 function deferment_2(content) {
+	var idPositiveViewName_hiddenid = $('[name="idPositiveViewName_hidden"]');
+	var idNegativeViewName_hidden = $('[name="idNegativeViewName_hidden"]');
+	var studentIdPositiveViewName_hidden = $('[name="studentIdPositiveViewName_hidden"]');
+	var studentIdNegativeViewName_hidden = $('[name="studentIdNegativeViewName_hidden"]');
+	var additionalViewName_hidden = $('[name="additionalViewName_hidden"]');
+	
+	var idPositiveViewName = content.idPositiveViewName_hidden;
+	var idNegativeViewName = content.idNegativeViewName_hidden;
+	var studentIdPositiveViewName = content.studentIdPositiveViewName_hidden;
+	var studentIdNegativeViewName = content.studentIdNegativeViewName_hidden;
+	var additionalViewName = content.additionalViewName_hidden;
+	
+	idPositiveViewName_hiddenid.val(idPositiveViewName);
+	idNegativeViewName_hidden.val(idNegativeViewName);
+	studentIdPositiveViewName_hidden.val(studentIdPositiveViewName);
+	studentIdNegativeViewName_hidden.val(studentIdNegativeViewName);
+	additionalViewName_hidden.val(additionalViewName);
+	
     showUploadFiles(content, 'Y');
     uploadEvent();
 }
 
 function deferment_3_1(content) {
+
+	var idPositiveViewName_hiddenid = $('[name="idPositiveViewName_hidden"]');
+	var idNegativeViewName_hidden = $('[name="idNegativeViewName_hidden"]');
+	var studentIdPositiveViewName_hidden = $('[name="studentIdPositiveViewName_hidden"]');
+	var studentIdNegativeViewName_hidden = $('[name="studentIdNegativeViewName_hidden"]');
+	var additionalViewName_hidden = $('[name="additionalViewName_hidden"]');
+	
+	var idPositiveViewName = content.idPositiveViewName_hidden;
+	var idNegativeViewName = content.idNegativeViewName_hidden;
+	var studentIdPositiveViewName = content.studentIdPositiveViewName_hidden;
+	var studentIdNegativeViewName = content.studentIdNegativeViewName_hidden;
+	var additionalViewName = content.additionalViewName_hidden;
+	
+	idPositiveViewName_hiddenid.val(idPositiveViewName);
+	idNegativeViewName_hidden.val(idNegativeViewName);
+	studentIdPositiveViewName_hidden.val(studentIdPositiveViewName);
+	studentIdNegativeViewName_hidden.val(studentIdNegativeViewName);
+	additionalViewName_hidden.val(additionalViewName);
+
 
     /*2016-06-02 added by titan for unbind preBtn*/
     var nextBtn = $('div.nextBtn');
@@ -645,6 +669,8 @@ function uploadEvent() {
             $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
         }
         $('.ajax-loader').show();
+		
+		setTimeout(function(){$('.ajax-loader').hide(); }, 2000);
     });
 
     $('input[type="file"]').on('change', function(ev) {
@@ -679,6 +705,7 @@ function uploadEvent() {
         } else {
             $('#documentType').hide();
             $('.ajax-loader').hide();
+			
             if (thisFileName.length > 24) {
                 $('#documentLength').show();
                 $('#documentType').hide();
@@ -707,6 +734,11 @@ function uploadEvent() {
                         tr.find('td.file-en').text(response.src);
                         tr.find('td.file-view a').addClass('active');
                         form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
+						
+						//塞副檔名到hidden中
+						var idName = tr.find('.file-view a').attr('id');
+						var nameHidden = $('[name="'+idName+'Name_hidden"]');
+						nameHidden.val(fileType);
 
                         //更新預覽的圖及小網顯示的圖
                         var newFile = response.docId;
@@ -726,8 +758,6 @@ function uploadEvent() {
                 });
             }
         }
-
-
     });
 }
 
@@ -1050,71 +1080,29 @@ function showUploadFiles(content, hasRadio) {
     //按預覽按鈕
     idPositiveView.on('click', function() {
         if (idPositiveView.hasClass('active')) {
-
-            previewDocument($('#pos iframe').attr('src'));
-
-            /*if ($("#pos").is(":hidden")) {
-                clickView.hide();
-                $('#pos').show();
-            } else {
-                $('#pos').hide();
-            }*/
+			var fileName = $('[name="idPositiveViewName_hidden"]').val();
+            previewDocument($('#pos iframe').attr('src'), fileName);
         }
     });
 
     idNegativeView.on('click', function() {
         if (idNegativeView.hasClass('active')) {
-
-            previewDocument($('#neg iframe').attr('src'));
-
-            /*if ($("#neg").is(":hidden")) {
-                clickView.hide();
-                $('#neg').show();
-            } else {
-                $('#neg').hide();
-            }*/
-
+			var fileName = $('[name="idNegativeViewName_hidden"]').val();
+            previewDocument($('#neg iframe').attr('src'), fileName);
         }
     });
 
     studentIdPositiveView.on('click', function() {
         if (studentIdPositiveView.hasClass('active')) {
-            previewDocument($('#sPos iframe').attr('src'));
-
-            /*if ($("#sPos").is(":hidden")) {
-                clickView.hide();
-                $('#sPos').show();
-            } else {
-                $('#sPos').hide();
-            }*/
+			var fileName = $('[name="studentIdPositiveViewName_hidden"]').val();
+            previewDocument($('#sPos iframe').attr('src'), fileName);
         }
     });
 
     studentIdNegativeView.on('click', function() {
         if (studentIdNegativeView.hasClass('active')) {
-
-            previewDocument($('#sNeg iframe').attr('src'));
-
-            /*if ($("#sNeg").is(":hidden")) {
-                clickView.hide();
-                $('#sNeg').show();
-            } else {
-                $('#sNeg').hide();
-            }*/
-        }
-    });
-
-    studentIdNegativeView.on('click', function() {
-        if (studentIdNegativeView.hasClass('active')) {
-
-            previewDocument($('#sNeg iframe').attr('src'));
-
-            /*if ($("#sNeg").is(":hidden")) {
-                clickView.hide();
-                $('#sNeg').show();
-            } else {
-                $('#sNeg').hide();
-            }*/
+			var fileName = $('[name="studentIdNegativeViewName_hidden"]').val();
+            previewDocument($('#sNeg iframe').attr('src'), fileName);
         }
     });
 }
@@ -1145,17 +1133,9 @@ function additionItem(additionalFile, additionalFile_docId, additionalFileURL) {
 
     //按預覽按鈕
     additionalView.on('click', function() {
-        if (studentIdNegativeView.hasClass('active')) {
-            previewDocument($('#add iframe').attr('src'));
-
-            /*if (additionalView.hasClass('active')) {
-                      if ($("#add").is(":hidden")) {
-                          clickView.hide();
-                          $('#add').show();
-                      } else {
-                          $('#add').hide();
-                      }
-                  }*/
-        }
+        if (additionalView.hasClass('active')) {
+			var fileName = $('[name="additionalViewName_hidden"]').val();
+            previewDocument($('#add iframe').attr('src'), fileName);
+		}
     });
 }
