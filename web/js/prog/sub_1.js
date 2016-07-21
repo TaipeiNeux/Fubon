@@ -120,28 +120,35 @@ $('#Ran-1-SliderVal').on('blur', function() {
     var isNumber = !(isNaN(amountInput));
     var err = $(this).parent('li').find('.err-message');
     if (isNumber == true) {
-        if ($(this).val() <= 0 || amountInput.substr(0, 1) == '0') {
-
-            err.text('請輸入大於0之整數');
-            $('#Ran-1-SliderVal').val(0);
-            $('#demo input').val(0);
-        } else if ($(this).val() > 9999999) {
-            err.text('長度限7位數');
-            $('#Ran-1-SliderVal').val(0);
-            $('#demo input').val(0);
-        } else if ($(this).val() == '') {
+        if ($(this).val() == '') {
             err.text('請輸入貸款金額');
             $('#Ran-1-SliderVal').val(0);
             $('#demo input').val(0);
-        } else {
-            computeLoan();
-            $(function() {
-                $("#Ran-1").slider('setValue', parseInt(amountInput));
-            });
+        } 
+        else {
+            if ($(this).val() <= 0 || amountInput.substr(0, 1) == '0') {
+                err.text('貸款金額請輸入大於0之整數');
+                $('#Ran-1-SliderVal').val(0);
+                $('#demo input').val(0);
+            } else if ($(this).val() > 9999999) {
+                err.text('貸款金額長度限7位數');
+                $('#Ran-1-SliderVal').val(0);
+                $('#demo input').val(0);
+            } else if ($(this).val() == '') {
+                err.text('請輸入貸款金額');
+                $('#Ran-1-SliderVal').val(0);
+                $('#demo input').val(0);
+            } else {
+                err.text('');
+                computeLoan();
+                $(function() {
+                    $("#Ran-1").slider('setValue', parseInt(amountInput));
+                });
 
+            }
         }
     } else if (isNumber == false) {
-        err.text('限輸入整數');
+        err.text('貸款金額請輸入大於0之整數');
         $('#Ran-1-SliderVal').val(0);
         $('#demo input').val(0);
     }
@@ -156,24 +163,27 @@ $('#Ran-2-SliderVal').on('blur', function() {
         if ($(this).val() == '') {
             err.text('請輸入年利率');
             $('#Ran-2-SliderVal').val(1.62);
-        } else {
+        } 
+        else {
             if ($(this).val() <= 0) {
-                err.text('請輸入大於0之數值');
+                err.text('年利率限輸入數字');
                 $('#Ran-2-SliderVal').val(1.62);
             } else if ($(this).val() >= 20) {
-                err.text('限輸入20%以下');
+                err.text('年利率限輸入20%以下');
                 $('#Ran-2-SliderVal').val(1.62);
             } else if (rateInput % 1) { //檢查小數點是否超過兩位數
                 if (rateInput.split(".")[1].length > 2) {
-                    err.text('限輸入小數點二位數');
+                    err.text('年利率限輸入小數點二位數');
                     $('#Ran-2-SliderVal').val(1.62);
                 } else {
+                    err.text('');
                     computeLoan();
                     $(function() {
                         $("#Ran-2").slider('setValue', parseInt(rateInput));
                     });
                 }
             } else {
+                err.text('');
                 computeLoan();
                 $(function() {
                     $("#Ran-2").slider('setValue', parseInt(rateInput));
@@ -181,7 +191,7 @@ $('#Ran-2-SliderVal').on('blur', function() {
             }
         }
     } else if (isNumber == false) {
-        err.text('限輸入數字');
+        err.text('年利率限輸入數字');
         $('#Ran-2-SliderVal').val(1.62);
     }
 });
@@ -191,25 +201,32 @@ $('#Ran-3-SliderVal').on('blur', function() {
     var isNumber = !(isNaN(regionInput));
     var err = $(this).parent('li').find('.err-message');
     if (isNumber == true) {
-        if ($(this).val() > 30) {
-            err.text('限輸入30以內');
-            $('#Ran-3-SliderVal').val(1);
-        } else if ($(this).val() <= 0 || regionInput.substr(0, 1) == '0') {
+        if ($(this).val() == '') {
             err.text('請輸入借款學期數');
             $('#Ran-3-SliderVal').val(1);
-        } else if ($(this).val() == '') {
-            err.text('請輸入借款學期數');
-            $('#Ran-3-SliderVal').val(1);
-        } else {
-            computeLoan();
-            regionMonth();
-            $(function() {
-                $("#Ran-3").slider('setValue', parseInt(regionInput));
-            });
+        } 
+        else {
+            if ($(this).val() > 30) {
+                err.text('借款學期數限輸入30以內');
+                $('#Ran-3-SliderVal').val(1);
+            } else if ($(this).val() <= 0 || regionInput.substr(0, 1) == '0') {
+                err.text('借款學期數限請輸入大於0之整數');
+                $('#Ran-3-SliderVal').val(1);
+            } else if ($(this).val() == '') {
+                err.text('請輸入借款學期數');
+                $('#Ran-3-SliderVal').val(1);
+            } else {
+                err.text('');
+                computeLoan();
+                regionMonth();
+                $(function() {
+                    $("#Ran-3").slider('setValue', parseInt(regionInput));
+                });
 
+            }
         }
     } else if (isNumber == false) {
-        err.text('限輸入整數');
+        err.text('借款學期數限請輸入大於0之整數');
         $('#Ran-3-SliderVal').val(1);
     }
 });
@@ -474,7 +491,6 @@ $('#getBranch').on('click', function() { //按下'確認'鍵後的動作
 
 //
 //表單、文件下載
-
 var documentJSON = modal.getDocument(function(documentJSON) {
     console.debug(documentJSON);
 
@@ -528,7 +544,7 @@ var documentJSON = modal.getDocument(function(documentJSON) {
     // 銵典鱓�����辣銝贝��   (pad)
     $('.dow h3').on('click', function() {
         $(this).toggleClass('active');
-        $(this).parent().find('.dowContentArea_s .dowContent').slideToggle(250);
+        $(this).parent().find('.dowContentArea_s .dowContent').slideToggle(1250);
     });
 
 

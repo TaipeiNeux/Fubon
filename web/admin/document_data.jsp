@@ -5,6 +5,7 @@
 <%@ page import="java.util.Vector" %>
 <%@ page import="com.neux.utility.orm.dal.dao.module.IDao" %>
 <%@ page import="com.neux.utility.utils.jsp.info.JSPMapInfo" %>
+<%@ page import="com.neux.utility.orm.dal.SQLCommand" %>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 
 <%
@@ -13,7 +14,8 @@
 
     IDao dao = DaoFactory.getDefaultDao();
     Vector<DataObject> result = new Vector<DataObject>();
-    dao.query(result,DaoFactory.getDefaultDataObject("Document_Data"),null);
+    SQLCommand query = new SQLCommand("select TopicNo,DataNo,Title from Document_Data");
+    dao.queryByCommand(result,query,null,DaoFactory.getDefaultDataObject("Document_Data"));
 %>
 
 <html>
@@ -42,11 +44,19 @@
     <%
         for(DataObject d : result) {
     %>
-      <tr>
-          <td><%=d.getValue("TopicNo")%></td>
-          <td><%=d.getValue("DataNo")%></td>
-          <td><%=d.getValue("Title")%></td>
-      </tr>
+    <tr>
+        <form action="document_data_act.jsp" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="DataNo" value="<%=d.getValue("DataNo")%>"/>
+            <input type="hidden" name="action" value="<%=JSPMapInfo.MODIFY%>"/>
+            <td><%=d.getValue("TopicNo")%></td>
+            <td><%=d.getValue("DataNo")%></td>
+            <td><%=d.getValue("Title")%></td>
+            <td>
+                修改檔案：<input type="file" name="file"/>
+                <button type="submit">送出</button>
+            </td>
+        </form>
+    </tr>
     <%
         }
     %>

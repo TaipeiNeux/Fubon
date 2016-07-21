@@ -43,6 +43,18 @@ public class Apply3_1 implements ILogic {
         String lastEnterDate = ""; //上次入學日期
 
         String month_graduation_hidden = "" , year_graduation_hidden = "";
+        String department_hidden = "";
+
+        //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
+        DataObject aplyMemberData = null;
+        if("Y".equalsIgnoreCase(isRecord)) {
+            //帶入撥款紀錄
+            aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        }
+        else {
+            //先取得「本學期」申請資料
+//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        }
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -64,19 +76,9 @@ public class Apply3_1 implements ILogic {
 
             if(root.element("month_graduation_hidden") != null) month_graduation_hidden = root.element("month_graduation_hidden").getText();
             if(root.element("year_graduation_hidden") != null) year_graduation_hidden = root.element("year_graduation_hidden").getText();
+            if(root.element("department_hidden") != null) department_hidden = root.element("department_hidden").getText();
         }
         else {
-
-            //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
-            DataObject aplyMemberData = null;
-            if("Y".equalsIgnoreCase(isRecord)) {
-                //帶入撥款紀錄
-                aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-            }
-            else {
-                //先取得「本學期」申請資料
-//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-            }
 
             if(aplyMemberData != null) {
 
@@ -100,19 +102,14 @@ public class Apply3_1 implements ILogic {
 
                 //轉為民國年
                 enterDateYear = ProjUtils.toBirthday(enterDateYear);
-
-                lastEnterDate = aplyMemberData.getValue("enterDT");
-                lastEnterDate = ProjUtils.toBirthday(lastEnterDate);
-
-//                //轉為民國年
-//                if(StringUtils.isNotEmpty(lastEnterDate) && lastEnterDate.length() == 6) {
-//                    String lastEnterYear = lastEnterDate.substring(0,4);
-//                    String lastEnterMonth = lastEnterDate.substring(4);
-//
-//                    lastEnterDate = (Integer.parseInt(lastEnterYear) - 1911) + "/" + lastEnterMonth;
-//                }
             }
         }
+
+        if(aplyMemberData != null) {
+            lastEnterDate = aplyMemberData.getValue("EnterDT");
+            lastEnterDate = ProjUtils.toBirthday(lastEnterDate);
+        }
+
 
         //要將代碼將成中文(資料確認頁會使用到)
         if(convertChinese) {
@@ -187,6 +184,8 @@ public class Apply3_1 implements ILogic {
 
         content.put("month_graduation_hidden",month_graduation_hidden);
         content.put("year_graduation_hidden",year_graduation_hidden);
+
+        content.put("department_hidden",department_hidden);
     }
 
     @Override

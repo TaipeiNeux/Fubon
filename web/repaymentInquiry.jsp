@@ -3,6 +3,20 @@
 <%@ include file="include/head.jsp" %>
 <%
     request.setCharacterEncoding( "utf-8");
+
+    LoginUserBean loginUserBean2 = ProjUtils.getLoginBean(request.getSession());
+
+    String hasAccount = StringUtils.isNotEmpty(loginUserBean2.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
+    String isArrears = loginUserBean2.getCustomizeValue("isArrear"); //是否不欠款
+    String isEtabs = ProjUtils.isEtabs(loginUserBean2) ? "Y" : "N"; //有無線上註記
+
+    if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears)) {
+        request.getRequestDispatcher("noPermit.jsp?typeId=1&name="+ java.net.URLEncoder.encode("進行「還款明細查詢」","utf-8")).forward(request,response);
+    }
+    else if("N".equalsIgnoreCase(isEtabs)) {
+        request.getRequestDispatcher("noPermit.jsp?typeId=2&name="+ java.net.URLEncoder.encode("進行「還款明細查詢」","utf-8")).forward(request,response);
+    }
+    else{
 %>
 
 <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css" />
@@ -16,20 +30,6 @@
 <div class="mobileMenu">
     <%@ include file="include/mobile_menu.jsp" %>
 </div>
-
-<%
-    String hasAccount = StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
-    String isArrears = loginUserBean.getCustomizeValue("isArrear"); //是否不欠款
-    String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N"; //有無線上註記
-
-    if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears)) {
-        request.getRequestDispatcher("noPermit.jsp?typeId=1&name=進行「還款明細查詢」").forward(request,response);
-    }
-    else if("N".equalsIgnoreCase(isEtabs)) {
-        request.getRequestDispatcher("noPermit.jsp?typeId=2&name=進行「還款明細查詢」").forward(request,response);
-    }
-    else{
-%>
 
 <div class="wrapper">
 
@@ -166,7 +166,7 @@
 
 </body>
 
-<script src="js/prog/repaymentInquiry.js"></script>
+<script src="js/prog/repaymentInquiry.js?v=<%=System.currentTimeMillis()%>"></script>
 
 <%
     }

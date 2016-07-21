@@ -13,6 +13,7 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.mark.MarkBean;
 import com.fubon.utils.ProjUtils;
+import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
@@ -79,6 +80,7 @@ public class Apply1_1 extends MarkFlow {
             if(StringUtils.isNotEmpty(birthday)) {
                 birthday = StringUtils.replace(birthday,"/","");
             }
+
         }
         else {
 
@@ -172,10 +174,29 @@ public class Apply1_1 extends MarkFlow {
             birthday = ProjUtils.toBirthday(birthday);
         }
 
-
         //轉成中文
         domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
         domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
+
+        //2016-07-15 added by titan，當勾選同戶藉時，要把通訊地址改成吃戶藉地址
+        GardenLog.log(GardenLog.DEBUG,"sameAddrHidden = " + sameAddrHidden);
+        if("Y".equalsIgnoreCase(sameAddrHidden)) {
+
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressCityId = " + domicileAddressCityId);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressZipCode = " + domicileAddressZipCode);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressLiner = " + domicileAddressLiner);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressNeighborhood = " + domicileAddressNeighborhood);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressAddress = " + domicileAddressAddress);
+
+
+            teleAddressCityId = domicileAddressCityId;
+            teleAddressZipCode = domicileAddressZipCode;
+            teleAddressAddress = domicileAddressLiner + domicileAddressNeighborhood + "鄰" + domicileAddressAddress;
+
+            GardenLog.log(GardenLog.DEBUG,"teleAddressCityId = " + teleAddressCityId);
+            GardenLog.log(GardenLog.DEBUG,"teleAddressZipCode = " + teleAddressZipCode);
+            GardenLog.log(GardenLog.DEBUG,"teleAddressAddress = " + teleAddressAddress);
+        }
 
         //隱碼
         if(isMark()) {

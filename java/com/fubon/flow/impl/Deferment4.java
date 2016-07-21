@@ -125,6 +125,9 @@ public class Deferment4 implements ILogic {
 
         //清除草稿資料
         FlowUtils.resetDraftData(userId,"deferment",dao);
+
+        String logResult = StringUtils.isEmpty(errorMsg) ? "延期還款申請成功" : errorMsg;
+        ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"getDraftData",logResult);
     }
 
     @Override

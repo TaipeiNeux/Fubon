@@ -63,7 +63,7 @@
 </div>
 
 <!-- 各別流程才各別載入所需的js -->
-<script src="js/prog/determimeGreeting.js"></script>
-<script src="js/prog/apply_00.js"></script>
+<script src="js/prog/determimeGreeting.js?v=<%=System.currentTimeMillis()%>"></script>
+<script src="js/prog/apply_00.js?v=<%=System.currentTimeMillis()%>"></script>
 
 </body>

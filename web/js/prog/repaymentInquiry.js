@@ -45,7 +45,6 @@ var RepaymentInquiry_controller = (function(){
 					}
 						
 						
-
 			        //綁定點選小日曆的事件讓它變藍色
 			        $('#datetimepicker1 .input-group-addon').off('click').on('click',function(ev){
 			            ev.preventDefault();
@@ -182,9 +181,13 @@ var RepaymentInquiry_controller = (function(){
 			            if( isAcceptedSearch ) {
 			                var account = $('#accounts').val();
 
+							
+							
 							//顯示Ajax轉轉圖，另外讓主頁面hide	
 							$('.ajax-loader').show();
 							setTimeout(function(){
+								$('.searchResult').hide();
+							
 								//alert(account+'\n'+start_str+'\n'+end_str);
 				                var result = RepaymentInquiry_modal.listRepaymentDetail({
 				                    account: account,
@@ -230,6 +233,7 @@ var RepaymentInquiry_controller = (function(){
 
     var listResult = function(listRepaymentDetail_data){
 
+		$('.searchResult').show();
         $('.searchResult .repayTable .smVersion').empty();
 
         $('.searchResult').removeClass('hidden');
@@ -344,8 +348,12 @@ var RepaymentInquiry_view = (function(){
 
     var account_selection = function(accounts,data){
 
-			var options = '<option>請選擇</option>';
+			var options = '';
 
+			if(accounts.length > 1) {
+				options = '<option>請選擇</option>';
+			}
+			
             for(var i =0;i<accounts.length;i++) {
                 options += '<option>'+accounts[i]+'</option>';			
 			}
@@ -380,11 +388,20 @@ var RepaymentInquiry_view = (function(){
 
         if(config.setEmpty) config.target.empty();
 
-        $table = $('<table class="rema"><thead></thead><tbody></tbody></table>').appendTo( config.target );
+        $table = $('<table class="rema 123"><thead></thead><tbody></tbody></table>').appendTo( config.target );
 
         if(config.thead != undefined && config.thead.length != 0) {
             $.each( config.thead, function(i, trObj){
-                createRow('thead', trObj, config.trAttr);
+				
+				console.log('123: ');
+				// console.log(config);
+				
+				// console.log(config.thead[0][6].val);
+				
+				// config.thead[0][6].val = '逾期<br class="repaymentInquiry_br">違約金';
+				// config.thead[0][7].val = '還款<br class="repaymentInquiry_br">金額合計';
+				
+               createRow('thead', trObj, config.trAttr);
             });
         }
 
@@ -397,7 +414,20 @@ var RepaymentInquiry_view = (function(){
         function createRow(tEle, trObj, trAttr){
             var arr = [], trAttrStr = '';
             $.each( trObj, function(i, obj){
-
+			
+				if( obj.val.indexOf("違約金") > -1){
+					// console.log("違約金");
+					obj.val = '逾期<br class="repaymentInquiry_br">違約金';
+					console.log(obj.val);
+				}
+					
+				else if (obj.val.indexOf("金額合計") > -1){
+					// console.log("金額合計");
+					obj.val = '還款<br class="repaymentInquiry_br">金額合計';
+					console.log(obj.val);
+				}
+					
+				
                 if(obj.val == undefined) {
                     obj.val = '';
                 }
@@ -414,10 +444,17 @@ var RepaymentInquiry_view = (function(){
                 if(obj.hasOwnProperty('maxSize') && obj.val.length>obj.maxSize) {
                     tagTitle = 'title="'+obj.val+'"';
                 }
-
-                else arr.push('<'+obj.type+' '+classStr+' '+(obj.valType == 'text'? titleStr :'')+' '+tagTitle+'>'+(obj.hasOwnProperty('maxSize')? ((obj.val.length>obj.maxSize)?obj.val.substring(0,obj.maxSize)+'...':obj.val):obj.val)+'</'+obj.type+'>');
-            });
-
+				
+                else {
+					arr.push('<'+obj.type+' '+classStr+' '+(obj.valType == 'text'? titleStr :'')+' '+tagTitle+'>'+(obj.hasOwnProperty('maxSize')? ((obj.val.length>obj.maxSize)?obj.val.substring(0,obj.maxSize)+'...':obj.val):obj.val)+'</'+obj.type+'>');
+      				// console.log('<'+obj.type+' '+classStr+' '+(obj.valType == 'text'? titleStr :'')+' '+tagTitle+'>'+(obj.hasOwnProperty('maxSize')? ((obj.val.length>obj.maxSize)?obj.val.substring(0,obj.maxSize)+'...':obj.val):obj.val)+'</'+obj.type+'>')
+				}
+				
+				});
+	
+			
+			
+			
             $table.find(tEle).append('<tr '+trAttrStr+'>'+arr.join('')+'</tr>');
         } // end createRow function
 

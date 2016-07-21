@@ -77,6 +77,7 @@ public class ForgetPassword4 implements ILogic {
                     studentUserProfile.setValue("Password",md5Password);
 
                     //重設密碼錯誤次數
+                    studentUserProfile.setValue("UserIdNotMatchCount","0");
                     studentUserProfile.setValue("LoginFailCount","0");
 
 
@@ -117,6 +118,9 @@ public class ForgetPassword4 implements ILogic {
         content.put("forgetPasswordDate",forgetPasswordDate);
         content.put("forgetPasswordTime",forgetPasswordTime);
 
+
+        String logResult = StringUtils.isEmpty(errorMsg) ? "忘記密碼交易成功" : errorMsg;
+        ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"getDraftData",logResult);
     }
 
     @Override

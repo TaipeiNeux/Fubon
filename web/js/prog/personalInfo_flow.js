@@ -26,7 +26,8 @@ $(document).ready(function() {
 		"personalInfo1": function(){
 			return {
 				DomicileNeighborhood : {
-					convertFullWidth : true
+					convertFullWidth : true,
+					focusClearVal : true
 				},
 				DomicileAddress : {
 					convertFullWidth : true,
@@ -134,6 +135,7 @@ function personalInfo_1(content) {
     var name_hidden = $('[name="name"]');
     var teleAddress_hidden = $('[name="teleAddress_hidden"]');
     var birthday_hidden = $('[name="birthday"]');
+	var birthday_match = $('[name="birthday_match"]');
 	var isRecord_hidden = $('[name="isRecord_hidden"]');
     
 	var addressObj = {
@@ -156,6 +158,7 @@ function personalInfo_1(content) {
 		var mm = birthday.substr(3, 2);
 		var dd = birthday.substr(5, 2);
 		birthday_hidden.val( yy + '/'+ mm + '/' +dd );
+		birthday_match.val(yy + '/'+ mm + '/' +dd );
 	}
 
     //限制輸入的長度
@@ -540,13 +543,18 @@ function personalInfo_1(content) {
                 var tagName = to.prop('tagName').toLowerCase();
 
                 //將戶籍地的村/里,鄰,地址一同塞入通訊地址的輸入框
-                if (obj.toInput == "address") {
-                    srcTemp = srcTemp + src;
+                if (obj.toInput == "address") {                 
                     console.debug(srcTemp);
                     if (obj.srcInput == "DomicileNeighborhood") {
-                        srcTemp = srcTemp + '鄰';
-                    } else if (obj.srcInput == "DomicileAddress") {
+                        src = (src == '') ? src : src + '鄰';
+                        srcTemp = srcTemp + src;
+                    } 
+                    else if (obj.srcInput == "DomicileAddress") {
+                        srcTemp = srcTemp + src;
                         src = srcTemp;
+                    }
+                    else{
+                        srcTemp = srcTemp + src;
                     }
                 }
 
@@ -1065,7 +1073,7 @@ function personalInfo_1_valid() {
             allowEmpty: false,
             group: 'birth',
 			hasHiddenCode: true,
-			hiddenTarget: $('input[name="birthday"]').val()
+			hiddenTarget: $('input[name="birthday_match"]').val()
         }],
         validMobile: [{
             name: 'cellPhone',

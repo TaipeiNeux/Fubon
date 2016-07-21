@@ -5,6 +5,7 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
@@ -30,9 +31,13 @@ public class Apply2 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
-        String familyStatus = "",guarantorStatus = "",marryStatus = "",incomeTax = "",applicantAdult = "",isGuarantor = "",showInfo = "";
+        String familyStatus = "",guarantorStatus = "",marryStatus = "",incomeTax = "",applicantAdult = "",isGuarantor = "",showInfo = "",familyStatusLevel1 = "",familyStatusLevel2 = "";
         String birthday = "",domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "",teleAddressAddress = "";
+        String sameAddrHidden = "";
+
+        String relationshipTitle = "";
+
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
         String isChanged = "Y";
         String guarantorText = "";
@@ -43,6 +48,8 @@ public class Apply2 implements ILogic {
         String father_RadioBtn = "" , mother_RadioBtn = "" ,thirdParty_RadioBtn = "" , spouse_RadioBtn = "", father_checkbox = "", mother_checkbox = "";
 
         String isSpouseForeignerHidden = "";
+
+        String father_String = "", mother_String = "",thirdParty_String = "",spouse_String = "";
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -59,6 +66,10 @@ public class Apply2 implements ILogic {
             if(root.element("thirdParty_sameAddrHidden") != null) thirdParty_sameAddrHidden = root.element("thirdParty_sameAddrHidden").getText();
             if(root.element("pouse_sameAddrHidden") != null) pouse_sameAddrHidden = root.element("pouse_sameAddrHidden").getText();
 
+            if(root.element("father_String") != null) father_String = root.element("father_String").getText();
+            if(root.element("mother_String") != null) mother_String = root.element("mother_String").getText();
+            if(root.element("thirdParty_String") != null) thirdParty_String = root.element("thirdParty_String").getText();
+            if(root.element("spouse_String") != null) spouse_String = root.element("spouse_String").getText();
 
             if(root.element("father_RadioBtn") != null) father_RadioBtn = root.element("father_RadioBtn").getText();
             if(root.element("mother_RadioBtn") != null) mother_RadioBtn = root.element("mother_RadioBtn").getText();
@@ -67,6 +78,7 @@ public class Apply2 implements ILogic {
             if(root.element("father_checkbox") != null) father_checkbox = root.element("father_checkbox").getText();
             if(root.element("mother_checkbox") != null) mother_checkbox = root.element("mother_checkbox").getText();
 
+            if(root.element("relationshipTitle") != null) relationshipTitle = root.element("relationshipTitle").getText();
         }
 
         //取得第1-1、1-2步的草稿資料
@@ -94,6 +106,7 @@ public class Apply2 implements ILogic {
         if(step1Root.element("address") != null) teleAddressAddress = step1Root.element("address").getText();
 
         if(step1Root.element("marryStatus") != null) marryStatus = step1Root.element("marryStatus").getText();
+        if(step1Root.element("sameAddrHidden") != null) sameAddrHidden = step1Root.element("sameAddrHidden").getText();
 
         if(step2Root.element("familyStatus") != null) familyStatus = step2Root.element("familyStatus").getText();
         if(step2Root.element("guarantorStatus") != null) guarantorStatus = step2Root.element("guarantorStatus").getText();
@@ -104,6 +117,8 @@ public class Apply2 implements ILogic {
         if(step2Root.element("guarantorText") != null) guarantorText = step2Root.element("guarantorText").getText();
         if(step2Root.element("isSpouseForeignerHidden") != null) isSpouseForeignerHidden = step2Root.element("isSpouseForeignerHidden").getText();
 
+        if(step2Root.element("familyStatusLevel1") != null) familyStatusLevel1 = step2Root.element("familyStatusLevel1").getText();
+        if(step2Root.element("familyStatusLevel2") != null) familyStatusLevel2 = step2Root.element("familyStatusLevel2").getText();
 
         //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
         DataObject aplyMemberData = null;
@@ -138,6 +153,26 @@ public class Apply2 implements ILogic {
             }
         }
 
+        //2016-07-15 added by titan，當勾選同戶藉時，要把通訊地址改成吃戶藉地址
+        GardenLog.log(GardenLog.DEBUG, "sameAddrHidden = " + sameAddrHidden);
+        if("Y".equalsIgnoreCase(sameAddrHidden)) {
+
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressCityId = " + domicileAddressCityId);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressZipCode = " + domicileAddressZipCode);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressLiner = " + domicileAddressLiner);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressNeighborhood = " + domicileAddressNeighborhood);
+            GardenLog.log(GardenLog.DEBUG,"domicileAddressAddress = " + domicileAddressAddress);
+
+
+            teleAddressCityId = domicileAddressCityId;
+            teleAddressZipCode = domicileAddressZipCode;
+            teleAddressAddress = domicileAddressLiner + domicileAddressNeighborhood + "鄰" + domicileAddressAddress;
+
+            GardenLog.log(GardenLog.DEBUG,"teleAddressCityId = " + teleAddressCityId);
+            GardenLog.log(GardenLog.DEBUG,"teleAddressZipCode = " + teleAddressZipCode);
+            GardenLog.log(GardenLog.DEBUG,"teleAddressAddress = " + teleAddressAddress);
+        }
+
 
         content.put("isRecord",isRecord);
         content.put("user_birthday",birthday);
@@ -153,6 +188,9 @@ public class Apply2 implements ILogic {
         content.put("relationship",thirdParty_relationship);
         content.put("thirdPartyTitle",thirdPartyTitle);
 
+        content.put("familyStatusLevel1",familyStatusLevel1);
+        content.put("familyStatusLevel2",familyStatusLevel2);
+
         content.put("isSpouseForeignerHidden",isSpouseForeignerHidden);
 
         content.put("father_sameAddr",father_sameAddrHidden);
@@ -160,12 +198,18 @@ public class Apply2 implements ILogic {
         content.put("thirdParty_sameAddr",thirdParty_sameAddrHidden);
         content.put("spouse_sameAddr",pouse_sameAddrHidden);
 
+        content.put("father_String",father_String);
+        content.put("mother_String",mother_String);
+        content.put("thirdParty_String",thirdParty_String);
+        content.put("spouse_String",spouse_String);
+
         content.put("father_RadioBtn",father_RadioBtn);
         content.put("mother_RadioBtn",mother_RadioBtn);
         content.put("thirdParty_RadioBtn",thirdParty_RadioBtn);
         content.put("spouse_RadioBtn",spouse_RadioBtn);
         content.put("father_checkbox",father_checkbox);
         content.put("mother_checkbox",mother_checkbox);
+        content.put("relationshipTitle",relationshipTitle);
 
         JSONObject domicileAddress = new JSONObject();
         domicileAddress.put("cityId",domicileAddressCityId);

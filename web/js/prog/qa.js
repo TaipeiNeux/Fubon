@@ -1,6 +1,5 @@
 if($('.QAListTab').length != 0) {
-
-
+	
 	modal.getQA(function(json) {
 	
 		var QAListTabArray = [];
@@ -65,7 +64,11 @@ if($('.QAListTab').length != 0) {
 			$('.QAListTab > ul > li .QAArea_s').hide();
 		}
 		
-
+		//2016-07-18 added by titan讓sub1.jsp的其他區塊顯示 
+		$('#QA').show();
+		$('#compute').show();
+		$('#loanBranchs').show();
+		$('#download').show();
 		
 		$('.QandAtab a').click(function(ev) {
 			ev.preventDefault();
@@ -100,66 +103,64 @@ if($('.QAListTab').length != 0) {
 		});
 
 		//移到目標位置
-var search = location.search;
-if (search != undefined && search != '' && search.indexOf('?') != -1) {
-    search = search.substr(1);
-}
+		var search = location.search;
+		if (search != undefined && search != '' && search.indexOf('?') != -1) {
+		    search = search.substr(1);
+		}
 
-var target;
-$.each(search.split('&'), function(i, param) {
+		var target;
+		$.each(search.split('&'), function(i, param) {
 
-    if (param.indexOf('=') != -1) {
-        var paramName = param.split('=')[0];
-        var paramValue = param.split('=')[1];
+		    if (param.indexOf('=') != -1) {
+		        var paramName = param.split('=')[0];
+		        var paramValue = param.split('=')[1];
 
-        if (paramName == 'target') {
-            target = parseInt(paramValue);
-        }
-    }
+		        if (paramName == 'target') {
+		            target = parseInt(paramValue);
+		        }
+		    }
 
-});
+		});
 
-var isInt = !isNaN(target);
-var index = 0;
-if (isInt == true) {
+		var isInt = !isNaN(target);
+		var index = 0;
+		if (isInt == true) {
 
-
-
-    switch (target) {
-        case 1:
-            $(function() {
-                GardenUtils.plugin.screenMoveToDiv({
-                    moveToDivObj: 'compute'
-                    //minHeight: getHeaderHeight()// + $('.header').height() + 40
-                });
-            });
-            break;
-        case 2:
-            $(function() {
-                GardenUtils.plugin.screenMoveToDiv({
-                    moveToDivObj: 'loanBranchs'//,
-                    //minHeight: getHeaderHeight()
-                });
-            });
-            break;
-        case 3:
-            $(function() {
-                GardenUtils.plugin.screenMoveToDiv({
-                    moveToDivObj: 'download'//,
-                    //minHeight: getHeaderHeight()
-                });
-            });
-            break;
-        case 4: // Edit by JiaRu 160604
-            $(function() {
-                GardenUtils.plugin.screenMoveToDiv({
-                    moveToDivObj: 'QA',
-                    minHeight: getHeaderHeight()
-                });
-            });
-            break;
-    }
-}
+		    switch (target) {
+		        case 1:
+		            $(function() {
+		                GardenUtils.plugin.screenMoveToDiv({
+		                    moveToDivObj: 'compute'
+		                    //minHeight: getHeaderHeight()// + $('.header').height() + 40
+		                });
+		            });
+		            break;
+		        case 2:
+		            $(function() {
+		                GardenUtils.plugin.screenMoveToDiv({
+		                    moveToDivObj: 'loanBranchs'//,
+		                    //minHeight: getHeaderHeight()
+		                });
+		            });
+		            break;
+		        case 3:
+		            $(function() {
+		                GardenUtils.plugin.screenMoveToDiv({
+		                    moveToDivObj: 'download'//,
+		                    //minHeight: getHeaderHeight()
+		                });
+		            });
+		            break;
+		        case 4: // Edit by JiaRu 160604
+		            $(function() {
+		                GardenUtils.plugin.screenMoveToDiv({
+		                    moveToDivObj: 'QA',
+		                    minHeight: getHeaderHeight()
+		                });
+		            });
+		            break;
+		    }
+		}
 		
 	});
 

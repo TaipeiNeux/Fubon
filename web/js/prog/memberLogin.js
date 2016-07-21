@@ -23,48 +23,48 @@ var loginBtn = $('#loginBtn');     //登入按鈕
 var loginQR = $('#loginQR');     //登入的QR code
 
 //(註冊)按下右上角三角形圖形,就會出現/消失QR code
-QR1.on('click', function(){
-    if(QR1.attr('class') == 'qrCodeRegister'){
-        hi1.hide();
-        circleBtn.hide();
-        registerBtn.hide();
-        registerQR.show();
-        QR1Img.attr('src','img/ytt.png');
-        QR1.removeClass('qrCodeRegister').addClass('labelRegister');
-        
-    }
-    else if(QR1.attr('class') == 'labelRegister'){
-        hi1.show();
-        circleBtn.show();
-        registerBtn.show();
-        registerQR.hide();
-        QR1Img.attr('src','img/yw.png');
-        QR1.removeClass('labelRegister').addClass('qrCodeRegister');
-    }
-    
-});
-
-//(登入)按下右上角三角形圖形,就會出現/消失QR code
-QR2.on('click', function(){
-    if(QR2.attr('class') == 'qrCodeLogin'){
-        hi2.hide();
-        loginInput.hide();
-        loginBtn.hide();
-        loginQR.show();
-        QR2Img.attr('src','img/yt.png');
-        QR2.removeClass('qrCodeLogin').addClass('labelLogin');
-        
-    }
-    else if(QR2.attr('class') == 'labelLogin'){
-        hi2.show();
-        loginInput.show();
-        loginBtn.show();
-        loginQR.hide();
-        QR2Img.attr('src','img/yw.png');
-        QR2.removeClass('labelLogin').addClass('qrCodeLogin');
-    }
-    
-});
+//QR1.on('click', function(){
+//    if(QR1.attr('class') == 'qrCodeRegister'){
+//        hi1.hide();
+//        circleBtn.hide();
+//        registerBtn.hide();
+//        registerQR.show();
+//        QR1Img.attr('src','img/ytt.png');
+//        QR1.removeClass('qrCodeRegister').addClass('labelRegister');
+//        
+//    }
+//    else if(QR1.attr('class') == 'labelRegister'){
+//        hi1.show();
+//        circleBtn.show();
+//        registerBtn.show();
+//        registerQR.hide();
+//        QR1Img.attr('src','img/yw.png');
+//        QR1.removeClass('labelRegister').addClass('qrCodeRegister');
+//    }
+//    
+//});
+//
+////(登入)按下右上角三角形圖形,就會出現/消失QR code
+//QR2.on('click', function(){
+//    if(QR2.attr('class') == 'qrCodeLogin'){
+//        hi2.hide();
+//        loginInput.hide();
+//        loginBtn.hide();
+//        loginQR.show();
+//        QR2Img.attr('src','img/yt.png');
+//        QR2.removeClass('qrCodeLogin').addClass('labelLogin');
+//        
+//    }
+//    else if(QR2.attr('class') == 'labelLogin'){
+//        hi2.show();
+//        loginInput.show();
+//        loginBtn.show();
+//        loginQR.hide();
+//        QR2Img.attr('src','img/yw.png');
+//        QR2.removeClass('labelLogin').addClass('qrCodeLogin');
+//    }
+//    
+//});
 
 //首頁：登入綁身份證轉大寫
 $('[name="studentId"],[name="studentCode"],[name="studentPassword"]').on('blur', function(ev) {

@@ -16,6 +16,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -92,6 +94,7 @@ public class ApplyBranchLogic implements BranchsLogic {
 
                 //(3)同一連帶保證人：連帶保證人之人數與身分證字號需與前次相同。
                 String faID = "" , maID = "" , thirdPartID = "",spouseId = "";
+                String isGuarantor = draftRoot2.element("isGuarantor").getText(); //共四碼，只有0或1，0代表不是，1代表是。例如：0001代表只有配偶是連帶保證人
                 if(draftRoot2.element("father_id") != null) faID = draftRoot2.element("father_id").getText();
                 if(draftRoot2.element("mother_id") != null) maID = draftRoot2.element("mother_id").getText();
                 if(draftRoot2.element("thirdParty_id") != null) thirdPartID = draftRoot2.element("thirdParty_id").getText();
@@ -100,6 +103,11 @@ public class ApplyBranchLogic implements BranchsLogic {
                 //(4)有簽訂網路服務契約註記：判斷於e化管理網或etabs有註記者。發電文：032282
                 String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N";
 
+                GardenLog.log(GardenLog.DEBUG, "isGuarantor = " + isGuarantor);
+                GardenLog.log(GardenLog.DEBUG, "faID = " + faID);
+                GardenLog.log(GardenLog.DEBUG, "maID = " + maID);
+                GardenLog.log(GardenLog.DEBUG, "thirdPartID = " + thirdPartID);
+                GardenLog.log(GardenLog.DEBUG, "spouseId = " + spouseId);
                 GardenLog.log(GardenLog.DEBUG, "isEtabs = " + isEtabs);
                 GardenLog.log(GardenLog.DEBUG, "studentEducationStage = " + studentEducationStage);
                 GardenLog.log(GardenLog.DEBUG, "studentIsNational = " + studentIsNational);
@@ -129,15 +137,30 @@ public class ApplyBranchLogic implements BranchsLogic {
                             && studentName.equalsIgnoreCase(historySchoolCode)) {
                         //再判斷3
 
-                        //先抓這次跟之前的申請人數量
-                        String[] now = new String[]{faID,maID,thirdPartID,spouseId};
+                        //先抓這次跟之前的保證人數量
+                        Set<String> nowIdSet = new HashSet<String>();
+                        for(int i=0;i<isGuarantor.length();i++) {
+                            String str = isGuarantor.substring(i,i+1);
+
+                            GardenLog.log(GardenLog.DEBUG,"check isGuarantor = ("+i+")" + str);
+
+                            //如果是連帶保證人，就看是父/母/監/第三
+                            if("1".equalsIgnoreCase(str)) {
+                                if(i == 0) nowIdSet.add(faID);
+                                else if(i == 1) nowIdSet.add(maID);
+                                else if(i == 2) nowIdSet.add(thirdPartID);
+                                else if(i == 3) nowIdSet.add(spouseId);
+                            }
+
+                        }
+//                        String[] now = new String[]{faID,maID,thirdPartID,spouseId};
 //                        String[] history = new String[]{historyFaIdNo,historyMaIdNo,historyGd1IdNo,historyPaId};
 
                         HashMap<String,String> signHM = ProjUtils.getSignData(dao,userId, studentName, loanAmt, studentEducationStage);
                         String loanAcct = signHM.get("signLoanAcct");
                         String yearTerm = signHM.get("signYearTerm");
 
-                        if(ProjUtils.isRelMatch(now, loanAcct, yearTerm)) {
+                        if(ProjUtils.isRelMatch(nowIdSet, loanAcct, yearTerm)) {
                             return "document_branch";
                         }
 

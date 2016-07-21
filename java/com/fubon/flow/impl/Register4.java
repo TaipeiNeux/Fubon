@@ -68,9 +68,12 @@ public class Register4 implements ILogic {
 
         String email = step2Root.element("email").getText();
 
+        String id = "";
+        String userId = "";
         try{
 
-            String id = step2Root.element("id").getText();
+            id = step2Root.element("id").getText();
+            userId = step2Root.element("userAccount").getText();
             String userPwd = step2Root.element("userPwd").getText();
 
             String s = id + "-" + userPwd;
@@ -80,7 +83,7 @@ public class Register4 implements ILogic {
             DataObject studentUserProfile = DaoFactory.getDefaultDataObject("Student_UserProfile");
 
             if(step2Root.element("id") != null) studentUserProfile.setValue("IdNo",id);
-            if(step2Root.element("userAccount") != null) studentUserProfile.setValue("UserId",step2Root.element("userAccount").getText());
+            if(step2Root.element("userAccount") != null) studentUserProfile.setValue("UserId",userId);
             if(step2Root.element("userPwd") != null) studentUserProfile.setValue("Password",md5Password);
 
             studentUserProfile.setValue("UserIdAlert","UserIdAlert");
@@ -163,6 +166,13 @@ public class Register4 implements ILogic {
         content.put("registerDate",registerDate);
         content.put("registerTime",registerTime);
 
+        String logResult = StringUtils.isEmpty(errorMsg) ? "註冊會員成功" : errorMsg;
+
+        String ip = JSPUtils.getClientIP(queryStringInfo.getRequest());
+        String sessionId = queryStringInfo.getRequest().getSession().getId();
+
+
+        ProjUtils.saveLog(dao,ip,id,userId,getClass().getName(),"getDraftData",logResult,sessionId);
     }
 
     private boolean checkExist(IDao dao,String id) throws Exception {

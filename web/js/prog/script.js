@@ -50,7 +50,8 @@ $(document).ready(function() {
     });
 
     var tmp_count = 0
-    $('.navArea ul li:eq(2) a,.navArea ul li:eq(3) a,.navArea ul li:eq(4) a,.navArea ul:eq(5) li a').click(function(ev) {
+    //$('.navArea ul li:eq(2) a,.navArea ul li:eq(3) a,.navArea ul li:eq(4) a,.navArea ul:eq(5) li a').click(function(ev) {
+	$('.navArea ul li:eq(2) a,.navArea ul li:eq(3) a,.navArea ul:eq(5) li a').click(function(ev) {
         ev.preventDefault();
         var navContent = $(this).parent().index() + 1;
         $('.navArea ul li a').removeClass('active');
@@ -837,6 +838,10 @@ function memberLogin() {
             errStr = errStr + '身分證字號輸入長度不符\n';
             $('[name="studentId"]').parent().find('.error').text('身分證字號輸入長度不符');
         }
+		else{
+			errStr = '';
+			$('[name="studentId"]').parent().find('.error').text('');
+		}
     }
 
     //console.debug(studentCode.length);
@@ -849,10 +854,15 @@ function memberLogin() {
         if (checkVal(studentCode) == false) {
             errStr = errStr + '使用者代碼限輸入英數字\n';
             $('[name="studentCode"]').parent().find('.error').text('使用者代碼限輸入英數字');
-        } else if (studentCode.length < 6) {
+        } 
+		else if (studentCode.length < 6) {
             errStr = errStr + '使用者代碼輸入長度不符\n';
             $('[name="studentCode"]').parent().find('.error').text('使用者代碼輸入長度不符');
         }
+		else{
+			errStr = '';
+			$('[name="studentCode"]').parent().find('.error').text('');
+		}
     }
 
     //使用者密碼
@@ -863,16 +873,22 @@ function memberLogin() {
         if (checkVal(studentPassword) == false) {
             errStr = errStr + '使用者密碼限輸入英數字';
             $('[name="studentPassword"]').parent().find('.error').text('使用者密碼限輸入英數字');
-        } else if (studentPassword.length < 6) {
+        } 
+		else if (studentPassword.length < 6) {
             errStr = errStr + '使用者密碼輸入長度不符';
             $('[name="studentPassword"]').parent().find('.error').text('使用者密碼輸入長度不符');
         }
+		else{
+			errStr = '';
+			$('[name="studentPassword"]').parent().find('.error').text('');
+		}
     }
 
     if (errStr != '') {
         //alert(errStr);
         errStr = '';
-    } else {
+    } 
+	else {
         //登入
 		
 		if($('.ajax-loader').length == 0) {
@@ -891,7 +907,7 @@ function memberLogin() {
 	        if (result.errorCode == '97') {
 	            GardenUtils.display.popup({
 	                title: '',
-	                content: '<p>您已於' + result.LastSignOn + '登入本服務專區,並且尚未登出。<br>若要繼續登入(捨棄上次登入)點選「確定」按鈕;<BR>若要取消本次登入(保留上次登入)請點選「取消｣按鈕。<br><div style="text-align: center;"><button type="button" class="btn btn-default cancel">取消</button><button type="button" class="btn btn-default continue">確定</button></div></p>',
+	                content: '<p>您已於' + result.LastSignOn + '登入本服務專區,並且尚未登出。<br>若要繼續登入(捨棄上次登入)點選「確定」按鈕;<BR>若要取消本次登入(保留上次登入)請點選「取消?按鈕。<br><div style="text-align: center;"><button type="button" class="btn btn-default cancel">取消</button><button type="button" class="btn btn-default continue">確定</button></div></p>',
 	                closeCallBackFn: function() {},
 	                showCallBackFn: function(popupView) {
 
@@ -1119,7 +1135,9 @@ function inputToLabel(input) {
 
 //將select轉為label
 function domicileToLabel(domicileAddrRightDiv, domicileCityName, domicileZipCodeName, domicileLiner, domiNei, domiAddr) {
-
+	if(domiNei !== ''){
+		domiNei = domiNei + '鄰';
+	}
     var label = $('<p class="susi" id="label_domicile" class="labelInline">' + domicileCityName + domicileZipCodeName + domicileLiner + domiNei + domiAddr + '</p>');
 
     //alert(domicileAddrRightDiv.find('.bootstrap-select').length);
@@ -1139,6 +1157,7 @@ function isMobileWidth() {
 
 function previewDocument(src, name) {
 	var kindOfTag = '';
+    //alert(name);
 	if(name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif'){
 		kindOfTag = '<img src="' + src + '"/>';
 	}
@@ -1272,7 +1291,7 @@ function g_countdown_seconds(conf) {
 function noETagsPopup() {
     GardenUtils.display.popup({
         title: '提醒您',
-        content: '<p>為提供更加便捷的就學貸款服務，只要簽署「就學貸款網路服務契約條款」<a href="pdf/16.就學貸款業務網路服務申請書暨契約條款(DE50).pdf" class="passIcon passpdf" target="_blank"><img src="img/akk-04.png"></a>，將可透過本服務專區申請「延後/提前還款｣。</p><p>填寫完畢，請將紙本郵寄至104 臺北市中山區中山北路二段50號3樓 「台北富邦銀行就學貸款組收｣<br>如有疑問，請洽客戶服務專線02-8751-6665按5</p>',
+        content: '<p>為提供更加便捷的就學貸款服務，只要簽署「就學貸款網路服務契約條款」<a href="pdf/16.就學貸款業務網路服務申請書暨契約條款(DE50).pdf" class="passIcon passpdf" target="_blank"><img src="img/akk-04.png"></a>，將可透過本服務專區申請「延後/提前還款?。</p><p>填寫完畢，請將紙本郵寄至104 臺北市中山區中山北路二段50號3樓 「台北富邦銀行就學貸款組收?<br>如有疑問，請洽客戶服務專線02-8751-6665按5</p>',
         closeCallBackFn: function() {},
         isShowSubmit: false
     });
@@ -1352,6 +1371,12 @@ function getCarryObj(content) {
     var thirdPartyName = content.thirdPartyName;
     var spouseName = content.spouseName;
     var loansPrice = content.loanPrice;
+    var father_RadioBtn = content.father_RadioBtn;
+    var mother_RadioBtn = content.mother_RadioBtn;
+    var thirdParty_RadioBtn = content.thirdParty_RadioBtn;
+    var spouse_RadioBtn = content.spouse_RadioBtn;
+    var father_checkbox = content.father_checkbox;
+    var mother_checkbox = content.mother_checkbox;
     var freedomLife = content.freedom.life;
     var accordingLife = content.accordingToBill.life;
     var adult = content.applicantAdult;
@@ -1359,7 +1384,7 @@ function getCarryObj(content) {
     var marryStatus = content.marryStatus;
     var level1Picked = content.familyStatusLevel1;
     var level2Picked = content.familyStatusLevel2;
-    var thirdPartyTitle = content.thirdPartyTitleHidden
+    var thirdPartyTitle = content.thirdPartyTitleHidden;
     var gaurantorTitle = ["父親", "母親", thirdPartyTitle, "配偶"]; //放父親, 母親, 第三人, 配偶 的字串 
     var gaurantorName = ['(' + fatherName + ')', '(' + motherName + ')', '(' + thirdPartyName + ')', '(' + spouseName + ')']; //放父親, 母親, 第三人, 配偶的名字的字串
     var carryObjArr = []; //放1~6
@@ -1477,9 +1502,17 @@ function getCarryObj(content) {
         }
     }
     console.debug('carryObjArr:' + carryObjArr);
-    
-    var isAddParents = '';
-
+	
+	var isIncome = content.incomeTax;
+    var isGuarantor = content.isGuarantor;
+        
+    var parentsArr =  [
+            {
+                "checkFather" : false
+            },{
+                "checkMother" : false
+            }];
+			
     //判斷哪些關係人是連帶保證人,需要帶文件
     if (marryStatus == 'N') {
         if (adult == 'N') { //未成年未婚
@@ -1498,12 +1531,45 @@ function getCarryObj(content) {
                 case '2':
                     if (level2Picked == '1') {
                         gaurantorObjArr.push('ab', 'ab');
-                    } else if (level2Picked == '2') {
-                        gaurantorObjArr.push('a', 'a');
-                    } else if (level2Picked == '3') {
-                        gaurantorObjArr.push('b', 'b');
-                    } else if (level2Picked == '4') {
-                        gaurantorObjArr.push('c', 'c');
+                    } 
+					else if (level2Picked == '2') {
+                        parentsArr[1].checkMother = true;
+						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
+						
+                        if(check == 'checkMother'){
+                            gaurantorObjArr.push('ab', 'ab');
+                        }
+                        else{
+                            gaurantorObjArr.push('a', 'a');
+                        }
+                    } 
+					else if (level2Picked == '3') {
+						parentsArr[0].checkFather = true;
+						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );					
+                        if(check == 'checkFather'){
+                            gaurantorObjArr.push('ab', 'ab');
+                        }
+                        else{
+                            gaurantorObjArr.push('b', 'b');
+                        }
+                    } 
+					else if (level2Picked == '4') {
+						parentsArr[0].checkFather = true;
+						parentsArr[1].checkMother = true;
+						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
+						
+                        if(check == 'checkFathercheckMother'){
+                            gaurantorObjArr.push('abc', 'abc');
+                        }
+                        if(check == 'checkFather'){
+                            gaurantorObjArr.push('ac', 'ac');
+                        }
+                        if(check == 'checkMother'){
+                            gaurantorObjArr.push('bc', 'bc');
+                        }
+                        else{
+                            gaurantorObjArr.push('c', 'c');
+                        }
                     }
                     break;
                 case '3':
@@ -1526,11 +1592,9 @@ function getCarryObj(content) {
                     if (level2Picked == '1') {
                         gaurantorObjArr.push('ab', 'ab');
                     } else if (level2Picked == '2') {
-                        gaurantorObjArr.push('a', 'a');
-                        isAddParents = 'mom';
+                        gaurantorObjArr.push('a', 'ab');
                     } else if (level2Picked == '3') {
-                        gaurantorObjArr.push('b', 'b');
-                        isAddParents = 'dad';
+                        gaurantorObjArr.push('b', 'ab');
                     } else if (level2Picked == '4') {
                         gaurantorObjArr.push('c', 'abc', 'c');
                     }
@@ -1538,12 +1602,46 @@ function getCarryObj(content) {
                 case '2':
                     if (level2Picked == '1') {
                         gaurantorObjArr.push('ab', 'ab');
-                    } else if (level2Picked == '2') {
-                        gaurantorObjArr.push('a', 'a');
-                    } else if (level2Picked == '3') {
-                        gaurantorObjArr.push('b', 'b');
-                    } else if (level2Picked == '4') {
-                        gaurantorObjArr.push('c', 'abc', 'c');
+                    } 
+					else if (level2Picked == '2') {
+						parentsArr[1].checkMother = true;
+						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
+											
+                        if(check == 'checkMother'){
+                            gaurantorObjArr.push('a', 'ab');
+                        }
+                        else{
+                            gaurantorObjArr.push('a', 'a');
+                        }
+                    } 
+					else if (level2Picked == '3') {
+						parentsArr[0].checkFather = true;
+					    var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
+						
+                        if(check == 'checkFather'){  
+                            gaurantorObjArr.push('b', 'ab');
+                        }
+                        else{
+                            gaurantorObjArr.push('b', 'b');
+                        }
+                    } 
+					else if (level2Picked == '4') {
+						parentsArr[0].checkFather = true;
+						parentsArr[1].checkMother = true;
+						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
+						
+                        if(check == 'checkFathercheckMother'){
+                            gaurantorObjArr.push('c', 'abc', 'c');
+                        }
+                        else if(check == 'checkFather'){
+                            gaurantorObjArr.push('c', 'ac', 'c');
+                        }
+                        else if(check == 'checkMother'){
+                            gaurantorObjArr.push('c', 'bc', 'c');
+                        }
+                        else{
+                            gaurantorObjArr.push('c', 'c', 'c');
+                        }
                     }
                     break;
                 case '3':
@@ -1606,12 +1704,41 @@ function getCarryObj(content) {
     }
     console.debug('gaurantorObjArr:' + gaurantorObjArr);
 
-    pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName, isAddParents);
+    pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName);
     return (pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName));
 }
 
+function checkParents( parentsArr, isAdult, isGuarantor, isIncome ){
+var returnString = '';
+    if(isAdult == 'N'){
+        $.each(parentsArr, function(index, obj){
+			$.each(obj, function(objIndex, objValue){
+				if(objValue){    //需要檢查當前的人
+					var current = isGuarantor.substr(index, 1);   //當前的人的值
+		               if(current == '1'){
+		                 returnString = returnString + objIndex;
+		            }					
+	            } 
+			});    
+        });
+    }
+    else if(isAdult == 'Y'){
+        $.each(parentsArr, function(index, obj){
+			$.each(obj, function(objIndex, objValue){
+				if(objValue){    //需要檢查當前的人
+					var current = isIncome.substr(index, 1);   //當前的人的值
+		               if(current == '1'){
+		                 returnString = returnString + objIndex;
+		            }					
+	            } 
+			});    
+        });
+    }
+    return returnString;
+}
+            
 //依function getCarryObj所分析的狀況塞需要攜帶的文件,連帶保證人的字串
-function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gaurantorTitleArray, gaurantorNameArray, isAddParents) {
+function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gaurantorTitleArray, gaurantorNameArray) {
     var titleName;
     var allObjArr = [];
     var numberOfGaurantors = []; //要帶相同物件的連帶保證人有幾位
@@ -1677,16 +1804,6 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
                         sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
                         gaurantorIndex += 1;
                     }
-                    
-                    //父母雙方健在且婚姻關係持續中
-                    //父親擔任連帶保證人
-                    /*if(isAddParents == 'mom'){
-                        sameObj = sameObj + '、母親';
-                    }
-                    //母親擔任連帶保證人
-                    else if(isAddParents == 'dad'){
-                        sameObj = sameObj + '、父親';
-                    }*/
                 
                     allObjArr[k] = '戶籍謄本或新式戶口名簿<p id="carryObjTip"><img src="img/pk-01-small.png" id="carryObjTip">需為最近三個月且記事欄需詳載，包含本人(' + appoName + ')、' + sameObj + '如戶籍不同者，需分別檢附</p>';
                 }
@@ -1741,6 +1858,8 @@ console.debug(content);
     var loansPrice = content.content.loanPrice;
     var freedomLife = content.content.freedom.life;
     var accordingLife = content.content.accordingToBill.life;
+    var familyStatusLevel1 = content.content.familyStatusLevel1;
+    var familyStatusLevel2 = content.content.familyStatusLevel2;
 	
 	var objList = []; //要攜帶的物品
 
@@ -1769,4 +1888,20 @@ console.debug(content);
     }
 
 	return objList;
+}
+
+
+function setToken(token) {
+	console.debug('getToken = ' + token);
+	$('#tokenKey').text(token);
+}
+
+function getToken() {
+	return window.top.getToken();
+	
+}
+
+function closeIE8() {
+	alert('into closeIE8');
+	$('#browser_ie8').remove();
 }

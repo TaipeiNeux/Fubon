@@ -4,17 +4,18 @@ import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.ORMAPI;
 import com.neux.utility.orm.hdl.connection.SQLConnection;
 import com.neux.utility.orm.hdl.connection.module.IConnection;
+import com.neux.utility.utils.date.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -168,5 +169,63 @@ public class DBUtils {
         }
 
         return false;
+    }
+
+    //取得當月非營業日
+    public static List<String> getNoBusinessDay(String yyyyMM) {
+
+        List<String> dayList = new ArrayList<String>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+
+            conn = getConnection(PIBDataSource);
+
+            String startDate = yyyyMM + "01000000";
+            String endDate = DateUtil.addDate(startDate, Calendar.MONTH,1);
+
+            startDate = DateUtil.convert14ToDate("yyyy-MM-dd",startDate);
+            endDate = DateUtil.convert14ToDate("yyyy-MM-dd",endDate);
+
+            //取回來的是像：2016-07-03 00:00:00
+            ps = conn.prepareStatement("select CALENDAR_DATE from BUSINESS_DAY where CALENDAR_DATE >= ? and CALENDAR_DATE <= ? and FLAG = ?");
+            ps.setDate(1, new Date(DateUtil.formatString2Date(startDate, DateUtil.getDateFormat(startDate)).getTime()));
+            ps.setDate(2, new Date(DateUtil.formatString2Date(endDate, DateUtil.getDateFormat(endDate)).getTime()));
+            ps.setInt(3, 0);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                String date = rs.getString("CALENDAR_DATE");
+
+                //轉成14碼後再轉成日期格式
+                date = DateUtil.convertDateTo14(date);
+                date = DateUtil.convert14ToDate("yyyy-MM-dd",date);
+
+                //放入的是只有yyyy-MM-dd格式
+                dayList.add(date);
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return dayList;
     }
 }

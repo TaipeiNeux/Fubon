@@ -59,6 +59,11 @@ public class FlowUtils {
     }
 
     public static String toDraftDataXML(JSPQueryStringInfo queryStringInfo) {
+        return toDraftDataXML(queryStringInfo,true);
+    }
+
+    //是點下一步才會是true，如果是暫存的話，原本的session還要在，所以會是false
+    public static String toDraftDataXML(JSPQueryStringInfo queryStringInfo,boolean isClearMark) {
 
         //判斷是否有隱碼需求
         MarkBean markBean = (MarkBean) queryStringInfo.getRequest().getSession().getAttribute("MarkBean");
@@ -71,7 +76,7 @@ public class FlowUtils {
                 String[] data = inputMap.get(key);
                 String original = data[0];
                 String after = data[1];
-                GardenLog.log(GardenLog.DEBUG,key + ":" + original + ":" + after);
+                GardenLog.log(GardenLog.DEBUG,key + ":[" + original + "]:[" + after + "]");
             }
         }
 
@@ -83,6 +88,7 @@ public class FlowUtils {
             String[] paramValues = queryStringInfo.getArrayParam(paramName);
 
             if(paramValues.length == 1) {
+
                 draftXML.append(ProjUtils.toTagXML(paramName,paramValues[0],inputMap));
             }
             else {
@@ -92,8 +98,12 @@ public class FlowUtils {
 
         draftXML.append("</record>");
 
-        //拿掉隱碼
-        queryStringInfo.getRequest().getSession().removeAttribute("MarkBean");
+        GardenLog.log(GardenLog.DEBUG,"draftXML["+draftXML+"]");
+
+        if(isClearMark) {
+            //拿掉隱碼
+            queryStringInfo.getRequest().getSession().removeAttribute("MarkBean");
+        }
 
         return draftXML.toString();
     }

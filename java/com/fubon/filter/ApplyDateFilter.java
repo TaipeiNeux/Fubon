@@ -30,7 +30,7 @@ public class ApplyDateFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        System.out.println("=============ApplyDateFilter===============");
+//        System.out.println("=============ApplyDateFilter===============");
 
         //判斷是否對保期間
         //取得當下學期
@@ -45,19 +45,19 @@ public class ApplyDateFilter implements Filter {
 
             String today = DateUtil.getTodayString().substring(0,8);
 
-            GardenLog.log(GardenLog.DEBUG, "eduYear = " + eduYear);
-            GardenLog.log(GardenLog.DEBUG,"semester = " + semester);
-            GardenLog.log(GardenLog.DEBUG,"applySDate = " + applySDate);
-            GardenLog.log(GardenLog.DEBUG,"applyEDate = " + applyEDate);
-            GardenLog.log(GardenLog.DEBUG,"preApplyDate = " + preApplyDate);
-            GardenLog.log(GardenLog.DEBUG,"today = " + today);
+//            GardenLog.log(GardenLog.DEBUG, "eduYear = " + eduYear);
+//            GardenLog.log(GardenLog.DEBUG,"semester = " + semester);
+//            GardenLog.log(GardenLog.DEBUG,"applySDate = " + applySDate);
+//            GardenLog.log(GardenLog.DEBUG,"applyEDate = " + applyEDate);
+//            GardenLog.log(GardenLog.DEBUG,"preApplyDate = " + preApplyDate);
+//            GardenLog.log(GardenLog.DEBUG,"today = " + today);
 
             //若提請開放時間早於起日才蓋過
             if(StringUtils.isNotEmpty(preApplyDate) && StringUtils.isNotEmpty(applySDate) && Long.parseLong(applySDate) >= Long.parseLong(preApplyDate)) {
                 applySDate = preApplyDate;
             }
 
-            GardenLog.log(GardenLog.DEBUG,"applySDate2 = " + applySDate);
+//            GardenLog.log(GardenLog.DEBUG,"applySDate2 = " + applySDate);
 
             boolean hasPreiod = (Long.parseLong(today) >= Long.parseLong(applySDate) && Long.parseLong(today) <= Long.parseLong(applyEDate));
 

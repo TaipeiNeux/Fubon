@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
 	
-	<input type="hidden" class="fileSize" name="idCardPosition_hidden" value="">
-       <input type="hidden" class="fileSize" name="idCardNegative_hidden" value="">
-       <input type="hidden" class="fileSize" name="registration_hidden" value="">
+	<input type="hidden" class="fileSize" name="isPositive_hidden" value="">
+       <input type="hidden" class="fileSize" name="isNegative_hidden" value="">
+       <input type="hidden" class="fileSize" name="register_hidden" value="">
        <input type="hidden" class="fileSize" name="lowIncome_hidden" value="">
 	   
-	   <input type="hidden" name="idCardPositionViewName_hidden" value="">
-       <input type="hidden" name="idCardNegativeViewName_hidden" value="">
-       <input type="hidden" name="registrationViewName_hidden" value="">
+	   <input type="hidden" name="idPositiveViewName_hidden" value="">
+       <input type="hidden" name="idNegativeViewName_hidden" value="">
+       <input type="hidden" name="registerViewName_hidden" value="">
        <input type="hidden" name="lowIncomeViewName_hidden" value="">
 	
 	<div class="wrap">
@@ -291,8 +291,7 @@
             </div>-->
         </div>
         <div class="dan" id="thirdParty">
-            <h2 class="thirdParty">第三人
-                <span id="isGuarantor_thirdParty">(為連帶保證人/合計所得對象）</span>
+            <h2 class="thirdParty">
               </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply2" class="editBtn">修改</a>
@@ -346,6 +345,14 @@
                     </div>
                     <div class="right">
                         <p name="thirdParty_mobile"></p>
+                    </div>
+                </div>
+				<div class="joy abon bgfff">
+                    <div class="left">
+                        <p>與申請人之關係</p>
+                    </div>
+                    <div class="right">
+                        <p name="thirdParty_relation"></p>
                     </div>
                 </div>
             </div>
@@ -643,11 +650,9 @@
                     </td>
                     <td class="file-zh">身份證正面影本</td>
                     <td class="file-en" id="idPositiveImg">無</td>
-                    <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案</a>
-						<input type="file" name="isPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
 					</td>
-                    <td class="file-upload"><a id="idPositiveUpload">上傳檔案</a>
-                        <input type="file" name="isPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-upload"><a id="idPositiveUpload">上傳檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="idPositiveView" class=""></a>
@@ -674,11 +679,9 @@
                     </td>
                     <td class="file-zh">身份證反面影本</td>
                     <td class="file-en" id="idNegativeImg">無</td>
-                    <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案</a>
-						<input type="file" name="isPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
 					</td>
-                    <td class="file-upload"><a id="idNegativeUpload">上傳檔案</a>
-                        <input type="file" name="isNegativeFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-upload"><a id="idNegativeUpload">上傳檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="idNegativeView"></a>
@@ -706,11 +709,9 @@
                         <span>（含註冊繳費單、住宿費用）</span>
                     </td>
                     <td class="file-en" id="registerImg">無</td>
-                    <td class="file-modify"><a id="registerChange" style="display:none">修改檔案</a>
-						<input type="file" name="isPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-modify"><a id="registerChange" style="display:none">修改檔案<input type="file" name="registerFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
 					</td>
-                    <td class="file-upload"><a id="registerUpload">上傳檔案</a>
-                        <input type="file" name="registerFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-upload"><a id="registerUpload">上傳檔案<input type="file" name="registerFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="registerView"></a>

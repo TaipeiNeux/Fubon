@@ -50,6 +50,7 @@ public class Apply6_1 implements ILogic {
 
 
         //申請完了，要直接寫入AplyMemberTuitionLoanDtl
+        String result = "申請失敗-線上續貸";
         try{
             DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo , dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,null,"1");
 
@@ -66,7 +67,16 @@ public class Apply6_1 implements ILogic {
         }catch(Exception e) {
             e.printStackTrace();
 
+            result = "申請失敗-線上續貸:" + e.getMessage();
+
             throw new Exception("申請失敗："+e.getMessage());
+        }
+        finally {
+            try{
+                ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"getDraftData",result);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

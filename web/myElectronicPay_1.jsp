@@ -2,21 +2,18 @@
 <%@ page import="com.fubon.utils.ElectronicPayUtils" %>
 <%@ page import="org.json.JSONArray" %>
 <%@ page import="org.apache.commons.lang3.StringUtils" %>
+<%@ page import="org.apache.commons.lang3.StringEscapeUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
 
-
-<body class="myElectronicPay_1">
-<div class="mobileMenu">
-    <%@ include file="include/mobile_menu.jsp" %>
-</div>
-
-    <%
+<%
     request.setCharacterEncoding("utf-8");
 
-    String hasAccount = StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
-    String isArrears = loginUserBean.getCustomizeValue("isArrear"); //是否不欠款
-    String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N"; //有無線上註記
+    LoginUserBean loginUserBean2 = ProjUtils.getLoginBean(request.getSession());
+
+    String hasAccount = StringUtils.isNotEmpty(loginUserBean2.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
+    String isArrears = loginUserBean2.getCustomizeValue("isArrear"); //是否不欠款
+    String isEtabs = ProjUtils.isEtabs(loginUserBean2) ? "Y" : "N"; //有無線上註記
 
     System.out.println("hasAccount = " + hasAccount);
     System.out.println("isArrears = " + isArrears);
@@ -32,26 +29,26 @@
     String barcode1 = "";
     String barcode2 = "";
     String barcode3 = "";
-	
+
     JSONArray details = null;
     if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears)) {
-        request.getRequestDispatcher("noPermit.jsp?typeId=4&name=查詢「我的電子繳款單」").forward(request,response);
+        request.getRequestDispatcher("noPermit.jsp?typeId=4&name=" + java.net.URLEncoder.encode("查詢「我的電子繳款單」","utf-8")).forward(request,response);
     }
     else if("N".equalsIgnoreCase(isEtabs)) {
-        request.getRequestDispatcher("noPermit.jsp?typeId=2&name=查詢「我的電子繳款單」").forward(request,response);
+        request.getRequestDispatcher("noPermit.jsp?typeId=2&name="+ java.net.URLEncoder.encode("查詢「我的電子繳款單」","utf-8")).forward(request,response);
     }
     else {
-            JSONObject jsonObject = ElectronicPayUtils.getElectronicPay(loginUserBean);
+        JSONObject jsonObject = ElectronicPayUtils.getElectronicPay(loginUserBean2);
 
-            out.println("<!--");
-            out.println(jsonObject.toString());
-            out.println("-->");
+//            out.println("<!--");
+//            out.println(jsonObject.toString());
+//            out.println("-->");
 
-            if("N".equalsIgnoreCase(jsonObject.getString("isSuccess"))) {
-                request.getRequestDispatcher("noPermit.jsp?typeId=3&name=查詢「我的電子繳款單」").forward(request,response);
-            }
-            else {
-                  //繳款單明細
+        if("N".equalsIgnoreCase(jsonObject.getString("isSuccess"))) {
+            request.getRequestDispatcher("noPermit.jsp?typeId=3&name="+ java.net.URLEncoder.encode("查詢「我的電子繳款單」","utf-8")).forward(request,response);
+        }
+        else {
+            //繳款單明細
             details = jsonObject.getJSONArray("details");
 
             //繳款單基本資料
@@ -68,13 +65,16 @@
             barcode1 = barcodeSrc.getString("barcode1");
             barcode2 = barcodeSrc.getString("barcode2");
             barcode3 = barcodeSrc.getString("barcode3");
-            }
-
-
-    }
+        }
 
 
 %>
+
+<body class="myElectronicPay_1">
+<div class="mobileMenu">
+    <%@ include file="include/mobile_menu.jsp" %>
+</div>
+
 
 <div class="wrapper">
 
@@ -82,6 +82,30 @@
     <%@ include file="include/headerArea.jsp" %>
 </div>
 
+<div id="mobile_barcode_block" style="display:none;">
+	<p class="mobile7_11_title">7-11超商代收專區(超商繳款免付手續費)</p>
+	<div class=" top">            
+            <div class="morena">
+                        <span class="img">
+                          <img src="<%=barcode1%>">
+                        </span>
+                <%--<p>0501016CH(條碼一)</p>--%>
+            </div>
+            <div class="morena">
+                        <span class="img">
+                          <img src="<%=barcode2%>">
+                        </span>
+                <%--<p>9998874496754799(條碼二)</p>--%>
+            </div>
+            <br>
+            <div class="morena">
+                        <span class="img">
+                          <img src="<%=barcode3%>">
+                        </span>
+                <%--<p>9998874496754799(條碼二)</p>--%>
+            </div>
+        </div>
+</div>
 
 <div class="contentArea">
 
@@ -90,6 +114,9 @@
 <div class="processBox">
 <div class="processInner">
 <div class="pomodal cheetah">
+
+
+
 <div class="printorsave">
     <a href="#" class="save">
         <img src="img/save-01.png">
@@ -337,7 +364,7 @@
 </div>
 </div>
 <div class="barCode">
-    <a href="#">產生條碼</a>
+    <a href="#" id="printMobileBarCode">產生條碼</a>
     <p class="barCodewords">提醒您，產生條碼後即可至全省7-11便利超商出示條碼進行繳款。</p>
 </div>
 <p class="casomTitle">注意事項:</p>
@@ -377,5 +404,9 @@
 
 
 <!-- 各別流程才各別載入所需的js -->
-<script src="js/prog/myElectronicPay_1.js"></script>
-<script src="js/prog/bootstrap_select_arrow.js"></script>
+<script src="js/prog/myElectronicPay_1.js?v=<%=System.currentTimeMillis()%>"></script>
+<script src="js/prog/bootstrap_select_arrow.js?v=<%=System.currentTimeMillis()%>"></script>
+
+<%
+    }
+%>

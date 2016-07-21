@@ -53,10 +53,11 @@
     Map<String,String> searchMap = new LinkedHashMap<String, String>();
     searchMap.put("b.BranchId",aplyMemberCase.getValue("EXPECTBRANCHID")); //就貸組預設的分行代號
     Vector<DataObject> ret = ProjUtils.getBranch(searchMap, DaoFactory.getDefaultDao());
-    DataObject branch = ret.get(0);
+    DataObject branch = ret.size() != 0 ? ret.get(0) : DaoFactory.getDefaultDataObject("Branch");
 
     // 申請人資料
-    String aplyIdNo = aplyMemberCase.getValue("AplyNo");
+    String aplyNo = aplyMemberCase.getValue("AplyNo");
+    String aplyIdNo = aplyMemberCase.getValue("AplyIdNo");
     String aplyName = aplyMemberCase.getValue("Applicant");
     String marriageDesc = ProjUtils.toMarryNewName(aplyMemberCase.getValue("Marriage"));
     String sex = (aplyIdNo.charAt(1) == '1') ? "男" : "女";
@@ -428,7 +429,13 @@
 
     }
 
+    //帶出審核完成時間
+    String verifyDate = aplyMemberCase.getValue("VerifyDate");
+    if(StringUtils.isNotEmpty(verifyDate) && verifyDate.length() ==8) {
+        verifyDate = ProjUtils.toBirthday(verifyDate);
 
+        verifyDate = verifyDate.substring(0,3) + "." + verifyDate.substring(3,5) + "." + verifyDate.substring(5);
+    }
 
     String[] checkIcon = {
 
@@ -511,337 +518,337 @@
 
 <form name="form1" method="post" action="">
 
-<table width="95%" border="0" cellspacing="0" cellpadding="2" align="center">
+<%--<table width="95%" border="0" cellspacing="0" cellpadding="2" align="center">--%>
 
-<tr>
+<%--<tr>--%>
 
-    <td class="text-12" nowrap height="22">
+    <%--<td class="text-12" nowrap height="22">--%>
 
-        <%=aplyName%> <%=aplyIdNo.startsWith("1", 1) ? "先生" : "小姐"%>，您本次就學貸款申請資料如下：
+        <%--<%=aplyName%> <%=aplyIdNo.startsWith("1", 1) ? "先生" : "小姐"%>，您本次就學貸款申請資料如下：--%>
 
-    </td>
+    <%--</td>--%>
 
-</tr>
+<%--</tr>--%>
 
-<tr>
+<%--<tr>--%>
 
-    <td>
+    <%--<td>--%>
 
-        <table width="100%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="1" class="table-frame">
+        <%--<table width="100%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="1" class="table-frame">--%>
 
-            <tr height="22" align="center">
+            <%--<tr height="22" align="center">--%>
 
-                <td class="cap" nowrap width="20%"><span class="text-12">學年度-學期</span></td>
+                <%--<td class="cap" nowrap width="20%"><span class="text-12">學年度-學期</span></td>--%>
 
-                <td class="cap" nowrap width="20%"><span class="text-12">身分證字號</span></td>
+                <%--<td class="cap" nowrap width="20%"><span class="text-12">身分證字號</span></td>--%>
 
-                <td class="cap" nowrap width="20%"><span class="text-12">學校名稱</span></td>
+                <%--<td class="cap" nowrap width="20%"><span class="text-12">學校名稱</span></td>--%>
 
-                <td class="cap" nowrap width="20%"><span class="text-12">本次請撥金額</span></td>
+                <%--<td class="cap" nowrap width="20%"><span class="text-12">本次請撥金額</span></td>--%>
 
-                <td class="cap" nowrap width="20%"><span class="text-12">申請日期</span></td>
+                <%--<td class="cap" nowrap width="20%"><span class="text-12">申請日期</span></td>--%>
 
-            </tr>
+            <%--</tr>--%>
 
-            <tr height="22" align="center">
+            <%--<tr height="22" align="center">--%>
 
-                <td class="text-12" nowrap width="20%"><%=eduYear%>學年度<%=semester%>學期</td>
+                <%--<td class="text-12" nowrap width="20%"><%=eduYear%>學年度<%=semester%>學期</td>--%>
 
-                <td class="text-12" nowrap width="20%"><%=aplyIdNo%></td>
+                <%--<td class="text-12" nowrap width="20%"><%=aplyIdNo%></td>--%>
 
-                <td class="text-12"        width="20%"><%=schoolName%></td>
+                <%--<td class="text-12"        width="20%"><%=schoolName%></td>--%>
 
-                <td class="text-12" nowrap width="20%"><%=renderAmt%></td>
+                <%--<td class="text-12" nowrap width="20%"><%=renderAmt%></td>--%>
 
-                <td class="text-12" nowrap width="20%"><%=aplyMemberCase.getValue("APLYDATE")%></td>
+                <%--<td class="text-12" nowrap width="20%"><%=aplyMemberCase.getValue("APLYDATE")%></td>--%>
 
-            </tr>
+            <%--</tr>--%>
 
-        </table>
+        <%--</table>--%>
 
-    </td>
+    <%--</td>--%>
 
-</tr>
+<%--</tr>--%>
 
-<tr height="20"><td></td></tr>
+<%--<tr height="20"><td></td></tr>--%>
 
-<tr>
+<%--<tr>--%>
 
-    <td>
+    <%--<td>--%>
 
-        <table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">
+        <%--<table width="100%" border="0" cellspacing="0" cellpadding="2" align="center">--%>
 
-            <tr valign="top">
+            <%--<tr valign="top">--%>
 
-                <td class="text-12 lh-20" nowrap align="center" width="1%">●</td>
+                <%--<td class="text-12 lh-20" nowrap align="center" width="1%">●</td>--%>
 
-                <td class="text-12 lh-20" nowrap align="center" width="99%">
+                <%--<td class="text-12 lh-20" nowrap align="center" width="99%">--%>
 
-                    <table width="100%" border="0" cellpadding="0" cellspacing="1">
+                    <%--<table width="100%" border="0" cellpadding="0" cellspacing="1">--%>
 
-                        <tr height="22">
+                        <%--<tr height="22">--%>
 
-                            <td class="text-12" colspan="2" valign="top">
+                            <%--<td class="text-12" colspan="2" valign="top">--%>
 
-                                <% if (signBill.equals("N")) { %>
+                                <%--<% if (signBill.equals("N")) { %>--%>
 
-                                您的就學貸款申請資料已建置成功，請列印申請書共1張，並攜帶下列證件資料至本行申辦就學貸款：
+                                <%--您的就學貸款申請資料已建置成功，請列印申請書共1張，並攜帶下列證件資料至本行申辦就學貸款：--%>
 
-                                <% } else { %>
+                                <%--<% } else { %>--%>
 
-                                您的就學貸款申請資料已建置成功，請列印申請書共1張並連同保證人，攜帶下列證件資料至本行申辦就學貸款：
+                                <%--您的就學貸款申請資料已建置成功，請列印申請書共1張並連同保證人，攜帶下列證件資料至本行申辦就學貸款：--%>
 
-                                <% } %>
+                                <%--<% } %>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                        <%
+                        <%--<%--%>
 
-                            ArrayList applyResultAlertMsg = ProjUtils.getApplyResultAlertMsg(aplyMemberCase);
+                            <%--ArrayList applyResultAlertMsg = ProjUtils.getApplyResultAlertMsg(aplyMemberCase);--%>
 
-                            for (int i = 0; i < applyResultAlertMsg.size(); i++) {
+                            <%--for (int i = 0; i < applyResultAlertMsg.size(); i++) {--%>
 
-                        %>
+                        <%--%>--%>
 
-                        <tr height="22" valign="top">
+                        <%--<tr height="22" valign="top">--%>
 
-                            <td class="text-12 lh-20" nowrap width="1%">ˇ</td>
+                            <%--<td class="text-12 lh-20" nowrap width="1%">ˇ</td>--%>
 
-                            <td class="text-12 lh-20" width="99%">
+                            <%--<td class="text-12 lh-20" width="99%">--%>
 
-                                <%=applyResultAlertMsg.get(i)%>
+                                <%--<%=applyResultAlertMsg.get(i)%>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                        <% } %>
+                        <%--<% } %>--%>
 
-                    </table>
+                    <%--</table>--%>
 
-                </td>
+                <%--</td>--%>
 
-            </tr>
+            <%--</tr>--%>
 
-            <% if (signBill.equals("N")) { %>
+            <%--<% if (signBill.equals("N")) { %>--%>
 
-            <tr valign="top">
+            <%--<tr valign="top">--%>
 
-                <td class="text-12 lh-20" nowrap align="center" width="1%">●</td>
+                <%--<td class="text-12 lh-20" nowrap align="center" width="1%">●</td>--%>
 
-                <td class="text-12 lh-20" nowrap align="center" width="99%">
+                <%--<td class="text-12 lh-20" nowrap align="center" width="99%">--%>
 
-                    <table width="100%" border="0" cellpadding="0" cellspacing="1">
+                    <%--<table width="100%" border="0" cellpadding="0" cellspacing="1">--%>
 
-                        <tr height="22">
+                        <%--<tr height="22">--%>
 
-                            <td class="text-12" colspan="2" valign="top">
+                            <%--<td class="text-12" colspan="2" valign="top">--%>
 
-                                如申請人或保證人有變更戶籍地址或姓名，請攜帶最新之戶籍謄本。
+                                <%--如申請人或保證人有變更戶籍地址或姓名，請攜帶最新之戶籍謄本。--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                    </table>
+                    <%--</table>--%>
 
-                </td>
+                <%--</td>--%>
 
-            </tr>
+            <%--</tr>--%>
 
-            <% } %>
+            <%--<% } %>--%>
 
-            <tr valign="top">
+            <%--<tr valign="top">--%>
 
-                <td class="text-12 lh-20" nowrap align="center" width="1%">●</td>
+                <%--<td class="text-12 lh-20" nowrap align="center" width="1%">●</td>--%>
 
-                <td class="text-12 lh-20" nowrap align="center" width="99%">
+                <%--<td class="text-12 lh-20" nowrap align="center" width="99%">--%>
 
-                    <table width="100%" border="0" cellpadding="0" cellspacing="1">
+                    <%--<table width="100%" border="0" cellpadding="0" cellspacing="1">--%>
 
-                        <tr height="22" valign="top">
+                        <%--<tr height="22" valign="top">--%>
 
-                            <td class="text-12 lh-20" nowrap align="right" width="1%">預約時間：</td>
+                            <%--<td class="text-12 lh-20" nowrap align="right" width="1%">預約時間：</td>--%>
 
-                            <td class="text-12 lh-20" width="99%">
+                            <%--<td class="text-12 lh-20" width="99%">--%>
 
-                                <%=expectDateList[0]%> 年 <%=expectDateList[1]%> 月 <%=expectDateList[2]%> 日&nbsp;&nbsp;<%=ProjUtils.getExpectTimeMemo(dao,aplyMemberCase.getValue("EXPECTBRANCHID"), aplyMemberCase.getValue("EXPECTTIME"))%>
+                                <%--<%=expectDateList[0]%> 年 <%=expectDateList[1]%> 月 <%=expectDateList[2]%> 日&nbsp;&nbsp;<%=ProjUtils.getExpectTimeMemo(dao,aplyMemberCase.getValue("EXPECTBRANCHID"), aplyMemberCase.getValue("EXPECTTIME"))%>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                        <tr height="22" valign="top">
+                        <%--<tr height="22" valign="top">--%>
 
-                            <td class="text-12 lh-20" nowrap align="right">預約分行：</td>
+                            <%--<td class="text-12 lh-20" nowrap align="right">預約分行：</td>--%>
 
-                            <td class="text-12 lh-20">
+                            <%--<td class="text-12 lh-20">--%>
 
-                                <%=branch.getValue("BranchName")%>
+                                <%--<%=branch.getValue("BranchName")%>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                        <tr height="22" valign="top">
+                        <%--<tr height="22" valign="top">--%>
 
-                            <td class="text-12 lh-20" nowrap align="right">地址：</td>
+                            <%--<td class="text-12 lh-20" nowrap align="right">地址：</td>--%>
 
-                            <td class="text-12 lh-20">
+                            <%--<td class="text-12 lh-20">--%>
 
-                                <%=branch.getValue("Addr")%>
+                                <%--<%=branch.getValue("Addr")%>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                        <tr height="22" valign="top">
+                        <%--<tr height="22" valign="top">--%>
 
-                            <td class="text-12 lh-20" nowrap align="right">電話：</td>
+                            <%--<td class="text-12 lh-20" nowrap align="right">電話：</td>--%>
 
-                            <td class="text-12 lh-20">
+                            <%--<td class="text-12 lh-20">--%>
 
-                                <%=branch.getValue("Tel")%>
+                                <%--<%=branch.getValue("Tel")%>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                    </table>
+                    <%--</table>--%>
 
-                </td>
+                <%--</td>--%>
 
-            </tr>
+            <%--</tr>--%>
 
-        </table>
+        <%--</table>--%>
 
-    </td>
+    <%--</td>--%>
 
-</tr>
+<%--</tr>--%>
 
-</table>
+<%--</table>--%>
 
-<table width="95%" border="0" cellspacing="0" cellpadding="2" align="center">
+<%--<table width="95%" border="0" cellspacing="0" cellpadding="2" align="center">--%>
 
-    <tr>
+    <%--<tr>--%>
 
-        <td class="text-12" nowrap height="22">
+        <%--<td class="text-12" nowrap height="22">--%>
 
-            備註：學生申請就學貸款之金額，以下列各項費用為範圍：
+            <%--備註：學生申請就學貸款之金額，以下列各項費用為範圍：--%>
 
-        </td>
+        <%--</td>--%>
 
-    </tr>
+    <%--</tr>--%>
 
-    <tr>
+    <%--<tr>--%>
 
-    <tr>
+    <%--<tr>--%>
 
-        <td>
+        <%--<td>--%>
 
-            <table width="100%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="1" class="table-frame">
+            <%--<table width="100%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="1" class="table-frame">--%>
 
-                <tr height="22" align="center">
+                <%--<tr height="22" align="center">--%>
 
-                    <td class="cap" width="3%"><span class="text-12">&nbsp;</span></td>
+                    <%--<td class="cap" width="3%"><span class="text-12">&nbsp;</span></td>--%>
 
-                    <td class="cap" width="10%"><span class="text-12">申請項目</span></td>
+                    <%--<td class="cap" width="10%"><span class="text-12">申請項目</span></td>--%>
 
-                    <td class="cap" width="52%"><span class="text-12">申 請 金 額 範 圍</span></td>
+                    <%--<td class="cap" width="52%"><span class="text-12">申 請 金 額 範 圍</span></td>--%>
 
-                    <td class="cap" width="35%"><span class="text-12">應 備 文 件</span></td>
+                    <%--<td class="cap" width="35%"><span class="text-12">應 備 文 件</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-                <tr height="22">
+                <%--<tr height="22">--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">1</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">1</span></td>--%>
 
-                    <td class="cap"><span class="text-12">學雜費</span></td>
+                    <%--<td class="cap"><span class="text-12">學雜費</span></td>--%>
 
-                    <td class="cap"><span class="text-12">其金額為該學期實際繳納者。【另依據教育部93 年7 月29 日台高（四）字第0930097146 號函釋：鑒於「音樂指導費」為音樂系學生應繳納費用之一，故得納入學雜費貸款金額項下。】</span></td>
+                    <%--<td class="cap"><span class="text-12">其金額為該學期實際繳納者。【另依據教育部93 年7 月29 日台高（四）字第0930097146 號函釋：鑒於「音樂指導費」為音樂系學生應繳納費用之一，故得納入學雜費貸款金額項下。】</span></td>--%>
 
-                    <td class="cap"rowspan="3"><span class="text-12">請自行列印註冊繳費單據正本及影本(或其他經學校簽章填註可貸金額之證明文件)</span></td>
+                    <%--<td class="cap"rowspan="3"><span class="text-12">請自行列印註冊繳費單據正本及影本(或其他經學校簽章填註可貸金額之證明文件)</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-                <tr height="22">
+                <%--<tr height="22">--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">2</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">2</span></td>--%>
 
-                    <td class="cap"><span class="text-12">實習費</span></td>
+                    <%--<td class="cap"><span class="text-12">實習費</span></td>--%>
 
-                    <td class="cap"><span class="text-12">其金額為該學期實際繳納者。</span></td>
+                    <%--<td class="cap"><span class="text-12">其金額為該學期實際繳納者。</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-                <tr height="22">
+                <%--<tr height="22">--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">3</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">3</span></td>--%>
 
-                    <td class="cap"><span class="text-12">學生團體保險費</span></td>
+                    <%--<td class="cap"><span class="text-12">學生團體保險費</span></td>--%>
 
-                    <td class="cap"><span class="text-12">其金額為該學期實際繳納者。</span></td>
+                    <%--<td class="cap"><span class="text-12">其金額為該學期實際繳納者。</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-                <tr height="22">
+                <%--<tr height="22">--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">4</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">4</span></td>--%>
 
-                    <td class="cap"><span class="text-12">住宿費</span></td>
+                    <%--<td class="cap"><span class="text-12">住宿費</span></td>--%>
 
-                    <td class="cap"><span class="text-12">其金額為該校住校宿舍費，校外住宿學生申貸之住宿費，以該校住校宿舍費之最高者為基準。</span></td>
+                    <%--<td class="cap"><span class="text-12">其金額為該校住校宿舍費，校外住宿學生申貸之住宿費，以該校住校宿舍費之最高者為基準。</span></td>--%>
 
-                    <td class="cap"><span class="text-12">校外住宿學生申貸之住宿費，請自行列印學校校內住宿費最高標準證明文件</span></td>
+                    <%--<td class="cap"><span class="text-12">校外住宿學生申貸之住宿費，請自行列印學校校內住宿費最高標準證明文件</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-                <tr height="22">
+                <%--<tr height="22">--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">5</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">5</span></td>--%>
 
-                    <td class="cap"><span class="text-12">書籍費</span></td>
+                    <%--<td class="cap"><span class="text-12">書籍費</span></td>--%>
 
-                    <td class="cap"><span class="text-12">高級中等學校為每生每學期新臺幣1,000 元；專科以上學校為每生每學期新臺幣3,000 元。</span></td>
+                    <%--<td class="cap"><span class="text-12">高級中等學校為每生每學期新臺幣1,000 元；專科以上學校為每生每學期新臺幣3,000 元。</span></td>--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">無</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">無</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-                <tr height="22">
+                <%--<tr height="22">--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">6</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">6</span></td>--%>
 
-                    <td class="cap"><span class="text-12">生活費</span></td>
+                    <%--<td class="cap"><span class="text-12">生活費</span></td>--%>
 
-                    <td class="cap"><span class="text-12">低收入戶學生，每生每學期以新臺幣4 萬元為上限；中低收入戶學生，每生每學期以新臺幣2 萬元為上限。生活費貸款者，應為經直轄市、縣（市）社政主管機關核定為低收入戶或中低收入戶之學生。</span></td>
+                    <%--<td class="cap"><span class="text-12">低收入戶學生，每生每學期以新臺幣4 萬元為上限；中低收入戶學生，每生每學期以新臺幣2 萬元為上限。生活費貸款者，應為經直轄市、縣（市）社政主管機關核定為低收入戶或中低收入戶之學生。</span></td>--%>
 
-                    <td class="cap"><span class="text-12">經直轄市、縣（市）社政主管機關發給之低收入戶卡或中低收入戶卡，或低收入戶、中低收入戶證明文件。</span></td>
+                    <%--<td class="cap"><span class="text-12">經直轄市、縣（市）社政主管機關發給之低收入戶卡或中低收入戶卡，或低收入戶、中低收入戶證明文件。</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-                <tr height="22">
+                <%--<tr height="22">--%>
 
-                    <td class="cap" style="text-align:center;"><span class="text-12">7</span></td>
+                    <%--<td class="cap" style="text-align:center;"><span class="text-12">7</span></td>--%>
 
-                    <td class="cap"><span class="text-12">海外研修費</span></td>
+                    <%--<td class="cap"><span class="text-12">海外研修費</span></td>--%>
 
-                    <td class="cap"><span class="text-12">海外研修費之申請對象，以教育部「學海飛颺」或「學海惜珠」計畫獲獎學生或依據大學法第 29條經核准同時在國內外大學修讀學位者 ( 雙聯學位 ) 為限，不包含交換學生、短期海外遊學。海外研修費之貸款範圍為海外學雜費，每生每年以新臺幣44 萬元為上限。</span></td>
+                    <%--<td class="cap"><span class="text-12">海外研修費之申請對象，以教育部「學海飛颺」或「學海惜珠」計畫獲獎學生或依據大學法第 29條經核准同時在國內外大學修讀學位者 ( 雙聯學位 ) 為限，不包含交換學生、短期海外遊學。海外研修費之貸款範圍為海外學雜費，每生每年以新臺幣44 萬元為上限。</span></td>--%>
 
-                    <td class="cap"><span class="text-12">需備妥學校或教育部核發之證明文件佐證，及學校於註冊繳費單上註記海外研修費之可貸金額(若為外幣需換算為新臺幣)。</span></td>
+                    <%--<td class="cap"><span class="text-12">需備妥學校或教育部核發之證明文件佐證，及學校於註冊繳費單上註記海外研修費之可貸金額(若為外幣需換算為新臺幣)。</span></td>--%>
 
-                </tr>
+                <%--</tr>--%>
 
-            </table>
+            <%--</table>--%>
 
-        </td>
+        <%--</td>--%>
 
-    </tr>
+    <%--</tr>--%>
 
-</table>
+<%--</table>--%>
 
 
 
@@ -849,7 +856,7 @@
 
 <%
 
-    int pages = 1;
+    int pages = 3;
 
     for (int i = 1; i <= pages; i++) {
 
@@ -1957,64 +1964,78 @@
                 </td>
 
                 <td class="text-10" nowrap width="27%">
+                    <div style="width:115px;height:95px;border:2px solid #DF2E2C;margin:0 auto;">
+                        <div style="width:115px;height:35px;border-bottom:2px solid #DF2E2C;">
+                            <p style="font-size:12px; text-align:center;margin:0;color:#DF2E2C;">台 北 富 邦 銀 行</P><P style="font-size:12px;margin:0;color:#DF2E2C;text-align:center;">已辦理就學貸款申請</p>
+                        </div>
+                        <div style="width:115px;height:30px;border-bottom:2px solid #DF2E2C;">
+                            <p style="color:#DF2E2C;text-align:center;margin:0;line-height:30px;"><%=verifyDate%></p>
+                        </div>
+                        <div style="margin-top:5px;">
+                            <p style="text-align:center;margin:0;color:#DF2E2C;font-size:12px;">
+                                線 上 續 貸 專 用
+                            </p>
+                        </div>
+                    </div>
+<!--                    <img src="print.png" />-->
 
-                    <table width="100%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="1" class="table-frame">
+                    <%--<table width="100%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="1" class="table-frame">--%>
 
-                        <tr>
+                        <%--<tr>--%>
 
-                            <td class="text-10" nowrap colspan="2" align="center">
+                            <%--<td class="text-10" nowrap colspan="2" align="center">--%>
 
-                                核對本人身分證及簽章無誤
+                                <%--核對本人身分證及簽章無誤--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                        <tr>
+                        <%--<tr>--%>
 
-                            <td colspan="2">
+                            <%--<td colspan="2">--%>
 
-                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <%--<table width="100%" border="0" cellspacing="0" cellpadding="0">--%>
 
-                                    <tr>
+                                    <%--<tr>--%>
 
-                                        <td class="text-10" nowrap width="99%" align="center">
+                                        <%--<td class="text-10" nowrap width="99%" align="center">--%>
 
-                                            <span class="text-14">&nbsp;</span>
+                                            <%--<span class="text-14">&nbsp;</span>--%>
 
-                                        </td>
+                                        <%--</td>--%>
 
-                                        <td class="text-10" nowrap width="1%" align="right">
+                                        <%--<td class="text-10" nowrap width="1%" align="right">--%>
 
-                                            <span class="text-14">&nbsp;分行</span>
+                                            <%--<span class="text-14">&nbsp;分行</span>--%>
 
-                                        </td>
+                                        <%--</td>--%>
 
-                                    </tr>
+                                    <%--</tr>--%>
 
-                                </table>
+                                <%--</table>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                        <tr height="55">
+                        <%--<tr height="55">--%>
 
-                            <td class="text-10" nowrap width="20%" align="left">
+                            <%--<td class="text-10" nowrap width="20%" align="left">--%>
 
-                                <span class="text-14">核對人</span>
+                                <%--<span class="text-14">核對人</span>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                            <td class="text-10" nowrap>
+                            <%--<td class="text-10" nowrap>--%>
 
-                                <span class="text-14">&nbsp;</span>
+                                <%--<span class="text-14">&nbsp;</span>--%>
 
-                            </td>
+                            <%--</td>--%>
 
-                        </tr>
+                        <%--</tr>--%>
 
-                    </table>
+                    <%--</table>--%>
 
                 </td>
 
@@ -2022,21 +2043,21 @@
 
                 <td class="text-10" nowrap width="30%">
 
-                    <span class="box lh-16"><span class="text-14">客服專線：(02)8751-6665 按9</span></span><br><br>
+                    <span class="box lh-16"><span class="text-14">客服專線：(02)8751-6665 按5</span></span><br><br>
 
-                    <span class="text-12 lh-16">對保日期：<span class="data-text"></span></span><br>
+                    <%--<span class="text-12 lh-16">對保日期：<span class="data-text"></span></span><br>--%>
 
-                    <span class="text-12 lh-16">對保分行：<span class="data-text"></span></span><br>
+                    <%--<span class="text-12 lh-16">對保分行：<span class="data-text"></span></span><br>--%>
 
                     <span class="text-12 lh-16">學校代碼：<span class="data-text"><%=schoolCode%></span></span><br>
 
-                    <span class="text-12 lh-16">簽立借據：<span class="data-text"></span></span><br>
+                    <%--<span class="text-12 lh-16">簽立借據：<span class="data-text"></span></span><br>--%>
 
-                    <span class="text-12 lh-16">對保編號：<span class="data-text"></span></span><br>
+                    <span class="text-12 lh-16">對保編號：<span class="data-text"><%=aplyNo%></span></span><br>
 
-                    <span class="text-12 lh-16">排序編號：<span class="data-text"></span></span><br>
+                    <%--<span class="text-12 lh-16">排序編號：<span class="data-text"></span></span><br>--%>
 
-                    <span class="text-12 lh-16">修改編號：<span class="data-text"><%=StringUtils.leftPad(aplyMemberCase.getValue("UPDATESN"),8,"0")%></span></span><br>
+                    <%--<span class="text-12 lh-16">修改編號：<span class="data-text"><%=StringUtils.leftPad(aplyMemberCase.getValue("UPDATESN"),8,"0")%></span></span><br>--%>
 
                 </td>
 

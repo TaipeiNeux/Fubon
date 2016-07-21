@@ -11,6 +11,7 @@
 			<input type="hidden" name="birthday_year" value=""/>
 			<input type="hidden" name="birthday_month" value=""/>
 			<input type="hidden" name="birthday_day" value=""/>
+			<input type="hidden" name="birthday_match" value=""/>
 			<input type="hidden" name="d_phone" value=""/>
 			<input type="hidden" name="t_phone" value=""/>
 			<input type="hidden" name="email_hidden" value=""/>

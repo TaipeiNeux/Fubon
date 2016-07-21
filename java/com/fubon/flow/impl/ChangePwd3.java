@@ -70,6 +70,8 @@ public class ChangePwd3 implements ILogic {
 
                     studentUserProfile.setValue("UserId",step1Root.element("userAccount").getText());
                     studentUserProfile.setValue("Password",md5Password);
+                    studentUserProfile.setValue("UserIdNotMatchCount","0");
+                    studentUserProfile.setValue("LoginFailCount","0");
 
                     dao.update(studentUserProfile);
 
@@ -113,6 +115,9 @@ public class ChangePwd3 implements ILogic {
 
         //清除草稿資料
         FlowUtils.resetDraftData(userId,"changePwd",dao);
+
+        String result = StringUtils.isEmpty(errorMsg) ? "變更代碼/密碼成功" : errorMsg;
+        ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"getDraftData",result);
     }
 
     @Override

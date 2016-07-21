@@ -38,6 +38,10 @@ public class WebServiceAgent {
 
 
     public static RSBean callWebService(RQBean rqBean) {
+        return callWebService(rqBean,getID(),"");
+    }
+
+    public static RSBean callWebService(RQBean rqBean,String hstano,String hretrn) {
 
         RSBean rsBean = new RSBean();
 
@@ -67,9 +71,9 @@ public class WebServiceAgent {
             header.setSPName(spName);
             header.setTxID(rqBean.getTxId());
             header.setHWSID(spName);
-            header.setHSTANO(getID());    //sequence：七碼
+            header.setHSTANO(hstano);    //sequence：七碼
             header.setHTLID(htlid);
-            header.setHRETRN("");
+            header.setHRETRN(hretrn);
             header.setEncoding("BIG5");
             header.setUUID(UUID.randomUUID().toString().replaceAll("-", ""));
 
@@ -154,7 +158,6 @@ public class WebServiceAgent {
                 rsBean.setErrorCode(res.getServiceHeader().getResponseCode());
                 rsBean.setTxnString("<root>"+res.getServiceBody().getTxnString()+"</root>");
 
-
             } else {
                 GardenLog.log(GardenLog.DEBUG, "異常");
 
@@ -190,7 +193,6 @@ public class WebServiceAgent {
     private static String getID() {
 
         return DBUtils.getSequenceNextVal(SQL_GET_SEQ_VALUE);
-
 
     }
 

@@ -1,10 +1,18 @@
 //產生招呼語
+if ($('.ajax-loader').length == 0) {
+    $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+}
 
-g_ajax({
+
+//顯示Ajax轉轉圖，另外讓主頁面hide	
+$('.ajax-loader').show();
+setTimeout(function() {
+
+$.ajax({
     url: 'auth?action=getLoginInfo&v=' + new Date().getTime(),
     data: {},
     datatype:'json',
-    callback: function(json) {
+    success: function(json) {
         //content = $.parseJSON(content);
         console.debug(json);
         var jsonLoginStatus = json;
@@ -22,6 +30,8 @@ g_ajax({
 		console.debug(st);
         console.debug(st.length);
 
+		var isForward = false;
+		
         if (st.length == 2) {
             var caseIndex = st.substr(1, 1);
                     console.debug(caseIndex);
@@ -30,6 +40,7 @@ g_ajax({
                         case '0':
                             modal.resetApply();
                             window.location = 'apply.jsp';
+							isForward = true;
                             break;
                         case '1':
                             var firSemesterStart = msg.split(",")[0];
@@ -120,6 +131,7 @@ g_ajax({
                 case '0': //直接進入我要申請的step1-1頁面
                     modal.resetApply();
                     window.location = 'apply.jsp';
+					isForward = true;
                     break;
                 case '1':
                     var firSemesterStart = msg.split(";")[0];
@@ -219,7 +231,15 @@ g_ajax({
             modal.resetApply();
             window.location = 'apply.jsp';
         });
+		
+		if(!isForward) {
+			$('.ajax-loader').hide();
+			$('div.processArea').show();
+		}
     }
 });
+
+},100);
+
 
 

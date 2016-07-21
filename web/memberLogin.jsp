@@ -93,7 +93,7 @@
                         </div>
                         <div class="loginBox">
                             <a href="forgetPassword.jsp">忘記代碼/密碼</a>
-                            <a href="register.jsp">註冊會員</a>
+                            <a href="register.jsp" class="register_1">註冊會員</a>
                         </div>
                     </div>
                     <div class="padaBtn" id="loginBtn">
@@ -120,4 +120,4 @@
     </div>
 
 </div>
-<script src="js/prog/memberLogin.js"></script>
+<script src="js/prog/memberLogin.js?v=<%=System.currentTimeMillis()%>"></script>

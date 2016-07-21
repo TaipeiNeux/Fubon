@@ -49,7 +49,8 @@
         	<p>Email</p>
       	</div>
       	<div class="right">
-        	<input class="input_L" type="text" name="email" maxlength="40">
+			<!--  0716 忠毅 : 已改規定 : 上限44位  **/  -->
+        	<input class="input_L" type="text" name="email" maxlength="44">
 <!--	        <span class="susi">(請輸入少於40位)</span>-->
 			<div class="error-msg"/>
       	</div>

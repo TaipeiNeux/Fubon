@@ -97,9 +97,19 @@ public class AuthServlet extends HttpServlet {
     }
 
     private void logout(JSPQueryStringInfo queryStringInfo,HttpServletResponse resp) {
+
+        try{
+            ProjUtils.saveLog(DaoFactory.getDefaultDao(),queryStringInfo.getRequest(),getClass().getName(),"logout","登出成功");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         removeLoginInfoToApplication(loginUserBean.getUserId());
         queryStringInfo.getRequest().getSession().removeAttribute("loginUserBean");
+
+
+
     }
 
     private void setGuest(JSPQueryStringInfo queryStringInfo,HttpServletResponse resp) {
@@ -142,6 +152,7 @@ public class AuthServlet extends HttpServlet {
         String id = queryStringInfo.getParam("id");
         String userId = queryStringInfo.getParam("userId");
         String userPwd = queryStringInfo.getParam("userPwd");
+        String token = queryStringInfo.getParam("token");
 
         JSONObject jsonObject = new JSONObject();
         boolean sendEmail = true;
@@ -149,13 +160,19 @@ public class AuthServlet extends HttpServlet {
         int failCount = 0;
         int userIdNotMatchCount = 0;
 
+        IDao dao = DaoFactory.getDefaultDao();
+
+        long now = System.currentTimeMillis();
         try{
+
+
+            GardenLog.log(GardenLog.DEBUG,"======start login======");
 
             jsonObject.put("errorCode","98");
             jsonObject.put("errorMsg", "您輸入的資料錯誤");
 
             //要查db確認身份，查：Student_UserProfile/Student_UserProfileDetail
-            IDao dao = DaoFactory.getDefaultDao();
+
             DataObject studentUserProfile = DaoFactory.getDefaultDataObject("Student_UserProfile");
             studentUserProfile.setValue("IdNo",id);
 
@@ -165,6 +182,10 @@ public class AuthServlet extends HttpServlet {
             //錯誤次數
 
             if(dao.querySingle(studentUserProfile,null) && dao.querySingle(studentUserProfileDetail,null)) {
+
+
+                GardenLog.log(GardenLog.DEBUG,"======login step1 waste:" + (System.currentTimeMillis()-now));
+                now = System.currentTimeMillis();
 
                 String dbUserId = studentUserProfile.getValue("UserId");
                 String dbPassword = studentUserProfile.getValue("Password");
@@ -208,13 +229,23 @@ public class AuthServlet extends HttpServlet {
 
                             if(md5Password.equalsIgnoreCase(dbPassword)) {
 
+                                GardenLog.log(GardenLog.DEBUG,"======login step2 waste:" + (System.currentTimeMillis()-now));
+                                now = System.currentTimeMillis();
+
                                 //當驗證都過了，就判斷這身份證是否已經在別的瀏覽器登入
                                 if(sessionMap.containsKey(id) && !"Y".equals(force)) {
                                     jsonObject.put("errorCode","97");
+                                    jsonObject.put("errorMsg","在別的瀏覽器登入");
                                     jsonObject.put("LastSignOn",sessionMap.get(id).getLoginTime());
+
+                                    sendEmail = false;
                                 }
                                 else {
                                     LoginUserBean loginUserBean = new LoginUserBean();
+
+                                    //2016-07-15 登入時將token放入session
+                                    GardenLog.log(GardenLog.DEBUG,"token = " + token);
+                                    loginUserBean.addCustomizeValue("_token",token);
 
                                     //把DB的值全部裝進去到Session
                                     List<DataColumn> colList = studentUserProfile.getColumnList();
@@ -229,6 +260,9 @@ public class AuthServlet extends HttpServlet {
                                         GardenLog.log(GardenLog.DEBUG,"put loginUserBean customizeValue:" + col.getName() + "=" + col.getValue());
                                         loginUserBean.addCustomizeValue(col.getName(),col.getValue());
                                     }
+
+                                    GardenLog.log(GardenLog.DEBUG,"======login step3 waste:" + (System.currentTimeMillis()-now));
+                                    now = System.currentTimeMillis();
 
                                     //是否有簽訂線上服務註記
                                     //如果是公司環境，固定是回傳true
@@ -287,6 +321,9 @@ public class AuthServlet extends HttpServlet {
 //                                        isArrearChk++;//testing
                                     }
 
+                                    GardenLog.log(GardenLog.DEBUG,"======login step4 waste:" + (System.currentTimeMillis()-now));
+                                    now = System.currentTimeMillis();
+
                                     String isEtabs = isETab ? "Y" : "N";//紀錄是否有簽訂線上服務註記
                                     String isArrear = isArrearChk == 0 ? "Y" : "N";//紀錄是否不欠款
 
@@ -310,6 +347,7 @@ public class AuthServlet extends HttpServlet {
 
                                     //重設密碼錯誤次數
                                     studentUserProfile.setValue("LoginFailCount","0");
+                                    studentUserProfile.setValue("UserIdNotMatchCount","0");
                                     studentUserProfile.setValue("LastSignOn",lastSignOn);
                                     dao.update(studentUserProfile);
 
@@ -328,6 +366,9 @@ public class AuthServlet extends HttpServlet {
                                     queryStringInfo.getRequest().getSession().removeAttribute("loginSuccessPage");
 
                                     sendEmail = false;
+
+                                    GardenLog.log(GardenLog.DEBUG,"======login step5 waste:" + (System.currentTimeMillis()-now));
+                                    now = System.currentTimeMillis();
                                 }
 
 
@@ -395,6 +436,9 @@ public class AuthServlet extends HttpServlet {
 
             try{
 
+                GardenLog.log(GardenLog.DEBUG,"======login step6 waste:" + (System.currentTimeMillis()-now));
+                now = System.currentTimeMillis();
+
                 MailBean mailBean = new MailBean("login");
                 mailBean.setReceiver(email);
                 mailBean.setTitle(MessageUtils.loginFailTitle);
@@ -404,20 +448,48 @@ public class AuthServlet extends HttpServlet {
 
                 MessageUtils.sendEmail(mailBean);
 
-                //錯誤超過5次時，額外發送
-                if(userIdNotMatchCount >= 5) {
-                    mailBean = new MailBean("login");
-                    mailBean.setReceiver(email);
-                    mailBean.setTitle(MessageUtils.loginFailTitle);
-                    mailBean.addResultParam("errorCode","98");
-                    mailBean.addResultParam("result","使用者代碼輸入錯誤五次");
-                    mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
+                GardenLog.log(GardenLog.DEBUG,"======login step7 waste:" + (System.currentTimeMillis()-now));
+                now = System.currentTimeMillis();
 
-                    MessageUtils.sendEmail(mailBean);
-                }
+//                //錯誤第5次時，額外發送
+//                if(userIdNotMatchCount == 5) {
+//                    mailBean = new MailBean("login");
+//                    mailBean.setReceiver(email);
+//                    mailBean.setTitle(MessageUtils.loginFailTitle);
+//                    mailBean.addResultParam("errorCode","98");
+//                    mailBean.addResultParam("result","使用者代碼輸入錯誤五次");
+//                    mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
+//
+//                    MessageUtils.sendEmail(mailBean);
+//
+//                    GardenLog.log(GardenLog.DEBUG,"======login step8 waste:" + (System.currentTimeMillis()-now));
+//                    now = System.currentTimeMillis();
+//                }
             }catch(Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        try{
+            GardenLog.log(GardenLog.DEBUG,"======login step1 waste9:" + (System.currentTimeMillis()-now));
+            now = System.currentTimeMillis();
+
+            String errorCode = jsonObject.getString("errorCode");
+
+            if("0".equalsIgnoreCase(errorCode)) {
+                ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"login","登入成功");
+            }
+            else {
+                String ip = JSPUtils.getClientIP(queryStringInfo.getRequest());
+                String sessionId = queryStringInfo.getRequest().getSession().getId();
+                ProjUtils.saveLog(dao,ip,id,userId,getClass().getName(),"login",jsonObject.getString("errorMsg"),sessionId);
+            }
+
+
+            GardenLog.log(GardenLog.DEBUG,"======login step10 waste:" + (System.currentTimeMillis()-now));
+            now = System.currentTimeMillis();
+        }catch(Exception e) {
+            e.printStackTrace();
         }
 
         JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
@@ -425,11 +497,16 @@ public class AuthServlet extends HttpServlet {
 
     private void getLoginInfo(JSPQueryStringInfo queryStringInfo,HttpServletResponse resp) {
 
+        String _token = queryStringInfo.getParam("_token");
+
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
 
         JSONObject jsonObject = new JSONObject();
         JSONObject content = new JSONObject();
         JSONArray reasonArray = new JSONArray();
+
+        IDao dao = DaoFactory.getDefaultDao();
+
         try{
             jsonObject.put("isLogin","N");
             jsonObject.put("content",content);
@@ -438,332 +515,432 @@ public class AuthServlet extends HttpServlet {
 
                 //判斷是否有重覆登入
                 String userId = loginUserBean.getUserId();
-                GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
+//                GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
 
                 SessionLoginBean sessionLoginBean = sessionMap.get(userId);
                 String sessionId = sessionLoginBean.getSessionId();
 
-                GardenLog.log(GardenLog.DEBUG,"current = " + queryStringInfo.getRequest().getSession().getId());
-                GardenLog.log(GardenLog.DEBUG,"sessionId = " + sessionId);
+//                GardenLog.log(GardenLog.DEBUG,"current = " + queryStringInfo.getRequest().getSession().getId());
+//                GardenLog.log(GardenLog.DEBUG,"sessionId = " + sessionId);
 
                 //如果驗證的sessionid跟目前的不同，則踢除
                 if(sessionLoginBean != null && !queryStringInfo.getRequest().getSession().getId().equals(sessionId)) {
                     queryStringInfo.getRequest().getSession().removeAttribute("loginUserBean");
                 }
                 else {
-                    jsonObject.put("isLogin","Y");
 
-                    IDao dao = DaoFactory.getDefaultDao();
-
-                    //加入個資隱碼
-                    jsonObject.put("name",ProjUtils.toNameMark(loginUserBean.getUserName()));
-
-                    //取得當下學期
-                    HashMap<String,String> eduYearInfo = ProjUtils.getEduYearInfo(dao,null);
-
-                    String eduYear = eduYearInfo.get("eduYear");//學年
-                    String semester = eduYearInfo.get("semester"); //取得第幾學期
-                    String applySDate = eduYearInfo.get("apply_sDate"); //網路投保開始時間
-                    String applyEDate = eduYearInfo.get("apply_eDate"); //網路投保開始時間
-                    String preApplyDate = eduYearInfo.get("preApplyDate"); //提前時間
-                    String noPeriodDisplayHTML = eduYearInfo.get("Bulletin");//若現在不是對保期間，撈對保期間的文字
-
-                    String today = DateUtil.getTodayString().substring(0,8);
-
-                    GardenLog.log(GardenLog.DEBUG,"eduYear = " + eduYear);
-                    GardenLog.log(GardenLog.DEBUG,"semester = " + semester);
-                    GardenLog.log(GardenLog.DEBUG,"applySDate = " + applySDate);
-                    GardenLog.log(GardenLog.DEBUG,"applyEDate = " + applyEDate);
-                    GardenLog.log(GardenLog.DEBUG,"preApplyDate = " + preApplyDate);
-                    GardenLog.log(GardenLog.DEBUG,"today = " + today);
-
-                    //若提請開放時間早於起日才蓋過
-                    if(StringUtils.isNotEmpty(preApplyDate) && StringUtils.isNotEmpty(applySDate) && Long.parseLong(applySDate) >= Long.parseLong(preApplyDate)) {
-                        applySDate = preApplyDate;
+                    //如果不同的token則踢除
+                    if(StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("_token")) && StringUtils.isNotEmpty(_token) && !loginUserBean.getCustomizeValue("_token").equalsIgnoreCase(_token)) {
+                        queryStringInfo.getRequest().getSession().removeAttribute("loginUserBean");
                     }
-
-                    GardenLog.log(GardenLog.DEBUG,"applySDate2 = " + applySDate);
-
-                    boolean hasPreiod = (Long.parseLong(today) >= Long.parseLong(applySDate) && Long.parseLong(today) <= Long.parseLong(applyEDate));
-
-                    //先取得「本學期」申請資料
-                    Map<String,String> queryMap = new HashMap<String,String>();
-                    queryMap.put("EduYear",eduYearInfo.get("eduYear"));
-                    queryMap.put("Semester",eduYearInfo.get("semester"));
-
-                    //查這學期的申請案件
-                    DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanData(userId,queryMap,dao);
-
-                    //撈1-2草稿
-                    String apply1_2DraftXML = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);
+                    else {
+                        jsonObject.put("isLogin","Y");
 
 
-                    //撈申辦人相關資料
-
-                    String isPeriod = hasPreiod ? "Y" : "N";//紀錄是否為對保期間
-                    String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N"; //紀錄是否有撥款紀錄
-                    String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N";//紀錄是否有簽訂線上服務註記
-                    String isPopUp = ProjUtils.isPopupPromoDialog(userId,dao) ? "Y" : "N";//此學期是否已經彈跳過
-                    String appCases = aplyMemberData != null ? "Y" : "N";//本學期是否有申請案件
-                    String tempCases = FlowUtils.isDraftData(userId, "apply", dao) ? "Y" : "N";//紀錄是否有暫存案件
-                    String kindOfCases = aplyMemberData != null ? aplyMemberData.getValue("AplyCaseType") : "";//紀錄案件種類(1:線上續貸/2:分行對保);
-                    String censor = "";//紀錄審核狀態 1:尚未審核;2:審核中;3:審核合完成通過;4:審核完成未通過
-
-                    String applicantAdult = "";//是否成年
-                    String userMarriedHidden = "";//婚姻狀態
-                    String familyStatusLevel1 = "";//家庭狀況1
-                    String familyStatusLevel2 = "";//家庭狀況2
-                    String signBill = aplyMemberData != null ? aplyMemberData.getValue("signBill") : "";//是否簽立借據
-
-                    if(StringUtils.isNotEmpty(apply1_2DraftXML)) {
-                        Document apply1_2Doc = DocumentHelper.parseText(apply1_2DraftXML);
-                        Element apply1_2Root = apply1_2Doc.getRootElement();
-
-                        applicantAdult = apply1_2Root.element("applicantAdult").getText();
-                        userMarriedHidden = apply1_2Root.element("userMarriedHidden").getText();
-                        familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
-                        familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
-                    }
-
-
-                    //預約分行紀錄
-                    String expectDate = aplyMemberData != null ? aplyMemberData.getValue("expectDate") : "";
-                    String expectTime = aplyMemberData != null ? aplyMemberData.getValue("expectTime") : "";
-
-                    String firstSemesterStart = "";//上學期的對保開始時間
-                    String firstSemesterEnd = "";//上學期的對保結束時間
-                    String secondSemesterStart = "";//下學期的對保開始時間
-                    String secondSemesterEnd = "";//下學期的對保結束時間
-
-                    String appName = "";//申請人名字
-
-                    //線上申貸的申請時間
-                    String onlineAppYear = "";
-                    String onlineAppMonth = "";
-                    String onlineAppDay = "";
-                    String onlineAppHour = "";
-                    String onlineAppMin = "";
-                    String onlineAppSec = "";
-
-                    //對保分行的申請時間
-                    String documentAppYear = "";
-                    String documentAppMonth = "";
-                    String documentAppDay = "";
-                    String documentAppHour = "";
-                    String documentAppMin = "";
-                    String documentAppSec = "";
-
-                    //草稿的修改時間
-                    String draftAppYear = "";
-                    String draftAppMonth = "";
-                    String draftAppDay = "";
-                    String draftAppHour = "";
-                    String draftAppMin = "";
-                    String draftAppSec = "";
-
-                    String branchName = ""; //對保分行名稱
-                    String branchAddr = ""; //對保分行地址
-                    String branchTel = ""; //對保分行電話
-                    String carryObjArr = ""; //攜帶的物品
-                    String reservation = ""; //預約對保分行的時間
-
-                    //取最後草稿修改時間
-                    String lastDraftModifyTime = FlowUtils.getDraftLastModifyTime(userId,"apply",dao);
-                    if(StringUtils.isNotEmpty(lastDraftModifyTime)) {
-                        String modifyTime14 = DateUtil.convertDateTo14(lastDraftModifyTime);
-
-                        draftAppYear = modifyTime14.substring(0,4);
-                        draftAppMonth = modifyTime14.substring(4,6);
-                        draftAppDay = modifyTime14.substring(6,8);
-                        draftAppHour = modifyTime14.substring(8,10);
-                        draftAppMin = modifyTime14.substring(10,12);
-                        draftAppSec = modifyTime14.substring(12,14);
-                    }
-
-                    //抓對保期間
-                    HashMap<String,String> regionMap = ProjUtils.getApplyDateRegion(dao);
-
-                    firstSemesterStart = regionMap.get("s1_sDate");//上學期的對保開始時間
-                    firstSemesterEnd = regionMap.get("s1_eDate");//上學期的對保結束時間
-                    secondSemesterStart = regionMap.get("s2_sDate");//下學期的對保開始時間
-                    secondSemesterEnd = regionMap.get("s2_eDate");//下學期的對保結束時間
-
-                    //若本學期有申請資料，才往下抓其他資料
-                    if(aplyMemberData != null) {
-
-                        String aplyStatus = aplyMemberData.getValue("APLYSTATUS");
-
-                        //(未對保) = 尚未審核
-                        if("UNVERIFIED".equalsIgnoreCase(aplyStatus)) {
-                            censor = "1";
-                        }
-                        //審核中
-                        if("VERIFYING".equalsIgnoreCase(aplyStatus)) {
-                            censor = "2";
-                        }
-                        //(已對保) = 審核完成-通過
-                        else if("VERIFIED".equalsIgnoreCase(aplyStatus)) {
-                            censor = "3";
-                        }
-                        //審核完成未通過
-                        else if("REJECT".equalsIgnoreCase(aplyStatus)) {
-                            censor = "4";
-                        }
-
-                        //拒絕原因
-                        DataObject aplyMemberTuitionLoanDtlReason = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_reason");
-                        aplyMemberTuitionLoanDtlReason.setValue("AplyNo",aplyMemberData.getValue("AplyNo"));
-                        if(dao.querySingle(aplyMemberTuitionLoanDtlReason,null)) {
-                            Vector<DataObject> rejectRS = new Vector<DataObject>();
-                            dao.query(rejectRS,DaoFactory.getDefaultDataObject("RejectReason"),new QueryConfig().addOrder("ReasonId", Order.ASC));
-
-
-                            for(int i=0;i<rejectRS.size();i++) {
-                                DataObject reasonObject = rejectRS.get(i);
-                                String reasonId = reasonObject.getValue("ReasonId");
-
-                                String id = reasonId.substring(1);
-                                id = String.valueOf(Integer.parseInt(id));
-
-                                String aplyReasonValue = aplyMemberTuitionLoanDtlReason.getValue("Reason" + id);
-
-                                if("Y".equalsIgnoreCase(aplyReasonValue)) {
-                                    reasonArray.put(reasonObject.getValue("Reason"));
-                                }
-
-                            }
-                        }
-
-                        appName = aplyMemberData.getValue("Applicant");
 
                         //加入個資隱碼
-                        appName = ProjUtils.toNameMark(appName);
+                        jsonObject.put("name",ProjUtils.toNameMark(loginUserBean.getUserName()));
 
-                        //依案件類型來判斷放入哪些變數(1:線上續貸/2:分行對保)
-                        String aplyCaseType = aplyMemberData.getValue("AplyCaseType");
-                        String aplyDate = aplyMemberData.getValue("AplyDate");
-                        String aplyTime = aplyMemberData.getValue("AplyTime");
+                        //取得當下學期
+                        HashMap<String,String> eduYearInfo = ProjUtils.getEduYearInfo(dao,null);
 
-                        if("1".equalsIgnoreCase(aplyCaseType)) {
-                            onlineAppYear = aplyDate.substring(0,4);
-                            onlineAppMonth = aplyDate.substring(4,6);
-                            onlineAppDay = aplyDate.substring(6,8);
-                            onlineAppHour = aplyTime.substring(0,2);
-                            onlineAppMin = aplyTime.substring(2,4);
-                            onlineAppSec = aplyTime.substring(4,6);
-                        }
-                        else if("2".equalsIgnoreCase(aplyCaseType)) {
-                            documentAppYear = aplyDate.substring(0,4);
-                            documentAppMonth = aplyDate.substring(4,6);
-                            documentAppDay = aplyDate.substring(6,8);
-                            documentAppHour = aplyTime.substring(0,2);
-                            documentAppMin = aplyTime.substring(2,4);
-                            documentAppSec = aplyTime.substring(4,6);
-                        }
+                        String eduYear = eduYearInfo.get("eduYear");//學年
+                        String semester = eduYearInfo.get("semester"); //取得第幾學期
+                        String applySDate = eduYearInfo.get("apply_sDate"); //網路投保開始時間
+                        String applyEDate = eduYearInfo.get("apply_eDate"); //網路投保開始時間
+                        String preApplyDate = eduYearInfo.get("preApplyDate"); //提前時間
+                        String noPeriodDisplayHTML = eduYearInfo.get("Bulletin");//若現在不是對保期間，撈對保期間的文字
 
-                        //對保分行
-                        String expectBranchId = aplyMemberData.getValue("expectBranchId");
-                        if(StringUtils.isNotEmpty(expectBranchId)) {
+                        String today = DateUtil.getTodayString().substring(0,8);
 
-                            expectDate = aplyMemberData.getValue("expectDate");
-                            expectTime = aplyMemberData.getValue("expectTime");
+                        GardenLog.log(GardenLog.DEBUG,"eduYear = " + eduYear);
+                        GardenLog.log(GardenLog.DEBUG,"semester = " + semester);
+                        GardenLog.log(GardenLog.DEBUG,"applySDate = " + applySDate);
+                        GardenLog.log(GardenLog.DEBUG,"applyEDate = " + applyEDate);
+                        GardenLog.log(GardenLog.DEBUG,"preApplyDate = " + preApplyDate);
+                        GardenLog.log(GardenLog.DEBUG,"today = " + today);
 
-                            expectDate = expectDate + "000000";
-
-                            Map<String,String> searchMap = new LinkedHashMap<String, String>();
-                            searchMap.put("b.BranchId",expectBranchId);
-                            Vector<DataObject> ret = ProjUtils.getBranch(searchMap, dao);
-                            DataObject branch = ret.get(0);
-
-                            branchName = branch.getValue("BranchName");
-                            branchAddr = branch.getValue("Addr"); //對保分行地址
-                            branchTel = branch.getValue("Tel"); //對保分行電話
-                            carryObjArr = ""; //攜帶的物品
-
-                            int time = Integer.parseInt(expectTime);
-                            boolean isAM = time >= 1000;
-
-                            String endTime = (Integer.parseInt(expectTime.substring(0,2)) + 1) + "00";
-                            endTime = StringUtils.leftPad(endTime,4,"0");
-
-                            reservation = DateUtil.convert14ToDate("yyyy/MM/dd",expectDate) + " " +(isAM ? "AM" : "PM") + expectTime.substring(0,2) + ":" + expectTime.substring(2) + "-" + endTime.substring(0,2) + ":" + endTime.substring(2); //預約對保分行的時間
+                        //若提請開放時間早於起日才蓋過
+                        if(StringUtils.isNotEmpty(preApplyDate) && StringUtils.isNotEmpty(applySDate) && Long.parseLong(applySDate) >= Long.parseLong(preApplyDate)) {
+                            applySDate = preApplyDate;
                         }
 
+                        GardenLog.log(GardenLog.DEBUG,"applySDate2 = " + applySDate);
+
+                        boolean hasPreiod = (Long.parseLong(today) >= Long.parseLong(applySDate) && Long.parseLong(today) <= Long.parseLong(applyEDate));
+
+                        //先取得「本學期」申請資料
+                        Map<String,String> queryMap = new HashMap<String,String>();
+                        queryMap.put("EduYear",eduYearInfo.get("eduYear"));
+                        queryMap.put("Semester",eduYearInfo.get("semester"));
+
+                        //查這學期的申請案件
+                        DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanData(userId,queryMap,dao);
+
+                        //撈1-2草稿
+                        String apply1_2DraftXML = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);
+
+
+                        //撈申辦人相關資料
+
+                        String isPeriod = hasPreiod ? "Y" : "N";//紀錄是否為對保期間
+                        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N"; //紀錄是否有撥款紀錄
+                        String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N";//紀錄是否有簽訂線上服務註記
+                        String isPopUp = ProjUtils.isPopupPromoDialog(userId,dao) ? "Y" : "N";//此學期是否已經彈跳過
+                        String appCases = aplyMemberData != null ? "Y" : "N";//本學期是否有申請案件
+                        String tempCases = FlowUtils.isDraftData(userId, "apply", dao) ? "Y" : "N";//紀錄是否有暫存案件
+                        String kindOfCases = aplyMemberData != null ? aplyMemberData.getValue("AplyCaseType") : "";//紀錄案件種類(1:線上續貸/2:分行對保);
+                        String censor = "";//紀錄審核狀態 1:尚未審核;2:審核中;3:審核合完成通過;4:審核完成未通過
+
+                        boolean isAdult = aplyMemberData != null && ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
+                        String isFaGuarantor = "";//父親是否為連帶保證人
+                        String isMaGuarantor = "";//母親是否為連帶保證人
+                        String isGd1Guarantor = "";//監護人是否為連帶保證人
+                        String isPaGuarantor = "";//是否為連帶保證人
+                        String isWarGuarantor =  "";//父親是否為連帶保證人
+
+                        //去查連帶保證人的新開Table
+                        if(aplyMemberData != null) {
+                            String aplyNo = aplyMemberData.getValue("AplyNo");
+                            DataObject aplyMemberTuitionLoanDtlGuarantor = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Guarantor");
+                            aplyMemberTuitionLoanDtlGuarantor.setValue("AplyNo",aplyNo);
+                            dao.querySingle(aplyMemberTuitionLoanDtlGuarantor,null);
+
+                            isFaGuarantor = aplyMemberTuitionLoanDtlGuarantor.getValue("Fa_Guarantor");//父親是否為連帶保證人
+                            isMaGuarantor = aplyMemberTuitionLoanDtlGuarantor.getValue("Ma_Guarantor");//母親是否為連帶保證人
+                            isGd1Guarantor = aplyMemberTuitionLoanDtlGuarantor.getValue("Gd1_Guarantor");//監護人是否為連帶保證人
+                            isPaGuarantor = aplyMemberTuitionLoanDtlGuarantor.getValue("Pa_Guarantor");//是否為連帶保證人
+                            isWarGuarantor = aplyMemberTuitionLoanDtlGuarantor.getValue("War_Guarantor");//是否為連帶保證人
+
+                        }
+
+                        String isFaIncome = aplyMemberData != null ? aplyMemberData.getValue("Fa_IncomeAddOn") : "";//父親是否為所得合計對象
+                        String isMaIncome = aplyMemberData != null ? aplyMemberData.getValue("Ma_IncomeAddOn") : "";//母親是否為所得合計對象
+                        String isGd1Income = aplyMemberData != null ? aplyMemberData.getValue("Gd1_IncomeAddOn") : "";//父親是否為所得合計對象
+                        String isPaIncome = aplyMemberData != null ? aplyMemberData.getValue("Pa_IncomeAddOn") : "";//母親是否為所得合計對象
+
+                        //合計所得對象
+                        String incomeTax = "";
+                        if("Y".equalsIgnoreCase(isFaIncome)) incomeTax += "1";
+                        else incomeTax += "0";
+
+                        if("Y".equalsIgnoreCase(isMaIncome)) incomeTax += "1";
+                        else incomeTax += "0";
+
+                        if("Y".equalsIgnoreCase(isGd1Income)) incomeTax += "1";
+                        else incomeTax += "0";
+
+                        if("Y".equalsIgnoreCase(isPaIncome)) incomeTax += "1";
+                        else incomeTax += "0";
+
+                        //是否為連帶保證人
+                        String isGuarantor = "";
+                        if("Y".equalsIgnoreCase(isFaGuarantor)) isGuarantor += "1";
+                        else isGuarantor += "0";
+
+                        if("Y".equalsIgnoreCase(isMaGuarantor)) isGuarantor += "1";
+                        else isGuarantor += "0";
+
+                        if(isAdult && "Y".equalsIgnoreCase(isWarGuarantor)) isGuarantor += "1";
+                        else if(!isAdult && "Y".equalsIgnoreCase(isGd1Guarantor)) isGuarantor += "1";
+                        else isGuarantor += "0";
+
+                        if("Y".equalsIgnoreCase(isPaGuarantor)) isGuarantor += "1";
+                        else isGuarantor += "0";
+
+                        String applicantAdult = "";//是否成年
+                        String userMarriedHidden = "";//婚姻狀態
+                        String familyStatusLevel1 = "";//家庭狀況1
+                        String familyStatusLevel2 = "";//家庭狀況2
+                        String signBill = aplyMemberData != null ? aplyMemberData.getValue("signBill") : "";//是否簽立借據
+
+                        if(StringUtils.isNotEmpty(apply1_2DraftXML)) {
+                            Document apply1_2Doc = DocumentHelper.parseText(apply1_2DraftXML);
+                            Element apply1_2Root = apply1_2Doc.getRootElement();
+
+                            applicantAdult = apply1_2Root.element("applicantAdult").getText();
+                            userMarriedHidden = apply1_2Root.element("userMarriedHidden").getText();
+                            familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
+                            familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
+                        }
+
+
+                        //預約分行紀錄
+                        String expectDate = aplyMemberData != null ? aplyMemberData.getValue("expectDate") : "";
+                        String expectTime = aplyMemberData != null ? aplyMemberData.getValue("expectTime") : "";
+
+                        String firstSemesterStart = "";//上學期的對保開始時間
+                        String firstSemesterEnd = "";//上學期的對保結束時間
+                        String secondSemesterStart = "";//下學期的對保開始時間
+                        String secondSemesterEnd = "";//下學期的對保結束時間
+
+                        String appName = "";//申請人名字
+
+                        //線上申貸的申請時間
+                        String onlineAppYear = "";
+                        String onlineAppMonth = "";
+                        String onlineAppDay = "";
+                        String onlineAppHour = "";
+                        String onlineAppMin = "";
+                        String onlineAppSec = "";
+
+                        //對保分行的申請時間
+                        String documentAppYear = "";
+                        String documentAppMonth = "";
+                        String documentAppDay = "";
+                        String documentAppHour = "";
+                        String documentAppMin = "";
+                        String documentAppSec = "";
+
+                        //草稿的修改時間
+                        String draftAppYear = "";
+                        String draftAppMonth = "";
+                        String draftAppDay = "";
+                        String draftAppHour = "";
+                        String draftAppMin = "";
+                        String draftAppSec = "";
+
+                        String branchName = ""; //對保分行名稱
+                        String branchAddr = ""; //對保分行地址
+                        String branchTel = ""; //對保分行電話
+                        String carryObjArr = ""; //攜帶的物品
+                        String reservation = ""; //預約對保分行的時間
+
+                        //繳費資訊
+                        String accordingToBillLife = "";
+                        String freedomLife = "";
+                        String loanPrice = "";
+
+
+                        //取最後草稿修改時間
+                        String lastDraftModifyTime = FlowUtils.getDraftLastModifyTime(userId,"apply",dao);
+                        if(StringUtils.isNotEmpty(lastDraftModifyTime)) {
+                            String modifyTime14 = DateUtil.convertDateTo14(lastDraftModifyTime);
+
+                            draftAppYear = modifyTime14.substring(0,4);
+                            draftAppMonth = modifyTime14.substring(4,6);
+                            draftAppDay = modifyTime14.substring(6,8);
+                            draftAppHour = modifyTime14.substring(8,10);
+                            draftAppMin = modifyTime14.substring(10,12);
+                            draftAppSec = modifyTime14.substring(12,14);
+                        }
+
+                        //抓對保期間
+                        HashMap<String,String> regionMap = ProjUtils.getApplyDateRegion(dao);
+
+                        firstSemesterStart = regionMap.get("s1_sDate");//上學期的對保開始時間
+                        firstSemesterEnd = regionMap.get("s1_eDate");//上學期的對保結束時間
+                        secondSemesterStart = regionMap.get("s2_sDate");//下學期的對保開始時間
+                        secondSemesterEnd = regionMap.get("s2_eDate");//下學期的對保結束時間
+
+                        //若本學期有申請資料，才往下抓其他資料
+                        if(aplyMemberData != null) {
+
+                            String aplyStatus = aplyMemberData.getValue("APLYSTATUS");
+
+                            //取消對保
+                            if("DELETE".equalsIgnoreCase(aplyStatus)) {
+                                censor = "0";
+                            }
+                            //(未對保) = 尚未審核
+                            else if("UNVERIFIED".equalsIgnoreCase(aplyStatus)) {
+                                censor = "1";
+                            }
+                            //審核中
+                            if("VERIFYING".equalsIgnoreCase(aplyStatus)) {
+                                censor = "2";
+                            }
+                            //(已對保) = 審核完成-通過
+                            else if("VERIFIED".equalsIgnoreCase(aplyStatus)) {
+                                censor = "3";
+                            }
+                            //審核完成未通過
+                            else if("REJECT".equalsIgnoreCase(aplyStatus)) {
+                                censor = "4";
+                            }
+
+                            //拒絕原因
+                            DataObject aplyMemberTuitionLoanDtlReason = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_reason");
+                            aplyMemberTuitionLoanDtlReason.setValue("AplyNo",aplyMemberData.getValue("AplyNo"));
+                            if(dao.querySingle(aplyMemberTuitionLoanDtlReason,null)) {
+                                Vector<DataObject> rejectRS = new Vector<DataObject>();
+                                dao.query(rejectRS,DaoFactory.getDefaultDataObject("RejectReason"),new QueryConfig().addOrder("ReasonId", Order.ASC));
+
+
+                                for(int i=0;i<rejectRS.size();i++) {
+                                    DataObject reasonObject = rejectRS.get(i);
+                                    String reasonId = reasonObject.getValue("ReasonId");
+
+                                    String id = reasonId.substring(1);
+                                    id = String.valueOf(Integer.parseInt(id));
+
+                                    String aplyReasonValue = aplyMemberTuitionLoanDtlReason.getValue("Reason" + id);
+
+                                    if("Y".equalsIgnoreCase(aplyReasonValue)) {
+                                        reasonArray.put(reasonObject.getValue("Reason"));
+                                    }
+
+                                }
+                            }
+
+                            appName = aplyMemberData.getValue("Applicant");
+
+                            //加入個資隱碼
+                            appName = ProjUtils.toNameMark(appName);
+
+                            //依案件類型來判斷放入哪些變數(1:線上續貸/2:分行對保)
+                            String aplyCaseType = aplyMemberData.getValue("AplyCaseType");
+                            String aplyDate = aplyMemberData.getValue("AplyDate");
+                            String aplyTime = aplyMemberData.getValue("AplyTime");
+
+                            if("1".equalsIgnoreCase(aplyCaseType)) {
+                                onlineAppYear = aplyDate.substring(0,4);
+                                onlineAppMonth = aplyDate.substring(4,6);
+                                onlineAppDay = aplyDate.substring(6,8);
+                                onlineAppHour = aplyTime.substring(0,2);
+                                onlineAppMin = aplyTime.substring(2,4);
+                                onlineAppSec = aplyTime.substring(4,6);
+                            }
+                            else if("2".equalsIgnoreCase(aplyCaseType)) {
+                                documentAppYear = aplyDate.substring(0,4);
+                                documentAppMonth = aplyDate.substring(4,6);
+                                documentAppDay = aplyDate.substring(6,8);
+                                documentAppHour = aplyTime.substring(0,2);
+                                documentAppMin = aplyTime.substring(2,4);
+                                documentAppSec = aplyTime.substring(4,6);
+                            }
+
+                            //對保分行
+                            String expectBranchId = aplyMemberData.getValue("expectBranchId");
+                            if(StringUtils.isNotEmpty(expectBranchId)) {
+
+                                expectDate = aplyMemberData.getValue("expectDate");
+                                expectTime = aplyMemberData.getValue("expectTime");
+
+                                expectDate = expectDate + "000000";
+
+                                Map<String,String> searchMap = new LinkedHashMap<String, String>();
+                                searchMap.put("b.BranchId",expectBranchId);
+                                Vector<DataObject> ret = ProjUtils.getBranch(searchMap, dao);
+                                DataObject branch = ret.get(0);
+
+                                branchName = branch.getValue("BranchName");
+                                branchAddr = branch.getValue("Addr"); //對保分行地址
+                                branchTel = branch.getValue("Tel"); //對保分行電話
+                                carryObjArr = ""; //攜帶的物品
+
+                                int time = Integer.parseInt(expectTime);
+                                boolean isAM = time >= 1000;
+
+                                String endTime = (Integer.parseInt(expectTime.substring(0,2)) + 1) + "00";
+                                endTime = StringUtils.leftPad(endTime,4,"0");
+
+                                reservation = DateUtil.convert14ToDate("yyyy/MM/dd",expectDate) + " " +(isAM ? "AM" : "PM") + expectTime.substring(0,2) + ":" + expectTime.substring(2) + "-" + endTime.substring(0,2) + ":" + endTime.substring(2); //預約對保分行的時間
+                            }
+
+
+                            accordingToBillLife = aplyMemberData.getValue("renderAmt_living");
+                            freedomLife = aplyMemberData.getValue("renderAmt_living");
+                            loanPrice = aplyMemberData.getValue("loanType");
+                        }
+
+                        JSONObject freedom = new JSONObject();
+                        freedom.put("life",freedomLife);
+
+                        JSONObject accordingToBill = new JSONObject();
+                        accordingToBill.put("life",accordingToBillLife);
+
+                        content.put("id",userId);
+                        content.put("isPeriod",isPeriod);
+                        content.put("isRecord",isRecord);
+                        content.put("isEtabs",isEtabs);
+                        content.put("isPopUp",isPopUp);
+                        content.put("appCases",appCases);
+                        content.put("tempCases",tempCases);
+                        content.put("kindOfCases",kindOfCases);
+                        content.put("censor",censor);
+                        content.put("firstSemesterStart",firstSemesterStart);
+                        content.put("firstSemesterEnd",firstSemesterEnd);
+                        content.put("secondSemesterStart",secondSemesterStart);
+                        content.put("secondSemesterEnd",secondSemesterEnd);
+                        content.put("semester",semester);
+                        content.put("appName",appName);
+                        content.put("noPeriodDisplayHTML",noPeriodDisplayHTML);
+                        content.put("reasons",reasonArray);
+
+                        content.put("loanPrice",loanPrice);
+                        content.put("freedom",freedom);
+                        content.put("accordingToBill",accordingToBill);
+
+                        content.put("incomeTax",incomeTax);
+                        content.put("isGuarantor",isGuarantor);
+
+                        content.put("father_RadioBtn",isFaGuarantor);
+                        content.put("mother_RadioBtn",isMaGuarantor);
+                        content.put("thirdParty_RadioBtn",isAdult ? isWarGuarantor : isGd1Guarantor);
+                        content.put("spouse_RadioBtn",isPaGuarantor);
+                        content.put("father_checkbox",isFaIncome);
+                        content.put("mother_checkbox",isMaIncome);
+
+
+                        JSONObject online = new JSONObject();
+
+                        online.put("appYear",onlineAppYear);
+                        online.put("appMonth",onlineAppMonth);
+                        online.put("appDay",onlineAppDay);
+                        online.put("appHour",onlineAppHour);
+                        online.put("appMin",onlineAppMin);
+                        online.put("appSec",onlineAppSec);
+
+                        JSONObject document = new JSONObject();
+
+                        document.put("appYear",documentAppYear);
+                        document.put("appMonth",documentAppMonth);
+                        document.put("appDay",documentAppDay);
+                        document.put("appHour",documentAppHour);
+                        document.put("appMin",documentAppMin);
+                        document.put("appSec",documentAppSec);
+
+                        JSONObject draft = new JSONObject();
+
+                        draft.put("appYear",draftAppYear);
+                        draft.put("appMonth",draftAppMonth);
+                        draft.put("appDay",draftAppDay);
+                        draft.put("appHour",draftAppHour);
+                        draft.put("appMin",draftAppMin);
+                        draft.put("appSec",draftAppSec);
+
+                        content.put("online",online);
+                        content.put("document",document);
+                        content.put("draft",draft);
+
+                        content.put("branchName",branchName);
+                        content.put("branchAddr",branchAddr);
+                        content.put("addr",branchAddr);
+                        content.put("branchTel",branchTel);
+                        content.put("tel",branchTel);
+                        content.put("carryObjArr",carryObjArr);
+                        content.put("reservation",reservation);
+
+                        content.put("dateSelected",StringUtils.isNotEmpty(expectDate) ? DateUtil.convert14ToDate("yyyy-MM-dd",expectDate) : "");
+                        content.put("timeSelected",expectTime);
+
+                        content.put("applicantAdult",applicantAdult);
+                        content.put("marryStatus",userMarriedHidden);
+                        content.put("familyStatusLevel1",familyStatusLevel1);
+                        content.put("familyStatusLevel2",familyStatusLevel2);
+
+                        content.put("reservation",reservation);
+
+
+                        //依照申請人取得線上續貸資料
+                        ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
+
+                        //放是否借據
+                        content.put("signBill",signBill);
                     }
 
-                    content.put("id",userId);
-                    content.put("isPeriod",isPeriod);
-                    content.put("isRecord",isRecord);
-                    content.put("isEtabs",isEtabs);
-                    content.put("isPopUp",isPopUp);
-                    content.put("appCases",appCases);
-                    content.put("tempCases",tempCases);
-                    content.put("kindOfCases",kindOfCases);
-                    content.put("censor",censor);
-                    content.put("firstSemesterStart",firstSemesterStart);
-                    content.put("firstSemesterEnd",firstSemesterEnd);
-                    content.put("secondSemesterStart",secondSemesterStart);
-                    content.put("secondSemesterEnd",secondSemesterEnd);
-                    content.put("semester",semester);
-                    content.put("appName",appName);
-                    content.put("noPeriodDisplayHTML",noPeriodDisplayHTML);
-                    content.put("reasons",reasonArray);
 
-                    JSONObject online = new JSONObject();
-
-                    online.put("appYear",onlineAppYear);
-                    online.put("appMonth",onlineAppMonth);
-                    online.put("appDay",onlineAppDay);
-                    online.put("appHour",onlineAppHour);
-                    online.put("appMin",onlineAppMin);
-                    online.put("appSec",onlineAppSec);
-
-                    JSONObject document = new JSONObject();
-
-                    document.put("appYear",documentAppYear);
-                    document.put("appMonth",documentAppMonth);
-                    document.put("appDay",documentAppDay);
-                    document.put("appHour",documentAppHour);
-                    document.put("appMin",documentAppMin);
-                    document.put("appSec",documentAppSec);
-
-                    JSONObject draft = new JSONObject();
-
-                    draft.put("appYear",draftAppYear);
-                    draft.put("appMonth",draftAppMonth);
-                    draft.put("appDay",draftAppDay);
-                    draft.put("appHour",draftAppHour);
-                    draft.put("appMin",draftAppMin);
-                    draft.put("appSec",draftAppSec);
-
-                    content.put("online",online);
-                    content.put("document",document);
-                    content.put("draft",draft);
-
-                    content.put("branchName",branchName);
-                    content.put("branchAddr",branchAddr);
-                    content.put("addr",branchAddr);
-                    content.put("branchTel",branchTel);
-                    content.put("tel",branchTel);
-                    content.put("carryObjArr",carryObjArr);
-                    content.put("reservation",reservation);
-
-                    content.put("dateSelected",DateUtil.convert14ToDate("yyyy-MM-dd",expectDate));
-                    content.put("timeSelected",expectTime);
-
-                    content.put("applicantAdult",applicantAdult);
-                    content.put("marryStatus",userMarriedHidden);
-                    content.put("familyStatusLevel1",familyStatusLevel1);
-                    content.put("familyStatusLevel2",familyStatusLevel2);
-
-                    content.put("reservation",reservation);
-
-
-                    //依照申請人取得線上續貸資料
-                    ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
-
-                    //放是否借據
-                    content.put("signBill",signBill);
                 }
 
 

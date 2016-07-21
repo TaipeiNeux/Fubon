@@ -115,12 +115,14 @@ public class PersonalInfo1 implements ILogic {
                     if(StringUtils.isNotEmpty(domicile) && domicile.length() > 2) {
                         domicilePhoneRegionCode = domicile.substring(0,2);
                         domicilePhonePhone = domicile.substring(2);
+                        domicilePhonePhone = domicilePhonePhone.trim();
                     }
 
                     //通訊電話抓3802
                     if(StringUtils.isNotEmpty(tele) && tele.length() > 2) {
                         telePhoneRegionCode = tele.substring(0,2);
                         telePhonePhone = tele.substring(2);
+                        telePhonePhone = telePhonePhone.trim();
                     }
 
                 }

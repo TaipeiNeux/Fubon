@@ -150,7 +150,6 @@ public class ParseTxtData {
 
         String filePath = "E:\\SVN\\2_project\\2016\\富邦-學貸\\客戶提供文件\\電子繳款單的規格及測試檔案\\SLBM013\\SLBM013.txt";
 
-
         insertDB(filePath);
     }
 

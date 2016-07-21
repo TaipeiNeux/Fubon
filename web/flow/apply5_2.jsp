@@ -254,8 +254,7 @@
             
         </div>
         <div class="dan" id="thirdParty">
-            <h2 class="thirdParty">第三人
-                <span id="isGuarantor_thirdParty">(為連帶保證人/合計所得對象）</span>
+            <h2 class="thirdParty">
               </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply2" class="editBtn">修改</a>
@@ -302,6 +301,14 @@
                     </div>
                     <div class="right">
                         <p name="thirdParty_mobile"></p>
+                    </div>
+                </div>
+				<div class="joy abon bgfff">
+                    <div class="left">
+                        <p>與申請人之關係</p>
+                    </div>
+                    <div class="right">
+                        <p name="thirdParty_relation"></p>
                     </div>
                 </div>
             </div>

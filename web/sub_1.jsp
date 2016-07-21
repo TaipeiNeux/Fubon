@@ -16,7 +16,7 @@
                     <form id="mainForm">
                         <div class="contentArea">
                             
-                            <section class="QA" id="QA">
+                            <section class="QA" id="QA" style="display:none;">
                                 <div class="container">
                                     <div class="border_title">
                                         <h2 class="zh">Q & A</h2>
@@ -38,7 +38,7 @@
                                 </div>
                             </section>
 
-                            <section class="Spreadsheets" id="compute">
+                            <section class="Spreadsheets" id="compute" style="display:none;">
                                 <div class="container">
                                     <div class="border_title">
                                         <h2 class="zh">貸款試算</h2>
@@ -58,11 +58,11 @@
                                             <li>
                                                 <h3>年利率</h3>
                                                 <div class="sliderRangebar">
-                                                    <input id="Ran-2" type="text" data-slider-min="1" data-slider-max="20" data-slider-step="0.01" data-slider-value="1.55">
+                                                    <input id="Ran-2" type="text" data-slider-min="1" data-slider-max="20" data-slider-step="0.01" data-slider-value="1.15">
 
                                                 </div>
 
-                                                <input id="Ran-2-SliderVal" class="val" value="1.55">
+                                                <input id="Ran-2-SliderVal" class="val" value="1.15">
                                                 <p class="valback">%</p>
                                                 <div class="err-message"></div>
                                             </li>
@@ -93,7 +93,7 @@
                                             <div class="MoreLink">
                                                 <p>注意事項:</p>
                                                 <ol class="noteLi">
-                                                    <li>目前就學貸款利率為1.55%，提供您參考，實際利率以營業單位牌告利率為準。</li>
+                                                    <li>目前就學貸款利率為1.15%，提供您參考，實際利率以營業單位牌告利率為準。</li>
                                                     <li>本試算僅供參考。</li>
                                                 </ol>
                                             </div>
@@ -104,7 +104,7 @@
 
 
 
-                            <section class="Application subApplication" id="loanBranchs">
+                            <section class="Application subApplication" id="loanBranchs" style="display:none;">
 
                                 <div class="container">
                                     <div class="appHf">
@@ -160,7 +160,7 @@
                                 <div class="mapArea" id="branchMap"></div>
                             </section>
 
-                            <section class="Download" id="download">
+                            <section class="Download" id="download" style="display:none;">
                                 <div class="container">
                                     <div class="border_title">
                                         <h2 class="zh">表單‧文件下載</h2>
@@ -753,3 +753,4 @@
 
                 <script src="js/prog/bootstrap_select_arrow.js"></script>
                 <script src="js/prog/sub_1.js"></script>
+				<script src="js/prog/qa.js"></script>

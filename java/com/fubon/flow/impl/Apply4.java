@@ -30,14 +30,18 @@ public class Apply4 implements ILogic {
         String loanPrice = "",loans = "" , freedomLife = "", accordingToBillLife = "",uploadFileIdCardPosition = "img/dh.jpg", uploadFileIdCardNegative = "img/dh.jpg",uploadFileRegistration = "img/dh.jpg",uploadFileLowIncome = "";
         String uploadFileIdCardPosition_docId = "", uploadFileIdCardNegative_docId = "", uploadFileRegistration_docId = "", uploadFileLowIncome_docId = "";
 
-        String idCardPosition_hidden = "",idCardNegative_hidden = "",registration_hidden = "",lowIncome_hidden = "";
+        String isPositive_hidden = "",isNegative_hidden = "",register_hidden = "",idPositiveViewName_hidden = "" , idNegativeViewName_hidden = "" , registerViewName_hidden = "",lowIncome_hidden = "",lowIncomeViewName_hidden = "";
 
         if(draftData != null) {
             Element root = draftData.getRootElement();
-            if(root.element("idCardPosition_hidden") != null) idCardPosition_hidden = root.element("idCardPosition_hidden").getText();
-            if(root.element("idCardNegative_hidden") != null) idCardNegative_hidden = root.element("idCardNegative_hidden").getText();
-            if(root.element("registration_hidden") != null) registration_hidden = root.element("registration_hidden").getText();
+            if(root.element("isPositive_hidden") != null) isPositive_hidden = root.element("isPositive_hidden").getText();
+            if(root.element("isNegative_hidden") != null) isNegative_hidden = root.element("isNegative_hidden").getText();
+            if(root.element("register_hidden") != null) register_hidden = root.element("register_hidden").getText();
+            if(root.element("idPositiveViewName_hidden") != null) idPositiveViewName_hidden = root.element("idPositiveViewName_hidden").getText();
+            if(root.element("idNegativeViewName_hidden") != null) idNegativeViewName_hidden = root.element("idNegativeViewName_hidden").getText();
+            if(root.element("registerViewName_hidden") != null) registerViewName_hidden = root.element("registerViewName_hidden").getText();
             if(root.element("lowIncome_hidden") != null) lowIncome_hidden = root.element("lowIncome_hidden").getText();
+            if(root.element("lowIncomeViewName_hidden") != null) lowIncomeViewName_hidden = root.element("lowIncomeViewName_hidden").getText();
 
         }
 
@@ -111,10 +115,14 @@ public class Apply4 implements ILogic {
         content.put("accordingToBill",accordingToBill);
         content.put("uploadFile",uploadFile);
 
-        content.put("idCardPosition_hidden",idCardPosition_hidden);
-        content.put("idCardNegative_hidden",idCardNegative_hidden);
-        content.put("registration_hidden",registration_hidden);
+        content.put("isPositive_hidden",isPositive_hidden);
+        content.put("isNegative_hidden",isNegative_hidden);
+        content.put("register_hidden",register_hidden);
+        content.put("idPositiveViewName_hidden",idPositiveViewName_hidden);
+        content.put("idNegativeViewName_hidden",idNegativeViewName_hidden);
+        content.put("registerViewName_hidden",registerViewName_hidden);
         content.put("lowIncome_hidden",lowIncome_hidden);
+        content.put("lowIncomeViewName_hidden",lowIncomeViewName_hidden);
     }
 
     @Override

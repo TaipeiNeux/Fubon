@@ -7,6 +7,7 @@
 	<input type="hidden" name="lastDate" value="" />
     <input type="hidden" name="stageSelectValue" value="" />
     <input type="hidden" name="loanAmt" value="" />   
+    <input type="hidden" name="department" value="" />   
     <input type="hidden" name="onTheJobHidden" value="0" />
 	<div id="student" class="candysan">
       <h3 class="snopy hat">就讀學校</h3>
@@ -58,7 +59,7 @@
                 <div class="left">
                     <p>科系所</p>
                 </div>
-                <div class="right">
+                <div class="right departmentInput">
 					<input type="text" class="input_m" name="student_department">
 					<div class="error-msg"></div>
                 </div>

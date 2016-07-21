@@ -64,7 +64,7 @@
 <!-- 各別流程才各別載入所需的js -->
 <link href='fullcalendar/fullcalendar.css' rel='stylesheet' />
 <link href='fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
-<script src="js/prog/apply.js"></script>
+<script src="js/prog/apply.js?v=<%=System.currentTimeMillis()%>"></script>
 <script src='fullcalendar/lib/moment.min.js'></script>
 <script src='fullcalendar/fullcalendar.min.js'></script>
 <!--<script src='fullcalendar/lib/jquery.min.js'></script>-->

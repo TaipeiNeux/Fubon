@@ -5,6 +5,7 @@
 <script src="js/jquery-ui.min.js"></script>
 <body class="index">
 
+
 <div class="ajax-loader" style="display: block;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>
 
 <div class="mobileMenu">
@@ -329,7 +330,7 @@
                     <p>查詢繳款資訊、還可以補印繳款單，再也不怕帳單不見囉！</p>
                     <ul>
                         <li><a href="<%=isLogin ? "payment.jsp" : "memberLogin.jsp"%>" class="files">繳款方式說明</a></li>
-                        <li><a href="<%=isLogin ? "myElectronicPay_1.jsp" : "memberLogin.jsp"%>" class="files">我的電子繳款單</a></li>
+                        <li><a href="<%=isLogin ? "myElectronicPay_1.jsp" : "memberLogin.jsp"%>" class="files bill">我的電子繳款單</a></li>
                         <!--<li><a href="" class="files" onclick="alert('系統建置中');return false;">立即繳款</a></li>-->
                     </ul>
                 </div>
@@ -372,7 +373,7 @@
                 <p>查詢繳款資訊、還可以補印繳款單，再也不怕帳單不見囉！</p>
                 <ul>
                     <li><a href="payment.jsp" class="files">繳款方式說明</a></li>
-                    <li><a href="<%=isLogin ? "myloan.jsp" : "memberLogin.jsp"%>" class="files">我的電子繳款單</a></li>
+                    <li><a href="<%=isLogin ? "myloan.jsp" : "memberLogin.jsp"%>" class="files bill">我的電子繳款單</a></li>
                     <!--<li><a href="" class="files" onclick="alert('系統建置中');return false;">立即繳款</a></li>-->
                 </ul>
             </div>
@@ -401,7 +402,7 @@
 
 
 <!-- 各別流程才各別載入所需的js -->
-<script src="js/prog/determimeGreeting.js"></script>
-<script src="js/prog/index.js"></script>
+<script src="js/prog/determimeGreeting.js?v=<%=System.currentTimeMillis()%>"></script>
+<script src="js/prog/index.js?v=<%=System.currentTimeMillis()%>"></script>
 
     </body>                

@@ -36,7 +36,7 @@
 		<div class="modal fade pomodal apply" id="modal_apply_5_1_2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
-	    
+	    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 	    <div class="modal-body">
 	      <h3>本次交易可輸入交易驗證碼的時間已逾時，請重新操作</h3>
 			

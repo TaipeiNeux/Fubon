@@ -42,7 +42,8 @@ var Myloan_controller = (function(){
                     }
 
                     //$('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>').insertbefore($('.casomTitle'));
-                    $('.casomTitle').before('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>');
+                    //$('.casomTitle').before('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a> <a href="'+client_data.data.client_detail[0].my_detail+'" class="pobtn-srb">我的電子繳款單</a> </div>');
+					$('.casomTitle').before('<div class="xizia"> <h3>相關功能</h3> <a href="'+client_data.data.client_detail[0].return_detail+'" class="pobtn-srb">還款明細查詢</a></div>');
 
                     /*$('.picabtn').off('mousedown').on('mousedown',function(){
 
@@ -110,8 +111,25 @@ var Myloan_view = (function(){
 		if(Myloan_view.show_star_and_number6(data.state)){
 			star = '**';
 		}
-
-		$('.casomTitle').before('<div class="lightWon"> <ul class="busus"> <li> <p>貸款帳號</p> <h3>'+data.account+star+'</h3> </li> <li> <p>分行名稱</p> <h3>'+data.bank_name+'</h3> </li> <li> <p>貸款餘額</p> <h3>'+GardenUtils.format.convertThousandComma(data.remain_money)+'</h3> </li> <li> <p>利率</p> <h3>'+rate_num +'%</h3> </li> <li> <p>每月應繳款日</p> <h3>'+data.pay_day+'日</h3> </li> </ul> <a href="javascript:;" class="picabtn">詳細資訊&nbsp<i class="fa fa-caret-down"></i></a> <div class="repayTableOuter"> <div class="repayTableArea"> <div class="repayTable resaTable"> </div> </div>  </div> </div>');
+		
+		var d = new Date();	
+		var data_str = data.intDate.split("/");
+		
+		var init_date = new Date(data_str[0]+'-'+data_str[1]+'-'+data_str[2]);
+		
+		var pay_title,should_pay_day;
+		if (init_date.getTime() > d.getTime()) {
+			//alert('not yet');
+			pay_title = "開始繳款日";
+			should_pay_day = data.intDate;
+		}
+		else {
+			pay_title = "每月繳款日";
+			should_pay_day = data.pay_day+'日';
+			
+		}
+		
+		$('.casomTitle').before('<div class="lightWon"> <ul class="busus"> <li> <p>貸款帳號</p> <h3>'+data.account+star+'</h3> </li> <li> <p>分行名稱</p> <h3>'+data.bank_name+'</h3> </li> <li> <p>貸款餘額</p> <h3>'+GardenUtils.format.convertThousandComma(data.remain_money)+'</h3> </li> <li> <p>利率</p> <h3>'+rate_num +'%</h3> </li> <li> <p>'+pay_title+'</p> <h3>'+should_pay_day+'</h3> </li> </ul> <a href="javascript:;" class="picabtn">詳細資訊&nbsp<i class="fa fa-caret-down"></i></a> <div class="repayTableOuter"> <div class="repayTableArea"> <div class="repayTable resaTable"> </div> </div>  </div> </div>');
 
 	}
 
@@ -136,7 +154,7 @@ var Myloan_view = (function(){
 			var semister_state = parseFloat(data.detail[j].semister_state);
 
 			var find_semister = (semister + semister_state) ;
-
+			
 			var original_money = parseInt(data.detail[j].original_money);
 			var balance_money = parseInt(data.detail[j].balance_money);
 			var need_pay_month = parseInt(data.detail[j].need_pay_month);
@@ -164,20 +182,39 @@ var Myloan_view = (function(){
 		for(var k=0;k<tmp_record.length;k++){
 			
 			var text = '';
+			var text2 = '';
 			var semisterYear = tmp_record[k].tmp_semister;
 			var semister_state = tmp_record[k].semister_state;
-			if(semister_state == '0') {
-				text = semisterYear + '年學期';
+			
+			//小網要加上換行
+			if($(window).width() < 769){
+				if(semister_state == '0') {
+					text = semisterYear + '年';
+					text2 = '學期';
+				}
+				else if(semister_state == '1'){
+					text = semisterYear + '年';
+					text2 = '上學期';
+				}
+				else if(semister_state == '2'){
+					text = semisterYear + '年';
+					text2 = '下學期';
+				}
+				type_1 += '<h5><div>'+text+'</div><div>'+text2+'</div></h5>';
 			}
-			else if(semister_state == '1'){
-				text = semisterYear + '年上學期';
-			}
-			else if(semister_state == '2'){
-				text = semisterYear + '年下學期';
+			else{
+				if(semister_state == '0') {
+					text = semisterYear + '年學期';
+				}
+				else if(semister_state == '1'){
+					text = semisterYear + '年上學期';
+				}
+				else if(semister_state == '2'){
+					text = semisterYear + '年下學期';
+				}
+				type_1 += '<h5>'+text+'</h5>';
 			}
 			
-			
-			type_1 += '<h5>'+text+'</h5>';
 			type_3 += '<h5>'+GardenUtils.format.convertThousandComma(tmp_record[k].original_money)+'</h5>';
 			type_4 += '<h5>'+GardenUtils.format.convertThousandComma(tmp_record[k].balance_money)+'</h5>';
 			type_5 += '<h5>'+GardenUtils.format.convertThousandComma(tmp_record[k].need_pay_month)+'</h5>';

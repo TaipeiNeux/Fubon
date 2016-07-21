@@ -201,6 +201,14 @@ var modal = {
 	login: function(studentId,studentCode,studentPassword,isForce) {
         var jsonGrade;
 		
+		//var token = getToken();
+		var token = '';
+		
+		try{
+			token = getToken();
+		}catch(e) {
+			console.debug(e);
+		}
 		
 		//var token = window.top.getToken();
 		//alert(token);
@@ -211,7 +219,8 @@ var modal = {
 				id : studentId,
 				userId : studentCode,
 				userPwd : studentPassword,
-				force:isForce
+				force:isForce,
+				token : token
 			},
 			type : 'post',
             success: function(json) {
@@ -265,9 +274,18 @@ var modal = {
     },
 	getLoginInfo: function(callback) {
         
+		//var token = getToken();
+		var token = '';
+		
+		try{
+			token = getToken();
+		}catch(e) {
+			console.debug(e);
+		}
+		
         $.ajax({
             async: false,
-            url: 'auth?action=getLoginInfo&v=' + new Date().getTime(),			
+            url: 'auth?action=getLoginInfo&_token='+token+'&v=' + new Date().getTime(),
             datatype: 'json',
 			type : 'post',
             success: function(json) {
@@ -372,12 +390,22 @@ var modal = {
         return jsonCarry;
     },
 	getLoginStatus: function() {
+	
+		//var token = getToken();
+		var token = '';
+		
+		try{
+			token = getToken();
+		}catch(e) {
+			console.debug(e);
+		}
+	
         var jsonLoginStatus;
         $.ajax({
             async: false,
 			//Json��ե�
             //url: 'json/loginSuccess.json',
-			url: 'auth?action=getLoginInfo&v=' + new Date().getTime(),
+			url: 'auth?action=getLoginInfo&_token='+token+'&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
                 jsonLoginStatus = json;
@@ -486,5 +514,15 @@ var modal = {
         console.debug(jsonStatus);
 
         return jsonStatus;
-    }
+    },
+    resetDefermentSize: function() {
+        $.ajax({
+            async: false,
+            url: 'flow?action=reset&flowId=deferment&v=' + new Date().getTime(),
+            datatype: 'json',
+            success: function(json) {
+			
+            }
+        });
+    },
 };

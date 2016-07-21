@@ -45,7 +45,7 @@ public class ForgetPassword1 implements ILogic {
             studentUserProfileDetail.setValue("AplyIdNo",id);
 
             if(!dao.querySingle(studentUserProfileDetail,null)) {
-                throw new Exception("生日驗證錯誤");
+                throw new Exception("此身份證不存在");
             }
             else {
                 String aplyBirthday = studentUserProfileDetail.getValue("AplyBirthday");

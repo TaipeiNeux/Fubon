@@ -5,7 +5,7 @@
 
 
 <script src="js/prog/script.js"></script>
-<script src="js/prog/qa.js"></script>
+
 
 <footer class="footer">
   <div class="copyright">

@@ -275,6 +275,11 @@ function eightGreeting() {
 function fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo) {
 
     switch (censor) {
+		case '0':
+            contentMessage.push(message.message_0);
+            determineStstus = '0';
+            //isForward = true;
+            break;
         case '1':
             contentMessage.push(message.message_3);
             pageMessage.push(messageInfo.message_3);

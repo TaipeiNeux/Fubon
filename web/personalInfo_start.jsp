@@ -149,5 +149,5 @@
 
 <!-- 各別流程才各別載入所需的js -->
 
-<script src="js/prog/personalInfo_start.js"></script>
+<script src="js/prog/personalInfo_start.js?v=<%=System.currentTimeMillis()%>"></script>
 </body>

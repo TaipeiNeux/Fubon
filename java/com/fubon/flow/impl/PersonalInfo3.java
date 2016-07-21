@@ -128,6 +128,7 @@ public class PersonalInfo3 implements ILogic {
                     dao.update(studentUserProfileDetail);
 
                     //更新到Session內
+                    loginUserBean.setUserName(name);
                     loginUserBean.addCustomizeValue("Applicant",studentUserProfileDetail.getValue("Applicant"));
                     loginUserBean.addCustomizeValue("Marriage",studentUserProfileDetail.getValue("Marriage"));
                     loginUserBean.addCustomizeValue("AplyCellPhoneNo",studentUserProfileDetail.getValue("AplyCellPhoneNo"));
@@ -362,6 +363,10 @@ public class PersonalInfo3 implements ILogic {
         content.put("errorMsg",errorMsg);
         content.put("registerDate",registerDate);
         content.put("registerTime",registerTime);
+
+
+        String logResult = StringUtils.isEmpty(errorMsg) ? "變更個人基本資料成功" : errorMsg;
+        ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"getDraftData",logResult);
     }
 
     @Override

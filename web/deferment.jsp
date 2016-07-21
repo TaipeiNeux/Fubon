@@ -62,6 +62,6 @@
 </div>
 
 <!-- 各別流程才各別載入所需的js -->
-<script src="js/prog/deferment.js"></script>
+<script src="js/prog/deferment.js?v=<%=System.currentTimeMillis()%>"></script>
 <!--<script src='fullcalendar/lib/jquery.min.js'></script>-->
 </body>

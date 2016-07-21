@@ -48,6 +48,8 @@
 
 %>
 
+
+
 <p id="tokenKey" style="display:none;"></p>
 
 <div class="navIcon">
@@ -85,7 +87,10 @@
         <li><a href="apply_00.jsp" class="applyBtn">我要申請</a></li>
         <li><a href="#" data-target="navContent-3">帳務查詢</a></li>
         <li><a href="#" data-target="navContent-4">延期還款</a></li>
-        <li><a href="#" data-target="navContent-5">繳款資訊</a></li>
+        <li><a href="payment.jsp">繳款資訊</a></li>
+		<!--
+		<li><a href="#" data-target="navContent-5">繳款資訊</a></li>
+		-->
         <li><a href="#" data-target="navContent-6">個人資料</a></li>
         <li><a href="#">線上問答</a></li>
     </ul>
@@ -144,6 +149,8 @@
 </div>
 
 <!-- 繳款資訊 -->
+<!--
+
 <div class="navContent navContent-5">
     <ul>
         <li>
@@ -168,6 +175,7 @@
         </li>
     </ul>
 </div>
+-->
 
 <!-- 個人資料 -->
 <div class="navContent navContent-6">

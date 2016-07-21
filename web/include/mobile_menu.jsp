@@ -25,12 +25,14 @@
         <li><a href="principal.jsp">緩繳本金/延長還款期間</a></li>
       </ul>
     </li>
-    <li><a href="javascript:;">繳款資訊</a>
+    <li><a href="payment.jsp">繳款資訊</a>
+	<!--
       <ul class="Inset">
         <li><a href="payment.jsp">繳款方式說明</a></li>
         <li><a href="myElectronicPay_1.jsp">我的電子繳款單</a></li>
-        <!--<li><a href="javascript:;" onclick="alert('系統建置中');return false;">立即繳款</a></li>-->
+        <li><a href="javascript:;" onclick="alert('系統建置中');return false;">立即繳款</a></li>
       </ul>
+	  -->
     </li>
     <li><a href="javascript:;">個人資料</a>
       <ul class="Inset">

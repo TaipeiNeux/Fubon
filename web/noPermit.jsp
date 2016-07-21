@@ -14,7 +14,7 @@
     name = StringEscapeUtils.escapeHtml4(name);
 
     String bodyClass = "";
-    if("「延後/提前還款」".equalsIgnoreCase(name)) {
+    if("申請「延後/提前還款」".equalsIgnoreCase(name)) {
         bodyClass = "deferment_0";
     }
     else if("進行「還款明細查詢」".equalsIgnoreCase(name)) {

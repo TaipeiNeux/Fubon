@@ -15,6 +15,7 @@
             <input type="hidden" name="string_thirdParty" value="" />
             <input type="hidden" name="string_spouse" value="" />
             <input type="hidden" name="thirdPartyTitle" value="" />
+			<input type="hidden" name="relationshipTitle" value="" />
 			<input type="hidden" name="user_birthday_hidden" value="" />
 
             <input type="hidden" name="father_sameAddrHidden" value="" />

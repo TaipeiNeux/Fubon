@@ -9,6 +9,7 @@ import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -31,6 +32,7 @@ public class Apply5_1 implements ILogic {
 
         String uploadFileIdCardPosition = "img/dh.jpg", uploadFileIdCardNegative = "img/dh.jpg",uploadFileRegistration = "img/dh.jpg",uploadFileLowIncome = "";
         String uploadFileIdCardPosition_docId = "", uploadFileIdCardNegative_docId = "", uploadFileRegistration_docId = "", uploadFileLowIncome_docId = "";
+        String isPositive_hidden = "",isNegative_hidden = "",register_hidden = "",idPositiveViewName_hidden = "" , idNegativeViewName_hidden = "" , registerViewName_hidden = "",lowIncome_hidden = "",lowIncomeViewName_hidden = "";
 
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         String userId = loginUserBean.getUserId();
@@ -39,6 +41,23 @@ public class Apply5_1 implements ILogic {
 
         //我要申請最後第5步確認資料的基本欄位
         ProjUtils.setApplyCommitStep5BasicData(queryStringInfo,content,userId,dao);
+
+        //撈第四步要顯示的欄位
+
+        String apply4DraftXML = FlowUtils.getDraftData(userId,"apply","apply_document_4",dao);
+        if(StringUtils.isNotEmpty(apply4DraftXML)) {
+            Document apply4Doc = DocumentHelper.parseText(apply4DraftXML);
+            Element root = apply4Doc.getRootElement();
+            if(root.element("isPositive_hidden") != null) isPositive_hidden = root.element("isPositive_hidden").getText();
+            if(root.element("isNegative_hidden") != null) isNegative_hidden = root.element("isNegative_hidden").getText();
+            if(root.element("register_hidden") != null) register_hidden = root.element("register_hidden").getText();
+            if(root.element("idPositiveViewName_hidden") != null) idPositiveViewName_hidden = root.element("idPositiveViewName_hidden").getText();
+            if(root.element("idNegativeViewName_hidden") != null) idNegativeViewName_hidden = root.element("idNegativeViewName_hidden").getText();
+            if(root.element("registerViewName_hidden") != null) registerViewName_hidden = root.element("registerViewName_hidden").getText();
+            if(root.element("lowIncome_hidden") != null) lowIncome_hidden = root.element("lowIncome_hidden").getText();
+            if(root.element("lowIncomeViewName_hidden") != null) lowIncomeViewName_hidden = root.element("lowIncomeViewName_hidden").getText();
+
+        }
 
         //上傳文件撈Table
         SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
@@ -83,6 +102,15 @@ public class Apply5_1 implements ILogic {
         uploadFile.put("lowIncome_docId",uploadFileLowIncome_docId);
 
         content.put("uploadFile",uploadFile);
+
+        content.put("isPositive_hidden",isPositive_hidden);
+        content.put("isNegative_hidden",isNegative_hidden);
+        content.put("register_hidden",register_hidden);
+        content.put("idPositiveViewName_hidden",idPositiveViewName_hidden);
+        content.put("idNegativeViewName_hidden",idNegativeViewName_hidden);
+        content.put("registerViewName_hidden",registerViewName_hidden);
+        content.put("lowIncome_hidden",lowIncome_hidden);
+        content.put("lowIncomeViewName_hidden",lowIncomeViewName_hidden);
     }
 
     @Override

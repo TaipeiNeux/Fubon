@@ -143,7 +143,8 @@ public class FlowServlet extends HttpServlet {
         String userId = loginUserBean.getUserId();
 
         //產生草稿XML
-        String draftXML = FlowUtils.toDraftDataXML(queryStringInfo);
+        GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
+        String draftXML = FlowUtils.toDraftDataXML(queryStringInfo,false);
 
         //更新草稿到DB
         FlowUtils.updateDraftData(userId,flowId,stepId,draftXML,dao,true);
@@ -199,13 +200,14 @@ public class FlowServlet extends HttpServlet {
 
         Element currentStep = FlowUtils.getFlowElementById(root, stepId);
 
+        GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
         GardenLog.log(GardenLog.DEBUG,"FlowServlet next currentStep = " + currentStep);
 
         //先儲存相關資料
         ILogic iLogic = FlowUtils.getLogic(currentStep);
         iLogic.doAction(queryStringInfo,content);
 
-        GardenLog.log(GardenLog.DEBUG,"DOAction=" + iLogic.getClass().getName());
+        GardenLog.log(GardenLog.DEBUG,"DoAction=" + iLogic.getClass().getName());
 
         //產生草稿XML
         String draftXML = FlowUtils.toDraftDataXML(queryStringInfo);

@@ -495,7 +495,7 @@ var GardenUtils = {
                     //verify date
                     $(config.validDate).each(function(j, number) {
                         var errName = number.hasOwnProperty('group')? number.group : number.name;
-                        if( config.showAllErr || hasErrName.indexOf(errName) == -1 ){
+                        if( config.showAllErr || hasErrName.indexOf(errName) == -1 ) {
                             var $this;
                             if( number.name.length == 1 ){
                                 $this = $('#' + n).find('[name="' + number.name + '"]');
@@ -515,7 +515,7 @@ var GardenUtils = {
                             }
 
 
-                            //console.error('validDate', number);
+                            console.error('validDate', number);
 
                             if ($this.length != 0 && (($this.length == 1 && $this.parents(":hidden").length == 0) || ($this.length == 3 && $this[0].parents(":hidden").length == 0))) {
                                 var val = '';
@@ -563,6 +563,8 @@ var GardenUtils = {
                                     },
                                     checkFunParam: number
                                 };
+								
+								console.debug(hiddenConf);
 
                                 if (number.allowEmpty) {
                                     //日期可為空
@@ -915,14 +917,14 @@ var GardenUtils = {
 
                     //先跑基本的
                     $.each(noPass,function(i,obj){
-                        console.debug(obj);
+						console.debug(obj);
 
                         var name = obj.name;
                         var type = obj.type;
                         var msg = obj.msg;
                         var validObj = obj.obj;
 						var val = obj.val;
-
+						
 						if(val.indexOf('*') != -1) {
 							msg = msg + '勿輸入遮掩字元，請重新輸入';
 						}
@@ -943,9 +945,22 @@ var GardenUtils = {
 	                        else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
 	                           
 	                            /** --start 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
-	                            if(type == 'identity')
-	                                 msg = msg + '驗證錯誤';
+	                            if(type == 'identity'){
+																		
+									/**  0716 忠毅  輸入非英數字,規定要顯示: 限輸入英數字  **/
+									if(/^[a-zA-Z0-9- ]*$/.test(obj.val) == false) {
+										//alert('string contains non english characters');
+										msg = '限輸入英數字';
+									}
+									/**  0716 忠毅  長度不符,規定要顯示: 輸入長度不符  **/									
+									else if(obj.val.length<10)
+										msg = '輸入長度不符';
+									
+									else 
+										msg = msg + '驗證錯誤';
 	                            
+								
+								}
 	                            else {
 	                            /** --end 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
 								
@@ -1011,7 +1026,8 @@ var GardenUtils = {
                 if( conf.hasHiddenCode && conf.src === conf.target ){
                     return true;
                 } else {
-                    return conf.checkFun(conf.checkFunParam);
+					if(conf.src.indexOf('*') != -1) return false
+                    else return conf.checkFun(conf.checkFunParam);
                 }
             }
             //身分證字號
@@ -1545,36 +1561,40 @@ var GardenUtils = {
 						console.debug('val = ' + val);
 						
 						//如果有需要點擊空白，離開後判斷是否有修改過，就要綁onFocus事件
+						var valIsChange = false;
 						if(focusClearVal) {
 							var original = input.attr('original');
 							//如果空白，就帶回原本的值
 							if(val == '') {
 								val = original;
 							}
+							else {
+								valIsChange = true;
+							}
 						}
 						
-						//去掉空白
-						if(trimSpace) {
-							val = GardenUtils.valid.removeSpace(val);
-						}
-						
-						//半形轉全形
-						if(convertFullWidth) {
-							var after = '';
-						    for(i=0; i<val.length; i++) {
-						     if(val.charCodeAt(i)  >= 33 && val.charCodeAt(i) <= 270) {
-						      after += String.fromCharCode(val.charCodeAt(i) + 65248);
-						     } else if(val.charCodeAt(i) == 32) {
-						      after += String.fromCharCode(12288);
-						     }else {
-							  after += val.substring(i,i+1);
-							 }
-						    }
+						if(valIsChange) {
+							//去掉空白
+							if(trimSpace) {
+								val = GardenUtils.valid.removeSpace(val);
+							}
 							
-							val = after;
+							//半形轉全形
+							if(convertFullWidth) {
+								var after = '';
+							    for(i=0; i<val.length; i++) {
+							     if(val.charCodeAt(i)  >= 33 && val.charCodeAt(i) <= 270) {
+							      after += String.fromCharCode(val.charCodeAt(i) + 65248);
+							     } else if(val.charCodeAt(i) == 32) {
+							      after += String.fromCharCode(12288);
+							     }else {
+								  after += val.substring(i,i+1);
+								 }
+							    }
+								
+								val = after;
+							}
 						}
-						
-						
 						
 	                    input.val(val);
 	                });

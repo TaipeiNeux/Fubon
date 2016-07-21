@@ -271,12 +271,14 @@ public class DataServlet extends HttpServlet {
                             if(StringUtils.isNotEmpty(domicile) && domicile.length() > 2) {
                                 domicilePhoneRegionCode = domicile.substring(0,2);
                                 domicilePhonePhone = domicile.substring(2);
+                                domicilePhonePhone = domicilePhonePhone.trim();
                             }
 
                             //通訊電話抓3802
                             if(StringUtils.isNotEmpty(tele) && tele.length() > 2) {
                                 telePhoneRegionCode = tele.substring(0,2);
                                 telePhonePhone = tele.substring(2);
+                                telePhonePhone = telePhonePhone.trim();
                             }
 
                         }
@@ -697,14 +699,14 @@ public class DataServlet extends HttpServlet {
 
         JSONObject jsonObject = new JSONObject();
         JSONArray booking = new JSONArray();
+        JSONArray noBusiness = new JSONArray();
 
         try{
 
             jsonObject.put("booking",booking);
+            jsonObject.put("noBusiness",noBusiness);
 
             IDao dao = DaoFactory.getDefaultDao();
-
-            //TODO 讀一張可以選擇的營業日的BUSINESS_DAY Table
 
             //先去查這間分行的資料
             Map<String,String> searchMap = new HashMap<String,String>();
@@ -725,6 +727,18 @@ public class DataServlet extends HttpServlet {
                 String todayYear = today.substring(0,4);
 
                 String month = StringUtils.leftPad(date,2,"0");
+
+                //讀一張可以選擇的營業日的BUSINESS_DAY Table
+                List<String> noBusinessDays = new ArrayList<String>();
+
+                String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+                if(!"sit".equalsIgnoreCase(env)) {
+                    noBusinessDays = DBUtils.getNoBusinessDay(todayYear + month);
+                }
+
+                for(String day : noBusinessDays) {
+                    noBusiness.put(day);
+                }
 
                 SQLCommand query = new SQLCommand("select ExpectDate,ExpectTime\n" +
                         "from AplyMemberTuitionLoanDtl \n" +
@@ -838,28 +852,43 @@ public class DataServlet extends HttpServlet {
                 String isGuarantor = "",id = "",name = "",birthday = "",telePhoneRegionCode = "",telePhonePhone = "",mobile = "";
                 String domicileAddressCityId = "" , domicileAddressCityName = "", domicileAddressZipCode = "",domicileAddressZipCodeName="",domicileLinerName = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
 
-                //取得第二步的草稿
-                String draftXML = FlowUtils.getDraftData(userId, "apply", "apply2", dao);
+                String applyBirthday = "";
+
+                //取得第1-1跟第二步的草稿
+                String draftXML1 = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
+                Document doc1 = DocumentHelper.parseText(draftXML1);
+                Element root1 = doc1.getRootElement();
+
+                if(StringUtils.isNotEmpty(draftXML1)) {
+                    //抓申請人生日
+                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+
+                    applyBirthday = ProjUtils.toYYYYBirthday(applyBirthday);
+                }
+
 
                 //如果有第二步草稿，就拿草稿的
+                String draftXML = FlowUtils.getDraftData(userId, "apply", "apply2", dao);
                 if(StringUtils.isNotEmpty(draftXML)) {
-
                     Document doc = DocumentHelper.parseText(draftXML);
                     Element root = doc.getRootElement();
+                    if(root.element(type + "_id") != null) {
 
-                    id = root.element(type + "_id").getText();
-                    name = root.element(type + "_name").getText();
-                    birthday = ProjUtils.toDraftBirthday(root.element(type + "_birthday0").getText(),root.element(type + "_birthday2").getText(),root.element(type + "_birthday4").getText());
+                        id = root.element(type + "_id").getText();
+                        name = root.element(type + "_name").getText();
+                        birthday = ProjUtils.toDraftBirthday(root.element(type + "_birthday0").getText(),root.element(type + "_birthday2").getText(),root.element(type + "_birthday4").getText());
 
-                    telePhoneRegionCode = root.element(type + "_regionCode").getText();
-                    telePhonePhone = root.element(type + "_phone").getText();
-                    mobile = root.element(type + "_mobile").getText();
+                        telePhoneRegionCode = root.element(type + "_regionCode").getText();
+                        telePhonePhone = root.element(type + "_phone").getText();
+                        mobile = root.element(type + "_mobile").getText();
 
-                    domicileAddressCityId = root.element(type + "_cityId_domi") != null ? root.element(type + "_cityId_domi").getText() : "";
-                    domicileAddressZipCode = root.element(type + "_zipCode_domi") != null ? root.element(type + "_zipCode_domi").getText() : "";
-                    domicileLinerName = root.element(type + "_liner_domi") != null ? root.element(type + "_liner_domi").getText() : "";
-                    domicileAddressNeighborhood = root.element(type + "_neighborhood_domi") != null ? root.element(type + "_neighborhood_domi").getText() : "";
-                    domicileAddressAddress = root.element(type + "_address_domi") != null ? root.element(type + "_address_domi").getText() : "";
+                        domicileAddressCityId = root.element(type + "_cityId_domi") != null ? root.element(type + "_cityId_domi").getText() : "";
+                        domicileAddressZipCode = root.element(type + "_zipCode_domi") != null ? root.element(type + "_zipCode_domi").getText() : "";
+                        domicileLinerName = root.element(type + "_liner_domi") != null ? root.element(type + "_liner_domi").getText() : "";
+                        domicileAddressNeighborhood = root.element(type + "_neighborhood_domi") != null ? root.element(type + "_neighborhood_domi").getText() : "";
+                        domicileAddressAddress = root.element(type + "_address_domi") != null ? root.element(type + "_address_domi").getText() : "";
+
+                    }
 
                 }
                 //沒草稿才拿申請人的撥款紀錄
@@ -871,6 +900,14 @@ public class DataServlet extends HttpServlet {
                     DataObject dataObject = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
 
                     if(dataObject != null) {
+
+                        //判斷是否申請人已成年(用來判斷寫入欄位是到監護人還是連帶保證人
+                        boolean isAdult = ProjUtils.isAdult(applyBirthday);
+
+                        //如果成年的話，改成保證人War欄位
+                        if(isAdult && "Gd1".equalsIgnoreCase(dbColumnPrefix)) {
+                            dbColumnPrefix = "War";
+                        }
 
                         String zipCode = dataObject.getValue(dbColumnPrefix + "_Zip");
 
@@ -895,6 +932,7 @@ public class DataServlet extends HttpServlet {
                     }
                 }
 
+
                 //代碼轉成中文顯示(資料確認頁會使用到
                 if("Y".equals(convert)) {
                     domicileAddressCityId = ProjUtils.toCityName(domicileAddressCityId,dao);
@@ -908,7 +946,6 @@ public class DataServlet extends HttpServlet {
                     domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
                     domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
                 }
-
 
                 //隱碼
                 if(!"Y".equalsIgnoreCase(noMark)) {
@@ -1317,6 +1354,7 @@ public class DataServlet extends HttpServlet {
         JSONArray client_type = new JSONArray();
         JSONArray repayment_detail = new JSONArray();
 
+        String result = "";
         try{
 
             data.put("client_type",client_type);
@@ -1339,7 +1377,16 @@ public class DataServlet extends HttpServlet {
                 RSBean rsBean = WebServiceAgent.callWebService(rqBean);
 
                 if(rsBean.isSuccess()) {
+
                     responses = rsBean.getTxnString();
+
+                    //如果還有電文就繼續
+                    if("C".equalsIgnoreCase(rsBean.getServiceHeader().getHRETRN())) {
+                        responses = moreTxData(responses,rqBean,rsBean.getServiceHeader().getHSTANO(),"C");
+                    }
+                }
+                else {
+                    throw new Exception("查詢電文失敗:"+rsBean.getErrorMsg());
                 }
             }
             else {
@@ -1468,7 +1515,7 @@ public class DataServlet extends HttpServlet {
             columnMap.put("TX_DATE",new String[]{"還款日期","Y","N"});
             columnMap.put("YR_TERM",new String[]{"學期別","Y","N"});
             columnMap.put("CURRATE",new String[]{"幣別","N","N"});
-            columnMap.put("PRN_AMT",new String[]{"本金","N","Y"});
+            columnMap.put("PRN_AMT", new String[]{"本金", "N", "Y"});
             columnMap.put("INT_AMT",new String[]{"利息","N","Y"});
             columnMap.put("DLY_AMT",new String[]{"遲延息","N","Y"});
             columnMap.put("PNT_AMT",new String[]{"逾期違約金","N","Y"});
@@ -1530,9 +1577,58 @@ public class DataServlet extends HttpServlet {
 
         }catch(Exception e) {
             e.printStackTrace();
+
+            result = "查詢失敗:" + e.getMessage();
+
+        }finally{
+            if(StringUtils.isEmpty(result)) {
+                result = "查詢成功";
+            }
+
+            ProjUtils.saveLog(DaoFactory.getDefaultDao(),queryStringInfo.getRequest(),getClass().getName(),"repaymentInquiry",result);
         }
 
+
         JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
+    }
+
+    private static String moreTxData(String response,RQBean rqBean,String hstano,String hretrn) throws Exception {
+
+        //先解開上一包的
+        Document doc = DocumentHelper.parseText(response);
+        Element root = doc.getRootElement();
+
+        //再抓這一包的
+        RSBean rsBean = WebServiceAgent.callWebService(rqBean,hstano,hretrn);
+        String moreResp = rsBean.getTxnString();
+
+        //解開這一包的XML
+        Document moreDoc = DocumentHelper.parseText(moreResp);
+        Element moreRoot = moreDoc.getRootElement();
+
+        //把第一包的TxRepeat加進去
+        StringBuffer txRepeatBuffer = new StringBuffer();
+        List<Element> TxRepeats = root.elements("TxRepeat");
+        for(Element txRepeat : TxRepeats) {
+            txRepeatBuffer.append(txRepeat.asXML());
+        }
+
+        //把第二包的也加進去
+        List<Element> MoreTxRepeats = moreRoot.elements("TxRepeat");
+        for(Element txRepeat : MoreTxRepeats) {
+            txRepeatBuffer.append(txRepeat.asXML());
+        }
+
+        //打包成XML
+        moreResp = "<root>" + txRepeatBuffer.toString() + "</root>";
+
+        //如果還有電文就繼續
+        if("C".equalsIgnoreCase(rsBean.getServiceHeader().getHRETRN())) {
+
+            return moreTxData(moreResp,rqBean,rsBean.getServiceHeader().getHSTANO(),"C");
+        }
+
+        else return moreResp;
     }
 
     public void updatePopupEtag(JSPQueryStringInfo queryStringInfo, HttpServletResponse resp) {
@@ -1597,13 +1693,14 @@ public class DataServlet extends HttpServlet {
         JSONObject data = new JSONObject();
         JSONArray client_detail = new JSONArray();
         JSONArray accounts = new JSONArray();
+        IDao dao = DaoFactory.getDefaultDao();
 
+        String result = "";
         try{
 
             String hasAccount = StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
             String isArrears = loginUserBean.getCustomizeValue("isArrear"); //是否不欠款
             String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N"; //有無線上註記
-
 
             jsonObject.put("isArrears",isArrears);
             jsonObject.put("isEtabs",isEtabs);
@@ -1635,6 +1732,9 @@ public class DataServlet extends HttpServlet {
                     RSBean rsBean = WebServiceAgent.callWebService(rqBean);
                     if(rsBean.isSuccess()) {
                         responses = rsBean.getTxnString();
+                    }
+                    else {
+                        throw new Exception("查詢電文失敗:" + rsBean.getErrorMsg());
                     }
 
                     isDelay = DBUtils.isDelayCustomer(acnoSl);
@@ -1815,87 +1915,22 @@ public class DataServlet extends HttpServlet {
                 }
 
                 Document doc = DocumentHelper.parseText(responses);
-//                Element root = doc.getRootElement();
 
-                //先找這個帳號學期別是1跟2的
-                Set<String> termSet = new HashSet<String>();
-                termSet.add("1");
-                termSet.add("2");
+//                //先找這個帳號學期別是1跟2的
+//                Set<String> termSet = new HashSet<String>();
+//                termSet.add("1");
+//                termSet.add("2");
 
-//                System.out.println("search 1 and 2");
+                total += setMyLoanAccountDetail(doc,client_detail,isDelay,acnoSl,bankName);
 
-                total += setMyLoanAccountDetail(termSet,doc,client_detail,isDelay,acnoSl,bankName);
+//                //再找0的
+//                termSet = new HashSet<String>();
+//                termSet.add("0");
 
-                //再找0的
-                termSet = new HashSet<String>();
-                termSet.add("0");
-
-//                System.out.println("search 0");
-                total += setMyLoanAccountDetail(termSet,doc,client_detail,isDelay,acnoSl,bankName);
+//                total += setMyLoanAccountDetail(doc,client_detail,isDelay,acnoSl,bankName);
 
                 accounts.put(acnoSl);
-//                String crlnAmt = root.element("CRLN_AMT").getText().trim();
-//                String loanBalTot = root.element("LOAN_BAL_TOT").getText().trim();
-//
-//                String intRate = "";
-//                String nextIntDate = "";
-//                String intDate = "";
-//
-//                loanBalTot = loanBalTot.replaceAll(",", "");
-//
-//                JSONArray detailArray = new JSONArray();
-//
-//                for (Iterator i = root.elementIterator("TxRepeat"); i.hasNext();) {
-//                    Element foo = (Element) i.next();
-//                    String yrTerm = foo.elementText("YR_TERM").trim();
-//                    if(yrTerm.equals("")) continue;
-//
-//                    intRate = foo.elementText("INT_RATE").trim();
-//                    String loanAmt = foo.elementText("LOAN_AMT").trim();
-//                    String loanBal = foo.elementText("LOAN_BAL").trim();
-//                    nextIntDate = foo.elementText("NEXT_INT_DATE").trim();
-//                    intDate = foo.elementText("INT_DATE").trim();
-//                    String insAmt = foo.elementText("INS_AMT").trim();
-//
-//                    if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
-//                            || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
-//
-//                    JSONObject jsonDetail = new JSONObject();
-//                    jsonDetail.put("semister",yrTerm.substring(0, 3));
-//                    jsonDetail.put("semister_state",yrTerm.substring(3, 4));
-//                    jsonDetail.put("original_money",loanAmt.replace(",", ""));
-//                    jsonDetail.put("balance_money", loanBal.replace(",", ""));
-//                    jsonDetail.put("need_pay_month",insAmt.replace(",", ""));
-//
-//                    detailArray.put(jsonDetail);
-//                }
-//
-//                //西元轉民國
-//                if(StringUtils.isNotEmpty(intDate)) {
-//                    intDate = ProjUtils.toYYYYBirthday(StringUtils.replace(intDate,"/",""));
-//
-//                    intDate = DateUtil.convert14ToDate("yyyy/MM/dd",intDate + "000000");
-//                }
-//
-//                clientDetail.put("state",isDelay ? "delay" : "normal");
-//                clientDetail.put("num","");
-//                clientDetail.put("account",acnoSl);
-//                clientDetail.put("bank_name",bankName);
-//                clientDetail.put("remain_money",loanBalTot);
-//                clientDetail.put("rate",intRate);
-//                clientDetail.put("pay_day",(StringUtils.isNotEmpty(nextIntDate) && nextIntDate.length() < 2) ? "" : nextIntDate.substring(nextIntDate.length()-2, nextIntDate.length()));
-//                clientDetail.put("intDate",intDate);
-//                clientDetail.put("return_detail","repaymentInquiry.jsp");
-//                clientDetail.put("my_detail","myElectronicPay_1.jsp");
-//                clientDetail.put("detail", detailArray);
-//
-//                client_detail.put(clientDetail);
-//
-//
-//                //加總
-//                if(StringUtils.isNumeric(loanBalTot)) {
-//                    total += Integer.parseInt(loanBalTot);
-//                }
+
             }
 
             jsonObject.put("accounts",accounts);
@@ -1904,10 +1939,15 @@ public class DataServlet extends HttpServlet {
             JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
         }catch(Exception e) {
             e.printStackTrace();
+        } finally{
+            if(StringUtils.isEmpty(result)) {
+                result = "查詢成功";
+            }
+            ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"myloanDetail",result);
         }
     }
 
-    private int setMyLoanAccountDetail(Set<String> yearTermSet ,Document doc,JSONArray client_detail,boolean isDelay,String acnoSl,String bankName) throws Exception {
+    private int setMyLoanAccountDetail(Document doc,JSONArray client_detail,boolean isDelay,String acnoSl,String bankName) throws Exception {
 
         int total = 0;
 
@@ -1931,11 +1971,21 @@ public class DataServlet extends HttpServlet {
             String yrTerm = foo.elementText("YR_TERM").trim();
             if(yrTerm.equals("")) continue;
 
-            intRate = foo.element("INT_RATE").getText().trim();
+            //只取第一筆
+            if(StringUtils.isEmpty(intRate)) {
+                intRate = foo.element("INT_RATE").getText().trim();
+            }
+
+            if(StringUtils.isEmpty(nextIntDate)) {
+                nextIntDate = foo.element("NEXT_INT_DATE").getText().trim();
+            }
+
+            if(StringUtils.isEmpty(intDate)) {
+                intDate = foo.element("INT_DATE").getText().trim();
+            }
+
             String loanAmt = foo.element("LOAN_AMT").getText().trim();
             String loanBal = foo.element("LOAN_BAL").getText().trim();
-            nextIntDate = foo.element("NEXT_INT_DATE").getText().trim();
-            intDate = foo.element("INT_DATE").getText().trim();
             String insAmt = foo.element("INS_AMT").getText().trim();
 
             if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
@@ -1944,8 +1994,6 @@ public class DataServlet extends HttpServlet {
             String semister = yrTerm.substring(0, 3);
             String semisterState = yrTerm.substring(3, 4);
             loanBal = loanBal.replace(",", "");
-
-            if(!yearTermSet.contains(semisterState)) continue;
 
 
             loanBalTot += Integer.parseInt(loanBal);
@@ -1962,8 +2010,14 @@ public class DataServlet extends HttpServlet {
 
         //西元轉民國
         if(StringUtils.isNotEmpty(intDate)) {
-            intDate = ProjUtils.toYYYYBirthday(StringUtils.replace(intDate,"/",""));
+            String intYear = intDate.split("/")[0];
+            String intMonth = intDate.split("/")[1];
+            String intDay = intDate.split("/")[2];
 
+            intYear = StringUtils.leftPad(intYear,3,"0");
+            intMonth = StringUtils.leftPad(intMonth,2,"0");
+            intDay = StringUtils.leftPad(intDay,2,"0");
+            intDate = ProjUtils.toYYYYBirthday(intYear + intMonth + intDay);
             intDate = DateUtil.convert14ToDate("yyyy/MM/dd",intDate + "000000");
         }
 

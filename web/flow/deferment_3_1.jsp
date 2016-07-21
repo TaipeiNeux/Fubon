@@ -62,11 +62,9 @@
                     </td>
                     <td class="file-zh">身份證正面影本</td>
                     <td class="file-en" id="idPositiveImg">無</td>
-                    <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案</a>
-						<input type="file" name="isPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
 					</td>
-                    <td class="file-upload"><a id="idPositiveUpload">上傳檔案</a>
-                        <input type="file" name="isPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-upload"><a id="idPositiveUpload">上傳檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="idPositiveView" class=""></a>
@@ -93,11 +91,9 @@
                     </td>
                     <td class="file-zh">身份證反面影本</td>
                     <td class="file-en" id="idNegativeImg">無</td>
-                    <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案</a>
-						<input type="file" name="isNegativeFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
-                    <td class="file-upload"><a id="idNegativeUpload">上傳檔案</a>
-                        <input type="file" name="isNegativeFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-upload"><a id="idNegativeUpload">上傳檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="idNegativeView"></a>
@@ -123,11 +119,9 @@
                     </td>
                     <td class="file-zh">學生證正面</td>
                     <td class="file-en" id="studentIdPositiveImg">無</td>
-                    <td class="file-modify"><a id="studentIdPositiveChange" style="display:none">修改檔案</a>
-						<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-modify"><a id="studentIdPositiveChange" style="display:none">修改檔案<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
-                    <td class="file-upload"><a id="studentIdPositiveUpload">上傳檔案</a>
-                        <input type="file" name="studentIdPositiveFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-upload"><a id="studentIdPositiveUpload">上傳檔案<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="studentIdPositiveView"></a>
@@ -153,11 +147,9 @@
                     </td>
                     <td class="file-zh">學生證反面</td>
                     <td class="file-en" id="studentIdNegativeImg">無</td>
-                    <td class="file-modify"><a id="studentIdNegativeChange" style="display:none">修改檔案</a>
-						<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-modify"><a id="studentIdNegativeChange" style="display:none">修改檔案<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
-                    <td class="file-upload"><a id="studentIdNegativeUpload">上傳檔案</a>
-                        <input type="file" name="studentIdNegativeFile" style="position: absolute;top: 18px;opacity: 0;">
+                    <td class="file-upload"><a id="studentIdNegativeUpload">上傳檔案<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="studentIdNegativeView"></a>
