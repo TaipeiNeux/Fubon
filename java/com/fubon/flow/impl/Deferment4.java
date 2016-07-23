@@ -67,14 +67,17 @@ public class Deferment4 implements ILogic {
                 month = step1Root.element("selectMonth").getText();
                 day = step1Root.element("selectDay").getText();
 
-                String yearYYYY = Integer.parseInt(year) + 1911 + "";
-                month = StringUtils.leftPad(month,2,"0");
-                day = StringUtils.leftPad(day,2,"0");
+                if(StringUtils.isNotEmpty(year) && StringUtils.isNotEmpty(month) && StringUtils.isNotEmpty(day)) {
+                    String yearYYYY = Integer.parseInt(year) + 1911 + "";
+                    month = StringUtils.leftPad(month,2,"0");
+                    day = StringUtils.leftPad(day,2,"0");
 
 
-                forecastDate = yearYYYY + month + day + "000000";
+                    forecastDate = yearYYYY + month + day + "000000";
 
-                forecastDate = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",forecastDate);
+                    forecastDate = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",forecastDate);
+                }
+
             }
 
             //新增

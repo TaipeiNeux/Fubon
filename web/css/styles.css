@@ -483,8 +483,8 @@ table {
 
 @font-face {
     font-family: 'FontAwesome';
-    src: url("../fonts/fontawesome-webfont.eot?v=4.5.0");
-    src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.5.0") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.5.0") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.5.0") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.5.0") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular") format("svg");
+    src: url("../fonts/fontawesome-webfont.eot?");
+    src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?") format("woff2"), url("../fonts/fontawesome-webfont.woff?") format("woff"), url("../fonts/fontawesome-webfont.ttf") format("truetype"), url("../fonts/fontawesome-webfont.svg?#fontawesomeregular") format("svg");
     font-weight: normal;
     font-style: normal;
 }
@@ -4539,14 +4539,19 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
     background-image: url(../img/fu-bg.jpg);
     background-position: left 37%;
     background-size: 77%;
+    /* background-repeat:no-repeat; */
+  /*     background-position: center;
+    background-size: cover; */
+    max-height: 500px;
 }
 
 @media (max-width: 769px) {
     .bannerArea {
         background-size: 115%;
         background-position: top right;
-        min-height: inherit;
+        min-height: initial;
         margin-top: 0;
+         max-height: 700px;
     }
 }
 
@@ -5379,6 +5384,7 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
     bottom: -16px;
     margin-left: -18.5px;
     transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
     z-index: -1;
     border: solid 1px #131415;
     display: none;
@@ -5401,6 +5407,7 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
 /* Application */
 
 .application_step li {
+    -webkit-display: table-cell;
     display: table-cell;
     width: 2%;
     position: relative;
@@ -6509,6 +6516,7 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
     color: #545555;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    z-index:2000;
 }
 
 @media (max-width: 769px) {
@@ -6522,6 +6530,7 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
         padding: 25px;
         text-align: center;
         position: relative;
+        
     }
 }
 
@@ -7928,6 +7937,7 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
 
 @media (max-width: 769px) {
     .loanUL > li {
+        z-index:20;
         width: 100%;
         float: left;
         margin-left: 0;
@@ -12895,6 +12905,7 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
     }
 }
 
+/*
 @media (max-width: 769px) {
     .apply_5_step1 .dan:after {
         content: '+';
@@ -12908,6 +12919,7 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
         top: 0;
     }
 }
+*/
 
 @media (max-width: 769px) {
     .apply_5_step1 .home:before {
@@ -13962,6 +13974,9 @@ body {
     font-family: 微軟正黑體, sans-serif;
     font-size: 15px;
     height: 100%;
+    width:100%;
+    max-width:100%;
+    min-width:100%;
 }
 
 .img img {
@@ -20608,8 +20623,8 @@ body.apply .processTab ul:before {
     body.apply_5_step1 .thirdParty:before,
     body.apply_5_step1 .spouse:before {
         top: -3px;
-        width: 31px;
-        height: 36px;
+        width: 23px;
+        height: 27px;
     }
     body.apply_1_step2 h3.snopy {
         padding: 20px 10px 0 50px;
@@ -21913,7 +21928,7 @@ a.reservation:hover {
         max-width: none;
     }
     div#isLogin a {
-        width: 35%;
+        width: 130px;
         font-size: 15px;
     }
 }
@@ -22764,4 +22779,145 @@ body.myElectronicPay_1 .img img {
 
 #body.index .files.bill {
     display: none;
+}
+
+body#body.apply_map label#timeLabel6 {
+    margin-right: 4px;
+}
+
+
+@media (max-width:769px) {
+    .apply_5_step1 .clickEvent {
+        position: absolute;
+        top: -5px;
+        left: 10px;
+        width: 15px;
+    }
+    
+/*
+    .apply_5_step1 .Stretch {
+        display: none;
+    }
+*/
+}
+
+@media (min-width:769px) {
+    .apply_5_step1 .clickEvent {
+        display: none;
+    }
+}
+
+@media (max-width:769px) {
+    
+    .appcont span {
+        font-size: 15px;
+        padding-left: 0;
+    }
+    
+    .apply_5_step1 .jam {
+        display: block;
+        float: none;
+        text-align: left;
+    }
+    
+    body.apply_5_step1 .appcont {
+        color: #2b2c2c;
+        font-size: 15px;
+        margin-right: 0;
+        text-align: left;
+        padding: 10px 15px;
+        border-top: solid 1px #e8e7e7;
+        width: 100%;
+    }
+    
+    body.apply_5_step1 .moneyAlign .right p {
+        text-align: left;
+    }
+    
+    body.apply_5_step1 div.noob p.student_publicExpense {
+        display: block;
+        float: none;
+    }
+    
+    .apply_5_step1 .hig {
+        font-size: 12px;
+    }
+    
+    .apply_5_step1 .dan.moneyAlign .joy .left p {
+        display: inline-block;
+        margin-right: 10px;
+    }
+    
+    .apply_5_step1 .dan.moneyAlign .joy {
+        padding-right: 0;
+    }
+    
+    body.apply_5_step1 .abon .left {
+        width: 100%;
+    }
+    
+    .apply_5_step1 .dan.moneyAlign .joy .left p.student_publicExpense {
+        display: block;
+    }
+}
+
+@media (min-width:769px) {
+    .apply_5_step1 .TOTAL {
+        display: inline-block;
+    }
+    
+    .apply_5_step1 .hig {
+        display: none;
+    }
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (orientation: portrait) 
+  and (-webkit-min-device-pixel-ratio: 2) {
+	/* body{width:768px!important;} */
+}
+
+
+@media (max-width:769px) {
+    body.register_3 .right.account,
+    body.register_3 .right.Pwd {
+        display: block;
+    }
+}
+
+@media (min-width:769px) {
+    body.apply_4 .processInner table.mqua {
+        margin-top: 0;
+    }
+    
+    body.apply_4 .processInner .bsc {
+        margin-top: 30px;
+    }
+    
+    body.apply_4 .processInner .bsc img {
+        width:20px;
+        margin-bottom: 2px;
+    }
+    
+    body.apply_4 div.modal-body ul {
+        padding-left: 0;
+    }
+    
+    body.apply_4 .modal-body ul li:first-child {
+        text-indent: 0;
+    }
+    
+    body#body.apply_5_step1 .who:before,
+    body#body.apply_5_step1 .home:before,
+    body#body.apply_5_step1 .father:before,
+    body#body.apply_5_step1 .thirdParty:before,
+    body#body.apply_5_step1 .hat:before,
+    body#body.apply_5_step1 .appmoney:before,
+    body#body.apply_5_step1 .mather:before,
+    body#body.apply_5_step1 .spouse:before {
+        left: -3px;
+    }
 }

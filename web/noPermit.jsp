@@ -67,6 +67,14 @@
                                 <br>
                                 <%
                                 }
+                                else if("5".equalsIgnoreCase(typeId)) {
+                                %>
+                                <p>目前查無你於本行有就學貸款應繳金額紀錄，如有疑問，請洽客戶服務專線02-8751-6665按5。</p>
+                                <br>
+                                <br>
+                                <br>
+                                <%
+                                }
                                 else if("2".equalsIgnoreCase(typeId))
                                 {
                                 %>

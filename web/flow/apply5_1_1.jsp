@@ -1,20 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
 	
-	<input type="hidden" class="fileSize" name="isPositive_hidden" value="">
-       <input type="hidden" class="fileSize" name="isNegative_hidden" value="">
-       <input type="hidden" class="fileSize" name="register_hidden" value="">
-       <input type="hidden" class="fileSize" name="lowIncome_hidden" value="">
-	   
-	   <input type="hidden" name="idPositiveViewName_hidden" value="">
-       <input type="hidden" name="idNegativeViewName_hidden" value="">
-       <input type="hidden" name="registerViewName_hidden" value="">
-       <input type="hidden" name="lowIncomeViewName_hidden" value="">
 	
 	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">
-            <h2 class="who">申請人</h2>
+            <h2 class="who">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+            申請人</h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply1_1" class="editBtn">修改</a>
             </div>
@@ -108,7 +103,11 @@
             </div>
         </div>
         <div class="dan">
-            <h2 class="home">家庭狀況</h2>
+            <h2 class="home">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+            家庭狀況</h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply1_2" class="editBtn">修改</a>
             </div>
@@ -129,7 +128,11 @@
         <h3 class="snopy pen mt40">關係人基本資料</h3>
 
         <div class="dan" id="father">
-            <h2 class="father">父親
+            <h2 class="father">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+               父親
                 <span id="isGuarantor_father">(為連帶保證人/合計所得對象）</span>
               </h2>
             <div class="editBtnBoxbottom">
@@ -210,7 +213,11 @@
             </div>-->
         </div>
         <div class="dan" id="mother">
-            <h2 class="mather">母親
+            <h2 class="mather">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+               母親
                 <span id="isGuarantor_mother">(為連帶保證人/合計所得對象)</span>
               </h2>
             <div class="editBtnBoxbottom">
@@ -378,7 +385,11 @@
             </div>
         </div>
         <div class="dan" id="spouse">
-            <h2 class="spouse">配偶
+            <h2 class="spouse">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+               配偶
                 <span id="isGuarantor_spouse">(為連帶保證人/合計所得對象）</span>
               </h2>
             <div class="editBtnBoxbottom">
@@ -463,7 +474,11 @@
             </h3>
 
         <div class="dan" id="student">
-            <h2 class="hat">就讀學校</h2>
+            <h2 class="hat">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+            就讀學校</h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply3_1" class="editBtn">修改</a>
             </div>
@@ -538,7 +553,11 @@
         </div>
 
         <div class="dan moneyAlign">
-            <h2 class="appmoney">申貸金額
+            <h2 class="appmoney">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+             申貸金額
               </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply3_2" class="editBtn">修改</a>
@@ -580,7 +599,7 @@
             <div class="may omega">
                 <div class="joy abon bgfff">
                     <div class="left">
-                        <p>書籍費</p>
+                        <p>書籍費</p><span class="hig">(如已含在可貸金額，請勿填寫)</span>
                     </div>
                     <div class="right">
                         <p class="student_book">0</p>
@@ -588,7 +607,7 @@
                 </div>
                 <div class="joy abon">
                     <div class="left">
-                        <p>住宿費</p>
+                        <p>住宿費</p><span class="hig">(如已含在可貸金額，請勿填寫)</span>
                     </div>
                     <div class="right">
                         <p class="student_live">0</p>
@@ -596,7 +615,7 @@
                 </div>
                 <div class="joy abon bgfff">
                     <div class="left">
-                        <p>海外研習費</p>
+                        <p>海外研習費</p><span class="hig">(限學海飛颺或學海惜珠得獎)</span>
                     </div>
                     <div class="right">
                         <p class="student_abroad">0</p>
@@ -604,7 +623,7 @@
                 </div>
                 <div class="joy abon">
                     <div class="left">
-                        <p>生活費</p>
+                        <p>生活費</p><span class="hig">(限低收入戶或中低收入戶)</span>
                     </div>
                     <div class="right">
                         <p class="student_life">0</p>
@@ -622,7 +641,7 @@
         </div>
         <div class="dan jam">
             <div class="appcont">本次申貸金額
-                <span class="student_sum totalMoney"></span><span class="bill">元</span>
+                <div><span class="student_sum totalMoney"></span><span class="bill">元</span></div>
             </div>
         </div>
 
@@ -642,94 +661,86 @@
                 </tr>
             </thead>
             <tbody id="uploadObj">
-                <tr>
+                <tr id="idPositive_0" class = "idPositive">
                     <td class="file-photo">
                         <a>
-                            <img id="idPositivePhoto" src="">
+                            <img id="idPositivePhoto_img_0" src="">
                         </a>
                     </td>
-                    <td class="file-zh">身份證正面影本</td>
-                    <td class="file-en" id="idPositiveImg">無</td>
-                    <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-					</td>
-                    <td class="file-upload"><a id="idPositiveUpload">上傳檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-zh">身分證正面影本</td>
+                    <td class="file-en" id="idPositiveImg_0">無</td>
+                    <td class="file-upload"><a id="idPositiveUpload_0">上傳檔案<input type="file" name="idPositiveFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="idPositiveView" class=""></a>
+                        <a id="idPositiveView_0" class=""></a>
                     </td>
 
                 </tr>
 
-                <tr>
-                    <td class="clickView" colspan="4" style="display:none" id="pos">
+                <tr id="idPositive_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="idPositiveViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="idPositiveViewImg" src="img/dh.jpg">-->
-                                <iframe id="idPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="idPositiveViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr>
+                <tr id="idNegative_0" class="idNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="idNegativePhoto" src="">
+                            <img id="idNegativePhoto_0" src="">
                         </a>
                     </td>
-                    <td class="file-zh">身份證反面影本</td>
-                    <td class="file-en" id="idNegativeImg">無</td>
-                    <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-					</td>
-                    <td class="file-upload"><a id="idNegativeUpload">上傳檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-zh">身分證反面影本</td>
+                    <td class="file-en" id="idNegativeImg_0">無</td>
+                    <td class="file-upload"><a id="idNegativeUpload_0">上傳檔案<input type="file" name="idNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="idNegativeView"></a>
+                        <a id="idNegativeView_0"></a>
                     </td>
                 </tr>
 
-                <tr>
-                    <td class="clickView" colspan="4" style="display:none" id="neg">
+                <tr id="idNegative_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="idNegativeViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="idNegativeViewImg" src="img/dh.jpg">-->
-                                <iframe id="idNegativeViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="idNegativeViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr>
+                <tr id="register_0" class="register">
                     <td class="file-photo">
                         <a>
-                            <img id="registerPhoto" src="">
+                            <img id="registerPhoto_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">註冊繳費單
                         <span>（含註冊繳費單、住宿費用）</span>
                     </td>
-                    <td class="file-en" id="registerImg">無</td>
-                    <td class="file-modify"><a id="registerChange" style="display:none">修改檔案<input type="file" name="registerFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-					</td>
-                    <td class="file-upload"><a id="registerUpload">上傳檔案<input type="file" name="registerFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-en" id="registerImg_0">無</td>
+                    <td class="file-upload"><a id="registerUpload_0">上傳檔案<input type="file" name="registerFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="registerView"></a>
+                        <a id="registerView_0"></a>
                     </td>
                 </tr>
 
                 <tr>
-                    <td class="clickView" colspan="4" style="display:none" id="reg">
+                    <td class="clickView" colspan="4" style="display:none" id="registerViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="registerViewImg" src="">-->
-                                <iframe id="registerViewImg" src="" style="width:100%; height: 100%;"></iframe>
+                                <!--<img id="registerViewImg_0" src="">-->
+                                <iframe id="registerViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
-                
-                
             </tbody>
         </table>
     </div>

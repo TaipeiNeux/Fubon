@@ -1,19 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
+	
+	<input type="hidden" name="RadioClicked" value="">
 
-       <input type="hidden" name="RadioClicked" value="">
-	   <input type="hidden" class="fileSize" name="isPositive_hidden" value="">
-       <input type="hidden" class="fileSize" name="isNegative_hidden" value="">
-       <input type="hidden" class="fileSize" name="studentIdPositive_hidden" value="">
-       <input type="hidden" class="fileSize" name="studentIdNegative_hidden" value="">
-       <input type="hidden" class="fileSize" name="additional_hidden" value="">
-	   
-	   <input type="hidden" name="idPositiveViewName_hidden" value="">
-       <input type="hidden" name="idNegativeViewName_hidden" value="">
-       <input type="hidden" name="studentIdPositiveViewName_hidden" value="">
-       <input type="hidden" name="studentIdNegativeViewName_hidden" value="">
-       <input type="hidden" name="additionalViewName_hidden" value="">
-       
         <div class="joy swataX" id="studentIdCardRadio" style="display:none">
             <div class="left">
                 <p>請確認學生證是否有本期註冊章</p>
@@ -27,19 +16,19 @@
                     <input name="registerStamp" id="registerStamp_n" class="css-checkbox_c" type="radio" value="">
                     <label for="registerStamp_n" class="css-label_c radGroup2">否</label>
                 </div>
-				<div class="error-msg" id="hasStamp" style="display:none">請先確認學生證是否有本期註冊章</div>
+                <div class="error-msg" id="hasStamp" style="display:none">請先確認學生證是否有本期註冊章</div>
             </div>
         </div>
         <div class="xica">
             <h4>請上傳以下文件
-                                  <a href="" data-toggle="modal" data-target="#pleaseUpload">
-                                    <img  src="img/na-11.png" alt="">
-                                  </a>
-                                </h4>
-								<div class="error-msg" id="hasDocument" style="display:none">請上傳文件</div>
-								<div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
-								<div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
-								<div class="error-msg" id="documentSize" style="display:none">上傳檔案大小合計限10MB</div>
+       <a href="" data-toggle="modal" data-target="#pleaseUpload">
+       <img  src="img/na-11.png" alt="">
+           </a>
+             </h4>
+            <div class="error-msg" id="hasDocument" style="display:none">請上傳文件</div>
+            <div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
+            <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
+            <div class="error-msg" id="documentSize" style="display:none">上傳檔案大小合計限10MB</div>
         </div>
         <table class="mqua">
             <thead>
@@ -51,115 +40,106 @@
                 </tr>
             </thead>
             <tbody id="uploadObj">
-                <tr>
+                <tr id="isPositive_0" class = "isPositive">
                     <td class="file-photo">
                         <a>
-                            <img id="idPositivePhoto_img" src="">
-                            <!--<iframe id="idPositivePhoto_iframe" src="">-->
+                            <img id="isPositivePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">身分證正面影本</td>
-                    <td class="file-en" id="idPositiveImg">無</td>
-                    <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-					</td>
-                    <td class="file-upload"><a id="idPositiveUpload">上傳檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-en" id="isPositiveImg_0">無</td>
+                    <td class="file-upload"><a id="isPositiveUpload_0">上傳檔案<input type="file" name="isPositiveFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="idPositiveView" class=""></a>
+                        <a id="isPositiveView_0" class=""></a>
                     </td>
 
                 </tr>
 
-                <tr>
-                    <td class="clickView" colspan="4" style="display:none" id="pos">
+                <tr id="isPositive_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="isPositiveViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                
-								<iframe id="idPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="isPositiveViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr>
+                <tr id="isNegative_0" class="isNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="idNegativePhoto" src="">
+                            <img id="isNegativePhoto_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">身分證反面影本</td>
-                    <td class="file-en" id="idNegativeImg">無</td>
-                    <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-                    </td>
-                    <td class="file-upload"><a id="idNegativeUpload">上傳檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-en" id="isNegativeImg_0">無</td>
+                    <td class="file-upload"><a id="isNegativeUpload_0">上傳檔案<input type="file" name="isNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="idNegativeView"></a>
+                        <a id="isNegativeView_0"></a>
                     </td>
                 </tr>
 
-                <tr>
-                    <td class="clickView" colspan="4" style="display:none" id="neg">
+                <tr id="isNegative_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="isNegativeViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                
-								<iframe id="idNegativeViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="isNegativeViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr id="studentIdPositive" style="display:none">
+                <tr id="studentIdPositive_0" style="display:none" class="studentIdPositive">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdPositivePhoto" src="">
+                            <img id="studentIdPositivePhoto_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">學生證正面影本(須蓋有繼續升學學校之註冊章戳)</td>
-                    <td class="file-en" id="studentIdPositiveImg">無</td>
-                    <td class="file-modify"><a id="studentIdPositiveChange" style="display:none">修改檔案<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-                    </td>
-                    <td class="file-upload"><a id="studentIdPositiveUpload">上傳檔案<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-en" id="studentIdPositiveImg_0">無</td>
+                    <td class="file-upload"><a id="studentIdPositiveUpload_0">上傳檔案<input type="file" name="studentIdPositiveFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="studentIdPositiveView"></a>
+                        <a id="studentIdPositiveView_0"></a>
                     </td>
                 </tr>
 
-                <tr id="studentIdPositive_view" style="display:none">
-                    <td class="clickView" colspan="4" style="display:none" id="sPos">
+                <tr id="studentIdPositive_view_0" style="display:none">
+                    <td class="clickView" colspan="4" style="display:none" id="studentIdPositiveViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                
-								<iframe id="studentIdPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="studentIdPositiveViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr id="studentIdNegative" style="display:none">
+                <tr id="studentIdNegative_0" style="display:none" class="studentIdNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdNegativePhoto" src="">
+                            <img id="studentIdNegativePhoto_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">學生證反面影本(須蓋有繼續升學學校之註冊章戳)</td>
-                    <td class="file-en" id="studentIdNegativeImg">無</td>
-                    <td class="file-modify"><a id="studentIdNegativeChange" style="display:none">修改檔案<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-                    </td>
-                    <td class="file-upload"><a id="studentIdNegativeUpload">上傳檔案<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-en" id="studentIdNegativeImg_0">無</td>
+                    <td class="file-upload"><a id="studentIdNegativeUpload_0">上傳檔案<input type="file" name="studentIdNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="studentIdNegativeView"></a>
+                        <a id="studentIdNegativeView_0"></a>
                     </td>
                 </tr>
 
-                <tr id="studentIdNegative_view" style="display:none">
-                    <td class="clickView" colspan="4" style="display:none" id="sNeg">
+                <tr id="studentIdNegative_view_0" style="display:none">
+                    <td class="clickView" colspan="4" style="display:none" id="studentIdNegativeViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                
-								<iframe id="studentIdNegativeViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="studentIdNegativeViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
@@ -182,7 +162,7 @@
                             <li class="uploadFileTip">或者直接透過行動載具(如：智慧型手機、平板電腦等)將申請文件拍照儲存</li>
                             <li class="uploadFileTip">並請將您已掃描或拍照的文件檔案儲存到您要線上申請的電腦或行動載具中，以利上傳</li>
                         </ul>
-                        
+
                         <ul>
                             <li class="uploadFileTip">2.文件上傳:</li>
                             <li class="uploadFileTip">點選<span class="blueButton">上傳檔案</span>按鈕後，即可從電腦或行動載具的資料庫中挑選您欲上傳的文件</li>

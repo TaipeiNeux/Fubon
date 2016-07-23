@@ -175,21 +175,27 @@ function eightGreeting() {
             //無簽訂線上服務註記且已有撥款紀錄且本學期沒有彈跳過訊息者要彈跳推廣訊息
             if (isEtabs == 'N' && isPopUp == 'N' && isRecord == 'Y') {
                 if (appCases == 'Y') {
-                    if (kindOfCases == '1') {
-                        var popUp = true;
-                        var result = fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo);
-                        contentMessage = result[0];
-                        pageMessage = result[1];
-                        determineStstus = result[2];
+					if(censor == '0'){
+						contentMessage.push(message.message_0);
+						determineStstus = '0';
+					} 
+					else{
+	                    if (kindOfCases == '1') {
+	                        var popUp = true;
+	                        var result = fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo);
+	                        contentMessage = result[0];
+	                        pageMessage = result[1];
+	                        determineStstus = result[2];
 
-                    } 
-                    else if (kindOfCases == '2') {
-                        contentMessage.push(message.message_7);
-                        pageMessage.push(messageInfo.message_7);
-                        loginMsg.val(pageMessage);
-                        determineStstus = '07';
-                    }
-                } 
+	                    } 
+	                    else if (kindOfCases == '2') {
+	                        contentMessage.push(message.message_7);
+	                        pageMessage.push(messageInfo.message_7);
+	                        loginMsg.val(pageMessage);
+	                        determineStstus = '07';
+	                    }
+	                } 
+				}
                 else if (appCases == 'N') {
                     if (tempCases == 'N') {
                         contentMessage.push(message.message_0);
@@ -204,24 +210,31 @@ function eightGreeting() {
 
             } else{
                 if (appCases == 'Y') {
-                    if (kindOfCases == '1') { //訊息為3 or 4 or 5 or 6
-                        var popUp = false;
-                        var result = fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo);
-                        
-                        console.debug(result);
-                        
-                        contentMessage = result[0];
-                        pageMessage = result[1];
-                        determineStstus = result[2];
+					if(censor == '0'){
+						contentMessage.push(message.message_0);
+						determineStstus = '0';
+					} 
+					else{
+	                    if (kindOfCases == '1') { //訊息為3 or 4 or 5 or 6
+	                        var popUp = false;
+	                        var result = fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo);
+	                        
+	                        console.debug(result);
+	                        
+	                        contentMessage = result[0];
+	                        pageMessage = result[1];
+	                        determineStstus = result[2];
 
-                    } else if (kindOfCases == '2') { //訊息為7
-                        contentMessage.push(message.message_7);
-                        pageMessage.push(messageInfo.message_7);
-                        loginMsg.val(pageMessage);
-                        determineStstus = '7';
-                        //isForward = true;
-                    }
-                } else if (appCases == 'N') {
+	                    } else if (kindOfCases == '2') { //訊息為7
+	                        contentMessage.push(message.message_7);
+	                        pageMessage.push(messageInfo.message_7);
+	                        loginMsg.val(pageMessage);
+	                        determineStstus = '7';
+	                        //isForward = true;
+	                    }
+	                }
+				}				
+				else if (appCases == 'N') {
                     if (tempCases == 'N') {
                         contentMessage.push(message.message_0);
                         determineStstus = '0';
@@ -242,28 +255,35 @@ function eightGreeting() {
                 determineStstus = '1';
                 //isForward = true;
             } else if (appCases == 'Y') {
-                if (kindOfCases == '1') { //訊息為3 or 4 or 5 or 6
-                    if (overTwoMonth == false) { //沒有超過兩個月
-                        var popUp = false;
-                        var result = fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo);
-                        contentMessage = result[0];
-                        pageMessage = result[1];
-                        determineStstus = result[2];
+				if(censor == '0'){
+					contentMessage.push(message.message_0);
+					determineStstus = '0';
+				} 
+				else{
+	                if (kindOfCases == '1') { //訊息為3 or 4 or 5 or 6
+	                    if (overTwoMonth == false) { //沒有超過兩個月
+	                        var popUp = false;
+	                        var result = fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo);
+	                        contentMessage = result[0];
+	                        pageMessage = result[1];
+	                        determineStstus = result[2];
 
-                    } else { //超過兩個月
-                        contentMessage.push(message.message_1);
-                        pageMessage.push(messageInfo.message_1);
-                        loginMsg.val(pageMessage);
-                        determineStstus = '1';
-                    }
+	                    } else { //超過兩個月
+	                        contentMessage.push(message.message_1);
+	                        pageMessage.push(messageInfo.message_1);
+	                        loginMsg.val(pageMessage);
+	                        determineStstus = '1';
+	                    }
 
-                } else if (kindOfCases == '2') { //訊息為1
-                    contentMessage.push(message.message_1);
-                    pageMessage.push(messageInfo.message_1);
-                    loginMsg.val(pageMessage);
-                    determineStstus = '1';
-                    //isForward = true;
-                }
+	                } 
+					else if (kindOfCases == '2') { //訊息為1
+	                    contentMessage.push(message.message_1);
+	                    pageMessage.push(messageInfo.message_1);
+	                    loginMsg.val(pageMessage);
+	                    determineStstus = '1';
+	                    //isForward = true;
+	                }
+				}
             }
         }
     }
@@ -275,11 +295,11 @@ function eightGreeting() {
 function fourMessage(popUp, censor, contentMessage, pageMessage, determineStstus, loginMsg, message, messageInfo) {
 
     switch (censor) {
-		case '0':
+		/*case '0':
             contentMessage.push(message.message_0);
             determineStstus = '0';
             //isForward = true;
-            break;
+            break;*/
         case '1':
             contentMessage.push(message.message_3);
             pageMessage.push(messageInfo.message_3);

@@ -20,6 +20,7 @@ import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.JSPUtils;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import com.neux.utility.utils.jsp.info.JSPUploadConf;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -246,6 +247,7 @@ public class DataServlet extends HttpServlet {
                         rqBean53.setTxId("EB032153");
                         rqBean53.addRqParam("CUST_NO",id);
 
+
                         RSBean rsBean53 = WebServiceAgent.callWebService(rqBean53);
                         if(rsBean53.isSuccess()) {
                             Document doc = DocumentHelper.parseText(rsBean53.getTxnString());
@@ -463,7 +465,9 @@ public class DataServlet extends HttpServlet {
             String isEtabs = "Y".equals(isLogin) ? (loginUserBean.getCustomizeValue("isEtabs")) : "N"; //有無線上註記
             String hasData = "Y".equals(isLogin) ? (ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(loginUserBean.getUserId(),DaoFactory.getDefaultDao()) == null ? "N" : "Y" ) : "N";//有無撥款紀錄
             String isArrears = "Y".equals(isLogin) ? (loginUserBean.getCustomizeValue("isArrear")) : "N"; //是否不欠款
-            String hasAccount = "Y".equals(isLogin) ? StringUtils.isNotEmpty(loginUserBean.getCustomizeValue("acnoSlList")) ? "Y" : "N" : "N";//是否有貸款帳號
+            String[] acnoSlList = "Y".equals(isLogin) ? loginUserBean.getCustomizeValue("acnoSlList").split(",") : new String[]{};
+            String hasAccount = acnoSlList.length != 0 ? "Y" : "N";//是否有貸款帳號
+            String isAccountClear = "N";
 
             if("Y".equalsIgnoreCase(isLogin)) {
 
@@ -473,6 +477,203 @@ public class DataServlet extends HttpServlet {
                 SQLCommand update = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
                 update.addParamValue(userId);
                 DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+
+                for(String acnoSl: acnoSlList) {
+
+                    if(StringUtils.isEmpty(acnoSl)) continue;
+
+                    String responses = null;
+
+                    String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+                    if(!"sit".equalsIgnoreCase(env)) {
+                        RQBean rqBean = new RQBean();
+                        rqBean.setTxId("EB382609");
+                        rqBean.addRqParam("ACNO_SL",acnoSl);
+
+                        RSBean rsBean = WebServiceAgent.callWebService(rqBean);
+                        if(rsBean.isSuccess()) {
+                            responses = rsBean.getTxnString();
+                        }
+                        else {
+                            throw new Exception("查詢電文失敗:" + rsBean.getErrorMsg());
+                        }
+                    }
+                    else {
+
+                        responses = "<root>\n" +
+                                "    <CRLN_AMT>800,000</CRLN_AMT>\n" +
+                                "    <AVAIL_BAL>677,144</AVAIL_BAL>\n" +
+                                "    <CUST_NO>E124876190</CUST_NO>\n" +
+                                "    <CUST_NAME>陳ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ</CUST_NAME>\n" +
+                                "    <PROD_STAG/>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM>1031</YR_TERM>\n" +
+                                "        <DOC_NO>035003</DOC_NO>\n" +
+                                "        <CRE_BRH>-705</CRE_BRH>\n" +
+                                "        <INT_RATE>1.6200</INT_RATE>\n" +
+                                "        <LOAN_AMT>30,720</LOAN_AMT>\n" +
+                                "        <LOAN_BAL>30,720</LOAN_BAL>\n" +
+                                "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                                "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                                "        <INT_FLG>N</INT_FLG>\n" +
+                                "        <WORK_FLG>N</WORK_FLG>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT>661</INS_AMT>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM>1032</YR_TERM>\n" +
+                                "        <DOC_NO>028153</DOC_NO>\n" +
+                                "        <CRE_BRH>-705</CRE_BRH>\n" +
+                                "        <INT_RATE>1.6200</INT_RATE>\n" +
+                                "        <LOAN_AMT>30,720</LOAN_AMT>\n" +
+                                "        <LOAN_BAL>30,720</LOAN_BAL>\n" +
+                                "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                                "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                                "        <INT_FLG>N</INT_FLG>\n" +
+                                "        <WORK_FLG>N</WORK_FLG>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT>661</INS_AMT>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM>1041</YR_TERM>\n" +
+                                "        <DOC_NO>019001</DOC_NO>\n" +
+                                "        <CRE_BRH>-320</CRE_BRH>\n" +
+                                "        <INT_RATE>1.6200</INT_RATE>\n" +
+                                "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
+                                "        <LOAN_BAL></LOAN_BAL>\n" +
+                                "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                                "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                                "        <INT_FLG>N</INT_FLG>\n" +
+                                "        <WORK_FLG>N</WORK_FLG>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT></INS_AMT>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM>1042</YR_TERM>\n" +
+                                "        <DOC_NO>013429</DOC_NO>\n" +
+                                "        <CRE_BRH>-705</CRE_BRH>\n" +
+                                "        <INT_RATE>1.6200</INT_RATE>\n" +
+                                "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
+                                "        <LOAN_BAL>30,708</LOAN_BAL>\n" +
+                                "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                                "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                                "        <INT_FLG>N</INT_FLG>\n" +
+                                "        <WORK_FLG>N</WORK_FLG>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT>661</INS_AMT>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM>0880</YR_TERM>\n" +
+                                "        <DOC_NO>013429</DOC_NO>\n" +
+                                "        <CRE_BRH>-705</CRE_BRH>\n" +
+                                "        <INT_RATE>1.6200</INT_RATE>\n" +
+                                "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
+                                "        <LOAN_BAL>30,708</LOAN_BAL>\n" +
+                                "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                                "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                                "        <INT_FLG>N</INT_FLG>\n" +
+                                "        <WORK_FLG>N</WORK_FLG>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT>661</INS_AMT>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM/>\n" +
+                                "        <DOC_NO/>\n" +
+                                "        <CRE_BRH/>\n" +
+                                "        <INT_RATE/>\n" +
+                                "        <LOAN_AMT/>\n" +
+                                "        <LOAN_BAL/>\n" +
+                                "        <INT_DATE/>\n" +
+                                "        <NEXT_INT_DATE/>\n" +
+                                "        <INT_FLG/>\n" +
+                                "        <WORK_FLG/>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT/>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM/>\n" +
+                                "        <DOC_NO/>\n" +
+                                "        <CRE_BRH/>\n" +
+                                "        <INT_RATE/>\n" +
+                                "        <LOAN_AMT/>\n" +
+                                "        <LOAN_BAL/>\n" +
+                                "        <INT_DATE/>\n" +
+                                "        <NEXT_INT_DATE/>\n" +
+                                "        <INT_FLG/>\n" +
+                                "        <WORK_FLG/>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT/>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM/>\n" +
+                                "        <DOC_NO/>\n" +
+                                "        <CRE_BRH/>\n" +
+                                "        <INT_RATE/>\n" +
+                                "        <LOAN_AMT/>\n" +
+                                "        <LOAN_BAL/>\n" +
+                                "        <INT_DATE/>\n" +
+                                "        <NEXT_INT_DATE/>\n" +
+                                "        <INT_FLG/>\n" +
+                                "        <WORK_FLG/>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT/>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM/>\n" +
+                                "        <DOC_NO/>\n" +
+                                "        <CRE_BRH/>\n" +
+                                "        <INT_RATE/>\n" +
+                                "        <LOAN_AMT/>\n" +
+                                "        <LOAN_BAL/>\n" +
+                                "        <INT_DATE/>\n" +
+                                "        <NEXT_INT_DATE/>\n" +
+                                "        <INT_FLG/>\n" +
+                                "        <WORK_FLG/>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT/>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM/>\n" +
+                                "        <DOC_NO/>\n" +
+                                "        <CRE_BRH/>\n" +
+                                "        <INT_RATE/>\n" +
+                                "        <LOAN_AMT/>\n" +
+                                "        <LOAN_BAL/>\n" +
+                                "        <INT_DATE/>\n" +
+                                "        <NEXT_INT_DATE/>\n" +
+                                "        <INT_FLG/>\n" +
+                                "        <WORK_FLG/>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT/>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <TxRepeat>\n" +
+                                "        <YR_TERM/>\n" +
+                                "        <DOC_NO/>\n" +
+                                "        <CRE_BRH/>\n" +
+                                "        <INT_RATE/>\n" +
+                                "        <LOAN_AMT/>\n" +
+                                "        <LOAN_BAL/>\n" +
+                                "        <INT_DATE/>\n" +
+                                "        <NEXT_INT_DATE/>\n" +
+                                "        <INT_FLG/>\n" +
+                                "        <WORK_FLG/>\n" +
+                                "        <PARTIAL_FLG/>\n" +
+                                "        <INS_AMT/>\n" +
+                                "    </TxRepeat>\n" +
+                                "    <C_NAME>合計：</C_NAME>\n" +
+                                "    <LOAN_AMT_TOT>122,856</LOAN_AMT_TOT>\n" +
+                                "    <LOAN_BAL_TOT>122,856</LOAN_BAL_TOT>\n" +
+                                "</root>\n";
+                    }
+
+                    Document doc = DocumentHelper.parseText(responses);
+
+                    boolean isClear = checkAccountDetail(doc);
+                    if(isClear) {
+                        isAccountClear = "Y";
+                    }
+
+                }
             }
 
             JSONObject jsonObject = new JSONObject();
@@ -482,6 +683,7 @@ public class DataServlet extends HttpServlet {
             jsonObject.put("hasData",hasData);
             jsonObject.put("isArrears",isArrears);
             jsonObject.put("hasAccount",hasAccount);
+            jsonObject.put("isAccountClear",isAccountClear);
 
             JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
         }catch(Exception e) {
@@ -526,6 +728,7 @@ public class DataServlet extends HttpServlet {
             LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
             String userId = loginUserBean.getUserId();
 
+            String docId = queryStringInfo.getParam("docId");
             Map<String,File> uploadFileMap = queryStringInfo.getUploadFilesMap();
             GardenLog.log(GardenLog.DEBUG,"uploadFileMap size = " + uploadFileMap.size());
 
@@ -539,21 +742,33 @@ public class DataServlet extends HttpServlet {
                 //studentIdNegativeFile：學生證反面
                 //additionalFile：在學證明
                 String docType = "";
-                if("isPositiveFile".equalsIgnoreCase(inputName)) docType = "1";
-                else if("isNegativeFile".equalsIgnoreCase(inputName)) docType = "2";
-                else if("studentIdPositiveFile".equalsIgnoreCase(inputName)) docType = "3";
-                else if("studentIdNegativeFile".equalsIgnoreCase(inputName)) docType = "4";
-                else if("additionalFile".equalsIgnoreCase(inputName)) docType = "5";
+                if(inputName.startsWith("isPositiveFile")) docType = "1";
+                else if(inputName.startsWith("isNegativeFile")) docType = "2";
+                else if(inputName.startsWith("studentIdPositiveFile")) docType = "3";
+                else if(inputName.startsWith("studentIdNegativeFile")) docType = "4";
+                else if(inputName.startsWith("additionalFile")) docType = "5";
+
+//                if("isPositiveFile".equalsIgnoreCase(inputName)) docType = "1";
+//                else if("isNegativeFile".equalsIgnoreCase(inputName)) docType = "2";
+//                else if("studentIdPositiveFile".equalsIgnoreCase(inputName)) docType = "3";
+//                else if("studentIdNegativeFile".equalsIgnoreCase(inputName)) docType = "4";
+//                else if("additionalFile".equalsIgnoreCase(inputName)) docType = "5";
 
                 if(StringUtils.isNotEmpty(docType)) {
 
                     IDao dao = DaoFactory.getDefaultDao();
 
-                    //先刪除原本的文件
-                    SQLCommand delete = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and DocType = ? and (FlowLogId is null or FlowLogId = 0)");
-                    delete.addParamValue(userId);
-                    delete.addParamValue(docType);
-                    dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+                    //修改的話要刪除原本的
+                    if(StringUtils.isNotEmpty(docId)) {
+                        SQLCommand delete = new SQLCommand("delete from Deferment_Doc where DocId = ?");
+                        delete.addParamValue(docId);
+                        dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+//                        SQLCommand delete = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and DocType = ? and (FlowLogId is null or FlowLogId = 0)");
+//                        delete.addParamValue(userId);
+//                        delete.addParamValue(docType);
+//                        dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+                    }
+
 
                     //再新增
                     DataObject Deferment_Doc = DaoFactory.getDefaultDataObject("Deferment_Doc");
@@ -561,10 +776,11 @@ public class DataServlet extends HttpServlet {
                     Deferment_Doc.setValue("DocType",docType);
                     Deferment_Doc.setValue("original_file_name",file.getName());
                     Deferment_Doc.setValue("CreateTime",DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString()));
+                    Deferment_Doc.setValue("Size",file.length() + "");
 
                     dao.insert(Deferment_Doc);
 
-                    String docId = Deferment_Doc.getValue("DocId");
+                    docId = Deferment_Doc.getValue("DocId");
 
                     //再更新文件內容，轉成binary後透過原生JDBC物件來更新資料
                     Connection conn = null;
@@ -591,6 +807,8 @@ public class DataServlet extends HttpServlet {
 
                     jsonObject.put("isSuccess","Y");
                     jsonObject.put("src",file.getName());
+                    jsonObject.put("size",file.length() + "");
+                    jsonObject.put("fileNameExtension",file.getName().substring(file.getName().lastIndexOf(".") + 1));
                     jsonObject.put("showPath",file.getName());
                     jsonObject.put("docId",docId);
                 }
@@ -611,14 +829,13 @@ public class DataServlet extends HttpServlet {
         try{
             jsonObject.put("isSuccess","N");
 
-
-
             LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
             String userId = loginUserBean.getUserId();
 
-
             Map<String,File> uploadFileMap = queryStringInfo.getUploadFilesMap();
             GardenLog.log(GardenLog.DEBUG,"uploadFileMap size = " + uploadFileMap.size());
+
+            String docId = queryStringInfo.getParam("docId");
 
             for(String inputName : uploadFileMap.keySet()) {
                 File file = uploadFileMap.get(inputName);
@@ -628,20 +845,25 @@ public class DataServlet extends HttpServlet {
                 //isNegativeFile：身份證反面
                 //registerFile：註冊
                 String docType = "";
-                if("isPositiveFile".equalsIgnoreCase(inputName)) docType = "1";
-                else if("isNegativeFile".equalsIgnoreCase(inputName)) docType = "2";
-                else if("registerFile".equalsIgnoreCase(inputName)) docType = "3";
-                else if("lowIncomeFile".equalsIgnoreCase(inputName)) docType = "4";
+                if(inputName.startsWith("idPositiveFile")) docType = "1";
+                else if(inputName.startsWith("idNegativeFile")) docType = "2";
+                else if(inputName.startsWith("registerFile")) docType = "3";
+                else if(inputName.startsWith("lowIncomeFile")) docType = "4";
 
                 if(StringUtils.isNotEmpty(docType)) {
 
                     IDao dao = DaoFactory.getDefaultDao();
 
-                    //先刪除原本的文件
-                    SQLCommand delete = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ? and DocType = ?");
-                    delete.addParamValue(userId);
-                    delete.addParamValue(docType);
-                    dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+                    if(StringUtils.isNotEmpty(docId)) {
+                        //先刪除原本的文件
+                        SQLCommand delete = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where DocId = ?");
+                        delete.addParamValue(docId);
+                        dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+//                        SQLCommand delete = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where DocId = ? and DocType = ?");
+//                        delete.addParamValue(userId);
+//                        delete.addParamValue(docType);
+//                        dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+                    }
 
                     //再新增
                     DataObject aplyMemberTuitionLoanDtlDoc = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Doc");
@@ -649,10 +871,11 @@ public class DataServlet extends HttpServlet {
                     aplyMemberTuitionLoanDtlDoc.setValue("DocType",docType);
                     aplyMemberTuitionLoanDtlDoc.setValue("original_file_name",file.getName());
                     aplyMemberTuitionLoanDtlDoc.setValue("CreateTime",DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString()));
+                    aplyMemberTuitionLoanDtlDoc.setValue("Size",file.length() + "");
 
                     dao.insert(aplyMemberTuitionLoanDtlDoc);
 
-                    String docId = aplyMemberTuitionLoanDtlDoc.getValue("DocId");
+                    docId = aplyMemberTuitionLoanDtlDoc.getValue("DocId");
 
                     //再更新文件內容，轉成binary後透過原生JDBC物件來更新資料
                     Connection conn = null;
@@ -678,6 +901,8 @@ public class DataServlet extends HttpServlet {
                     }
 
                     jsonObject.put("isSuccess","Y");
+                    jsonObject.put("size",file.length() + "");
+                    jsonObject.put("fileNameExtension",file.getName().substring(file.getName().lastIndexOf(".") + 1));
                     jsonObject.put("src",file.getName());
                     jsonObject.put("showPath",file.getName());
                     jsonObject.put("docId",docId);
@@ -733,7 +958,23 @@ public class DataServlet extends HttpServlet {
 
                 String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
                 if(!"sit".equalsIgnoreCase(env)) {
-                    noBusinessDays = DBUtils.getNoBusinessDay(todayYear + month);
+                    //放入當月/及後兩個月
+                    DBUtils.getNoBusinessDay(todayYear,month,noBusinessDays);
+                }
+                else {
+                    String y = DateUtil.getTodayString().substring(0,4);
+                    String m = DateUtil.getTodayString().substring(4,6);
+
+                    //配合公司測試，從1-28每7天一個假日
+                    for(int i=1;i<=28;i++) {
+                        if(i % 7 == 0) {
+                            String day = String.valueOf(i);
+                            day = StringUtils.leftPad(day,2,"0");
+
+                            noBusinessDays.add(y + "-" + m + "-" + day);
+                        }
+
+                    }
                 }
 
                 for(String day : noBusinessDays) {
@@ -1157,7 +1398,10 @@ public class DataServlet extends HttpServlet {
                 for(DataObject detailObj : detailRS) {
                     JSONObject detailJSON = new JSONObject();
 
-                    detailJSON.put("DataNo",detailObj.getValue("DataNo"));
+                    String dataNo = detailObj.getValue("DataNo");
+                    dataNo = new String(Base64.encodeBase64(dataNo.getBytes("utf-8")),"utf-8");
+
+                    detailJSON.put("DataNo",dataNo);
                     detailJSON.put("Title",detailObj.getValue("Title"));
 
                     detail.put(detailJSON);
@@ -1292,6 +1536,8 @@ public class DataServlet extends HttpServlet {
 
         Connection conn = null;
         try{
+            dataNo = new String(Base64.decodeBase64(dataNo.getBytes("utf-8")),"utf-8");
+
             boolean isIE = userAgent.contains("MSIE") || userAgent.contains("Trident/7.0");
 
             conn = ((SQLConnection) ORMAPI.getConnection("db")).getConnection();
@@ -1947,7 +2193,7 @@ public class DataServlet extends HttpServlet {
         }
     }
 
-    private int setMyLoanAccountDetail(Document doc,JSONArray client_detail,boolean isDelay,String acnoSl,String bankName) throws Exception {
+    public static int setMyLoanAccountDetail(Document doc,JSONArray client_detail,boolean isDelay,String acnoSl,String bankName) throws Exception {
 
         int total = 0;
 
@@ -1971,6 +2217,23 @@ public class DataServlet extends HttpServlet {
             String yrTerm = foo.elementText("YR_TERM").trim();
             if(yrTerm.equals("")) continue;
 
+            String loanAmt = foo.element("LOAN_AMT").getText().trim();
+            String loanBal = foo.element("LOAN_BAL").getText().trim();
+            String insAmt = foo.element("INS_AMT").getText().trim();
+
+            loanAmt = StringUtils.replace(loanAmt," ","");
+            loanBal = StringUtils.replace(loanBal," ","");
+            insAmt = StringUtils.replace(insAmt," ","");
+
+            GardenLog.log(GardenLog.DEBUG,"loanAmt = ["+loanAmt+"]");
+            GardenLog.log(GardenLog.DEBUG,"loanBal = ["+loanBal+"]");
+            GardenLog.log(GardenLog.DEBUG,"insAmt = ["+insAmt+"]");
+
+            if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
+                    || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
+
+            GardenLog.log(GardenLog.DEBUG,"going");
+
             //只取第一筆
             if(StringUtils.isEmpty(intRate)) {
                 intRate = foo.element("INT_RATE").getText().trim();
@@ -1983,13 +2246,6 @@ public class DataServlet extends HttpServlet {
             if(StringUtils.isEmpty(intDate)) {
                 intDate = foo.element("INT_DATE").getText().trim();
             }
-
-            String loanAmt = foo.element("LOAN_AMT").getText().trim();
-            String loanBal = foo.element("LOAN_BAL").getText().trim();
-            String insAmt = foo.element("INS_AMT").getText().trim();
-
-            if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
-                    || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
 
             String semister = yrTerm.substring(0, 3);
             String semisterState = yrTerm.substring(3, 4);
@@ -2043,5 +2299,39 @@ public class DataServlet extends HttpServlet {
         total += loanBalTot;
 
         return total;
+    }
+
+    private boolean checkAccountDetail(Document doc) throws Exception {
+
+        boolean isClear = true;
+
+        JSONObject clientDetail = new JSONObject();
+
+        Element root = doc.getRootElement();
+
+        for (Iterator i = root.elementIterator("TxRepeat"); i.hasNext();) {
+            Element foo = (Element) i.next();
+            String yrTerm = foo.elementText("YR_TERM").trim();
+            if(yrTerm.equals("")) continue;
+
+            String loanAmt = foo.element("LOAN_AMT").getText().trim();
+            String loanBal = foo.element("LOAN_BAL").getText().trim();
+            String insAmt = foo.element("INS_AMT").getText().trim();
+
+            loanAmt = StringUtils.replace(loanAmt," ","");
+            loanBal = StringUtils.replace(loanBal," ","");
+            insAmt = StringUtils.replace(insAmt," ","");
+
+            GardenLog.log(GardenLog.DEBUG,"loanAmt = ["+loanAmt+"]");
+            GardenLog.log(GardenLog.DEBUG,"loanBal = ["+loanBal+"]");
+            GardenLog.log(GardenLog.DEBUG,"insAmt = ["+insAmt+"]");
+
+            if(StringUtils.isEmpty(loanBal) || "0".equalsIgnoreCase(loanBal)
+                    || StringUtils.isEmpty(insAmt) || "0".equalsIgnoreCase(insAmt)) continue;
+
+            isClear = false;
+        }
+
+        return isClear;
     }
 }

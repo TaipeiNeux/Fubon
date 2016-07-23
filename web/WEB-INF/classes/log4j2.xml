@@ -2,7 +2,7 @@
 <configuration status="OFF"> 
 
 	<Properties>
-	<Property name="log-path">D:/Tomcat_Deploy/tomcat4df6cb67-2aaa-4ebf-b8ab-a68274a168f2/webapps/fubon_SL/logs/</Property>
+	<Property name="log-path">D:/student/logs/</Property>
 	</Properties>
 
 

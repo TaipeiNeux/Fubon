@@ -46,8 +46,8 @@
 
 @font-face {
   font-family: 'FuBon-Font';
-  src: url("fonts/FuBon-Font.eot?2015100502&1447231922");
-  src: url("fonts/FuBon-Font.eot?&1447231922#iefix2015100502") format("embedded-opentype"), url("fonts/FuBon-Font.woff?2015100502&1447231922") format("woff"), url("fonts/FuBon-Font.ttf?2015100502&1447231922") format("truetype"), url("fonts/FuBon-Font.svg?2015100502&1447231922#skmFount") format("svg");
+  src: url("fonts/FuBon-Font.eot");
+  src: url("fonts/FuBon-Font.eot?#iefix2015100502") format("embedded-opentype"), url("fonts/FuBon-Font.woff?") format("woff"), url("fonts/FuBon-Font.ttf?") format("truetype"), url("fonts/FuBon-Font.svg?#skmFount") format("svg");
   font-weight: normal;
   font-style: normal;
 }

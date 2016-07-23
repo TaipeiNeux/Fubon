@@ -45,10 +45,12 @@ $(document).ready(function() {
 });
 
 function forgetPassword1_Error(json){
+	$('div.error-msg').text('');
 	$('div.error-msg:last').text(json.Header.errorMsg);
 }
 
 function forgetPassword2_Error(json){
+	$('div.error-msg').text('');
 	$('div.error-msg:last').text(json.Header.errorMsg);
 }
 

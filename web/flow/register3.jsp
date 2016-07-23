@@ -53,7 +53,7 @@
       <div class="left">
         <p>使用者代碼</p>
       </div>
-      <div class="right">
+      <div class="right Account">
         <p id="userAccount"></p>
       </div>
     </div>
@@ -61,7 +61,7 @@
       <div class="left">
         <p>使用者密碼</p>
       </div>
-      <div class="right">
+      <div class="right Pwd">
         <p id="userPwd"></p>
       </div>
     </div>

@@ -15,6 +15,9 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.json.JSONObject;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Titan
@@ -50,6 +53,8 @@ public class Apply2 implements ILogic {
         String isSpouseForeignerHidden = "";
 
         String father_String = "", mother_String = "",thirdParty_String = "",spouse_String = "";
+
+        String lastIsGuarantor = "";//上次撥款紀錄中的保人(4碼)
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -133,6 +138,35 @@ public class Apply2 implements ILogic {
 
 
         if(aplyMemberData != null) {
+
+            //抓上次撥款的保人紀錄轉成4碼
+            Set<String> set = new HashSet<String>();
+
+            String res1Rel = aplyMemberData.getValue("Res1_Rel");
+            String res2Rel = aplyMemberData.getValue("Res2_Rel");
+            String res3Rel = aplyMemberData.getValue("Res3_Rel");
+            String warRel = aplyMemberData.getValue("War_Rel");
+
+            set.add(res1Rel);
+            set.add(res2Rel);
+            set.add(res3Rel);
+            set.add(warRel);
+
+            boolean isAdult = ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
+            lastIsGuarantor += set.contains("fa") ? "1" : "0";
+            lastIsGuarantor += set.contains("ma") ? "1" : "0";
+            if(!isAdult && set.contains("gd1")) {
+                lastIsGuarantor += "1";
+            }
+            else if(isAdult && StringUtils.isNotEmpty(warRel) && !"1A".equalsIgnoreCase(warRel)) {
+                lastIsGuarantor += "1";
+            }
+            else {
+                lastIsGuarantor += "0";
+            }
+
+            lastIsGuarantor += set.contains("1A") ? "1" : "0";
+
             String familyStatusVal = aplyMemberData.getValue("FamilyStatus");
             if(StringUtils.isNotEmpty(familyStatusVal) && familyStatusVal.length() >= 3) {
                 String[] statusArray = familyStatusVal.split("_");
@@ -187,6 +221,7 @@ public class Apply2 implements ILogic {
         content.put("marryStatus",marryStatus);
         content.put("relationship",thirdParty_relationship);
         content.put("thirdPartyTitle",thirdPartyTitle);
+        content.put("lastIsGuarantor",lastIsGuarantor);
 
         content.put("familyStatusLevel1",familyStatusLevel1);
         content.put("familyStatusLevel2",familyStatusLevel2);

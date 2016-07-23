@@ -74,6 +74,14 @@
                     <label for="time4" class="css-label_c timeRight" id="timeLabel4">PM01:00-02:00 尚可預約
                         <span id="number4" class="number">3</span>人
                     </label>
+					<input type="radio" name="time" id="time5" class="css-checkbox_c">
+                    <label for="time5" class="css-label_c timeLeft" id="timeLabel5">PM02:00-03:00 尚可預約
+                        <span id="number5" class="number">3</span>人
+                    </label>
+					<input type="radio" name="time" id="time6" class="css-checkbox_c">
+                    <label for="time6" class="css-label_c timeLeft" id="timeLabel6">PM03:00-04:00 尚可預約
+                        <span id="number6" class="number">3</span>人
+                    </label>
                 </div>
                 <div class="reservationInfo">
                     <div id="branchsInfo" class="col-sm-6">

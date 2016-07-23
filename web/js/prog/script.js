@@ -1,5 +1,32 @@
 $(document).ready(function() {
-	$('body').attr('id', 'body');
+
+    // $(window).width(parent.document.getElementById("frame1").width);
+
+
+    console.log($(window).width());
+
+    if (inIframe()) {
+        console.log("start");
+        // $(window).width(700);
+        // parent.document.getElementById("frame1").width=700;
+        // $('body').css('max-width', '100% !important');
+        // parent.document.body.style.width="100px";
+
+
+    } else {
+
+    }
+
+    function inIframe() {
+        try {
+            return window.self !== window.top;
+        } catch (e) {
+            return true;
+        }
+    }
+
+
+    $('body').attr('id', 'body');
     $('.scrollToTop').click(function(ev) {
         ev.preventDefault();
         GardenUtils.plugin.screenMoveToDiv({
@@ -50,8 +77,8 @@ $(document).ready(function() {
     });
 
     var tmp_count = 0
-    //$('.navArea ul li:eq(2) a,.navArea ul li:eq(3) a,.navArea ul li:eq(4) a,.navArea ul:eq(5) li a').click(function(ev) {
-	$('.navArea ul li:eq(2) a,.navArea ul li:eq(3) a,.navArea ul:eq(5) li a').click(function(ev) {
+        //$('.navArea ul li:eq(2) a,.navArea ul li:eq(3) a,.navArea ul li:eq(4) a,.navArea ul:eq(5) li a').click(function(ev) {
+    $('.navArea ul li:eq(2) a,.navArea ul li:eq(3) a,.navArea ul:eq(5) li a').click(function(ev) {
         ev.preventDefault();
         var navContent = $(this).parent().index() + 1;
         $('.navArea ul li a').removeClass('active');
@@ -61,41 +88,41 @@ $(document).ready(function() {
 
         controlHeader();
     });
-	
-	$('.navContent, .navArea ul li a').off('mouseenter').on('mouseenter', function() {
 
-            tmp_count++;
+    $('.navContent, .navArea ul li a').off('mouseenter').on('mouseenter', function() {
 
-            console.debug('enter tmp_count = ' + tmp_count);
+        tmp_count++;
 
-            $(this).click(function() {
-                var navContent = $(this).parent().index() + 1;
-                $('.navArea ul li a').removeClass('active');
-                $(this).addClass('active');
-                $('.navContent').removeClass('active');
-                $('.navContent-' + navContent + '').addClass('active');
+        console.debug('enter tmp_count = ' + tmp_count);
 
-                controlHeader();
+        $(this).click(function() {
+            var navContent = $(this).parent().index() + 1;
+            $('.navArea ul li a').removeClass('active');
+            $(this).addClass('active');
+            $('.navContent').removeClass('active');
+            $('.navContent-' + navContent + '').addClass('active');
 
-            });
+            controlHeader();
 
-        }).mouseleave(function() {
-
-            if (tmp_count == 0) {
-                return;
-            }
-
-            tmp_count--;
-
-            console.debug('leave tmp_count = ' + tmp_count);
-
-            setTimeout(function() {
-                if (tmp_count == 0) {
-                    $('.navContent').removeClass('active');
-                    $('.navArea ul li a').removeClass('active');
-                }
-            }, 50);
         });
+
+    }).mouseleave(function() {
+
+        if (tmp_count == 0) {
+            return;
+        }
+
+        tmp_count--;
+
+        console.debug('leave tmp_count = ' + tmp_count);
+
+        setTimeout(function() {
+            if (tmp_count == 0) {
+                $('.navContent').removeClass('active');
+                $('.navArea ul li a').removeClass('active');
+            }
+        }, 50);
+    });
 
     /**  0622 主功能列 =>  不再focus則隱藏  **/
 
@@ -354,14 +381,17 @@ $(document).ready(function() {
 
     **/
 
+
     //------------------------------------------------------------------------------
 
     // 就學貸款介紹
     $('.loanUL li').on('click', function() {
-        if ($(window).width() < 768) {
+        console.log($(window).width());
+        console.log($(window).width() < 769);
+        if ($(window).width() < 769) {
             $(this).toggleClass('active');
-            $(this).find('.pho').toggleClass('active');
-            $(this).find('.textbox').slideToggle(250);
+            $(this).children('.pho').toggleClass('active');
+            $(this).children('.text').children('.textbox').slideToggle(250);
         }
     });
 
@@ -440,6 +470,7 @@ $(document).ready(function() {
         var $list = $('.list'),
             $items = $list.find('.list__item'),
             setHeights = function() {
+                // $("body").css("width", $(window).width());
                 $items.css('height', 'auto');
 
                 var perRow = Math.floor($list.width() / $items.width());
@@ -458,6 +489,8 @@ $(document).ready(function() {
             };
         if ($(window).width() > 768) {
             setHeights();
+            // $("body").css("width", $(window).width());
+
         }
         $(window).on('resize', setHeights);
 
@@ -515,11 +548,35 @@ $(document).ready(function() {
     //-----------------------------------------------------------------------------
 
 
+    //mike detect ipad 
+    $(window).on("orientationchange", function() {
+        console.log("width" + $(window).outerWidth());
+        console.log("height" + $(window).height());
+        console.log($(document).width());
+        console.log($(document).height());
+        console.log($(document).scrollTop());
+        console.log($(document).scrollLeft());
+
+
+
+    });
+
+
     //QAListTabset();
     $(window).resize(function() {
+        // console.log("width" + $(window).width());
+        // $("body").css("width", $(window).width());
+        // $("body").css("height", $(window).height());
         //QAListTabset();
         wilbeckset();
         setBannerAreaHeight();
+
+        $("body").css("width", $(window).width());
+        $(".bannerArea").css("min-width", "400px");
+
+
+
+        console.log($(window).width());
     });
 
     //2016-06-10 added by titan 綁全站input有name的輸入完後過濾空白
@@ -565,12 +622,15 @@ $(document).ready(function() {
     });*/
 
     //$(window).resize();
-
+    //mike
+    $("body").css("width", $(window).width());
+    // $("body").css("height", $(window).height());
 }); //(document).ready
 
 function setBannerAreaHeight() {
     if ($(window).width() >= 769) {
-        var BannerAreaH = ($(window).height()) - (146 + 300);
+        // var BannerAreaH = ($(window).height()) - (146 + 300);
+        var BannerAreaH = 350;
         $('.bannerArea').css({
             'height': BannerAreaH
         });
@@ -591,122 +651,121 @@ function getHeaderHeight() {
 }
 
 $(document).ready(function() {
-	//會員判斷是否已登入
-modal.getLoginInfo(function(json) {
+    //會員判斷是否已登入
+    modal.getLoginInfo(function(json) {
 
-    window.loginInfo = json;
+        window.loginInfo = json;
 
-	
-    if (json.isLogin == 'N') { //還沒有登入
-        //$('#isNotLogin').removeClass('personalin');
-        //$('#isLogin').addClass('personalin');
 
-        $('#applyButton').text('註冊會員');
-        $('#applyButton').removeClass('apply').addClass('regBtn');;
+        if (json.isLogin == 'N') { //還沒有登入
+            //$('#isNotLogin').removeClass('personalin');
+            //$('#isLogin').addClass('personalin');
 
-        if ($(window).width() >= 768) {
-            $('#isNotLogin').show();
-            $('#isLogin').hide();
+            $('#applyButton').text('註冊會員');
+            $('#applyButton').removeClass('apply').addClass('regBtn');;
+
+            if ($(window).width() >= 768) {
+                $('#isNotLogin').show();
+                $('#isLogin').hide();
+            }
+
+            //$('#mobileMenu_left_area > ul > li:first').hide();
+            $('#mobileMenu_left_area > ul > li:first').on('click', function() {
+                window.location = 'memberLogin.jsp';
+            });
+
+            $('.loginArea').hide();
+
+            $('.regBtn').click(function(ev) {
+                ev.preventDefault();
+                window.location = 'register.jsp';
+            });
+
+            $('a.apply').click(function(ev) {
+                ev.preventDefault();
+                window.location = 'memberLogin.jsp';
+            });
+
+            $('.csA a').click(function(ev) {
+                ev.preventDefault();
+                window.location = 'memberLogin.jsp';
+            });
+
+
+        } else { //已經登入
+            $('.smbtnArea').hide();
+            $('#isNotLogin').hide();
+            //$('#isLogin').show();
+            $('.loginArea').show();
+
+            $('a.apply').click(function(ev) {
+                ev.preventDefault();
+                window.location = 'apply_00.jsp';
+            });
+
+
+            $('.csA a').click(function(ev) {
+                ev.preventDefault();
+                window.location = 'apply_00.jsp';
+            });
+
+            //2016-05-03 by titan 先加上登出按鈕
+
+            $('#isLogin .reset').click(function(ev) {
+                ev.preventDefault();
+
+                modal.resetApply();
+                window.location = 'apply.jsp';
+            });
+
+            //$('#isNotLogin').addClass('personalin');
+            //$('#isLogin').removeClass('personalin');
+
+            //2016-06-10 added by titan
+            //系統判斷客戶閒置不可超過10分鐘,並於閒置第9分鐘時，壓黑顯示訊息。
+            var dialog;
+            GardenUtils.plugin.useCountDown({
+                totalTime: 600, //總時間(秒)
+                countDownTime: 60, //倒數多少時間後呼叫countDownFn(秒)
+                countDownFn: function(totalTime) {
+                    GardenUtils.display.popup({
+                        title: '',
+                        content: '<p>Hi, 你好!<br/>你在本服務專區已閒置超過9分鐘，本系統將於<span class="time">' + totalTime + '</span>秒後自動登出<br>若你需繼續使用，請按 <a class="underline hyperlink continue">繼續使用</a>；或按 <a class="underline hyperlink cancel">直接登出</a> 登出本服務專區。<!--<br><div style="text-align: center;"><button type="button" class="btn btn-default continue">繼續使用</button><button type="button" class="btn btn-default cancel">直接登出</button></div>--></p>',
+                        closeCallBackFn: function() {},
+                        showCallBackFn: function(popupView) {
+                            dialog = popupView;
+                            $('.modal-dialog .cancel').off('click').on('click', function(ev) {
+                                ev.preventDefault();
+
+                                modal.logout();
+
+                                location = 'index.jsp';
+                            });
+
+                            $('.modal-dialog .continue').off('click').on('click', function(ev) {
+                                ev.preventDefault();
+                                popupView.modal('hide');
+                            });
+                        },
+                        isShowSubmit: false,
+                        isShowClose: false
+                    });
+
+                }, //倒數多少時間後呼叫的function
+                countDownIntervalFn: function(nowTime) {
+                    if (dialog != undefined) {
+                        dialog.find('span.time').text(nowTime);
+                    }
+                },
+                overTimeFn: function() {
+                        modal.logout();
+                        window.location = 'index.jsp';
+                    } //時間到了的function
+            });
         }
 
-        //$('#mobileMenu_left_area > ul > li:first').hide();
-        $('#mobileMenu_left_area > ul > li:first').on('click', function() {
-            window.location = 'memberLogin.jsp';
-        });
 
-        $('.loginArea').hide();
-
-        $('.regBtn').click(function(ev) {
-            ev.preventDefault();
-            window.location = 'register.jsp';
-        });
-
-        $('a.apply').click(function(ev) {
-            ev.preventDefault();
-            window.location = 'memberLogin.jsp';
-        });
-
-        $('.csA a').click(function(ev) {
-            ev.preventDefault();
-            window.location = 'memberLogin.jsp';
-        });
-
-
-    } 
-	else { //已經登入
-        $('.smbtnArea').hide();
-        $('#isNotLogin').hide();
-        //$('#isLogin').show();
-        $('.loginArea').show();
-
-        $('a.apply').click(function(ev) {
-            ev.preventDefault();
-            window.location = 'apply_00.jsp';
-        });
-
-
-        $('.csA a').click(function(ev) {
-            ev.preventDefault();
-            window.location = 'apply_00.jsp';
-        });
-
-        //2016-05-03 by titan 先加上登出按鈕
-
-        $('#isLogin .reset').click(function(ev) {
-            ev.preventDefault();
-
-            modal.resetApply();
-            window.location = 'apply.jsp';
-        });
-
-        //$('#isNotLogin').addClass('personalin');
-        //$('#isLogin').removeClass('personalin');
-
-        //2016-06-10 added by titan
-        //系統判斷客戶閒置不可超過10分鐘,並於閒置第9分鐘時，壓黑顯示訊息。
-        var dialog;
-        GardenUtils.plugin.useCountDown({
-            totalTime: 600, //總時間(秒)
-            countDownTime: 60, //倒數多少時間後呼叫countDownFn(秒)
-            countDownFn: function(totalTime) {
-                GardenUtils.display.popup({
-                    title: '',
-                    content: '<p>Hi, 你好!<br/>你在本服務專區已閒置超過9分鐘，本系統將於<span class="time">' + totalTime + '</span>秒後自動登出<br>若你需繼續使用，請按 <a class="underline hyperlink continue">繼續使用</a>；或按 <a class="underline hyperlink cancel">直接登出</a> 登出本服務專區。<!--<br><div style="text-align: center;"><button type="button" class="btn btn-default continue">繼續使用</button><button type="button" class="btn btn-default cancel">直接登出</button></div>--></p>',
-                    closeCallBackFn: function() {},
-                    showCallBackFn: function(popupView) {
-                        dialog = popupView;
-                        $('.modal-dialog .cancel').off('click').on('click', function(ev) {
-                            ev.preventDefault();
-
-                            modal.logout();
-
-                            location = 'index.jsp';
-                        });
-
-                        $('.modal-dialog .continue').off('click').on('click', function(ev) {
-                            ev.preventDefault();
-                            popupView.modal('hide');
-                        });
-                    },
-                    isShowSubmit: false,
-                    isShowClose: false
-                });
-
-            }, //倒數多少時間後呼叫的function
-            countDownIntervalFn: function(nowTime) {
-                if (dialog != undefined) {
-                    dialog.find('span.time').text(nowTime);
-                }
-            },
-            overTimeFn: function() {
-                    modal.logout();
-                    window.location = 'index.jsp';
-                } //時間到了的function
-        });
-    }
-	
-	
-});
+    });
 });
 
 
@@ -837,11 +896,10 @@ function memberLogin() {
         } else if (studentId.length != 10) {
             errStr = errStr + '身分證字號輸入長度不符\n';
             $('[name="studentId"]').parent().find('.error').text('身分證字號輸入長度不符');
+        } else {
+            errStr = '';
+            $('[name="studentId"]').parent().find('.error').text('');
         }
-		else{
-			errStr = '';
-			$('[name="studentId"]').parent().find('.error').text('');
-		}
     }
 
     //console.debug(studentCode.length);
@@ -854,15 +912,13 @@ function memberLogin() {
         if (checkVal(studentCode) == false) {
             errStr = errStr + '使用者代碼限輸入英數字\n';
             $('[name="studentCode"]').parent().find('.error').text('使用者代碼限輸入英數字');
-        } 
-		else if (studentCode.length < 6) {
+        } else if (studentCode.length < 6) {
             errStr = errStr + '使用者代碼輸入長度不符\n';
             $('[name="studentCode"]').parent().find('.error').text('使用者代碼輸入長度不符');
+        } else {
+            errStr = '';
+            $('[name="studentCode"]').parent().find('.error').text('');
         }
-		else{
-			errStr = '';
-			$('[name="studentCode"]').parent().find('.error').text('');
-		}
     }
 
     //使用者密碼
@@ -873,89 +929,86 @@ function memberLogin() {
         if (checkVal(studentPassword) == false) {
             errStr = errStr + '使用者密碼限輸入英數字';
             $('[name="studentPassword"]').parent().find('.error').text('使用者密碼限輸入英數字');
-        } 
-		else if (studentPassword.length < 6) {
+        } else if (studentPassword.length < 6) {
             errStr = errStr + '使用者密碼輸入長度不符';
             $('[name="studentPassword"]').parent().find('.error').text('使用者密碼輸入長度不符');
+        } else {
+            errStr = '';
+            $('[name="studentPassword"]').parent().find('.error').text('');
         }
-		else{
-			errStr = '';
-			$('[name="studentPassword"]').parent().find('.error').text('');
-		}
     }
 
     if (errStr != '') {
         //alert(errStr);
         errStr = '';
-    } 
-	else {
+    } else {
         //登入
-		
-		if($('.ajax-loader').length == 0) {
-			$('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
-		}
-		
-		
-		//顯示Ajax轉轉圖，另外讓主頁面hide	
-		$('.ajax-loader').show();
-		setTimeout(function(){
-			var result = modal.login(studentId, studentCode, studentPassword);
 
-			$('.ajax-loader').hide();
-			
-	        //判斷是否有重覆登入
-	        if (result.errorCode == '97') {
-	            GardenUtils.display.popup({
-	                title: '',
-	                content: '<p>您已於' + result.LastSignOn + '登入本服務專區,並且尚未登出。<br>若要繼續登入(捨棄上次登入)點選「確定」按鈕;<BR>若要取消本次登入(保留上次登入)請點選「取消?按鈕。<br><div style="text-align: center;"><button type="button" class="btn btn-default cancel">取消</button><button type="button" class="btn btn-default continue">確定</button></div></p>',
-	                closeCallBackFn: function() {},
-	                showCallBackFn: function(popupView) {
+        if ($('.ajax-loader').length == 0) {
+            $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+        }
 
-	                    $('.modal-dialog .cancel').off('click').on('click', function(ev) {
-	                        ev.preventDefault();
 
-	                        popupView.modal('hide');
-	                    });
+        //顯示Ajax轉轉圖，另外讓主頁面hide  
+        $('.ajax-loader').show();
+        setTimeout(function() {
+            var result = modal.login(studentId, studentCode, studentPassword);
 
-	                    $('.modal-dialog .continue').off('click').on('click', function(ev) {
-	                        ev.preventDefault();
+            $('.ajax-loader').hide();
 
-	                        var result = modal.login(studentId, studentCode, studentPassword, 'Y');
-	                        window.location = 'index.jsp';
-	                    });
-	                },
-	                isShowSubmit: false,
-	                isShowClose: false
-	            });
-	        } else if (result.errorCode == '0') {
-	            //alert('success');
-	            window.location = result.loginSuccessPage;
-	        } else {
+            //判斷是否有重覆登入
+            if (result.errorCode == '97') {
+                GardenUtils.display.popup({
+                    title: '',
+                    content: '<p>您已於' + result.LastSignOn + '登入本服務專區,並且尚未登出。<br>若要繼續登入(捨棄上次登入)點選「確定」按鈕;<BR>若要取消本次登入(保留上次登入)請點選「取消」按鈕。<br><div style="text-align: center;"><button type="button" class="btn btn-default cancel">取消</button><button type="button" class="btn btn-default continue">確定</button></div></p>',
+                    closeCallBackFn: function() {},
+                    showCallBackFn: function(popupView) {
 
-	            var failCount = result.failCount;
-	            var errorMsg = result.errorMsg;
-	            var failMsg = '';
-	            if (failCount == 1) {
-	                failMsg = '<p>使用者密碼輸入錯誤一次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
-	            } else if (failCount == 2) {
-	                failMsg = '<p>使用者密碼輸入錯誤二次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
-	            } else if (failCount >= 3) {
-	                failMsg = '<p>使用者密碼連續輸入錯誤三次，已被鎖定</br>(你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
-	            } else {
-	                failMsg = '<p>' + errorMsg + '</p>';
-	            }
+                        $('.modal-dialog .cancel').off('click').on('click', function(ev) {
+                            ev.preventDefault();
 
-	            GardenUtils.display.popup({
-	                title: '',
-	                content: failMsg,
-	                closeCallBackFn: function() {},
-	                isShowSubmit: false
-	            });
+                            popupView.modal('hide');
+                        });
 
-	            //alert(result.errorMsg);
-	        }
-		},100);
-        
+                        $('.modal-dialog .continue').off('click').on('click', function(ev) {
+                            ev.preventDefault();
+
+                            var result = modal.login(studentId, studentCode, studentPassword, 'Y');
+                            window.location = 'index.jsp';
+                        });
+                    },
+                    isShowSubmit: false,
+                    isShowClose: false
+                });
+            } else if (result.errorCode == '0') {
+                //alert('success');
+                window.location = result.loginSuccessPage;
+            } else {
+
+                var failCount = result.failCount;
+                var errorMsg = result.errorMsg;
+                var failMsg = '';
+                if (failCount == 1) {
+                    failMsg = '<p>使用者密碼輸入錯誤一次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
+                } else if (failCount == 2) {
+                    failMsg = '<p>使用者密碼輸入錯誤二次</br>(連續錯誤三次將被鎖定，你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；<br>如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
+                } else if (failCount >= 3) {
+                    failMsg = '<p>使用者密碼連續輸入錯誤三次，已被鎖定</br>(你可使用<a href="forgetPassword.jsp" class="underline hyperlink">忘記代碼/密碼</a>進行重設；如有疑問，請洽客戶服務專線02-8751-6665 按5)</p>';
+                } else {
+                    failMsg = '<p>' + errorMsg + '</p>';
+                }
+
+                GardenUtils.display.popup({
+                    title: '',
+                    content: failMsg,
+                    closeCallBackFn: function() {},
+                    isShowSubmit: false
+                });
+
+                //alert(result.errorMsg);
+            }
+        }, 100);
+
     }
 
 
@@ -1135,9 +1188,9 @@ function inputToLabel(input) {
 
 //將select轉為label
 function domicileToLabel(domicileAddrRightDiv, domicileCityName, domicileZipCodeName, domicileLiner, domiNei, domiAddr) {
-	if(domiNei !== ''){
-		domiNei = domiNei + '鄰';
-	}
+    if (domiNei !== '') {
+        domiNei = domiNei + '鄰';
+    }
     var label = $('<p class="susi" id="label_domicile" class="labelInline">' + domicileCityName + domicileZipCodeName + domicileLiner + domiNei + domiAddr + '</p>');
 
     //alert(domicileAddrRightDiv.find('.bootstrap-select').length);
@@ -1156,14 +1209,13 @@ function isMobileWidth() {
 }
 
 function previewDocument(src, name) {
-	var kindOfTag = '';
+    var kindOfTag = '';
     //alert(name);
-	if(name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif'){
-		kindOfTag = '<img src="' + src + '"/>';
-	}
-	else if(name == 'pdf' || name == 'tif'){
-		kindOfTag = '<iframe src="' + src + '" style="width: 100%; height: 100%;"><frame/>'
-	}
+    if (name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif') {
+        kindOfTag = '<img src="' + src + '"/>';
+    } else if (name == 'pdf' || name == 'tif') {
+        kindOfTag = '<iframe src="' + src + '" style="width: 100%; height: 100%;"><frame/>'
+    }
 
     GardenUtils.display.popup({
         title: '預覽',
@@ -1181,6 +1233,7 @@ function previewDocument(src, name) {
 
 // start global countdown function
 var countdownid;
+
 function g_countdown(conf) {
     // g_countdown({
     //     minute: 4,
@@ -1291,7 +1344,7 @@ function g_countdown_seconds(conf) {
 function noETagsPopup() {
     GardenUtils.display.popup({
         title: '提醒您',
-        content: '<p>為提供更加便捷的就學貸款服務，只要簽署「就學貸款網路服務契約條款」<a href="pdf/16.就學貸款業務網路服務申請書暨契約條款(DE50).pdf" class="passIcon passpdf" target="_blank"><img src="img/akk-04.png"></a>，將可透過本服務專區申請「延後/提前還款?。</p><p>填寫完畢，請將紙本郵寄至104 臺北市中山區中山北路二段50號3樓 「台北富邦銀行就學貸款組收?<br>如有疑問，請洽客戶服務專線02-8751-6665按5</p>',
+        content: '<p>為提供更加便捷的就學貸款服務，只要簽署「就學貸款網路服務契約條款」<a href="pdf/16.就學貸款業務網路服務申請書暨契約條款(DE50).pdf" class="passIcon passpdf" target="_blank"><img src="img/akk-04.png"></a>，將可透過本服務專區申請「延後/提前還款」。</p><p>填寫完畢，請將紙本郵寄至104 臺北市中山區中山北路二段50號3樓 「台北富邦銀行就學貸款組收」<br>如有疑問，請洽客戶服務專線02-8751-6665按5</p>',
         closeCallBackFn: function() {},
         isShowSubmit: false
     });
@@ -1324,9 +1377,8 @@ function checkSize(size) {
     if (explorer.indexOf("MSIE 9.0") == -1) {
         if (size >= 10000000) {
             //alert('圖片上限10MB!!'); //顯示警告!!
-			$('#documentSize').show();
-        }
-        else{
+            $('#documentSize').show();
+        } else {
             $('#documentSize').hide();
         }
 
@@ -1389,13 +1441,13 @@ function getCarryObj(content) {
     var gaurantorName = ['(' + fatherName + ')', '(' + motherName + ')', '(' + thirdPartyName + ')', '(' + spouseName + ')']; //放父親, 母親, 第三人, 配偶的名字的字串
     var carryObjArr = []; //放1~6
     /*
-     1.	(依判斷塞其他關係人名即可)之身分證及印章，包含本人(吳*名)
-     2.	戶籍謄本或新式戶口名簿【需為最近三個月且記事欄需詳載，包含本人(吳*名)、(依判斷塞其他關係人名即可)，如戶籍不同者，需分別檢附】
-     3.	(依判斷塞其他關係人名即可)之特殊情形證明文件
-     4.	(依判斷塞其他關係人名即可)之除戶謄本或死亡證明
-     5.	連帶保證人(塞c的關係人名)之扣繳憑單、財力證明或在職證明
+     1. (依判斷塞其他關係人名即可)之身分證及印章，包含本人(吳*名)
+     2. 戶籍謄本或新式戶口名簿【需為最近三個月且記事欄需詳載，包含本人(吳*名)、(依判斷塞其他關係人名即可)，如戶籍不同者，需分別檢附】
+     3. (依判斷塞其他關係人名即可)之特殊情形證明文件
+     4. (依判斷塞其他關係人名即可)之除戶謄本或死亡證明
+     5. 連帶保證人(塞c的關係人名)之扣繳憑單、財力證明或在職證明
      6.  生活費>0的人 要再增加攜帶政府機關出具之低收入戶或中低收入戶證明
-     	註冊繳費單/住宿費用單據，必加
+       註冊繳費單/住宿費用單據，必加
      */
     var gaurantorObjArr = []; //a,b,c,d  (有幾個就產生幾個關係人的字串)
     /*
@@ -1502,17 +1554,16 @@ function getCarryObj(content) {
         }
     }
     console.debug('carryObjArr:' + carryObjArr);
-	
-	var isIncome = content.incomeTax;
+
+    var isIncome = content.incomeTax;
     var isGuarantor = content.isGuarantor;
-        
-    var parentsArr =  [
-            {
-                "checkFather" : false
-            },{
-                "checkMother" : false
-            }];
-			
+
+    var parentsArr = [{
+        "checkFather": false
+    }, {
+        "checkMother": false
+    }];
+
     //判斷哪些關係人是連帶保證人,需要帶文件
     if (marryStatus == 'N') {
         if (adult == 'N') { //未成年未婚
@@ -1531,43 +1582,37 @@ function getCarryObj(content) {
                 case '2':
                     if (level2Picked == '1') {
                         gaurantorObjArr.push('ab', 'ab');
-                    } 
-					else if (level2Picked == '2') {
+                    } else if (level2Picked == '2') {
                         parentsArr[1].checkMother = true;
-						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
-						
-                        if(check == 'checkMother'){
+                        var check = checkParents(parentsArr, adult, isGuarantor, isIncome);
+
+                        if (check == 'checkMother') {
                             gaurantorObjArr.push('ab', 'ab');
-                        }
-                        else{
+                        } else {
                             gaurantorObjArr.push('a', 'a');
                         }
-                    } 
-					else if (level2Picked == '3') {
-						parentsArr[0].checkFather = true;
-						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );					
-                        if(check == 'checkFather'){
+                    } else if (level2Picked == '3') {
+                        parentsArr[0].checkFather = true;
+                        var check = checkParents(parentsArr, adult, isGuarantor, isIncome);
+                        if (check == 'checkFather') {
                             gaurantorObjArr.push('ab', 'ab');
-                        }
-                        else{
+                        } else {
                             gaurantorObjArr.push('b', 'b');
                         }
-                    } 
-					else if (level2Picked == '4') {
-						parentsArr[0].checkFather = true;
-						parentsArr[1].checkMother = true;
-						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
-						
-                        if(check == 'checkFathercheckMother'){
+                    } else if (level2Picked == '4') {
+                        parentsArr[0].checkFather = true;
+                        parentsArr[1].checkMother = true;
+                        var check = checkParents(parentsArr, adult, isGuarantor, isIncome);
+
+                        if (check == 'checkFathercheckMother') {
                             gaurantorObjArr.push('abc', 'abc');
                         }
-                        if(check == 'checkFather'){
+                        if (check == 'checkFather') {
                             gaurantorObjArr.push('ac', 'ac');
                         }
-                        if(check == 'checkMother'){
+                        if (check == 'checkMother') {
                             gaurantorObjArr.push('bc', 'bc');
-                        }
-                        else{
+                        } else {
                             gaurantorObjArr.push('c', 'c');
                         }
                     }
@@ -1585,8 +1630,7 @@ function getCarryObj(content) {
                     gaurantorObjArr.push('c', 'c');
                     break;
             }
-        } 
-        else if (adult == 'Y') { //已成年未婚
+        } else if (adult == 'Y') { //已成年未婚
             switch (level1Picked) {
                 case '1':
                     if (level2Picked == '1') {
@@ -1602,44 +1646,36 @@ function getCarryObj(content) {
                 case '2':
                     if (level2Picked == '1') {
                         gaurantorObjArr.push('ab', 'ab');
-                    } 
-					else if (level2Picked == '2') {
-						parentsArr[1].checkMother = true;
-						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
-											
-                        if(check == 'checkMother'){
+                    } else if (level2Picked == '2') {
+                        parentsArr[1].checkMother = true;
+                        var check = checkParents(parentsArr, adult, isGuarantor, isIncome);
+
+                        if (check == 'checkMother') {
                             gaurantorObjArr.push('a', 'ab');
-                        }
-                        else{
+                        } else {
                             gaurantorObjArr.push('a', 'a');
                         }
-                    } 
-					else if (level2Picked == '3') {
-						parentsArr[0].checkFather = true;
-					    var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
-						
-                        if(check == 'checkFather'){  
+                    } else if (level2Picked == '3') {
+                        parentsArr[0].checkFather = true;
+                        var check = checkParents(parentsArr, adult, isGuarantor, isIncome);
+
+                        if (check == 'checkFather') {
                             gaurantorObjArr.push('b', 'ab');
-                        }
-                        else{
+                        } else {
                             gaurantorObjArr.push('b', 'b');
                         }
-                    } 
-					else if (level2Picked == '4') {
-						parentsArr[0].checkFather = true;
-						parentsArr[1].checkMother = true;
-						var check = checkParents( parentsArr, adult, isGuarantor, isIncome );
-						
-                        if(check == 'checkFathercheckMother'){
+                    } else if (level2Picked == '4') {
+                        parentsArr[0].checkFather = true;
+                        parentsArr[1].checkMother = true;
+                        var check = checkParents(parentsArr, adult, isGuarantor, isIncome);
+
+                        if (check == 'checkFathercheckMother') {
                             gaurantorObjArr.push('c', 'abc', 'c');
-                        }
-                        else if(check == 'checkFather'){
+                        } else if (check == 'checkFather') {
                             gaurantorObjArr.push('c', 'ac', 'c');
-                        }
-                        else if(check == 'checkMother'){
+                        } else if (check == 'checkMother') {
                             gaurantorObjArr.push('c', 'bc', 'c');
-                        }
-                        else{
+                        } else {
                             gaurantorObjArr.push('c', 'c', 'c');
                         }
                     }
@@ -1708,35 +1744,34 @@ function getCarryObj(content) {
     return (pushCarryObjString(appoName, carryObjArr, gaurantorObjArr, gaurantorTitle, gaurantorName));
 }
 
-function checkParents( parentsArr, isAdult, isGuarantor, isIncome ){
-var returnString = '';
-    if(isAdult == 'N'){
-        $.each(parentsArr, function(index, obj){
-			$.each(obj, function(objIndex, objValue){
-				if(objValue){    //需要檢查當前的人
-					var current = isGuarantor.substr(index, 1);   //當前的人的值
-		               if(current == '1'){
-		                 returnString = returnString + objIndex;
-		            }					
-	            } 
-			});    
+function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
+    var returnString = '';
+    if (isAdult == 'N') {
+        $.each(parentsArr, function(index, obj) {
+            $.each(obj, function(objIndex, objValue) {
+                if (objValue) { //需要檢查當前的人
+                    var current = isGuarantor.substr(index, 1); //當前的人的值
+                    if (current == '1') {
+                        returnString = returnString + objIndex;
+                    }
+                }
+            });
         });
-    }
-    else if(isAdult == 'Y'){
-        $.each(parentsArr, function(index, obj){
-			$.each(obj, function(objIndex, objValue){
-				if(objValue){    //需要檢查當前的人
-					var current = isIncome.substr(index, 1);   //當前的人的值
-		               if(current == '1'){
-		                 returnString = returnString + objIndex;
-		            }					
-	            } 
-			});    
+    } else if (isAdult == 'Y') {
+        $.each(parentsArr, function(index, obj) {
+            $.each(obj, function(objIndex, objValue) {
+                if (objValue) { //需要檢查當前的人
+                    var current = isIncome.substr(index, 1); //當前的人的值
+                    if (current == '1') {
+                        returnString = returnString + objIndex;
+                    }
+                }
+            });
         });
     }
     return returnString;
 }
-            
+
 //依function getCarryObj所分析的狀況塞需要攜帶的文件,連帶保證人的字串
 function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gaurantorTitleArray, gaurantorNameArray) {
     var titleName;
@@ -1804,7 +1839,7 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
                         sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
                         gaurantorIndex += 1;
                     }
-                
+
                     allObjArr[k] = '戶籍謄本或新式戶口名簿<p id="carryObjTip"><img src="img/pk-01-small.png" id="carryObjTip">需為最近三個月且記事欄需詳載，包含本人(' + appoName + ')、' + sameObj + '如戶籍不同者，需分別檢附</p>';
                 }
                 break;
@@ -1851,17 +1886,17 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
     return allObjArr;
 }
 
-function determineCarryObj(content){
-console.debug(content);
-	var signIOU = content.content.signBill; //是否需要簽立借據(須同時符合同一學程/同一學校/同一連帶保證人/同一申貸額度)
+function determineCarryObj(content) {
+    console.debug(content);
+    var signIOU = content.content.signBill; //是否需要簽立借據(須同時符合同一學程/同一學校/同一連帶保證人/同一申貸額度)
     var appoName = content.content.appoName; //本人姓名
     var loansPrice = content.content.loanPrice;
     var freedomLife = content.content.freedom.life;
     var accordingLife = content.content.accordingToBill.life;
     var familyStatusLevel1 = content.content.familyStatusLevel1;
     var familyStatusLevel2 = content.content.familyStatusLevel2;
-	
-	var objList = []; //要攜帶的物品
+
+    var objList = []; //要攜帶的物品
 
     if (signIOU == 'N') { //不需要簽立借據者
         objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li>' +
@@ -1887,21 +1922,21 @@ console.debug(content);
         });
     }
 
-	return objList;
+    return objList;
 }
 
 
 function setToken(token) {
-	console.debug('getToken = ' + token);
-	$('#tokenKey').text(token);
+    console.debug('getToken = ' + token);
+    $('#tokenKey').text(token);
 }
 
 function getToken() {
-	return window.top.getToken();
-	
+    return window.top.getToken();
+
 }
 
 function closeIE8() {
-	alert('into closeIE8');
-	$('#browser_ie8').remove();
+    alert('into closeIE8');
+    $('#browser_ie8').remove();
 }

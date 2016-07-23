@@ -2,7 +2,7 @@
     <% request.setCharacterEncoding( "utf-8"); %>
 
         <form id="mainForm">
-
+<input type="hidden" name="lastIsGuarantor" value="" />
             <input type="hidden" name="isRecordHidden" value="" />
             <input type="hidden" name="isChangeHidden" value="" />
             <input type="hidden" name="adultHidden" value="" />

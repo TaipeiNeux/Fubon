@@ -265,7 +265,8 @@
     %>
     <ul>
         <li class="path_home"><a href="">首頁</a></li>
-        <li><a href="register.jsp" class="active">我要申請</a></li>
+		<!--剛進來按登入時,只要顯示首頁,所以把"我要申請"拿掉-->
+        <!--<li><a href="register.jsp" class="active">我要申請</a></li>-->
     </ul>
     <%
     } else if("apply".equalsIgnoreCase(nav)) {

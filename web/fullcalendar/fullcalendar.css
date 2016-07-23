@@ -1129,3 +1129,9 @@ be a descendant of the grid when it is being dragged.
 	border-top-color: transparent;
 	border-bottom-color: transparent;
 }
+
+/*
+table .fc-rigid tr td.fc-today {
+    color: #fff;
+    background: #0E89CB;
+}*/

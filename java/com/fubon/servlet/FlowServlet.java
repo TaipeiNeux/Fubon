@@ -7,6 +7,7 @@ import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
 import com.neux.utility.orm.bean.DataObject;
+import com.neux.utility.orm.dal.QueryConfig;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.JSPUtils;
@@ -55,6 +56,7 @@ public class FlowServlet extends HttpServlet {
 
         JSONObject header = new JSONObject();
         JSONObject content = new JSONObject();
+
 
         IDao dao = DaoFactory.getDefaultDao();
 //        Transcation transcation = dao.beginTranscation();
@@ -106,6 +108,13 @@ public class FlowServlet extends HttpServlet {
         }catch(Exception e) {
             e.printStackTrace();
 
+            GardenLog.log(GardenLog.DEBUG,"FlowServlet Exception=>"+e.getMessage());
+            StackTraceElement[] stackTraceElements = e.getStackTrace();
+
+            for(StackTraceElement element : stackTraceElements) {
+                GardenLog.log(GardenLog.DEBUG,element.getClassName() + ":"+ element.getMethodName() + "("+element.getLineNumber()+")");
+            }
+
             try{
                 header.put("errorCode","99");
                 header.put("errorMsg",e.getMessage());
@@ -133,6 +142,10 @@ public class FlowServlet extends HttpServlet {
 
         FlowUtils.resetDraftData(userId,flowId,dao);
 
+
+        SQLCommand update = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+        update.addParamValue(userId);
+        DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
 
     }
 

@@ -142,7 +142,7 @@ public class MessageUtils {
         //因為只有Prod才會真的發簡訊，所以判斷參數如果是Prod才走電文發SMS，否則是自己產生六碼驗證碼
         String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
 
-        if("Prod".equalsIgnoreCase(env)) {
+        if(!"sit".equalsIgnoreCase(env)) {
             RQBean rqBean = new RQBean();
             rqBean.setTxId("MWMG");
             rqBean.addRqParam("BusClass","SL");

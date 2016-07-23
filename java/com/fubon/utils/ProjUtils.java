@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.Inet4Address;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -275,7 +276,20 @@ public class ProjUtils {
                 tagValue = original;
             }
 
-            tagValue = StringEscapeUtils.escapeHtml4(tagValue);
+//            GardenLog.log(GardenLog.DEBUG,"tagValue = ["+tagValue+"]");
+//            tagValue = StringEscapeUtils.escapeHtml4(tagValue);
+        }
+
+        try{
+//                tagValue = new String(tagValue.getBytes("big5"),"CP950");
+
+//            tagValue = new String(tagValue.getBytes("utf-8"),"CP950");
+
+            tagValue = StringUtils.replace(tagValue,"<","&lt;");
+            tagValue = StringUtils.replace(tagValue,">","&gt;");
+            tagValue = StringUtils.replace(tagValue,"&","&amp;");
+        }catch(Exception e) {
+            e.printStackTrace();
         }
 
         return "<" + tagName + "><![CDATA["+tagValue+"]]></"+tagName+">";
@@ -1682,7 +1696,11 @@ public class ProjUtils {
             String zipcode = aplyMemberCase.getValue(zipCodeCol);
             String cityId = toCityId(zipcode,dao);
 
-            return toCityName(cityId,dao) + toZipCodeName(zipcode,dao) + aplyMemberCase.getValue(villageCol) + aplyMemberCase.getValue(linerCol) + "鄰" + aplyMemberCase.getValue(addressCol);
+            String liner = aplyMemberCase.getValue(linerCol);
+            if(StringUtils.isNotEmpty(liner)) {
+                liner = liner + "鄰";
+            }
+            return toCityName(cityId,dao) + toZipCodeName(zipcode,dao) + aplyMemberCase.getValue(villageCol) + liner  + aplyMemberCase.getValue(addressCol);
         }
         else {
             return "";
@@ -2291,7 +2309,53 @@ public class ProjUtils {
 
     }
 
+    /**
+     * 取得輸入字串中的難字(取自舊平台程式)
+     *
+     * @param strValue
+     * @param msgKey
+     * @return
+     */
+    public static String checkInvalidChars(String strValue, String charset) throws Exception {
+        StringBuffer invalidChar = new StringBuffer();
+        if (StringUtils.isBlank(strValue)) {
+            return "";
+        }
+        try {
+            String output = new String(strValue.getBytes(charset), charset);
+            byte[] utf32Bytes = strValue.getBytes("UTF-32");
+            if (!StringUtils.equals(strValue, output)) {
+                // 找出不相等的字元
+                for (int i = 0; i < utf32Bytes.length / 4; i++) {
+                    try {
+                        String tmpStr = new String(utf32Bytes, i * 4, 4, "UTF-32");
+                        if (!StringUtils.equals(tmpStr, StringUtils.mid(output, i, 1))) {
+                            invalidChar.append(tmpStr);
+                        }
+                    }
+                    catch (Exception e) {
+                        // 因為有可能發生轉換成 Big5 後字串長度較短, 所以在此 catch exception 並終止迴圈
+                        break;
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            // will not happend
+        }
+        return invalidChar.toString();
+    }
 
+    public static String getAddr() {
+        String addr = "UNKNOW";
+        try{
+            addr = Inet4Address.getLocalHost().getHostName();
+            addr = StringUtils.right(addr,3);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return addr;
+    }
 }
 
 

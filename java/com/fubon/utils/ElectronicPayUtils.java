@@ -117,7 +117,7 @@ public class ElectronicPayUtils {
 
     //產生39Code
     public static String getBarCodeImg(String msg) {
-        String barcode;
+        String barcode = "";
         String datahead = "data:image/png;base64,";
         int dpi = 150;//resolution
 
@@ -135,7 +135,7 @@ public class ElectronicPayUtils {
             baos.close();
             barcode = datahead + DatatypeConverter.printBase64Binary(baos.toByteArray());
         } catch (IOException e) {
-            barcode = "error=>" + e.getMessage();
+            e.printStackTrace();
         }
         return barcode;
     }

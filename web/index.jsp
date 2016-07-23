@@ -287,14 +287,14 @@
                 <span class="himg">
                 <img src="img/fu-24.png" alt="">
               </span>
-                    <a href="<%=isLogin ? "myloan.jsp" : "memberLogin.jsp"%>" class="pobtn-bla">我要查詢</a>
+                    <a href="myloan.jsp" class="pobtn-bla">我要查詢</a>
                 </div>
                 <div class="umopen">
                     <h3>帳務查詢</h3>
                     <p>即時查詢貸款餘額、利率與還款明細，快速掌握零時差！</p>
                     <ul>
-                        <li><a href="<%=isLogin ? "myloan.jsp" : "memberLogin.jsp"%>" class="files">我的貸款</a></li>
-                        <li><a href="<%=isLogin ? "repaymentInquiry.jsp" : "memberLogin.jsp"%>" class="files">還款明細查詢</a></li>
+                        <li><a href="myloan.jsp" class="files">我的貸款</a></li>
+                        <li><a href="repaymentInquiry.jsp" class="files">還款明細查詢</a></li>
                     </ul>
                 </div>
             </li>
@@ -305,7 +305,7 @@
                                             <span class="himg">
                 <img src="img/fu-22.png" alt="">
               </span>
-                    <a href="<%=isLogin ? "apply.jsp" : "memberLogin.jsp"%>" class="pobtn-bla">我要申請</a>
+                    <a href="apply.jsp" class="pobtn-bla">我要申請</a>
                 </div>
                 <div class="umopen">
                     <h3>延期還款</h3>
@@ -329,8 +329,8 @@
                     <h3>繳款資訊</h3>
                     <p>查詢繳款資訊、還可以補印繳款單，再也不怕帳單不見囉！</p>
                     <ul>
-                        <li><a href="<%=isLogin ? "payment.jsp" : "memberLogin.jsp"%>" class="files">繳款方式說明</a></li>
-                        <li><a href="<%=isLogin ? "myElectronicPay_1.jsp" : "memberLogin.jsp"%>" class="files bill">我的電子繳款單</a></li>
+                        <li><a href="payment.jsp" class="files">繳款方式說明</a></li>
+                        <!--<li><a href="myElectronicPay_1.jsp" class="files bill">我的電子繳款單</a></li>-->
                         <!--<li><a href="" class="files" onclick="alert('系統建置中');return false;">立即繳款</a></li>-->
                     </ul>
                 </div>
@@ -348,8 +348,8 @@
                     <h3>個人資料</h3>
                     <p>如果有搬家、更換聯絡方式，記得來修改才能繼續收到本行相關資訊唷！</p>
                     <ul>
-                        <li><a href="<%=isLogin ? "personalInfo_start.jsp" : "memberLogin.jsp"%>" class="files" >變更基本資料</a></li>
-                        <li><a href="<%=isLogin ? "changePwd.jsp" : "memberLogin.jsp"%>" class="files" >變更代碼/密碼</a></li>
+                        <li><a href="personalInfo_start.jsp" class="files" >變更基本資料</a></li>
+                        <li><a href="changePwd.jsp" class="files" >變更代碼/密碼</a></li>
                     </ul>
                 </div>
             </li>
@@ -358,8 +358,8 @@
             <div class="umopen umopen-1">
                 <p>即時查詢貸款餘額、利率與還款明細，快速掌握零時差！</p>
                 <ul>
-                    <li><a href="<%=isLogin ? "myloan.jsp" : "memberLogin.jsp"%>" class="files">我的貸款</a></li>
-                    <li><a href="<%=isLogin ? "repaymentInquiry.jsp" : "memberLogin.jsp"%>" class="files" >還款明細查詢</a></li>
+                    <li><a href="myloan.jsp" class="files">我的貸款</a></li>
+                    <li><a href="repaymentInquiry.jsp" class="files" >還款明細查詢</a></li>
                 </ul>
             </div>
             <div class="umopen umopen-2">
@@ -373,15 +373,15 @@
                 <p>查詢繳款資訊、還可以補印繳款單，再也不怕帳單不見囉！</p>
                 <ul>
                     <li><a href="payment.jsp" class="files">繳款方式說明</a></li>
-                    <li><a href="<%=isLogin ? "myloan.jsp" : "memberLogin.jsp"%>" class="files bill">我的電子繳款單</a></li>
+                    <li><a href="myloan.jsp" class="files bill">我的電子繳款單</a></li>
                     <!--<li><a href="" class="files" onclick="alert('系統建置中');return false;">立即繳款</a></li>-->
                 </ul>
             </div>
             <div class="umopen umopen-4">
                 <p>如果有搬家、更換聯絡方式，記得來修改才能繼續收到本行相關資訊唷！</p>
                 <ul>
-                    <li><a href="<%=isLogin ? "personalInfo.jsp" : "memberLogin.jsp"%>" class="files">變更基本資料</a></li>
-                    <li><a href="<%=isLogin ? "changePwd.jsp" : "memberLogin.jsp"%>" class="files">變更代碼/密碼</a></li>
+                    <li><a href="personalInfo_flow.jsp" class="files">變更基本資料</a></li>
+                    <li><a href="changePwd.jsp" class="files">變更代碼/密碼</a></li>
                 </ul>
             </div>
         </ul>

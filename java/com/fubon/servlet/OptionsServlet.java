@@ -183,7 +183,7 @@ public class OptionsServlet extends HttpServlet {
             }
 
             IDao dao = DaoFactory.getDefaultDao();
-            SQLCommand query = new SQLCommand("select SchoolCode,SchoolName from SchoolInfo where SchoolType1 = ? and SchoolType2 = ? and SchoolType3 = ? group by SchoolCode,SchoolName");
+            SQLCommand query = new SQLCommand("select SchoolCode,SchoolName,StudyYears from SchoolInfo where SchoolType1 = ? and SchoolType2 = ? and SchoolType3 = ? group by SchoolCode,SchoolName,StudyYears");
             query.addParamValue(type1);
             query.addParamValue(type2);
             query.addParamValue(type3);
@@ -196,6 +196,7 @@ public class OptionsServlet extends HttpServlet {
 
                 tmp.put("schoolId",d.getValue("SchoolCode"));
                 tmp.put("schoolName",d.getValue("SchoolName"));
+                tmp.put("studyYears",d.getValue("StudyYears"));
 
                 school.put(tmp);
             }

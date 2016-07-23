@@ -1,4 +1,13 @@
 <%@ page import="org.apache.commons.lang3.StringUtils" %>
+<%@ page import="com.neux.utility.utils.PropertiesUtil" %>
+<%@ page import="com.fubon.webservice.bean.RQBean" %>
+<%@ page import="com.fubon.webservice.bean.RSBean" %>
+<%@ page import="com.fubon.webservice.WebServiceAgent" %>
+<%@ page import="com.fubon.utils.DBUtils" %>
+<%@ page import="org.dom4j.Document" %>
+<%@ page import="org.dom4j.DocumentHelper" %>
+<%@ page import="com.fubon.servlet.DataServlet" %>
+<%@ page import="org.json.JSONArray" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
 <%
@@ -9,8 +18,203 @@
     String hasAccount = StringUtils.isNotEmpty(loginUserBean2.getCustomizeValue("acnoSlList")) ? "Y" : "N";//是否有貸款帳號
     String isArrears = loginUserBean2.getCustomizeValue("isArrear"); //是否不欠款
     String isEtabs = ProjUtils.isEtabs(loginUserBean2) ? "Y" : "N"; //有無線上註記
+    String[] acnoSlList = loginUserBean2.getCustomizeValue("acnoSlList").split(",");
+    JSONArray client_detail = new JSONArray();
 
-    if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears)) {
+    for(String acnoSl: acnoSlList) {
+
+        if(StringUtils.isEmpty(acnoSl)) continue;
+
+        String responses = null;
+
+        String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+        if(!"sit".equalsIgnoreCase(env)) {
+            RQBean rqBean = new RQBean();
+            rqBean.setTxId("EB382609");
+            rqBean.addRqParam("ACNO_SL",acnoSl);
+
+            RSBean rsBean = WebServiceAgent.callWebService(rqBean);
+            if(rsBean.isSuccess()) {
+                responses = rsBean.getTxnString();
+            }
+        }
+        else {
+
+            responses = "<root>\n" +
+                    "    <CRLN_AMT>800,000</CRLN_AMT>\n" +
+                    "    <AVAIL_BAL>677,144</AVAIL_BAL>\n" +
+                    "    <CUST_NO>E124876190</CUST_NO>\n" +
+                    "    <CUST_NAME>陳ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ</CUST_NAME>\n" +
+                    "    <PROD_STAG/>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM>1031</YR_TERM>\n" +
+                    "        <DOC_NO>035003</DOC_NO>\n" +
+                    "        <CRE_BRH>-705</CRE_BRH>\n" +
+                    "        <INT_RATE>1.6200</INT_RATE>\n" +
+                    "        <LOAN_AMT>30,720</LOAN_AMT>\n" +
+                    "        <LOAN_BAL>30,720</LOAN_BAL>\n" +
+                    "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                    "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                    "        <INT_FLG>N</INT_FLG>\n" +
+                    "        <WORK_FLG>N</WORK_FLG>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT>661</INS_AMT>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM>1032</YR_TERM>\n" +
+                    "        <DOC_NO>028153</DOC_NO>\n" +
+                    "        <CRE_BRH>-705</CRE_BRH>\n" +
+                    "        <INT_RATE>1.6200</INT_RATE>\n" +
+                    "        <LOAN_AMT>30,720</LOAN_AMT>\n" +
+                    "        <LOAN_BAL>30,720</LOAN_BAL>\n" +
+                    "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                    "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                    "        <INT_FLG>N</INT_FLG>\n" +
+                    "        <WORK_FLG>N</WORK_FLG>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT>661</INS_AMT>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM>1041</YR_TERM>\n" +
+                    "        <DOC_NO>019001</DOC_NO>\n" +
+                    "        <CRE_BRH>-320</CRE_BRH>\n" +
+                    "        <INT_RATE>1.6200</INT_RATE>\n" +
+                    "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
+                    "        <LOAN_BAL></LOAN_BAL>\n" +
+                    "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                    "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                    "        <INT_FLG>N</INT_FLG>\n" +
+                    "        <WORK_FLG>N</WORK_FLG>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT></INS_AMT>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM>1042</YR_TERM>\n" +
+                    "        <DOC_NO>013429</DOC_NO>\n" +
+                    "        <CRE_BRH>-705</CRE_BRH>\n" +
+                    "        <INT_RATE>1.6200</INT_RATE>\n" +
+                    "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
+                    "        <LOAN_BAL>30,708</LOAN_BAL>\n" +
+                    "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                    "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                    "        <INT_FLG>N</INT_FLG>\n" +
+                    "        <WORK_FLG>N</WORK_FLG>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT>661</INS_AMT>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM>0880</YR_TERM>\n" +
+                    "        <DOC_NO>013429</DOC_NO>\n" +
+                    "        <CRE_BRH>-705</CRE_BRH>\n" +
+                    "        <INT_RATE>1.6200</INT_RATE>\n" +
+                    "        <LOAN_AMT>30,708</LOAN_AMT>\n" +
+                    "        <LOAN_BAL>30,708</LOAN_BAL>\n" +
+                    "        <INT_DATE>108/06/30</INT_DATE>\n" +
+                    "        <NEXT_INT_DATE>108/08/01</NEXT_INT_DATE>\n" +
+                    "        <INT_FLG>N</INT_FLG>\n" +
+                    "        <WORK_FLG>N</WORK_FLG>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT>661</INS_AMT>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM/>\n" +
+                    "        <DOC_NO/>\n" +
+                    "        <CRE_BRH/>\n" +
+                    "        <INT_RATE/>\n" +
+                    "        <LOAN_AMT/>\n" +
+                    "        <LOAN_BAL/>\n" +
+                    "        <INT_DATE/>\n" +
+                    "        <NEXT_INT_DATE/>\n" +
+                    "        <INT_FLG/>\n" +
+                    "        <WORK_FLG/>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT/>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM/>\n" +
+                    "        <DOC_NO/>\n" +
+                    "        <CRE_BRH/>\n" +
+                    "        <INT_RATE/>\n" +
+                    "        <LOAN_AMT/>\n" +
+                    "        <LOAN_BAL/>\n" +
+                    "        <INT_DATE/>\n" +
+                    "        <NEXT_INT_DATE/>\n" +
+                    "        <INT_FLG/>\n" +
+                    "        <WORK_FLG/>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT/>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM/>\n" +
+                    "        <DOC_NO/>\n" +
+                    "        <CRE_BRH/>\n" +
+                    "        <INT_RATE/>\n" +
+                    "        <LOAN_AMT/>\n" +
+                    "        <LOAN_BAL/>\n" +
+                    "        <INT_DATE/>\n" +
+                    "        <NEXT_INT_DATE/>\n" +
+                    "        <INT_FLG/>\n" +
+                    "        <WORK_FLG/>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT/>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM/>\n" +
+                    "        <DOC_NO/>\n" +
+                    "        <CRE_BRH/>\n" +
+                    "        <INT_RATE/>\n" +
+                    "        <LOAN_AMT/>\n" +
+                    "        <LOAN_BAL/>\n" +
+                    "        <INT_DATE/>\n" +
+                    "        <NEXT_INT_DATE/>\n" +
+                    "        <INT_FLG/>\n" +
+                    "        <WORK_FLG/>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT/>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM/>\n" +
+                    "        <DOC_NO/>\n" +
+                    "        <CRE_BRH/>\n" +
+                    "        <INT_RATE/>\n" +
+                    "        <LOAN_AMT/>\n" +
+                    "        <LOAN_BAL/>\n" +
+                    "        <INT_DATE/>\n" +
+                    "        <NEXT_INT_DATE/>\n" +
+                    "        <INT_FLG/>\n" +
+                    "        <WORK_FLG/>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT/>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <TxRepeat>\n" +
+                    "        <YR_TERM/>\n" +
+                    "        <DOC_NO/>\n" +
+                    "        <CRE_BRH/>\n" +
+                    "        <INT_RATE/>\n" +
+                    "        <LOAN_AMT/>\n" +
+                    "        <LOAN_BAL/>\n" +
+                    "        <INT_DATE/>\n" +
+                    "        <NEXT_INT_DATE/>\n" +
+                    "        <INT_FLG/>\n" +
+                    "        <WORK_FLG/>\n" +
+                    "        <PARTIAL_FLG/>\n" +
+                    "        <INS_AMT/>\n" +
+                    "    </TxRepeat>\n" +
+                    "    <C_NAME>合計：</C_NAME>\n" +
+                    "    <LOAN_AMT_TOT>122,856</LOAN_AMT_TOT>\n" +
+                    "    <LOAN_BAL_TOT>122,856</LOAN_BAL_TOT>\n" +
+                    "</root>\n";
+        }
+
+        Document doc = DocumentHelper.parseText(responses);
+
+
+        DataServlet.setMyLoanAccountDetail(doc,client_detail,false,acnoSl,"");
+
+
+    }
+
+    if("N".equalsIgnoreCase(hasAccount) || "N".equalsIgnoreCase(isArrears) || client_detail.length() == 0) {
         request.getRequestDispatcher("noPermit.jsp?typeId=1&name="+ java.net.URLEncoder.encode("查詢「我的貸款」","utf-8")).forward(request,response);
     }
     else if("N".equalsIgnoreCase(isEtabs)) {

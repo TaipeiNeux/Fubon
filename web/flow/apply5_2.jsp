@@ -9,10 +9,16 @@
 	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">
-            <h2 class="who">申請人</h2>
+            <h2 class="who">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+            申請人
+            </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply1_1" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -102,12 +108,17 @@
                 </div>
             </div>
         </div>
-
+        </div>
         <div class="dan">
-            <h2 class="home">家庭狀況</h2>
+            <h2 class="home">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+            家庭狀況</h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply1_2" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="maya">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -120,17 +131,23 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
     <div class="wrap">
         <h3 class="snopy pen mt40">關係人基本資料</h3>
 
         <div class="dan" id="father">
-            <h2 class="father">父親
+            <h2 class="father">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+               父親
                 <span id="isGuarantor_father">(為連帶保證人/合計所得對象）</span>
               </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply2" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -186,15 +203,20 @@
                     </div>
                 </div>
             </div>
-            
+        </div>   
         </div>
         <div class="dan" id="mother">
-            <h2 class="mather">母親
+            <h2 class="mather">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+               母親
                 <span id="isGuarantor_mother">(為連帶保證人/合計所得對象)</span>
               </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply2" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -251,7 +273,7 @@
                     </div>
                 </div>
             </div>
-            
+        </div> 
         </div>
         <div class="dan" id="thirdParty">
             <h2 class="thirdParty">
@@ -259,6 +281,7 @@
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply2" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -324,13 +347,19 @@
                 
             </div>
         </div>
+        </div>
         <div class="dan" id="spouse">
-            <h2 class="spouse">配偶
+            <h2 class="spouse">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+               配偶
                 <span id="isGuarantor_spouse">(為連帶保證人/合計所得對象）</span>
               </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply2" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -388,16 +417,22 @@
                 
             </div>
         </div>
+        </div>
     </div>
     <div class="wrap">
         <h3 class="snopy pen mt40">就讀學校及申貸金額
             </h3>
 
         <div class="dan" id="student">
-            <h2 class="hat">就讀學校</h2>
+            <h2 class="hat">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+            就讀學校</h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply3_1" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -467,13 +502,19 @@
                 </div>
             </div>
         </div>
+        </div>
 
         <div class="dan moneyAlign">
-            <h2 class="appmoney">申貸金額
+            <h2 class="appmoney">
+            <div class="clickEvent default">
+            <img src="img/plus.png" alt="" >
+            </div>
+             申貸金額
               </h2>
             <div class="editBtnBoxbottom">
                 <a href="apply.jsp?step=apply3_2" class="editBtn">修改</a>
             </div>
+        <div class="Stretch">
             <div class="may">
                 <div class="joy abon bgfff">
                     <div class="left">
@@ -511,7 +552,7 @@
             <div class="may omega">
                 <div class="joy abon bgfff">
                     <div class="left">
-                        <p>書籍費</p>
+                        <p>書籍費</p><span class="hig">(如已含在可貸金額，請勿填寫)</span>
                     </div>
                     <div class="right">
                         <p class="student_book">0元</p>
@@ -519,7 +560,7 @@
                 </div>
                 <div class="joy abon">
                     <div class="left">
-                        <p>住宿費</p>
+                        <p>住宿費</p><span class="hig">(如已含在可貸金額，請勿填寫)</span>
                     </div>
                     <div class="right">
                         <p class="student_live">0元</p>
@@ -527,7 +568,7 @@
                 </div>
                 <div class="joy abon bgfff">
                     <div class="left">
-                        <p>海外研習費</p>
+                        <p>海外研習費</p><span class="hig">(限學海飛颺或學海惜珠得獎)</span>
                     </div>
                     <div class="right">
                         <p class="student_abroad">0元</p>
@@ -535,7 +576,7 @@
                 </div>
                 <div class="joy abon">
                     <div class="left">
-                        <p>生活費</p>
+                        <p>生活費</p><span class="hig">(限低收入戶或中低收入戶)</span>
                     </div>
                     <div class="right">
                         <p class="student_life">0元</p>
@@ -544,18 +585,20 @@
             </div>
             <div class="maya">
                 <div class="joy swataX bgfff">
-                    <div class="left noob">
+                    <div class="left noob">    
                         <p>應扣除教育補助費或助學公費</p>
                         <p class="student_publicExpense">0元</p>
                     </div>
                 </div>
             </div>
-        </div>
         <div class="dan jam">
             <div class="appcont">本次申貸金額
-                <span class="student_sum totalMoney"></span><span class="bill"></span>
+                <div class="TOTAL"><span class="student_sum totalMoney"></span><span class="bill"></span></div>
             </div>
         </div>
+        </div>
+        </div>
+        
     </div>
     <div class="wrap">
        <h3 class="snopy pen lastTitle">對保分行</h3>

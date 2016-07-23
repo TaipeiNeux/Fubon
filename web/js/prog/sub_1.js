@@ -162,19 +162,19 @@ $('#Ran-2-SliderVal').on('blur', function() {
     if (isNumber == true) {
         if ($(this).val() == '') {
             err.text('請輸入年利率');
-            $('#Ran-2-SliderVal').val(1.62);
+            $('#Ran-2-SliderVal').val(1.15);
         } 
         else {
             if ($(this).val() <= 0) {
                 err.text('年利率限輸入數字');
-                $('#Ran-2-SliderVal').val(1.62);
+                $('#Ran-2-SliderVal').val(1.15);
             } else if ($(this).val() >= 20) {
                 err.text('年利率限輸入20%以下');
-                $('#Ran-2-SliderVal').val(1.62);
+                $('#Ran-2-SliderVal').val(1.15);
             } else if (rateInput % 1) { //檢查小數點是否超過兩位數
                 if (rateInput.split(".")[1].length > 2) {
                     err.text('年利率限輸入小數點二位數');
-                    $('#Ran-2-SliderVal').val(1.62);
+                    $('#Ran-2-SliderVal').val(1.15);
                 } else {
                     err.text('');
                     computeLoan();
@@ -192,7 +192,7 @@ $('#Ran-2-SliderVal').on('blur', function() {
         }
     } else if (isNumber == false) {
         err.text('年利率限輸入數字');
-        $('#Ran-2-SliderVal').val(1.62);
+        $('#Ran-2-SliderVal').val(1.15);
     }
 });
 
@@ -215,7 +215,11 @@ $('#Ran-3-SliderVal').on('blur', function() {
             } else if ($(this).val() == '') {
                 err.text('請輸入借款學期數');
                 $('#Ran-3-SliderVal').val(1);
-            } else {
+            }else if($(this).val().indexOf('.') != -1){
+				err.text('借款學期數限請輸入大於0之整數');
+                $('#Ran-3-SliderVal').val(1);
+			} 
+			else {
                 err.text('');
                 computeLoan();
                 regionMonth();

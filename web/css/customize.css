@@ -218,6 +218,7 @@ display: block;
 
 .QAListTab > ul > li > a {
     font-size: 16px;
+    z-index:20;
 }
 
 .QAList ul > li a p {
@@ -2524,6 +2525,7 @@ body.register_1 label.sqr-label {
 /* IE11 fix 查詢繳款明細 datIcon and password隱碼大小 */
 @media screen and (-ms-high-contrast: active),
 (-ms-high-contrast: none) {
+    
     body#body input[type="password"] {
         font-family: sans-serif;
     }
@@ -2576,6 +2578,7 @@ body.register_1 label.sqr-label {
     .QAListTab > ul > li > a.active {
         border-bottom: none;
         border-left: 20px solid #666767;
+        z-index:20;
     }
     
     .sub .container {
@@ -3179,6 +3182,10 @@ h4.modal-title {
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
 
 /* IE10+ CSS styles go here by Wade */
+    
+    #body .tab_arrow {
+        top: 3px;
+    }
 
     .path ul li a:after {
         width: 5px;
@@ -3360,3 +3367,5 @@ body.memberLogin_1 .register_1 {
         max-width: 600px;
     }
 }
+
+

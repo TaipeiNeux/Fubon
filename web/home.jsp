@@ -37,7 +37,27 @@
         function getToken() {
             return _TOKENKEY;
         }
+
+            //mike detect ipad 
+        $(window).on("orientationchange", function() {
+            console.log("width" + $(window).width());
+            $("#frame1").css("width", $(window).width());
+            $("#frame1").css("min-width", $(window).width());
+            $("#frame1").css("max-width", $(window).width());
+
+        });
     </script>
+    <style>
+        #frame1{
+            max-width:100%;
+            max-height:100%;
+            min-width:100%;
+            min-height:100%;
+            width:100%;
+            height:100%;
+           
+        }
+    </style>
 	
 	<!--[if lt IE 9]>
     <script src="js/html5shiv.min.js?v=<%=System.currentTimeMillis()%>"></script>

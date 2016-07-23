@@ -40,6 +40,7 @@ $(document).ready(function() {
             var isEtabs = jsondeferment.isEtabs;
             var isArrears = jsondeferment.isArrears;
 			var hasAccount = jsondeferment.hasAccount;//是否有貸款帳號
+			var isAccountClear = jsondeferment.isAccountClear;
 
 			
             if (isLogin == 'Y') { //有登入
@@ -50,6 +51,10 @@ $(document).ready(function() {
                 }
                 else if(isEtabs == 'N') {
                     redirectNoPermit('2','申請「延後/提前還款」');
+					goNextStep = false;
+                }
+				else if(isAccountClear == 'Y') {
+                    redirectNoPermit('5','申請「延後/提前還款」');
 					goNextStep = false;
                 }
 				else {

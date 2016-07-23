@@ -12,6 +12,7 @@ import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Vector;
@@ -28,7 +29,7 @@ public class Apply4 implements ILogic {
     public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception {
 
         String loanPrice = "",loans = "" , freedomLife = "", accordingToBillLife = "",uploadFileIdCardPosition = "img/dh.jpg", uploadFileIdCardNegative = "img/dh.jpg",uploadFileRegistration = "img/dh.jpg",uploadFileLowIncome = "";
-        String uploadFileIdCardPosition_docId = "", uploadFileIdCardNegative_docId = "", uploadFileRegistration_docId = "", uploadFileLowIncome_docId = "";
+//        String uploadFileIdCardPosition_docId = "", uploadFileIdCardNegative_docId = "", uploadFileRegistration_docId = "", uploadFileLowIncome_docId = "";
 
         String isPositive_hidden = "",isNegative_hidden = "",register_hidden = "",idPositiveViewName_hidden = "" , idNegativeViewName_hidden = "" , registerViewName_hidden = "",lowIncome_hidden = "",lowIncomeViewName_hidden = "";
 
@@ -67,27 +68,32 @@ public class Apply4 implements ILogic {
         Vector<DataObject> docResult = new Vector<DataObject>();
         dao.queryByCommand(docResult,query,null,null);
 
+        JSONArray idCardPosition = new JSONArray();
+        JSONArray idCardNegative = new JSONArray();
+        JSONArray registration = new JSONArray();
+        JSONArray lowIncome = new JSONArray();
+
         if(docResult.size() != 0) {
             for(DataObject d : docResult) {
                 String docId = d.getValue("DocId");
                 String docType = d.getValue("DocType");
                 String originalFileName = d.getValue("original_file_name");
 
+                JSONObject tmp = new JSONObject();
+                tmp.put("fileName",originalFileName);
+                tmp.put("docId",docId);
+
                 if("1".equalsIgnoreCase(docType)) {
-                    uploadFileIdCardPosition = originalFileName;
-                    uploadFileIdCardPosition_docId = docId;
+                    idCardPosition.put(tmp);
                 }
                 else if("2".equalsIgnoreCase(docType)) {
-                    uploadFileIdCardNegative = originalFileName;
-                    uploadFileIdCardNegative_docId = docId;
+                    idCardNegative.put(tmp);
                 }
                 else if("3".equalsIgnoreCase(docType)) {
-                    uploadFileRegistration = originalFileName;
-                    uploadFileRegistration_docId = docId;
+                    registration.put(tmp);
                 }
                 else if("4".equalsIgnoreCase(docType)) {
-                    uploadFileLowIncome = originalFileName;
-                    uploadFileLowIncome_docId = docId;
+                    lowIncome.put(tmp);
                 }
             }
         }
@@ -99,15 +105,15 @@ public class Apply4 implements ILogic {
         accordingToBill.put("life",accordingToBillLife);
 
         JSONObject uploadFile = new JSONObject();
-        uploadFile.put("idCardPosition",uploadFileIdCardPosition);
-        uploadFile.put("idCardNegative",uploadFileIdCardNegative);
-        uploadFile.put("registration",uploadFileRegistration);
-        uploadFile.put("lowIncome",uploadFileLowIncome);
+        uploadFile.put("idCardPosition",idCardPosition);
+        uploadFile.put("idCardNegative",idCardNegative);
+        uploadFile.put("registration",registration);
+        uploadFile.put("lowIncome",lowIncome);
 
-        uploadFile.put("idCardPosition_docId",uploadFileIdCardPosition_docId);
-        uploadFile.put("idCardNegative_docId",uploadFileIdCardNegative_docId);
-        uploadFile.put("registration_docId",uploadFileRegistration_docId);
-        uploadFile.put("lowIncome_docId",uploadFileLowIncome_docId);
+//        uploadFile.put("idCardPosition_docId",uploadFileIdCardPosition_docId);
+//        uploadFile.put("idCardNegative_docId",uploadFileIdCardNegative_docId);
+//        uploadFile.put("registration_docId",uploadFileRegistration_docId);
+//        uploadFile.put("lowIncome_docId",uploadFileLowIncome_docId);
 
         content.put("loanPrice",loanPrice);
         content.put("loans",loans);

@@ -172,52 +172,67 @@ public class DBUtils {
     }
 
     //取得當月非營業日
-    public static List<String> getNoBusinessDay(String yyyyMM) {
+    public static void getNoBusinessDay(String yyyy,String MM,List<String> noBusinessDays) {
 
-        List<String> dayList = new ArrayList<String>();
         Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+
         try{
 
             conn = getConnection(PIBDataSource);
 
-            String startDate = yyyyMM + "01000000";
-            String endDate = DateUtil.addDate(startDate, Calendar.MONTH,1);
+            //抓近三個月的
+            for(int i=0;i<3;i++) {
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+                try{
+                    String yyyyMM = yyyy + MM;
+                    String startDate = yyyyMM + "01000000";
 
-            startDate = DateUtil.convert14ToDate("yyyy-MM-dd",startDate);
-            endDate = DateUtil.convert14ToDate("yyyy-MM-dd",endDate);
+                    startDate = DateUtil.addDate(startDate,Calendar.MONTH,i);
+                    String endDate = DateUtil.addDate(startDate, Calendar.MONTH,1);
 
-            //取回來的是像：2016-07-03 00:00:00
-            ps = conn.prepareStatement("select CALENDAR_DATE from BUSINESS_DAY where CALENDAR_DATE >= ? and CALENDAR_DATE <= ? and FLAG = ?");
-            ps.setDate(1, new Date(DateUtil.formatString2Date(startDate, DateUtil.getDateFormat(startDate)).getTime()));
-            ps.setDate(2, new Date(DateUtil.formatString2Date(endDate, DateUtil.getDateFormat(endDate)).getTime()));
-            ps.setInt(3, 0);
-            rs = ps.executeQuery();
-            while(rs.next()) {
-                String date = rs.getString("CALENDAR_DATE");
+                    startDate = DateUtil.convert14ToDate("yyyy-MM-dd",startDate);
+                    endDate = DateUtil.convert14ToDate("yyyy-MM-dd",endDate);
 
-                //轉成14碼後再轉成日期格式
-                date = DateUtil.convertDateTo14(date);
-                date = DateUtil.convert14ToDate("yyyy-MM-dd",date);
+                    //取回來的是像：2016-07-03 00:00:00
+                    ps = conn.prepareStatement("select CALENDAR_DATE from BUSINESS_DAY where CALENDAR_DATE >= ? and CALENDAR_DATE <= ? and FLAG = ?");
+                    ps.setDate(1, new Date(DateUtil.formatString2Date(startDate, DateUtil.getDateFormat(startDate)).getTime()));
+                    ps.setDate(2, new Date(DateUtil.formatString2Date(endDate, DateUtil.getDateFormat(endDate)).getTime()));
+                    ps.setInt(3, 0);
+                    rs = ps.executeQuery();
+                    while(rs.next()) {
+                        String date = rs.getString("CALENDAR_DATE");
 
-                //放入的是只有yyyy-MM-dd格式
-                dayList.add(date);
+                        //轉成14碼後再轉成日期格式
+                        date = DateUtil.convertDateTo14(date);
+                        date = DateUtil.convert14ToDate("yyyy-MM-dd",date);
+
+                        //放入的是只有yyyy-MM-dd格式
+                        noBusinessDays.add(date);
+                    }
+                }catch(Exception ex) {
+                    ex.printStackTrace();
+                }finally{
+                    try {
+                        if (rs != null) rs.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        if (ps != null) ps.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
             }
+
+
         }catch(Exception e) {
             e.printStackTrace();
         }finally {
-            try {
-                if (rs != null) rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                if (ps != null) ps.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
 
             try {
                 if (conn != null) conn.close();
@@ -226,6 +241,5 @@ public class DBUtils {
             }
         }
 
-        return dayList;
     }
 }

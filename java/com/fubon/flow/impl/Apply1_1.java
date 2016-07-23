@@ -15,6 +15,7 @@ import com.fubon.mark.MarkBean;
 import com.fubon.utils.ProjUtils;
 import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
+import com.neux.utility.orm.dal.QueryConfig;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
@@ -46,6 +47,14 @@ public class Apply1_1 extends MarkFlow {
         String domicileAddressCityId = "", domicileAddressCityName = "", domicileAddressZipCode = "",domicileAddressZipCodeName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "",teleAddressAddress = "";
         String sameAddrHidden = "";
+
+        //如果有強制回來，清除文件跟資料
+        if("apply1_1".equalsIgnoreCase(queryStringInfo.getParam("step"))) {
+            //清除文件
+            SQLCommand update = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+            update.addParamValue(userId);
+            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+        }
 
         //若有草稿就裝到content，沒有才走邏輯判斷
         if(draftData != null) {

@@ -52,14 +52,20 @@
         try{
             conn = ((SQLConnection)ORMAPI.getConnection("db")).getConnection();
 
-            ps = conn.prepareStatement("update Document_Data set Data = ? where DataNo = ?");
+            documentData = DaoFactory.getDefaultDataObject("Document_Data");
+            documentData.setValue("DataNo",DataNo);
+            if(dao.querySingle(documentData,null)) {
+                ps = conn.prepareStatement("update Document_Data set Data = ? where DataNo = ?");
 
-            is = new FileInputStream(file);
-            ps.setBinaryStream(1, is, (int) file.length());
-            ps.setString(2,DataNo);
-            ps.execute();
+                is = new FileInputStream(file);
+                ps.setBinaryStream(1, is, (int) file.length());
+                ps.setString(2,documentData.getValue("DataNo"));
+                ps.execute();
 
-            isSuccess = true;
+                isSuccess = true;
+            }
+
+
         }catch(Exception e) {
             e.printStackTrace();
         }finally{
@@ -97,7 +103,7 @@
 
                 is = new FileInputStream(file);
                 ps.setBinaryStream(1, is, (int) file.length());
-                ps.setString(2,DataNo);
+                ps.setString(2,documentData.getValue("DataNo"));
                 ps.execute();
 
                 isSuccess = true;

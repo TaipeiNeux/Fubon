@@ -1,3 +1,6 @@
+<%@ page import="java.net.Inet4Address" %>
+<%@ page import="java.net.InetAddress" %>
+<%@ page import="org.apache.commons.lang3.StringUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%
     request.setCharacterEncoding("utf-8");
@@ -6,11 +9,8 @@
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
 
-    String apName = java.net.InetAddress.getLocalHost().getHostName();
+    String addr = ProjUtils.getAddr();
 
-    if(apName.length() >= 3) {
-        apName = apName.substring(apName.length()-3,apName.length());
-    }
 %>
 <!DOCTYPE html -ms-overflow-style: scrollbar;>
 
@@ -18,7 +18,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimum-scale=1.0" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="">
@@ -29,11 +29,10 @@
     <meta property="og:title" content="" />
     <meta property="og:description" content="" />
     <meta property="og:image" content="" />
-    <meta name="generator" content="<%=apName%>">
+    <meta name="generator" content="<%=addr%>">
 
     <title>台北富邦銀行 | 就學貸款</title>
     <link rel="shortcut icon" href="img/favicon.ico?v=2">
-    <link rel="shortcut icon" href="http://garden.decoder.com.tw/portal/demo/fubon/img/favicon.ico">
 	
     <link rel="stylesheet" href="css/bootstrap.min.css?v=<%=System.currentTimeMillis()%>">
     <link rel="stylesheet" href="css/bootstrap-select.min.css?v=<%=System.currentTimeMillis()%>">

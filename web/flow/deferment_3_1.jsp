@@ -1,19 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
         
-        <input type="hidden" name="date" value="">
-		<input type="hidden" class="fileSize" name="isPositive_hidden" value="">
-       <input type="hidden" class="fileSize" name="isNegative_hidden" value="">
-       <input type="hidden" class="fileSize" name="studentIdPositive_hidden" value="">
-       <input type="hidden" class="fileSize" name="studentIdNegative_hidden" value="">
-       <input type="hidden" class="fileSize" name="additional_hidden" value="">
-	   
-	   <input type="hidden" name="idPositiveViewName_hidden" value="">
-       <input type="hidden" name="idNegativeViewName_hidden" value="">
-       <input type="hidden" name="studentIdPositiveViewName_hidden" value="">
-       <input type="hidden" name="studentIdNegativeViewName_hidden" value="">
-       <input type="hidden" name="additionalViewName_hidden" value="">
-
         <h3 class="snopy pen">申請原因
                 <div class="editBtnBoxbottom">
                   <a href="deferment.jsp?step=deferment1" class="editBtn">修改</a>
@@ -54,114 +41,108 @@
                 </tr>
             </thead>
             <tbody id="uploadObj">
-                <tr>
+                <tr id="isPositive_0" class = "isPositive">
                     <td class="file-photo">
                         <a>
-                            <img id="idPositivePhoto" src="">
+                            <img id="isPositivePhoto_img_0" src="">
                         </a>
                     </td>
-                    <td class="file-zh">身份證正面影本</td>
-                    <td class="file-en" id="idPositiveImg">無</td>
-                    <td class="file-modify"><a id="idPositiveChange" style="display:none">修改檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-					</td>
-                    <td class="file-upload"><a id="idPositiveUpload">上傳檔案<input type="file" name="isPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-zh">身分證正面影本</td>
+                    <td class="file-en" id="isPositiveImg_0">無</td>
+                    <td class="file-upload"><a id="isPositiveUpload_0">上傳檔案<input type="file" name="isPositiveFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="idPositiveView" class=""></a>
+                        <a id="isPositiveView_0" class=""></a>
                     </td>
 
                 </tr>
 
-                <tr>
-                    <td class="clickView" colspan="4" style="display:none" id="pos">
+                <tr id="isPositive_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="isPositiveViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="idPositiveViewImg" src="img/dh.jpg">-->
-								<iframe id="idPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="isPositiveViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr>
+                <tr id="isNegative_0" class="isNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="idNegativePhoto" src="">
+                            <img id="isNegativePhoto_0" src="">
                         </a>
                     </td>
-                    <td class="file-zh">身份證反面影本</td>
-                    <td class="file-en" id="idNegativeImg">無</td>
-                    <td class="file-modify"><a id="idNegativeChange" style="display:none">修改檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-                    </td>
-                    <td class="file-upload"><a id="idNegativeUpload">上傳檔案<input type="file" name="isNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-zh">身分證反面影本</td>
+                    <td class="file-en" id="isNegativeImg_0">無</td>
+                    <td class="file-upload"><a id="isNegativeUpload_0">上傳檔案<input type="file" name="isNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="idNegativeView"></a>
+                        <a id="isNegativeView_0"></a>
                     </td>
                 </tr>
 
-                <tr>
-                    <td class="clickView" colspan="4" style="display:none" id="neg">
+                <tr id="isNegative_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="isNegativeViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="idNegativeViewImg" src="img/dh.jpg">-->
-								<iframe id="idNegativeViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="isNegativeViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr id="studentIdPositive" style="display:none">
+                <tr id="studentIdPositive_0" style="display:none" class="studentIdPositive">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdPositivePhoto" src="">
+                            <img id="studentIdPositivePhoto_0" src="">
                         </a>
                     </td>
-                    <td class="file-zh">學生證正面</td>
-                    <td class="file-en" id="studentIdPositiveImg">無</td>
-                    <td class="file-modify"><a id="studentIdPositiveChange" style="display:none">修改檔案<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-                    </td>
-                    <td class="file-upload"><a id="studentIdPositiveUpload">上傳檔案<input type="file" name="studentIdPositiveFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-zh">學生證正面影本(須蓋有繼續升學學校之註冊章戳)</td>
+                    <td class="file-en" id="studentIdPositiveImg_0">無</td>
+                    <td class="file-upload"><a id="studentIdPositiveUpload_0">上傳檔案<input type="file" name="studentIdPositiveFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
-                        <a id="studentIdPositiveView"></a>
+                        <a id="studentIdPositiveView_0"></a>
                     </td>
                 </tr>
 
-                <tr id="studentIdPositive_view" style="display:none">
-                    <td class="clickView" colspan="4" style="display:none" id="sPos">
+                <tr id="studentIdPositive_view_0" style="display:none">
+                    <td class="clickView" colspan="4" style="display:none" id="studentIdPositiveViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="studentIdPositiveViewImg" src="">-->
-								<iframe id="studentIdPositiveViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="studentIdPositiveViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>
                 </tr>
 
-                <tr id="studentIdNegative" style="display:none">
+                <tr id="studentIdNegative_0" style="display:none" class="studentIdNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdNegativePhoto" src="">
+                            <img id="studentIdNegativePhoto_0" src="">
                         </a>
                     </td>
-                    <td class="file-zh">學生證反面</td>
-                    <td class="file-en" id="studentIdNegativeImg">無</td>
-                    <td class="file-modify"><a id="studentIdNegativeChange" style="display:none">修改檔案<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
-                    </td>
-                    <td class="file-upload"><a id="studentIdNegativeUpload">上傳檔案<input type="file" name="studentIdNegativeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-zh">學生證反面影本(須蓋有繼續升學學校之註冊章戳)</td>
+                    <td class="file-en" id="studentIdNegativeImg_0">無</td>
+                    <td class="file-upload">
+						
+					<a id="studentIdNegativeUpload_0">上傳檔案</a>
                     </td>
                     <td class="file-view">
-                        <a id="studentIdNegativeView"></a>
+                        <a id="studentIdNegativeView_0"></a>
                     </td>
                 </tr>
 
-                <tr id="studentIdNegative_view" style="display:none">
-                    <td class="clickView" colspan="4" style="display:none" id="sNeg">
+                <tr id="studentIdNegative_view_0" style="display:none">
+                    <td class="clickView" colspan="4" style="display:none" id="studentIdNegativeViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
-                                <!--<img id="studentIdNegativeViewImg" src="">-->
-								<iframe id="studentIdNegativeViewImg" src="" style="width:100%; height: 100%;"></iframe>
+
+                                <iframe id="studentIdNegativeViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>

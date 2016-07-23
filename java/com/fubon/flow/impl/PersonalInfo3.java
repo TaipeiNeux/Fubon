@@ -1,5 +1,7 @@
 package com.fubon.flow.impl;
 
+import com.fubon.utils.MessageUtils;
+import com.fubon.utils.bean.MailBean;
 import com.fubon.webservice.WebServiceAgent;
 import com.fubon.webservice.bean.RQBean;
 import com.fubon.webservice.bean.RSBean;
@@ -295,13 +297,11 @@ public class PersonalInfo3 implements ILogic {
                 }catch(Exception ex) {
                     ex.printStackTrace();
 
-                    //TODO 要編ErrorCode
                     if(StringUtils.isEmpty(errorCode)) errorCode = "99";
                     errorMsg = "系統更新失敗["+ex.getMessage()+"]";
                 }
             }
             else {
-                //TODO 要編ErrorCode
                 errorCode = "11";
                 errorMsg = "查無此資料";
             }
@@ -364,6 +364,29 @@ public class PersonalInfo3 implements ILogic {
         content.put("registerDate",registerDate);
         content.put("registerTime",registerTime);
 
+        //寄發Email
+        String msg = StringUtils.isEmpty(errorCode) ? "成功" : "失敗";
+        String mailTitle = MessageUtils.forgetTitle;
+        mailTitle = StringUtils.replace(mailTitle, "{result}", msg);
+
+        MailBean mailBean = new MailBean("personalInfo");
+        mailBean.setReceiver(email);
+        mailBean.setTitle(mailTitle);
+        mailBean.addResultParam("result",(StringUtils.isEmpty(errorCode) ? "<img src=\"{host}/img/na-14.png\">變更成功" : "<img src=\"{host}/img/na-16.png\">變更失敗("+errorCode+")"+errorMsg));
+
+        //加入變更身份
+        mailBean.addResultParam("id",ProjUtils.toIDMark(id));
+        mailBean.addResultParam("name",ProjUtils.toNameMark(name));
+        mailBean.addResultParam("birthday","民國" + birthday.substring(0,3) + "年" + birthday.substring(3,5) + "月" + birthday.substring(5) + "日");
+        mailBean.addResultParam("marryStatus","Y".equals(marryStatus) ? "已婚" : "未婚");
+        mailBean.addResultParam("domicilePhone","("+domicilePhoneRegionCode+")" + ProjUtils.toTelMark(domicilePhonePhone));
+        mailBean.addResultParam("telePhone","("+telePhoneRegionCode+")" + ProjUtils.toTelMark(telePhonePhone));
+        mailBean.addResultParam("email",ProjUtils.toEMailMark(email));
+        mailBean.addResultParam("cellPhone",ProjUtils.toTelMark(cellPhone));
+        mailBean.addResultParam("domicileAddressAddress",ProjUtils.toAddressMark(domicileAddressAddress));
+        mailBean.addResultParam("teleAddress",ProjUtils.toAddressMark(teleAddressAddress));
+
+        MessageUtils.sendEmail(mailBean);
 
         String logResult = StringUtils.isEmpty(errorMsg) ? "變更個人基本資料成功" : errorMsg;
         ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"getDraftData",logResult);

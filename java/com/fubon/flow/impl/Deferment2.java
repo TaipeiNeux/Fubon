@@ -14,6 +14,7 @@ import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -33,12 +34,11 @@ public class Deferment2 implements ILogic {
 
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
         String id = loginUserBean.getCustomizeValue("IdNo") , eliIndex="";
-        String isPositiveFile = "", isNegativeFile = "", studentIdPositiveFile = "", studentIdNegativeFile = "", additionalFile = "",
-        		isPositiveFile_docId = "", isNegativeFile_docId = "", studentIdPositiveFile_docId = "", studentIdNegativeFile_docId = "", additionalFile_docId = "";
 
         String idPositiveViewName_hidden = "",idNegativeViewName_hidden = "",studentIdPositiveViewName_hidden = "",studentIdNegativeViewName_hidden = "",additionalViewName_hidden = "";
-
         String isPositive_hidden = "",isNegative_hidden = "",studentIdPositive_hidden = "",studentIdNegative_hidden = "",additional_hidden = "";
+
+        String RadioClicked = "";//是否已勾選
 
         //若有草稿就裝到content
         if(draftData != null) {
@@ -54,6 +54,8 @@ public class Deferment2 implements ILogic {
             if(root.element("studentIdPositive_hidden") != null) studentIdPositive_hidden = root.element("studentIdPositive_hidden").getText();
             if(root.element("studentIdNegative_hidden") != null) studentIdNegative_hidden = root.element("studentIdNegative_hidden").getText();
             if(root.element("additional_hidden") != null) additional_hidden = root.element("additional_hidden").getText();
+
+            if(root.element("RadioClicked") != null) RadioClicked = root.element("RadioClicked").getText();
         }
 
         //從第1步取eliIndex
@@ -65,36 +67,44 @@ public class Deferment2 implements ILogic {
         eliIndex = step1Root.element("eliIndex").getText();
         
         //抓上傳文件(只抓還沒被更新過的
-        SQLCommand query = new SQLCommand("select DocId, DocType, original_file_name from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
+        SQLCommand query = new SQLCommand("select DocId, DocType, original_file_name,Size from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
         query.addParamValue(userId);
         Vector<DataObject> docResult = new Vector<DataObject>();
         dao.queryByCommand(docResult,query,null,null);
+
+        JSONArray isPositiveFile = new JSONArray();
+        JSONArray isNegativeFile = new JSONArray();
+        JSONArray studentIdPositiveFile = new JSONArray();
+        JSONArray studentIdNegativeFile = new JSONArray();
+        JSONArray additionalFile = new JSONArray();
 
         if(docResult.size() != 0) {
             for(DataObject d : docResult) {
                 String docId = d.getValue("DocId");
                 String docType = d.getValue("DocType");
                 String originalFileName = d.getValue("original_file_name");
+                String size = d.getValue("Size");
+
+                JSONObject tmp = new JSONObject();
+                tmp.put("fileName",originalFileName);
+                tmp.put("docId",docId);
+                tmp.put("size",size);
+                tmp.put("fileNameExtension",originalFileName.substring(originalFileName.lastIndexOf(".") + 1));
 
                 if("1".equalsIgnoreCase(docType)) {
-                	isPositiveFile = originalFileName;
-                	isPositiveFile_docId = docId;
+                    isPositiveFile.put(tmp);
                 }
                 else if("2".equalsIgnoreCase(docType)) {
-                	isNegativeFile = originalFileName;
-                	isNegativeFile_docId = docId;
+                    isNegativeFile.put(tmp);
                 }
                 else if("3".equalsIgnoreCase(docType)) {
-                	studentIdPositiveFile = originalFileName;
-                	studentIdPositiveFile_docId = docId;
+                    studentIdPositiveFile.put(tmp);
                 }
                 else if("4".equalsIgnoreCase(docType)) {
-                	studentIdNegativeFile = originalFileName;
-                	studentIdNegativeFile_docId = docId;
+                    studentIdNegativeFile.put(tmp);
                 }
                 else if("5".equalsIgnoreCase(docType)) {
-                	additionalFile = originalFileName;
-                	additionalFile_docId = docId;
+                    additionalFile.put(tmp);
                 }
             }
         }
@@ -105,12 +115,6 @@ public class Deferment2 implements ILogic {
         uploadFile.put("studentIdPositiveFile",studentIdPositiveFile);
         uploadFile.put("studentIdNegativeFile",studentIdNegativeFile);
         uploadFile.put("additionalFile",additionalFile);
-        
-        uploadFile.put("isPositiveFile_docId",isPositiveFile_docId);
-        uploadFile.put("isNegativeFile_docId",isNegativeFile_docId);
-        uploadFile.put("studentIdPositiveFile_docId",studentIdPositiveFile_docId);
-        uploadFile.put("studentIdNegativeFile_docId",studentIdNegativeFile_docId);
-        uploadFile.put("additionalFile_docId",additionalFile_docId);
 
 
         content.put("isRecord",isRecord);
@@ -118,6 +122,7 @@ public class Deferment2 implements ILogic {
         content.put("eliIndex",eliIndex);
         content.put("uploadFile",uploadFile);
         content.put("eligibilityText",eligibilityText);
+        content.put("RadioClicked",RadioClicked);
 
         content.put("idPositiveViewName_hidden",idPositiveViewName_hidden);
         content.put("idNegativeViewName_hidden",idNegativeViewName_hidden);

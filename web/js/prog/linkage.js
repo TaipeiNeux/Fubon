@@ -200,7 +200,7 @@ var linkage = {
             var nameArray = [];
             nameArray.push('<option value="">請選擇學校</option>');
             $.each(jsonNameArr, function(i, nameData) {
-                nameArray.push('<option value=' + nameData.schoolId + '>' + nameData.schoolName + '</option>');
+                nameArray.push('<option class=' + nameData.studyYears + ' value=' + nameData.schoolId + '>' + nameData.schoolName + '</option>');
             });
         
             nameSelect.empty();

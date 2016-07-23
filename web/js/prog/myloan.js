@@ -19,7 +19,7 @@ var Myloan_controller = (function(){
                 var hasAccount = client_data.hasAccount; //是否有貸款帳號
                 var isArrears = client_data.isArrears; //是否無欠款
 
-                if(hasAccount == 'N' || isArrears == 'N') {
+                if(hasAccount == 'N' || isArrears == 'N' || client_data.data.client_detail.length == 0) {
                     redirectNoPermit('1','查詢「我的貸款」');
                 }
                 else if(isEtabs == 'N') {

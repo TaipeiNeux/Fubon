@@ -236,72 +236,116 @@ function deferment_2_valid() {
     }
 
     //檢查文件是否都有上傳
-    var idpText = $('#idPositiveImg').text();
-    var idnText = $('#idNegativeImg').text();
-    if (idpText == '無' || idnText == '無') {
-        $('#hasDocument').show();
-        result = false;
-    } else {
-        $('#hasDocument').hide();
-        result = true;
-    }
+	var mustUploadFiles = ['isPositive', 'isNegative'];
+	
+	//先檢查有幾個相同類型文件的檔案
+	$.each(mustUploadFiles, function(index, value){
+		var len = $('.'+value+'').length;
+		if(len == 1){
+			var text =  $('#'+value+'Img_0').text();
+			if( text == '無' ){
+				$('#hasDocument').show();
+				result = false;
+			}
+			else{
+				$('#hasDocument').hide();
+				result = true;
+			}
+		}
+	});
 
     if (eliIndex == '2' || eliIndex == '4' || eliIndex == '5' || eliIndex == '6' || eliIndex == '7') {
-        var addText = $('#additionalImg').text();
-        if (addText == '無') {
-            $('#hasDocument').show();
-            result = false;
-        } else {
-            $('#hasDocument').hide();
-            result = true;
-        }
+        var len = $('.additional').length;
+		if(len == 1){
+			var text =  $('#additionalImg_0').text();
+			if( text == '無' ){
+				$('#hasDocument').show();
+				result = false;
+			}
+			else{
+				$('#hasDocument').hide();
+				result = true;
+			}
+		}
     } else if (eliIndex == '1' || eliIndex == '3') {
         if (yesLen != 0) {
-            var spText = $('#studentIdPositiveImg').text();
-            var snText = $('#studentIdNegativeImg').text();
-            if (spText == '無' || snText == '無') {
-                $('#hasDocument').show();
-                result = false;
-            } else {
-                $('#hasDocument').hide();
-                result = true;
-            }
+            var selectUploadFiles = ['studentIdPositive', 'studentIdNegative'];
+	
+			//先檢查有幾個相同類型文件的檔案
+			$.each(selectUploadFiles, function(index, value){
+				var len = $('.'+value+'').length;
+				if(len == 1){
+					var text =  $('#'+value+'Img_0').text();
+					if( text == '無' ){
+						$('#hasDocument').show();
+						result = false;
+					}
+					else{
+						$('#hasDocument').hide();
+						result = true;
+					}
+				}
+			});
         } else if (noLen != 0) {
-            var addText = $('#additionalImg').text();
-            if (addText == '無') {
-                $('#hasDocument').show();
-                result = false;
-            } else {
-                $('#hasDocument').hide();
-                result = true;
-            }
+            var len = $('.additional').length;
+			if(len == 1){
+				var text =  $('#additionalImg_0').text();
+				if( text == '無' ){
+					$('#hasDocument').show();
+					result = false;
+				}
+				else{
+					$('#hasDocument').hide();
+					result = true;
+				}
+			}
         }
     }
 
     //檢查上傳文件合計大小是否超過10MB
     //var size = $('.fileSize');
-	var trIDArray = [ 'studentIdPositive', 'studentIdNegative', 'addition' ];
-	var hiddenNameArray = [ 'studentIdPositive_hidden', 'studentIdNegative_hidden', 'additional_hidden' ];
+	var trClassArray = [ 'studentIdPositive', 'studentIdNegative', 'additional' ];
 	
-    var sizeSum = 0;
+	var sizeSum = 0;
+	var isPosSize = 0;
+	var isNegSize = 0;
+	
+	//2016-07-23 added by titan 直接算所有的檔案大小加總
+	var fileSizeArray = ['fileSize_isPositive','fileSize_isNegative','fileSize_studentIdPositive','fileSize_additional'];
+	$.each(fileSizeArray,function(i,className){
+		$('.' + className).each(function(j,sizeHidden){
+			var size = $(sizeHidden).val();
+			console.debug('className = ' + className + ',size = ' + size);
+			sizeSum += parseInt(size);
+		});
+	});
+	
+	console.debug('sizeSum = ' + sizeSum);
 	
 	//先把必上傳的文件之size加起來
-	isPosSize = parseInt($('[name="isPositive_hidden"]').val());
-	isNegSize = parseInt($('[name="isNegative_hidden"]').val());
+	/**
+	isPosLen = $('.fileSize_isPositive').length;
+	isNegLen = $('.fileSize_isNegative').length;
+	
+	for(var i = 0; i <= isPosLen-1; i++){
+		var oneSize = parseInt($('[name="isPositive_hidden'+i+'"]').val());
+		isPosSize = isPosSize + oneSize;
+	}
+	
+	for(var i = 0; i <= isNegLen-1; i++){
+		var oneSize = parseInt($('[name="isNegative_hidden'+i+'"]').val());
+		isNegSize = isNegSize + oneSize;
+	}
+	
 	sizeSum = isPosSize + isNegSize;
 	
 	//再把選擇性上傳的文件之size加起來
-	$.each(trIDArray, function(index, value){
-		var ckeckSize = $('#' + trIDArray[index] + '');
-		if(ckeckSize.is(":hidden") == false){	
-			var thisHidden = hiddenNameArray[index];
-			var thisSize = parseInt($('[name="' + thisHidden + '"]').val());
-			
-			sizeSum = sizeSum + thisSize;
-		}
-	});
+**/
+	
 	
 	var sizeResult = true;
+	//10MB = 10000000
+	
     if (sizeSum > 10000000) {
         $('#documentSize').show();
         sizeResult = false;
@@ -309,6 +353,7 @@ function deferment_2_valid() {
         $('#documentSize').hide();
         sizeResult = true;
     }
+	//sizeResult = true;
 
     if (sizeResult == true && result == true && radioResult == true) {
         return true;
@@ -321,41 +366,9 @@ function deferment_2_valid() {
 
 function deferment_3_1_valid() {
     //檢查上傳文件合計大小是否超過10MB
-    //var size = $('.fileSize');
-	var trIDArray = [ 'studentIdPositive', 'studentIdNegative', 'addition' ];
-	var hiddenNameArray = [ 'studentIdPositive_hidden', 'studentIdNegative_hidden', 'additional_hidden' ];
-	var sizeResult = true;
-    var sizeSum = 0;
+    
 	
-	//先把必上傳的文件之size加起來
-	isPosSize = parseInt($('[name="isPositive_hidden"]').val());
-	isNegSize = parseInt($('[name="isNegative_hidden"]').val());
-	sizeSum = isPosSize + isNegSize;
-	
-	//再把選擇性上傳的文件之size加起來
-	$.each(trIDArray, function(index, value){
-		var ckeckSize = $('#' + trIDArray[index] + '');
-		if(ckeckSize.is(":hidden") == false){	
-			var thisHidden = hiddenNameArray[index];
-			var thisSize = parseInt($('[name="' + thisHidden + '"]').val());
-			
-			sizeSum = sizeSum + thisSize;
-		}
-	});
-	
-    if (sizeSum > 10000000) {
-        $('#documentSize').show();
-        sizeResult = false;
-    } else {
-        $('#documentSize').hide();
-        sizeResult = true;
-    }
-
-    if (sizeResult) {
-        return true;
-    } else {
-        return false;
-    }
+	return true;
 }
 
 function deferment_3_2_valid() {
@@ -399,7 +412,7 @@ function deferment_1(content) {
 
     /*2016-06-02 added by titan for unbind preBtn*/
     var nextBtn = $('div.nextBtn');
-    nextBtn.append('<a href="#" class="gray prev  noBindingPreEvent">上一步</a>');
+    nextBtn.append('<a href="#" class="gray prev noBindingPreEvent">上一步</a>');
 
     var prev = nextBtn.find('.prev');
     prev.off('click').on('click', function(ev) {
@@ -534,88 +547,12 @@ function deferment_1(content) {
 
 //上傳證明文件須依上步驟學生所選定的申請原因，連動帶出以下學生要上傳的證明文件名稱
 function deferment_2(content) {
-    var isPositive_hidden = $('[name="isPositive_hidden"]');
-	var isNegative_hidden = $('[name="isNegative_hidden"]');
-	var studentIdPositive_hidden = $('[name="studentIdPositive_hidden"]');
-	var studentIdNegative_hidden = $('[name="studentIdNegative_hidden"]');
-	var additional_hidden = $('[name="additional_hidden"]');
-    
-	var idPositiveViewName_hiddenid = $('[name="idPositiveViewName_hidden"]');
-	var idNegativeViewName_hidden = $('[name="idNegativeViewName_hidden"]');
-	var studentIdPositiveViewName_hidden = $('[name="studentIdPositiveViewName_hidden"]');
-	var studentIdNegativeViewName_hidden = $('[name="studentIdNegativeViewName_hidden"]');
-	var additionalViewName_hidden = $('[name="additionalViewName_hidden"]');
-	
-	var isPositiveSize = content.isPositive_hidden;
-	var isNegativeSize = content.isNegative_hidden;
-	var studentIdPositiveSize = content.studentIdPositive_hidden;
-	var studentIdNegativeSize = content.studentIdNegative_hidden;
-	var additionalSize = content.additional_hidden;
-    
-    var idPositiveViewName = content.idPositiveViewName_hidden;
-	var idNegativeViewName = content.idNegativeViewName_hidden;
-	var studentIdPositiveViewName = content.studentIdPositiveViewName_hidden;
-	var studentIdNegativeViewName = content.studentIdNegativeViewName_hidden;
-	var additionalViewName = content.additionalViewName_hidden;
-    
-    //塞size和副檔名到hidden裡
-    isPositive_hidden.val(isPositiveSize);
-	isNegative_hidden.val(isNegativeSize);
-	studentIdPositive_hidden.val(studentIdPositiveSize);
-	studentIdNegative_hidden.val(studentIdNegativeSize);
-	additional_hidden.val(additionalSize);
-	
-	idPositiveViewName_hiddenid.val(idPositiveViewName);
-	idNegativeViewName_hidden.val(idNegativeViewName);
-	studentIdPositiveViewName_hidden.val(studentIdPositiveViewName);
-	studentIdNegativeViewName_hidden.val(studentIdNegativeViewName);
-	additionalViewName_hidden.val(additionalViewName);
-	
     showUploadFiles(content, 'Y');
     uploadEvent();
-	
 }
 
 function deferment_3_1(content) {
-
-	var isPositive_hidden = $('[name="isPositive_hidden"]');
-	var isNegative_hidden = $('[name="isNegative_hidden"]');
-	var studentIdPositive_hidden = $('[name="studentIdPositive_hidden"]');
-	var studentIdNegative_hidden = $('[name="studentIdNegative_hidden"]');
-	var additional_hidden = $('[name="additional_hidden"]');
     
-	var idPositiveViewName_hiddenid = $('[name="idPositiveViewName_hidden"]');
-	var idNegativeViewName_hidden = $('[name="idNegativeViewName_hidden"]');
-	var studentIdPositiveViewName_hidden = $('[name="studentIdPositiveViewName_hidden"]');
-	var studentIdNegativeViewName_hidden = $('[name="studentIdNegativeViewName_hidden"]');
-	var additionalViewName_hidden = $('[name="additionalViewName_hidden"]');
-	
-	var isPositiveSize = content.isPositive_hidden;
-	var isNegativeSize = content.isNegative_hidden;
-	var studentIdPositiveSize = content.studentIdPositive_hidden;
-	var studentIdNegativeSize = content.studentIdNegative_hidden;
-	var additionalSize = content.additional_hidden;
-    
-    var idPositiveViewName = content.idPositiveViewName_hidden;
-	var idNegativeViewName = content.idNegativeViewName_hidden;
-	var studentIdPositiveViewName = content.studentIdPositiveViewName_hidden;
-	var studentIdNegativeViewName = content.studentIdNegativeViewName_hidden;
-	var additionalViewName = content.additionalViewName_hidden;
-    
-    //塞size和副檔名到hidden裡
-    isPositive_hidden.val(isPositiveSize);
-	isNegative_hidden.val(isNegativeSize);
-	studentIdPositive_hidden.val(studentIdPositiveSize);
-	studentIdNegative_hidden.val(studentIdNegativeSize);
-	additional_hidden.val(additionalSize);
-	
-	idPositiveViewName_hiddenid.val(idPositiveViewName);
-	idNegativeViewName_hidden.val(idNegativeViewName);
-	studentIdPositiveViewName_hidden.val(studentIdPositiveViewName);
-	studentIdNegativeViewName_hidden.val(studentIdNegativeViewName);
-	additionalViewName_hidden.val(additionalViewName);
-
-
     /*2016-06-02 added by titan for unbind preBtn*/
     var nextBtn = $('div.nextBtn');
     var prev = nextBtn.find('.prev');
@@ -637,6 +574,7 @@ function deferment_3_1(content) {
 
     //延後/提前還款原因
     causeText.text(eligibilityText);
+
     //日期
     graDate.text(selectYear + '年' + selectMonth + '月' + selectDay + '日');
     date.val(selectYear + '年' + selectMonth + '月' + selectDay + '日');
@@ -644,10 +582,38 @@ function deferment_3_1(content) {
     if (eligibilityText == '延畢') {
         $('#gDate').hide();
     }
+	
+	//動態長紀錄size和副檔名的hidden
+	console.debug(content.uploadFile);
+	var docItem = content.uploadFile;
+	$.each(docItem, function(index, value){
+		var currentIndex = 0;
+		
+		console.debug('value = ' + value);
+		
+		$.each(value, function(i, v) {
+			//塞副檔名和size到hidden中
+			
+			console.debug(i + '=' + v);
+			
+			var sizeArray = '<input type="hidden" class="fileSize_'+index+'" name="'+index+'_hidden'+currentIndex+'" value="">';
+			var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+index+'Name_hidden'+currentIndex+'" value="">';
+			$('.processInner').prepend(sizeArray);
+			$('.processInner').prepend(FilenameExtension);
+			var sizeHidden = $('[name="'+index+'_hidden'+currentIndex+'"]');
+			var nameHidden = $('[name="'+index+'Name_hidden'+currentIndex+'"]');
+			sizeHidden.val(v.size);
+			nameHidden.val(v.fileNameExtension);
+			currentIndex++;
+		});
+	});
+
+    uploadEvent();
 
     //帶入前步驟上傳的文件
     showUploadFiles(content, 'N');
-    uploadEvent();
+
+
 
     //帶入電話號碼
     cell.text(cellPhone);
@@ -753,21 +719,29 @@ function deferment_4(content) {
 }
 
 //綁上傳事件
-function uploadEvent() {
-    $('input[type="file"]').on('change', function(ev) {
+function uploadEvent(input) {
+
+	var defaultFileArray = $('input[type="file"]');
+
+	if(input != undefined) {
+		defaultFileArray = input;
+	}
+
+//    alert(defaultFileArray.length);
+
+    defaultFileArray.off('change').on('change', function(ev) {
         ev.preventDefault();
 
         var inputFile = $(this);
         var inputFileName = inputFile.attr('name');
-        var inputTitle = inputFileName.split('F')[0];
-        var inputHidden = $('[name="' + inputTitle + '_hidden"]');
+		var inputTitle = inputFileName.split('F')[0];
+		var buttonId = inputFile.parent().attr('id');
+		var currentIndex = buttonId.substr(-1,1);
         var tr = inputFile.parents('tr:first');
         var selected_file_name = $(this).val();
         var fileSize = inputFile.context.files[0].size;
 
-        //checkSize(fileSize);
-
-
+        console.debug(inputTitle);
         console.debug(fileSize);
         console.debug(selected_file_name.substr(-3, 3));
 
@@ -802,8 +776,10 @@ function uploadEvent() {
                 var form = $('<form id="uploadForm" method="post" action="data?action=uploadDefermentDocument" enctype="Multipart/Form-Data" style="display:none;"></form>').prependTo('body');
 
                 //inputFile.clone().appendTo(form);
+				
                 inputFile.appendTo(form);
 				
+				//alert(form.html());
 				if ($('.ajax-loader').length == 0) {
 		            $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
 		        }
@@ -813,17 +789,25 @@ function uploadEvent() {
 
                     console.debug(response);
 
-                    if (response.isSuccess == 'Y') {
-                        inputHidden.val(fileSize);
+                    if (response.isSuccess == 'Y') {   //上傳成功
+						if(tr.find('td.file-upload a').text() == '上傳檔案'){
+							var nextIndex = parseInt(currentIndex) +1;
+							addNewFile(tr, inputTitle, nextIndex,'上傳檔案');
+						}
                         tr.find('td.file-upload a').text('修改檔案');
                         tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
                         tr.find('td.file-en').text(response.src);
                         tr.find('td.file-view a').addClass('active');
-                        form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
+                        form.find('input[type="file"]').appendTo(tr.find('td.file-modify a'));
 						
-						//塞副檔名到hidden中
-						var idName = tr.find('.file-view a').attr('id');
-						var nameHidden = $('[name="'+idName+'Name_hidden"]');
+						//塞副檔名和size到hidden中
+						var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
+						var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
+						$('.processInner').prepend(sizeArray);
+						$('.processInner').prepend(FilenameExtension);
+						var sizeHidden = $('[name="'+inputTitle+'_hidden'+currentIndex+'"]');
+						var nameHidden = $('[name="'+inputTitle+'Name_hidden'+currentIndex+'"]');
+						sizeHidden.val(fileSize);
 						nameHidden.val(fileType);
 
                         //更新預覽的圖及小網顯示的圖
@@ -832,10 +816,10 @@ function uploadEvent() {
                         var newURL = previewURL + newFile;
                         tr.next('tr').find('iframe').attr("src", newURL);
                         tr.find('td.file-photo img').attr("src", newURL);
-
+						
                         $('.ajax-loader').hide();
-
-                    } else {
+                    } 
+					else {
                         if (selected_file_name != '') alert('Upload Fail!!');
                         form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
 
@@ -849,174 +833,123 @@ function uploadEvent() {
     });
 }
 
+//顯示文件項目的字串
+function showFileString(name){
+	switch(name){
+		case 'isPositive':
+			return '身分證正面影本';
+		case 'isNegative':
+			return '身分證反面影本';
+		case 'studentIdPositive':
+			return '學生證正面影本(須蓋有繼續升學學校之註冊章戳)';
+		case 'studentIdNegative':
+			return '學生證反面影本(須蓋有繼續升學學校之註冊章戳)';
+		case 'additional':
+			switch(eliIndex){
+				case '1':
+					return '在學證明';
+				case '2':
+					return '教育主管機關核准文件影本';
+				case '3':
+					return '在學證明';
+				case '4':
+					return '鄉鎮市區公所兵役課出具之「應徵（召）服兵役證明書」或入營徵集令影本';
+				case '5':
+					return '教育實習證影本';
+				case '6':
+					return '相關休學、退學證明文件';
+				case '7':
+					return '畢業證書影本';
+			}
+	}
+}
+
+//動態長出同項目的新的上傳檔案
+function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
+	var trView;
+    
+    if(tr != null){
+        trView = tr.next();  
+    }
+
+
+    
+	console.debug('---------------------------');
+	console.debug(compareName);
+	
+	//動態再長一個"上傳檔案"的li
+	var fileName = showFileString(compareName);
+	var newTr = $('<tr id="'+compareName+'_'+nextIndex+'" class="'+compareName+'">' +
+				'<td class="file-photo">' +
+					'<a>' +
+						'<img id="'+compareName+'Photo_img_'+nextIndex+'" src="">' +
+					'</a>' +
+				'</td>' +
+				'<td class="file-zh">'+fileName+'</td>' +
+				'<td class="file-en" id="'+compareName+'Img_'+nextIndex+'">無</td>' +
+				'<td class="file-upload">'+
+					'<a class = "upload" id="'+compareName+'Upload_'+nextIndex+'">'+uploadDisplayName+'<input type="file" name="'+compareName+'File_'+nextIndex+'" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>' +
+				'</td>' +
+				'<td class="file-view">' +
+					'<a id="'+compareName+'View_'+nextIndex+'"></a>' +
+				'</td>' +
+			'</tr>' +
+			'<tr id="'+compareName+'_view_'+nextIndex+'" style="display:none">' +
+				'<td class="clickView" colspan="4" style="display:none" id="'+compareName+'ViewTag_'+nextIndex+'">' +
+					'<div class="dowitemContent" style="display:block">' +
+						'<div class="imgBox">' +
+							'<iframe id="'+compareName+'ViewImg_'+nextIndex+'" src="" style="width:100%; height: 100%;"></iframe>' +
+						'</div>' +
+					'</div>' +
+				'</td>' +
+		    '</tr>');
+
+    if(tr != null){
+        newTr.insertAfter(trView);
+    }
+    else if(tr == null){
+        $('#uploadObj').append(newTr);
+    }
+	
+	uploadEvent(newTr.find('input[type="file"]'));
+
+    //綁預覽事件
+    newTr.find('.file-view a').off('click').on('click', function() {
+        previewClickHandler($(this));
+    });
+
+    return newTr;
+}
+
 //帶預設值for上傳檔案
 function showUploadFiles(content, hasRadio) {
-    console.debug('showUploadFiles', content);
+	console.debug(content);
     eliIndex = content.eliIndex;
-    var isNegativeFile = content.uploadFile.isNegativeFile;
-    var isPositiveFile = content.uploadFile.isPositiveFile;
-    var studentIdNegativeFile = content.uploadFile.studentIdNegativeFile;
-    var studentIdPositiveFile = content.uploadFile.studentIdPositiveFile;
-    var additionalFile = content.uploadFile.additionalFile;
-    var isNegativeFile_docId = content.uploadFile.isNegativeFile_docId;
-    var isPositiveFile_docId = content.uploadFile.isPositiveFile_docId;
-    var studentIdNegativeFile_docId = content.uploadFile.studentIdNegativeFile_docId;
-    var studentIdPositiveFile_docId = content.uploadFile.studentIdPositiveFile_docId;
-    var additionalFile_docId = content.uploadFile.additionalFile_docId;
 
-    var additionalArr = [];
-    var studentIdCardRadio = $('#studentIdCardRadio');
-    var uploadObj = $('#uploadObj');
-    var idPositivePhoto = $('#idPositivePhoto');
-    var idPositiveImg = $('#idPositiveImg');
-    var idPositiveUpload = $('#idPositiveUpload');
-    var idPositiveChange = $('#idPositiveChange');
-    var idPositiveView = $('#idPositiveView');
-    var idPositiveViewImg = $('#idPositiveViewImg');
-    var idNegativePhoto = $('#idNegativePhoto');
-    var idNegativeImg = $('#idNegativeImg');
-    var idNegativeUpload = $('#idNegativeUpload');
-    var idNegativeChange = $('#idNegativeChange');
-    var idNegativeView = $('#idNegativeView');
-    var idNegativeViewImg = $('#idNegativeViewImg');
-    var studentIdPositivePhoto = $('#studentIdPositivePhoto');
-    var studentIdPositiveImg = $('#studentIdPositiveImg');
-    var studentIdPositiveUpload = $('#studentIdPositiveUpload');
-    var studentIdPositiveChange = $('#studentIdPositiveChange');
-    var studentIdPositiveView = $('#studentIdPositiveView');
-    var studentIdPositiveViewImg = $('#studentIdPositiveViewImg');
-    var studentIdPositive = $('#studentIdPositive');
-    var studentIdPositive_view = $('#studentIdPositive_view');
-    var studentIdNegativePhoto = $('#studentIdNegativePhoto');
-    var studentIdNegativeImg = $('#studentIdNegativeImg');
-    var studentIdNegativeUpload = $('#studentIdNegativeUpload');
-    var studentIdNegativeChange = $('#studentIdNegativeChange');
-    var studentIdNegativeView = $('#studentIdNegativeView');
-    var studentIdNegativeViewImg = $('#studentIdNegativeViewImg');
-    var studentIdNegative = $('#studentIdNegative');
-    var studentIdNegative_view = $('#studentIdNegative_view');
-
+	var studentIdCardRadio = $('#studentIdCardRadio');
     var previewURL = 'data?action=downloadDefermentDocument&isPreview=Y&docId=';
+	var fileItem = content.uploadFile;
+    var fileIndex = 0;
 
-    var isPositiveFileURL = previewURL + isPositiveFile_docId;
-    var isNegativeFileURL = previewURL + isNegativeFile_docId;
-    var studentIdNegativeFileURL = previewURL + studentIdNegativeFile_docId;
-    var studentIdPositiveFileURL = previewURL + studentIdPositiveFile_docId;
-    var additionalFileURL = previewURL + additionalFile_docId;
-
+    //長額外的文件項目    
     switch (eliIndex) {
-        case '1':
-            //addition.hide();
+        case '1':{
             studentIdCardRadio.show();
-            //var studentIdRadio = studentIdCardRadio.find('input:checked');
+            var studentIdPositive = $('.studentIdPositive');
+            var studentIdNegative = $('.studentIdNegative');
+            var studentIdPositive_view = $('#studentIdPositive_view_0');
+            var studentIdNegative_view = $('#studentIdNegative_view_0');
             var studentIdRadioPicked = studentIdCardRadio.find('input');
-
-            additionalArr.push('<tr id="addition" style="display:none">' +
-                '<td class="file-photo"><a><img id="additionalPhoto" src=""></a></td>' +
-                '<td class="file-zh">在學證明</td><td class="file-en" id="additionalImg">無</td>' +
-                '<td class="file-modify"><a id="additionalChange" style="display:none">修改檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td>' +
-                '<td class="file-upload"><a id="additionalUpload">上傳檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td>' +
-                '<td class="file-view"><a id="additionalView"></a></td></tr><tr>' +
-                '<td class="clickView" colspan="4" id="add" style="display:none">' +
-                '<div class="dowitemContent" style="display:block"><div class="imgBox">' +
-                '<iframe id="additionalViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
-
-            uploadObj.append(additionalArr.join(''));
-
-            var addition = $('#addition');
-
-            //等Titan給我值, 就拿掉
-            /*studentIdRadioPicked.on('click', function() {
-                var pickId = $(this).attr('id');
-                if (pickId == 'registerStamp_y') { //選擇"是"
-                    studentIdPositive.show();
-                    studentIdPositive_view.show();
-                    studentIdNegative.show();
-                    studentIdNegative_view.show();
-                    addition.hide();
-                } else if (pickId == 'registerStamp_n') { //選擇"否"
-                    studentIdPositive.hide();
-                    studentIdPositive_view.hide();
-                    studentIdNegative.hide();
-                    studentIdNegative_view.hide();
-                    addition.show();
-
-                }
-            });*/
-
+            var itemName = 'additional';
+            var additionName = showFileString(itemName);
+            addNewFile(null, itemName, fileIndex++,'上傳檔案');
+            var addition = $('.additional');
             var RadioClicked = content.RadioClicked;
             var RadioClickedHidden = $('[name="RadioClicked"]');
             //檢查是否需要點選radio
-            if (hasRadio == 'Y') { //step2   
-                studentIdRadioPicked.on('click', function() {
-                    var pickId = $(this).attr('id');
-                    if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
-						studentIdPositive.show();
-                        studentIdPositive_view.show();
-                        studentIdNegative.show();
-                        studentIdNegative_view.show();
-                        RadioClickedHidden.val('Y');
-                        addition.hide();
-                    } else if (pickId == 'registerStamp_n') { //若學生證無本期註冊章,就顯示在學證明
-						studentIdPositive.hide();
-                        studentIdPositive_view.hide();
-                        studentIdNegative.hide();
-                        studentIdNegative_view.hide();
-                        RadioClickedHidden.val('N');
-                        addition.show();
-                    }
-                });
+            if (hasRadio == 'Y') { //step2
+                studentIdRadioPicked.on('click', function(ev) {
 
-            } else if (hasRadio == 'N') { //step3-1
-                if (RadioClicked == 'Y') { //若前一步是選擇"是",就顯示學生證正反面
-                    studentIdPositive.show();
-                    studentIdPositive_view.show();
-                    studentIdNegative.show();
-                    studentIdNegative_view.show();
-                    addition.hide();
-                } else if (RadioClicked == 'N') { //若前一步是選擇"否",就顯示在學證明
-                    studentIdPositive.hide();
-                    studentIdPositive_view.hide();
-                    studentIdNegative.hide();
-                    studentIdNegative_view.hide();
-                    addition.show();
-                }
-            }
-
-            additionItem(additionalFile, additionalFile_docId, additionalFileURL);
-
-            if (hasRadio == 'Y') {
-                addition.hide();
-            } else {
-                if (RadioClicked == 'Y') {
-                    addition.hide();
-                }
-            }
-
-            break;
-        case '2':
-            additionalArr.push('<tr id="addition" style="display:none"><td class="file-photo"><a><img id="additionalPhoto" src=""></a></td><td class="file-zh">教育主管機關核准文件影本</td><td class="file-en" id="additionalImg">無</td><td class="file-modify"><a id="additionalChange" style="display:none">修改檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="additionalUpload">上傳檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="additionalView"></a></td></tr><tr><td class="clickView" colspan="4" id="add" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><iframe id="additionalViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
-
-            uploadObj.append(additionalArr.join(''));
-            var addition = $('#addition');
-            addition.show();
-            additionItem(additionalFile, additionalFile_docId, additionalFileURL);
-            break;
-
-        case '3':
-            studentIdCardRadio.show();
-            //var studentIdRadio = studentIdCardRadio.find('input:checked');
-            var studentIdRadioPicked = studentIdCardRadio.find('input');
-
-            additionalArr.push('<tr id="addition" style="display:none"><td class="file-photo"><a><img id="additionalPhoto" src=""></a></td><td class="file-zh">在學證明</td><td class="file-en" id="additionalImg">無</td><td class="file-modify"><a id="additionalChange" style="display:none">修改檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="additionalUpload">上傳檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="additionalView"></a></td></tr><tr><td class="clickView" colspan="4" id="add" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><iframe id="additionalViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
-
-            uploadObj.append(additionalArr.join(''));
-            var addition = $('#addition');
-            var RadioClicked = content.RadioClicked;
-            var RadioClickedHidden = $('[name="RadioClicked"]');
-            //檢查是否需要點選radio
-            if (hasRadio == 'Y') { //step2   
-                studentIdRadioPicked.on('click', function() {
                     var pickId = $(this).attr('id');
                     if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
                         studentIdPositive.show();
@@ -1051,7 +984,75 @@ function showUploadFiles(content, hasRadio) {
                 }
             }
 
-            additionItem(additionalFile, additionalFile_docId, additionalFileURL);
+            if (hasRadio == 'Y') {
+                addition.hide();
+            } else {
+                if (RadioClicked == 'Y') {
+                    addition.hide();
+                }
+            }
+
+            break;
+        }
+        case '2':
+        {
+			var itemName = 'additional';
+            var additionName = showFileString(itemName);
+            addNewFile(null, itemName, fileIndex++,'上傳檔案');
+            break;
+        }
+        case '3':
+        {
+            studentIdCardRadio.show();
+            var studentIdPositive = $('.studentIdPositive');
+            var studentIdNegative = $('.studentIdNegative');
+            var studentIdPositive_view = $('#studentIdPositive_view_0');
+            var studentIdNegative_view = $('#studentIdNegative_view_0');
+            var studentIdRadioPicked = studentIdCardRadio.find('input');
+            var itemName = 'additional';
+            var additionName = showFileString(itemName);
+            addNewFile(null, itemName, fileIndex++,'上傳檔案');
+            var addition = $('.additional');
+            var RadioClicked = content.RadioClicked;
+            var RadioClickedHidden = $('[name="RadioClicked"]');
+            //檢查是否需要點選radio
+            if (hasRadio == 'Y') { //step2
+                studentIdRadioPicked.on('click', function(ev) {
+
+                    var pickId = $(this).attr('id');
+
+                    if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
+                        studentIdPositive.show();
+                        studentIdPositive_view.show();
+                        studentIdNegative.show();
+                        studentIdNegative_view.show();
+                        RadioClickedHidden.val('Y');
+                        addition.hide();
+                    } else if (pickId == 'registerStamp_n') { //若學生證無本期註冊章,就顯示在學證明
+                        studentIdPositive.hide();
+                        studentIdPositive_view.hide();
+                        studentIdNegative.hide();
+                        studentIdNegative_view.hide();
+                        RadioClickedHidden.val('N');
+                        addition.show();
+                    }
+                });
+
+            } else if (hasRadio == 'N') { //step3-1
+                if (RadioClicked == 'Y') { //若前一步是選擇"是",就顯示學生證正反面
+                    studentIdPositive.show();
+                    studentIdPositive_view.show();
+                    studentIdNegative.show();
+                    studentIdNegative_view.show();
+                    addition.hide();
+                } else if (RadioClicked == 'N') { //若前一步是選擇"否",就顯示在學證明
+                    studentIdPositive.hide();
+                    studentIdPositive_view.hide();
+                    studentIdNegative.hide();
+                    studentIdNegative_view.hide();
+                    addition.show();
+                }
+            }
 
             if (hasRadio == 'Y') {
                 addition.hide();
@@ -1061,145 +1062,132 @@ function showUploadFiles(content, hasRadio) {
                 }
             }
             break;
-        case '4':
-            additionalArr.push('<tr id="addition" style="display:none"><td class="file-photo"><a><img id="additionalPhoto" src=""></a></td><td class="file-zh">鄉鎮市區公所兵役課出具之「應徵（召）服兵役證明書」或入營徵集令影本</td><td class="file-en" id="additionalImg">無</td><td class="file-modify"><a id="additionalChange" style="display:none">修改檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="additionalUpload">上傳檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="additionalView"></a></td></tr><tr><td class="clickView" colspan="4" id="add" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><iframe id="additionalViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
+        }
 
-            uploadObj.append(additionalArr.join(''));
-            var addition = $('#addition');
-            addition.show();
-            additionItem(additionalFile, additionalFile_docId, additionalFileURL);
+        case '4':
+            var itemName = 'additional';
+            var additionName = showFileString(itemName);
+            addNewFile(null, itemName, fileIndex++,'上傳檔案');
             break;
         case '5':
-            additionalArr.push('<tr id="addition" style="display:none"><td class="file-photo"><a><img id="additionalPhoto" src=""></a></td><td class="file-zh">教育實習證影本</td><td class="file-en" id="additionalImg">無</td><td class="file-modify"><a id="additionalChange" style="display:none">修改檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="additionalUpload">上傳檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="additionalView"></a></td></tr><tr><td class="clickView" colspan="4" id="add" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><iframe id="additionalViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
-
-            uploadObj.append(additionalArr.join(''));
-            var addition = $('#addition');
-            addition.show();
-            additionItem(additionalFile, additionalFile_docId, additionalFileURL);
+            var itemName = 'additional';
+            var additionName = showFileString(itemName);
+            addNewFile(null, itemName, fileIndex++,'上傳檔案');
             break;
 
         case '6':
-            additionalArr.push('<tr id="addition" style="display:none"><td class="file-photo"><a><img id="additionalPhoto" src=""></a></td><td class="file-zh">相關休學、退學證明文件</td><td class="file-en" id="additionalImg">無</td><td class="file-modify"><a id="additionalChange" style="display:none">修改檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="additionalUpload">上傳檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="additionalView"></a></td></tr><tr><td class="clickView" colspan="4" id="add" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><iframe id="additionalViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
-
-            uploadObj.append(additionalArr.join(''));
-            additionItem(additionalFile, additionalFile_docId, additionalFileURL)
+            var itemName = 'additional';
+            var additionName = showFileString(itemName);
+            addNewFile(null, itemName, fileIndex++,'上傳檔案');
             break;
         case '7':
-            additionalArr.push('<tr id="addition" style="display:none"><td class="file-photo"><a><img id="additionalPhoto" src=""></a></td><td class="file-zh">畢業證書影本</td><td class="file-en" id="additionalImg">無</td><td class="file-modify"><a id="additionalChange" style="display:none">修改檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="additionalUpload">上傳檔案<input type="file" name="additionalFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="additionalView"></a></td></tr><tr><td class="clickView" colspan="4" id="add" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><iframe id="additionalViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
-
-            uploadObj.append(additionalArr.join(''));
-            var addition = $('#addition');
-            addition.show();
-            additionItem(additionalFile, additionalFile_docId, additionalFileURL);
+            var itemName = 'additional';
+            var additionName = showFileString(itemName);
+            addNewFile(null, itemName, fileIndex++,'上傳檔案');
             break;
     }
 
-    var clickView = $('.clickView');
+    //var informationArr = ['Photo_img', 'Img', 'Upload', 'File', 'View', '_view', 'ViewImg'];
+    $.each(fileItem, function(item, docContent) {    //跑文件項目
+        console.debug(item);
+        console.debug(docContent);
+        var itemName = item.split('F')[0];
+        console.debug('itemName = ' + itemName);
+        if(docContent == '' || docContent == undefined){
+            newFileName = '無';
+        }
+        else{
+            console.debug('================================================');
+            $.each(docContent, function(index, value) {    //跑文件項目裡的檔案
+                console.debug('~~~~~~~~~~~~~~~~~~~~'+index+'~~~~~~~~~~~~~~~~~~~~~');
+//                console.debug('fileIndex:'+fileIndex+'/fileName:'+fileName+'/docId:'+docId+'/size:'+size+'/fileNameExtension:'+fileNameExtension);
 
-    if (isPositiveFile_docId != '') {
-        idPositivePhoto.attr("src", isPositiveFileURL);
-        idPositiveImg.text(isPositiveFile);
-        idPositiveUpload.parent().remove();
-        idPositiveChange.show();
-        idPositiveView.addClass('active');
-        idPositiveViewImg.attr("src", isPositiveFileURL);
-    } else {
-        idPositiveChange.parent().remove();
-    }
+                var dataArr = [];
+                var docId = value.docId;
+                var size = value.size;
+                var fileName = value.fileName;
+                var fileNameExtension = value.fileNameExtension;
+                var fileURL = previewURL + docId;    //檔案路徑
+                console.debug(fileURL);
 
-    if (isNegativeFile_docId !== '') {
-        idNegativePhoto.attr("src", isNegativeFileURL);
-        idNegativeImg.text(isNegativeFile);
-        idNegativeUpload.parent().remove();
-        idNegativeChange.show();
-        idNegativeView.addClass('active');
-        idNegativeViewImg.attr("src", isNegativeFileURL);
-    } else {
-        idNegativeChange.parent().remove();
-    }
+                if(docId != undefined && docId != '') {
+
+                    var itemNamePhoto_img;
+                    var itemNameImg;
+                    var itemNameUpload;
+                    var itemNameFile;
+                    var itemNameView;
+                    var itemName_view;
+                    var itemNameViewImg;
+                    var fileItemName;
+                    var item = showFileString(itemName);
+
+                    //塞預設的資料
+                    if(index == 0) {   //第一個代值
+                        itemNamePhoto_img = $('#'+itemName+'Photo_img_'+index+'');
+                        itemNameImg = $('#'+itemName+'Img_'+index+'');
+                        itemNameUpload = $('#'+itemName+'Upload_'+index+'');
+//                        itemNameFile = $('[name="'+itemName+'File_'+index+'');
+                        itemNameView = $('#'+itemName+'View_'+index+'');
+//                        itemName_view = $('#'+itemName+'_view_'+index+'');
+                        itemNameViewImg = $('#'+itemName+'ViewImg_'+index+'');
+                        fileItemName = $('#'+itemName+'_'+index+' .file-zh');
 
 
-    if (studentIdPositiveFile_docId != '') {
-        studentIdPositivePhoto.attr("src", studentIdPositiveFileURL);
-        studentIdPositiveImg.text(studentIdPositiveFile);
-        studentIdPositiveUpload.parent().remove();
-        studentIdPositiveChange.show();
-        studentIdPositiveView.addClass('active');
-        studentIdPositiveViewImg.attr("src", studentIdPositiveFileURL);
-    } else {
-        studentIdPositiveChange.parent().remove();
-    }
+                    }
+                    else{    //第一個以後用動態長的
+                        console.debug('長下一個：' + $('#'+itemName+'_'+(index-1)).length);
+                        var tr = $('#'+itemName+'_'+(index-1));
+                        console.debug(tr);
+                        console.debug(tr.html());
 
-    if (studentIdNegativeFile_docId != '') {
-        studentIdNegativePhoto.attr("src", studentIdNegativeFileURL);
-        studentIdNegativeImg.text(studentIdNegativeFile);
-        studentIdNegativeUpload.parent().remove();
-        studentIdNegativeChange.show();
-        studentIdNegativeView.addClass('active');
-        studentIdNegativeViewImg.attr("src", studentIdNegativeFileURL);
-    } else {
-        studentIdNegativeChange.parent().remove();
-    }
+                        var newTr = addNewFile(tr, itemName, index,'修改檔案');
+
+                        itemNamePhoto_img = newTr.find('#'+itemName+'Photo_img_'+index+'');
+                        itemNameImg = newTr.find('#'+itemName+'Img_'+index+'');
+                        itemNameUpload = newTr.find('#'+itemName+'Upload_'+index+'');
+//                        itemNameFile = newTr.find('[name="'+itemName+'File_'+index+'');
+                        itemNameView = newTr.find('#'+itemName+'View_'+index+'');
+//                        itemName_view = newTr.find('#'+itemName+'_view_'+index+'');
+                        itemNameViewImg = newTr.find('#'+itemName+'ViewImg_'+index+'');
+                        fileItemName = newTr.find('#'+itemName+'_'+index+' .file-zh');
+                    }
+
+                    itemNamePhoto_img.attr("src", fileURL);
+                    itemNameImg.text(fileName);
+//                    itemNameUpload.text('修改檔案');
+                    itemNameUpload.parent().removeClass('file-upload').addClass('file-modify');
+                    itemNameView.addClass('active');
+                    itemNameViewImg.attr("src", fileURL);
+                    fileItemName.text(item);
+                }
+
+            });
+        }
+    });
+
 
     //按預覽按鈕
-    idPositiveView.on('click', function() {
-        if (idPositiveView.hasClass('active')) {
-			var fileName = $('[name="idPositiveViewName_hidden"]').val();
-            previewDocument($('#pos iframe').attr('src'), fileName);
-        }
+	$('.file-view a').off('click').on('click', function() {
+        previewClickHandler($(this));
     });
-
-    idNegativeView.on('click', function() {
-        if (idNegativeView.hasClass('active')) {
-			var fileName = $('[name="idNegativeViewName_hidden"]').val();
-            previewDocument($('#neg iframe').attr('src'), fileName);
-        }
-    });
-
-    studentIdPositiveView.on('click', function() {
-        if (studentIdPositiveView.hasClass('active')) {
-			var fileName = $('[name="studentIdPositiveViewName_hidden"]').val();
-            previewDocument($('#sPos iframe').attr('src'), fileName);
-        }
-    });
-
-    studentIdNegativeView.on('click', function() {
-        if (studentIdNegativeView.hasClass('active')) {
-			var fileName = $('[name="studentIdNegativeViewName_hidden"]').val();
-            previewDocument($('#sNeg iframe').attr('src'), fileName);
-        }
-    });
+    
+    
 }
 
-//額外需要上傳的資料
-function additionItem(additionalFile, additionalFile_docId, additionalFileURL) {
-    var additionalPhoto = $('#additionalPhoto');
-    var additionalImg = $('#additionalImg');
-    var additionalUpload = $('#additionalUpload');
-    var additionalChange = $('#additionalChange');
-    var additionalView = $('#additionalView');
-    var additionalViewImg = $('#additionalViewImg');
-    var addition = $('#addition');
-    var clickView = $('.clickView');
+function previewClickHandler(obj) {
 
-    if (additionalFile_docId != '') {
-        additionalPhoto.attr("src", additionalFileURL);
-        additionalImg.text(additionalFile);
-        additionalUpload.parent().remove();
-        additionalChange.show();
-        additionalView.addClass('active');
-        additionalViewImg.attr("src", additionalFileURL);
-    } else {
-        additionalChange.parent().remove();
+    if (obj.hasClass('active')) {
+        var thisID = obj.attr('id');
+        var itemName = thisID.split('View_')[0];
+        var fileIndex = thisID.split('View_')[1];
+        var fileName = $('#' + itemName + 'Img_' + fileIndex).text();
+        if(fileName != undefined) {
+            fileName = fileName.substring(fileName.lastIndexOf('.')+1);
+        }
+
+//			var fileName = $('[name="'+itemName+'Name_hidden'+fileIndex+'"]').val();
+
+        previewDocument($('#'+itemName+'ViewTag_'+fileIndex+' iframe').attr('src'), fileName);
     }
-
-    addition.show();
-
-    //按預覽按鈕
-    additionalView.on('click', function() {
-        if (additionalView.hasClass('active')) {
-			var fileName = $('[name="additionalViewName_hidden"]').val();
-            previewDocument($('#add iframe').attr('src'), fileName);
-		}
-    });
 }

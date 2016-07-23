@@ -174,7 +174,7 @@ function buildFlow(Content, stepEventHandler, nextEventHanlder, nextEventErrorHa
                     var value = column.val();
 
                     //當有name跟value時就放hidden
-                    if (colName != '' && value != '') {
+                    if (colName != '') {
                         form.find('input[type="hidden"][name="' + colName + '"]').remove();
                         form.prepend('<input type="hidden" name="' + colName + '" value="' + value + '"/>');
                     }
@@ -317,7 +317,7 @@ function buildFlow(Content, stepEventHandler, nextEventHanlder, nextEventErrorHa
                         var value = column.val();
 
                         //當有name跟value時就放hidden
-                        if (colName != '' && value != '') {
+                        if (colName != '') {
                             form.find('input[type="hidden"][name="' + colName + '"]').remove();
                             //form.prepend('<input type="hidden" name="'+colName+'" value="'+value+'"/>');
                             $('.processInner').prepend('<input type="hidden" name="' + colName + '" value="' + value + '"/>');
