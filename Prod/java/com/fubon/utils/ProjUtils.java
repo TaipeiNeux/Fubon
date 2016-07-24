@@ -458,6 +458,8 @@ public class ProjUtils {
         hm.put("Bulletin",Bulletin);
 //        hm.putAll(getSchoolApplyDateRegion(apply_sDate, apply_eDate, preApplyDate));
 
+
+
         return hm;
 
 //        HashMap hm = new HashMap();

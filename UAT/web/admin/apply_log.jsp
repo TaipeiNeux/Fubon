@@ -58,10 +58,12 @@
                 aplyStatus = statusRS.get(0).getValue("AplyStatus");
             }
 
-            DataObject docObject = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Doc");
-            docObject.setValue("AplyIdNo",aplyIdNo);
+//            DataObject docObject = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Doc");
+//            docObject.setValue("AplyIdNo",aplyIdNo);
             Vector<DataObject> tmp = new Vector<DataObject>();
-            dao.query(tmp,docObject,null);
+            SQLCommand queryDoc = new SQLCommand("select DocId,DocType,CreateTime from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+            queryDoc.addParamValue(aplyIdNo);
+            dao.queryByCommand(tmp,queryDoc,null,null);
 
             //查拒絕原因
             DataObject aplyReject = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_reason");
