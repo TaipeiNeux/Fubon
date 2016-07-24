@@ -4839,7 +4839,7 @@ function apply4_1(content) {
     showUploadFiles(content, '4');
 
     //綁預覽事件
-    newTr.find('.file-view a').off('click').on('click', function() {
+    $('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });
 }
@@ -6341,13 +6341,13 @@ function showUploadFiles(content, step) {
 
     if (loansIndex == '1') {
         if (lifePriceOfBill > 0) {
-            lowIncomesArr.push('<tr><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-modify"><a id="lowIncomeChange" style="display:none">修改檔案<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="' + lowIncomeURL + '" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
+            lowIncomesArr.push('<tr><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-modify"><a id="lowIncomeChange" style="display:none">修改檔案<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
 
             uploadObj.append(lowIncomesArr.join(''));
         }
     } else if (loansIndex == '2') {
         if (lifePriceOfFree > 0) {
-            lowIncomesArr.push('<tr><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-modify"><a id="lowIncomeChange" style="display:none">修改檔案<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="' + lowIncomeURL + '" style="width:100%; height: 100%;"></div></div></td></tr>');
+            lowIncomesArr.push('<tr><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-modify"><a id="lowIncomeChange" style="display:none">修改檔案<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="" style="width:100%; height: 100%;"></div></div></td></tr>');
 
             uploadObj.append(lowIncomesArr.join(''));
         }

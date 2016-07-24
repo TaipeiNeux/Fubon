@@ -9,6 +9,7 @@ $(document).ready(function() {
         "deferment4": deferment_4
     };
 
+	
     var nextEventHanlder = {
         "deferment1": deferment_1_valid,
         "deferment2": deferment_2_valid,

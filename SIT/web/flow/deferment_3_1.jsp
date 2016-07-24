@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
-        
+       
         <h3 class="snopy pen">申請原因
                 <div class="editBtnBoxbottom">
                   <a href="deferment.jsp?step=deferment1" class="editBtn">修改</a>

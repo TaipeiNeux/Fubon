@@ -33,6 +33,7 @@ public class Deferment4 implements ILogic {
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         String userId = loginUserBean.getUserId();
 
+		
         IDao dao = DaoFactory.getDefaultDao();
 
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
