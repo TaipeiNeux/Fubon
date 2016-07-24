@@ -55,11 +55,11 @@
         <steps>
 
 
-            <step id="deferment1" name="輸入資料" view="flow/deferment_1.jsp" logic="com.fubon.flow.impl.Deferment1" class="deferment_1 processBar_4"  isFirstStep="Y"/>
+            <step id="deferment1" name="輸入資料" view="flow/deferment_1.jsp" logic="com.fubon.flow.impl.Deferment1" class="deferment_1 processBar_4"  isFirstStep="Y" noBindingPreEvent="Y"/>
             <step id="deferment2" name="上傳證明文件" view="flow/deferment_2.jsp" logic="com.fubon.flow.impl.Deferment2" class="deferment_2 processBar_4"/>
             <step id="deferment3" name="確認資料">
-                <step id="deferment3_1" name="確認資料" view="flow/deferment_3_1.jsp" logic="com.fubon.flow.impl.Deferment3_1" class="deferment_3_step1 processBar_4" isConfirm="Y"/>
-                <step id="deferment3_2" name="資料驗證" view="flow/deferment_3_2.jsp" logic="com.fubon.flow.impl.Deferment3_2" class="deferment_3_step2 processBar_4" isConfirm="Y"/>
+                <step id="deferment3_1" name="確認資料" view="flow/deferment_3_1.jsp" logic="com.fubon.flow.impl.Deferment3_1" class="deferment_3_step1 processBar_4" isConfirm="Y" noBindingPreEvent="Y"/>
+                <step id="deferment3_2" name="資料驗證" view="flow/deferment_3_2.jsp" logic="com.fubon.flow.impl.Deferment3_2" class="deferment_3_step2 processBar_4" isConfirm="Y" noBindingPreEvent="Y"/>
             </step>
             <step id="deferment4" name="申請結果" view="flow/deferment_4.jsp" logic="com.fubon.flow.impl.Deferment4" class="deferment_4 processBar_4"/>
 

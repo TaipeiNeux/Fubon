@@ -35,7 +35,6 @@ import java.util.Properties;
  */
 public class MessageUtils {
 
-
     //標題
     public final static String OTPTitle = "台北富邦銀行就學貸款服務專區交易驗證碼發送通知";
     public final static String registerTitle = "台北富邦銀行就學貸款服務專區註冊會員「{result}」通知";
