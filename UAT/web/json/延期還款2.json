@@ -1,0 +1,48 @@
+{
+    "Header": {
+        "errorCode": "0",
+        "errorMsg" : "(當errorCode不為0時，請alert出errorMsg)"
+    },
+    "Content": {
+        "flow" : {
+            "flowId" : "deferment",
+            "viewURL" : "flow/deferment_2.jsp",
+            "currentMainStep" : "deferment2",
+            "currentSubStep" : "",
+            "mainStep" : [
+                {
+                    "id" : "deferment1",
+                    "name" : "輸入資料"
+                },
+                {
+                    "id" : "deferment2",
+                    "name" : "上傳證明文件"
+                },
+                {
+                    "id" : "deferment3",
+                    "name" : "確認資料"
+                },
+                {
+                    "id" : "deferment4",
+                    "name" : "申請結果"
+                }
+            ],
+            "subStep" : []
+        },
+        "isRecord":"N",
+        "id" : "A123****89",
+        "eliIndex" : "4",
+        "uploadFile":{
+            "idCardPosition": "img/dh.jpg",
+            "idCardNegative": "img/dh.jpg",
+            "studentIdCardPosition": "img/dh.jpg",
+            "studentIdCardNegative": "img/dh.jpg",
+            "certificateEnrollment": "img/dh.jpg",
+            "approvedFile": "img/dh.jpg",
+            "militaryFile": "img/dh.jpg",
+            "practicalTraining": "img/dh.jpg",
+            "discontinue": "img/dh.jpg",
+            "graduationCertificate": "img/dh.jpg"
+        }
+    }
+}

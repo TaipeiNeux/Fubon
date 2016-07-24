@@ -1,0 +1,59 @@
+{
+    "Header": { 
+        "errorCode": "0",
+        "errorMsg" : "(當errorCode不為0時，請alert出errorMsg)"
+    },
+    "Content": {
+        "flow" : {
+            "flowId" : "personalInfo",
+            "viewURL" : "flow/personalInfo_2_1.jsp",
+            "currentMainStep" : "personalInfo_2",
+            "currentSubStep" : "personalInfo_2_1",
+            "mainStep" : [
+                {
+                    "id" : "personalInfo_1",
+                    "name" : "輸入資料"
+                },
+                {
+                    "id" : "personalInfo_2",
+                    "name" : "確認資料"
+                },
+                {
+                    "id" : "personalInfo_3",
+                    "name" : "變更結果"
+                }
+            ],
+            "subStep" : [{
+                    "id" : "personalInfo_2_1",
+                    "name" : "確認資料"
+                },
+                {
+                    "id" : "personalInfo_2_2",
+                    "name" : "資料驗證"
+                }
+               
+            ]
+        },
+        "isRecord":"Y",
+        "id" : "A123456789",
+        "name" : "鄧小文",
+        "birthday" : "991122",
+        "marryStatus" : "N",
+        "domicilePhone" : {
+            "regionCode" : "03",
+            "phone" : "28220204"
+        },
+        "telePhone" : {
+            "regionCode" : "02",
+            "phone" : "28220204"
+        },
+        "mobile" : "0937020400",
+        "email" : "neux.titanteng@gmail.com",
+        "domicileAddress" : {
+           "address" : "台北市中正區百貨公司3樓"
+        },
+        "teleAddress" : {
+           "address" : "台北市中正區百貨公司3樓"
+        }
+    }
+}
