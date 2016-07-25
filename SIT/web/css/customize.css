@@ -2977,6 +2977,7 @@ body#body .modal-content {
 }
 
 /*2016-07-09 added by titan加上假日行事曆反灰*/
+/*
 body.apply_map .greyDeepgrey,
 body.apply_map .fc-sat,
 body.apply_map .greyDeepgrey,
@@ -2984,6 +2985,18 @@ body.apply_map .fc-sun {
     color: #828686;
     background-color: #F0F0F0;
 }
+*/
+
+/* 2016-07-25 added by fernando行事曆holiday樣式 */
+
+body.apply_map .greyDeepgrey,
+body.apply_map .fc-holiday {
+    color: #826868;
+    background: #F0F0F0;
+}
+
+
+
 @media (max-width:769px) {
     body.apply_map .fc-event span {
         font-size: 6px;
