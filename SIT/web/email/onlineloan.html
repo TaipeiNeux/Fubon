@@ -41,22 +41,27 @@
         </div>
         <div class="edm_main" style="margin: 10px 0">
             <div class="processInner" style="padding: 25px;background: #f8fafc;border: dashed 1px #CCCED2;border-radius: 10px;padding: 10px 25px;">
-                <p style="color: #323434;font-size: 18px;font-weight:bold;text-align:left;">親愛的客戶您好</p><p style="font-size: 17px;color:#323434;text-align:left;">您已於{date}透過台北富邦銀行就學貸款服務專區執行立即登入交易。</p>
+                <p style="color: #323434;font-size: 18px;font-weight:bold;text-align:left;">親愛的客戶您好</p><p style="font-size: 17px;color:#323434;text-align:left;">您已於{date}透過台北富邦銀行就學貸款服務專區執行申請就學貸款線上續貸交易，本行將進行審核作業，並以Email通知您審核結果。</p>
                 <p style="color: #323434;font-size: 17px;text-align:left;">此信件為本行系統自動發送之通知，敬請參考。</p>
-                <h4 class="mipa" style="font-size: 17px;color: #0872bb;font-weight: 500;line-height: 1.5em;text-align:left;">(若您有相關疑問,請洽客戶服務專線 02-8751-6665 按 5, 以 確保您的權益。台北富邦銀行貼心提醒您!)</h4>
-                <h3 class="snopy pen" style="font-size: 18px;border-bottom: solid 1px #919090;font-weight: bold;color: #0E89CB;padding: 10px;margin-bottom: 40px;line-height: 1.4em;clear: both;text-align:left;"><img src="{host}/img/na-06.png"style="width:25px;height:25px;">立即登入</h3>
-                <table border="0" cellpadding="0" cellspacing="0" style="width:100%;">
+                <h4 class="mipa" style="font-size: 17px;color: #0872bb;font-weight: 500;line-height: 1.5em;text-align:left;">(若您有相關疑問,請洽本行 24 小時客戶服務專線 02-8751-6665 按 5, 以 確保您的權益。台北富邦銀行貼心提醒您!)</h4>
+                <h3 class="snopy pen" style="font-size: 18px;border-bottom: solid 1px #919090;font-weight: bold;color: #0E89CB;padding: 10px;margin-bottom: 40px;line-height: 1.4em;clear: both;text-align:left;"><img src="{host}/img/na-06.png"style="width:25px;height:25px;">申請就學貸款線上續貸</h3>
+                <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
                     <tr style="height:70px;">
-                        <td style="width:110px;padding:15px;color:#323434;background-color:#ededee;text-align:center;font-size:17px;font-weight:bold;border:1px solid #000;">交易結果</td>
+                        <td style="width:110px;padding:15px;color:#323434;background-color:#ededee;text-align:center;font-size:17px;font-weight:bold;border:1px solid #000;">申請結果</td>
                         <td style="padding:15px;border:1px solid #000;border-left:none;text-align:left;">
-                            <img src="{host}/img/deny.png"/><p class="deny" style="color: #DA1C16;font-size: 15px;margin: 0;display: inline;">(錯誤代碼：{errorCode}){result}，你可使用<a href="{host}/forgetPassword.jsp" target="_blank" style="color: #DA1C16;">忘記代碼/密碼</a>進行重設;如有疑問，請洽客戶服務專線02-8751-6665 按5。</p>
+                            <p class="nike" style="color: #323434;font-size: 15px;margin: 0;">{result}</p>
                         </td>
                     </tr>
                     <tr style="height:70px;">
-                        <td style="width:110px;padding:15px;color:#323434;background-color:#ededee;text-align:center;font-size:17px;font-weight:bold;border:1px solid #000;">交易時間</td>
-                        <td style="padding:15px;border:1px solid #000;border-left:none;text-align:left;">{date}</td>
+                        <td style="width:110px;padding:15px;color:#323434;background-color:#ededee;text-align:center;font-size:17px;font-weight:bold;border:1px solid #000;">申請時間</td>
+                        <td style="padding:15px;border:1px solid #000;border-left:none;">
+                            <p style="color: #323434;font-size: 15px;margin: 0;text-align:left;">{date}</p>
+                        </td>
                     </tr>
                 </table>
+                <p style="color:#0E89CB;font-weight:bold;font-size:18px;">您已順利完成線上續貸申請，本行將進行審核作業，會以Email通知您審核結果。</p>
+                <p style="color:#323434;text-align:left;font-size:15px;margin-left:35px;">若審核結果為「<img src="{host}/img/na-14.png" alt="">通過」時，請您再次進入本功能列印申請書(收執聯)交付學校。</p>
+                <p style="color:#323434;text-align:left;font-size:15px;margin-left:35px;">若審核結果為「<img src="{host}/img/deny.png" alt="">未通過」時，請您依據不通過之原因，再次進入本功能盡速修改後重新送出申請。</p>
 <!--
                 <div class="aimeeBox" style="clear: both;">
                     <div class="aimee" style="min-height:70px;display: table;width: 100%;border-spacing: 1px;background: #676868;">
@@ -64,7 +69,7 @@
                             <p style="color: #323434;font-size: 17px;margin: 0;font-weight:bold;">交易結果</p>
                         </div>
                         <div class="right" style="background: #fff;display: table-cell;vertical-align: middle;padding: 15px;">
-                            <img src="{host}/img/deny.png"/><p class="deny" style="color: #DA1C16;font-size: 15px;margin: 0;display: inline;">(錯誤代碼：{errorCode}){result}，你可使用<a href="{host}/forgetPassword.jsp" target="_blank" style="color: #DA1C16;">忘記代碼/密碼</a>進行重設;如有疑問，請洽客戶服務專線02-8751-6665 按5。</p>
+                            <p class="nike" style="color: #323434;font-size: 15px;margin: 0;">{result}</p>
                         </div>
                     </div>
                     <div class="aimee aimeepo" style="min-height:70px;display: table;width: 100%;border-spacing: 1px;background: #676868;position: relative;top: -1px;">
@@ -85,10 +90,10 @@
         <div class="edm_info" style="padding-left:20px;">
             <!--<p class="casomTitle" style="font-size: 23px;font-weight: bold;color: #323434;clear: both;">注意事項:</p>-->
             <!--<ol class="casom">-->
-                <!--<li>若審核結果為「-->
-                    <!--<span class="nike"></span> 通過｣時，請您再次進入本功能列印申請書(收執聯)交付學校。</li>-->
-                <!--<li>若審核結果為「-->
-                    <!--<span class="close_2"></span> 未通過｣時，請您依據不通過之原因，再次進入本功能儘速修改後重新送出申請。</li>-->
+            <!--<li>若審核結果為「-->
+            <!--<span class="nike"></span> 通過｣時，請您再次進入本功能列印申請書(收執聯)交付學校。</li>-->
+            <!--<li>若審核結果為「-->
+            <!--<span class="close_2"></span> 未通過｣時，請您依據不通過之原因，再次進入本功能儘速修改後重新送出申請。</li>-->
             <!--</ol>-->
             <!--<h4 style="float: right;margin-bottom: 5%;clear: both;font-size: 15px;">台北富邦銀行 敬上</h4>-->
 			<p style="float:right;font-size:14px;">台北富邦銀行 敬上</p>
