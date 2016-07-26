@@ -753,4 +753,4 @@
 
                 <script src="js/prog/bootstrap_select_arrow.js"></script>
                 <script src="js/prog/sub_1.js"></script>
-				<script src="js/prog/qa.js"></script>
+				
