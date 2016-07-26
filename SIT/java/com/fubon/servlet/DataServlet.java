@@ -957,9 +957,9 @@ public class DataServlet extends HttpServlet {
                 //讀一張可以選擇的營業日的BUSINESS_DAY Table
                 List<String> noBusinessDays = new ArrayList<String>();
 
+                //放入當月/及後兩個月
                 String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
                 if(!"sit".equalsIgnoreCase(env)) {
-                    //放入當月/及後兩個月
                     DBUtils.getNoBusinessDay(todayYear,month,noBusinessDays);
                 }
                 else {
