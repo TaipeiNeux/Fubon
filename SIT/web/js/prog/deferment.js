@@ -9,7 +9,6 @@ $(document).ready(function() {
         "deferment4": deferment_4
     };
 
-	
     var nextEventHanlder = {
         "deferment1": deferment_1_valid,
         "deferment2": deferment_2_valid,
@@ -613,7 +612,8 @@ function deferment_3_1(content) {
 
     //帶入前步驟上傳的文件
     showUploadFiles(content, 'N','3_1');
-
+	var upload = $('.file-upload');
+	upload.removeClass('file-upload').addClass('file-modify');
 
 
     //帶入電話號碼
@@ -796,16 +796,19 @@ function uploadEvent(input) {
                 GardenUtils.ajax.uploadFile(form, 'data?action=uploadDefermentDocument&docId=' + docId, function(response) {
 
                     console.debug(response);
-
+					var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
+					var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
+						
                     if (response.isSuccess == 'Y') {   //上傳成功
 						var newFile = response.docId;
 					
 						if(tr.find('td.file-upload a').text() == '上傳檔案'){
 							var nextIndex = parseInt(currentIndex) +1;
 							addNewFile(tr, inputTitle, nextIndex,'上傳檔案');
+							$('.processInner').prepend(sizeArray);
+							$('.processInner').prepend(FilenameExtension);
 						}
 						
-
                         tr.find('td.file-upload a').text('修改檔案');
                         tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
                         tr.find('td.file-en').text(response.src);
@@ -814,10 +817,13 @@ function uploadEvent(input) {
 						tr.find('td.file-modify').attr('docid',newFile);
 						
 						//塞副檔名和size到hidden中
-						var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
-						var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
-						$('.processInner').prepend(sizeArray);
-						$('.processInner').prepend(FilenameExtension);
+						
+						/*alert(inputTitle);
+						alert(currentIndex);
+						alert($('[name="'+inputTitle+'_hidden'+currentIndex+'"]').length);
+						alert($('[name="'+inputTitle+'Name_hidden'+currentIndex+'"]').length);
+						*/
+						
 						var sizeHidden = $('[name="'+inputTitle+'_hidden'+currentIndex+'"]');
 						var nameHidden = $('[name="'+inputTitle+'Name_hidden'+currentIndex+'"]');
 						sizeHidden.val(fileSize);
@@ -961,13 +967,14 @@ function showUploadFiles(content, hasRadio,step) {
             var itemName = 'additional';
             var additionName = showFileString(itemName);
             addNewFile(null, itemName, fileIndex++,defaultName);
-            var addition = $('.additional');
+            
             var RadioClicked = content.RadioClicked;
             var RadioClickedHidden = $('[name="RadioClicked"]');
             //檢查是否需要點選radio
             if (hasRadio == 'Y') { //step2
                 studentIdRadioPicked.on('click', function(ev) {
-
+					
+					var addition = $('.additional');
                     var pickId = $(this).attr('id');
                     if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
                         studentIdPositive.show();
@@ -987,7 +994,8 @@ function showUploadFiles(content, hasRadio,step) {
                 });
 
             } else if (hasRadio == 'N') { //step3-1
-                if (RadioClicked == 'Y') { //若前一步是選擇"是",就顯示學生證正反面
+                var addition = $('.additional');
+				if (RadioClicked == 'Y') { //若前一步是選擇"是",就顯示學生證正反面
                     studentIdPositive.show();
                     studentIdPositive_view.show();
                     studentIdNegative.show();
@@ -1003,10 +1011,10 @@ function showUploadFiles(content, hasRadio,step) {
             }
 
             if (hasRadio == 'Y') {
-                addition.hide();
+                $('.additional').hide();
             } else {
                 if (RadioClicked == 'Y') {
-                    addition.hide();
+                    $('.additional').hide();
                 }
             }
 
