@@ -572,8 +572,7 @@ function deferment_3_1(content) {
     var date = $('[name="date"]');
     var cell = $('#cell');
 
-    //延後/提前還款原因
-    causeText.text(eligibilityText);
+    
 
     //日期
     graDate.text(selectYear + '年' + selectMonth + '月' + selectDay + '日');
@@ -581,7 +580,11 @@ function deferment_3_1(content) {
 
     if (eligibilityText == '延畢') {
         $('#gDate').hide();
+        eligibilityText = eligibilityText + ' (延畢者應每學期申請延期一次)';
     }
+    
+    //延後/提前還款原因
+    causeText.text(eligibilityText);
 	
 	//動態長紀錄size和副檔名的hidden
 	console.debug(content.uploadFile);
@@ -714,8 +717,9 @@ function deferment_4(content) {
 
     if (eligibilityText != '延畢') {
         $('#applyReasonDate').text(ReasonDate + ' 民國' + ReasonTime);
-    } else {
-        $('#applyReasonDate').text(ReasonDate);
+    } 
+    else {
+        $('#applyReasonDate').text('('+ReasonDate+')');
     }
 }
 
@@ -802,9 +806,11 @@ function uploadEvent(input) {
                     if (response.isSuccess == 'Y') {   //上傳成功
 						var newFile = response.docId;
 					
-						if(tr.find('td.file-upload a').text() == '上傳檔案'){
+						if(tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多'){
 							var nextIndex = parseInt(currentIndex) +1;
-							addNewFile(tr, inputTitle, nextIndex,'上傳檔案');
+							if( inputTitle == 'additional' ){
+                                addNewFile(tr, inputTitle, nextIndex,'上傳更多');
+                            }
 							$('.processInner').prepend(sizeArray);
 							$('.processInner').prepend(FilenameExtension);
 						}
