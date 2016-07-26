@@ -465,8 +465,9 @@ public class DataServlet extends HttpServlet {
             String isEtabs = "Y".equals(isLogin) ? (loginUserBean.getCustomizeValue("isEtabs")) : "N"; //有無線上註記
             String hasData = "Y".equals(isLogin) ? (ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(loginUserBean.getUserId(),DaoFactory.getDefaultDao()) == null ? "N" : "Y" ) : "N";//有無撥款紀錄
             String isArrears = "Y".equals(isLogin) ? (loginUserBean.getCustomizeValue("isArrear")) : "N"; //是否不欠款
-            String[] acnoSlList = "Y".equals(isLogin) ? loginUserBean.getCustomizeValue("acnoSlList").split(",") : new String[]{};
-            String hasAccount = acnoSlList.length != 0 ? "Y" : "N";//是否有貸款帳號
+            String acnoSlListStr = loginUserBean.getCustomizeValue("acnoSlList");
+            String[] acnoSlList = "Y".equals(isLogin) ? acnoSlListStr.split(",") : new String[]{};
+            String hasAccount = (StringUtils.isNotEmpty(acnoSlListStr) && acnoSlList.length != 0) ? "Y" : "N";//是否有貸款帳號
             String isAccountClear = "N";
 
             if("Y".equalsIgnoreCase(isLogin)) {
@@ -956,9 +957,9 @@ public class DataServlet extends HttpServlet {
                 //讀一張可以選擇的營業日的BUSINESS_DAY Table
                 List<String> noBusinessDays = new ArrayList<String>();
 
+                //放入當月/及後兩個月
                 String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
                 if(!"sit".equalsIgnoreCase(env)) {
-                    //放入當月/及後兩個月
                     DBUtils.getNoBusinessDay(todayYear,month,noBusinessDays);
                 }
                 else {

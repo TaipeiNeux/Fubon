@@ -39,7 +39,6 @@ public class PersonalInfo3 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
-		
         String today = DateUtil.getTodayString();
         today = DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",today);
 

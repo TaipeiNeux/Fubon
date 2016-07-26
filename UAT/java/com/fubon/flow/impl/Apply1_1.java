@@ -37,7 +37,6 @@ public class Apply1_1 extends MarkFlow {
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         String userId = loginUserBean.getUserId();
 
-		
         IDao dao = DaoFactory.getDefaultDao();
 
         String isPopUp = ProjUtils.isPopupPromoDialog(userId,dao) ? "Y" : "N";//此學期是否已經彈跳過

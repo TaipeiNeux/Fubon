@@ -27,7 +27,7 @@
             nav = "repaymentInquiry";
             funcName = "還款明細查詢";
         }
-        else if("deferment.jsp".equalsIgnoreCase(loginSuccessPage)) {
+        else if("deferment.jsp".equalsIgnoreCase(loginSuccessPage) || "deferment_0.jsp".equalsIgnoreCase(loginSuccessPage)) {
             nav = "deferment";
             funcName = "延後/提前還款";
         }

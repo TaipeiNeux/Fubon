@@ -4852,7 +4852,6 @@ function uploadEvent(input) {
         defaultFileArray = input;
     }
 
-
     //綁上傳事件
     defaultFileArray.off('change').on('change', function(ev) {
         ev.preventDefault();
@@ -4922,13 +4921,19 @@ function uploadEvent(input) {
                     GardenUtils.ajax.uploadFile(form, 'data?action=uploadApplyDocument&docId=' + docId, function(response) {
 
                         console.debug(response);
-
+						var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
+						var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
+                            
                         if (response.isSuccess == 'Y') {
 							var newFile = response.docId;
 						
                             if(tr.find('td.file-upload a').text() == '上傳檔案'){
                                 var nextIndex = parseInt(currentIndex) +1;
-                                addNewFile(tr, inputTitle, nextIndex,'上傳檔案');
+								if( inputTitle == 'lowIncome' || inputTitle == 'register' ){
+									addNewFile(tr, inputTitle, nextIndex,'上傳更多');
+								}
+								$('.processInner').prepend(sizeArray);
+								$('.processInner').prepend(FilenameExtension);
                             }
 
                             inputHidden.val(fileSize);
@@ -4940,10 +4945,6 @@ function uploadEvent(input) {
 							tr.find('td.file-modify').attr('docid',newFile);
 
                             //塞副檔名到hidden中
-                            var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
-                            var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
-                            $('.processInner').prepend(sizeArray);
-                            $('.processInner').prepend(FilenameExtension);
                             var sizeHidden = $('[name="'+inputTitle+'_hidden'+currentIndex+'"]');
                             var nameHidden = $('[name="'+inputTitle+'Name_hidden'+currentIndex+'"]');
                             sizeHidden.val(fileSize);
@@ -4989,9 +4990,9 @@ function showFileString(name){
         case 'idNegative':
             return '身分證反面影本';
         case 'register':
-            return '註冊單';
+            return '註冊繳費單';
         case 'lowIncome':
-            return '低收入戶證明';
+            return '政府機關出具之低收入戶或中低收入戶證明';
     }
 }
 
@@ -5433,7 +5434,8 @@ function apply4_2(content) {
                                 console.debug('noBusinessDay = ' + noBusinessDay);
                                 var td = element.find('[data-date="'+noBusinessDay+'"]');
                                 console.debug(td.length);
-                                td.addClass('fc-sat');
+                                //td.addClass('fc-sat');
+                                td.addClass('fc-holiday');
                             });
 
                             //切換月份時，要把下面時段資訊先拿掉，還有對保時間也拿掉
@@ -6308,18 +6310,6 @@ function showUploadFiles(content, step) {
     var fileItem = content.uploadFile;
     var previewURL = 'data?action=downloadApplyDocument&isPreview=Y&docId=';
 
-//    var idCardPosition_docId = content.uploadFile.idCardPosition_docId;
-//    var idCardNegative_docId = content.uploadFile.idCardNegative_docId;
-//    var registration_docId = content.uploadFile.registration_docId;
-//    var lowIncome_docId = content.uploadFile.lowIncome_docId;
-//
-//    var idCardPositionURL = previewURL + idCardPosition_docId;
-//    var idCardNegativeURL = previewURL + idCardNegative_docId;
-//    var registrationURL = previewURL + registration_docId;
-//    var lowIncomeURL = previewURL + lowIncome_docId;
-
-    //alert(idPositivePhoto.length);
-
     var idPositivePhoto = $('#idPositivePhoto');
     var idPositiveImg = $('#idPositiveImg');
     var idPositiveUpload = $('#idPositiveUpload');
@@ -6339,17 +6329,19 @@ function showUploadFiles(content, step) {
     var registerView = $('#registerView');
     var registerViewImg = $('#registerViewImg');
 
-    if (loansIndex == '1') {
+     if (loansIndex == '1') {
         if (lifePriceOfBill > 0) {
-            lowIncomesArr.push('<tr><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-modify"><a id="lowIncomeChange" style="display:none">修改檔案<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
+            lowIncomesArr.push('<tr id="lowIncome"><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="" style="width:100%; height: 100%;"></iframe></div></div></td></tr>');
 
             uploadObj.append(lowIncomesArr.join(''));
+			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
     } else if (loansIndex == '2') {
         if (lifePriceOfFree > 0) {
-            lowIncomesArr.push('<tr><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-modify"><a id="lowIncomeChange" style="display:none">修改檔案<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="" style="width:100%; height: 100%;"></div></div></td></tr>');
+            lowIncomesArr.push('<tr id="lowIncome"><td class="file-photo"><a><img id="lowIncomePhoto" src=""></a></td><td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td><td class="file-en" id="lowIncomeImg">無</td><td class="file-upload"><a id="lowIncomeUpload">'+defaultName+'<input type="file" name="lowIncomeFile" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a></td><td class="file-view"><a id="lowIncomeView"></a></td></tr><tr><td class="clickView" colspan="4" id="low" style="display:none"><div class="dowitemContent" style="display:block"><div class="imgBox"><!--<img id="lowIncomeViewImg" src="' + lowIncome + '" style="display:block">--><iframe id="lowIncomeViewImg" src="" style="width:100%; height: 100%;"></div></div></td></tr>');
 
             uploadObj.append(lowIncomesArr.join(''));
+			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
     }
 
@@ -6445,8 +6437,14 @@ function showUploadFiles(content, step) {
 
             });
         }
+		
     });
 
+	//綁預覽事件
+    newTr.find('.file-view a').off('click').on('click', function() {
+        previewClickHandler($(this));
+    });
+	/*
 //    var lowIncomePhoto = $('#lowIncomePhoto');
 //    var lowIncomeImg = $('#lowIncomeImg');
 //    var lowIncomeUpload = $('#lowIncomeUpload');
@@ -6532,7 +6530,7 @@ function showUploadFiles(content, step) {
 //            previewDocument($('#low iframe').attr('src'), fileName);
 //        }
 //    });
-
+*/
 }
 
 function setEducationText(info, div) {
