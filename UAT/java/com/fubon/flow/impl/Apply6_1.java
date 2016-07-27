@@ -1,5 +1,7 @@
 package com.fubon.flow.impl;
 
+import com.fubon.utils.MessageUtils;
+import com.fubon.utils.bean.MailBean;
 import com.neux.garden.authorization.LoginUserBean;
 import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
@@ -51,8 +53,15 @@ public class Apply6_1 implements ILogic {
 
         //申請完了，要直接寫入AplyMemberTuitionLoanDtl
         String result = "申請失敗-線上續貸";
+
+        //寄發email需要使用到的
+        String email = "";
+        String errorCode = "" , errorMsg = "";
+
         try{
             DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo , dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,null,"1");
+
+            email = aplyMemberDataObject.getValue("AplyEmail");
 
             //依照申請人取得線上續貸資料
             ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
@@ -78,6 +87,18 @@ public class Apply6_1 implements ILogic {
                 e.printStackTrace();
             }
         }
+
+
+        //寄發Email
+        String msg = StringUtils.isEmpty(errorCode) ? "成功" : "失敗";
+        String mailTitle = MessageUtils.applyOnlineTitle;
+        mailTitle = StringUtils.replace(mailTitle,"{result}",msg);
+
+        MailBean mailBean = new MailBean("onlineloan");
+        mailBean.setReceiver(email);
+        mailBean.setTitle(mailTitle);
+        mailBean.addResultParam("result",(StringUtils.isEmpty(errorCode) ? "<img src=\"{host}/img/na-14.png\">您已成功送出申請資料!本行將儘速審核您的案件" : "<img src=\"{host}/img/na-16.png\">送出申請資料失敗("+errorCode+")"+errorMsg));
+        MessageUtils.sendEmail(mailBean);
     }
 
     @Override

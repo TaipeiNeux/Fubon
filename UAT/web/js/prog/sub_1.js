@@ -779,19 +779,7 @@ $(document).ready(function() {
 
 
 
-    $('.QAListTab > ul > li > a').on('click', function() {
-        var qaindex = $(this).parent().index() + 1;
 
-        if ($(window).width() >= 768) {
-            $('.QAListTab > ul > li > a').removeClass('active');
-            $(this).addClass('active');
-            $('.QAArea .QAList').removeClass('active');
-            $('.QAArea .qaList-' + qaindex + '').addClass('active');
-        } else if ($(window).width() < 768) {
-            $(this).toggleClass('active');
-            $('.QAArea_s .qaList-' + qaindex + '').slideToggle(250);
-        }
-    });
 
     /*
      function addressMap(address) {

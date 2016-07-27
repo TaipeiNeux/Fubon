@@ -45,11 +45,15 @@ public class PersonalInfo3 implements ILogic {
         String errorCode = "" , errorMsg = "";
         String registerResult = "fail", registerDate = today.substring(0,10), registerTime = today.substring(11);
 
-        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",marryStatus = "",cellPhone = "", email = "";
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
         String domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "", teleAddressAddress = "";
+
+        //生日改為三個輸入框
+        String birthday = "";
+        String birthYear = "",birthMonth = "",birthDay = "";
 
         try{
 
@@ -61,7 +65,11 @@ public class PersonalInfo3 implements ILogic {
             if(root.element("id") != null) id = root.element("id").getText();
             if(root.element("name") != null) name = root.element("name").getText();
 
-            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+            if(root.element("birthday_year") != null) birthYear = root.element("birthday_year").getText();
+            if(root.element("birthday_month") != null) birthMonth = root.element("birthday_month").getText();
+            if(root.element("birthday_day") != null) birthDay = root.element("birthday_day").getText();
+
+//            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
             if(root.element("cellPhone") != null) cellPhone = root.element("cellPhone").getText();
 
             if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
@@ -85,9 +93,9 @@ public class PersonalInfo3 implements ILogic {
             if(root.element("zipCode") != null) teleAddressZipCode = root.element("zipCode").getText();
             if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
 
-            if(StringUtils.isNotEmpty(birthday)) {
-                birthday = StringUtils.replace(birthday,"/","");
-            }
+//            if(StringUtils.isNotEmpty(birthday)) {
+//                birthday = StringUtils.replace(birthday,"/","");
+//            }
 
             //半形轉全形
             name = ProjUtils.toChanisesFullChar(name);
@@ -104,6 +112,12 @@ public class PersonalInfo3 implements ILogic {
                 studentUserProfileDetail.setValue("Applicant",name);
                 studentUserProfileDetail.setValue("Marriage", "Y".equalsIgnoreCase(marryStatus) ? "1" : "0");// 婚姻狀況
                 studentUserProfileDetail.setValue("AplyCellPhoneNo",cellPhone);
+
+                birthYear = StringUtils.leftPad(birthYear,3,"0");
+                birthMonth = StringUtils.leftPad(birthMonth,2,"0");
+                birthDay = StringUtils.leftPad(birthDay,2,"0");
+
+                birthday = birthYear + birthMonth + birthDay;
 
                 if(StringUtils.isNotEmpty(birthday)) {
                     studentUserProfileDetail.setValue("AplyBirthday",ProjUtils.toYYYYBirthday(birthday));//申請人生日

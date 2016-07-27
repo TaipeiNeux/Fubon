@@ -1103,7 +1103,12 @@ public class DataServlet extends HttpServlet {
 
                 if(StringUtils.isNotEmpty(draftXML1)) {
                     //抓申請人生日
-                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+                    String yearBirthday = root1.element("birthday0").getText();
+                    String monthBirthday = root1.element("birthday2").getText();
+                    String dayBirthday = root1.element("birthday4").getText();
+
+//                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+                    applyBirthday = yearBirthday + monthBirthday + dayBirthday;
 
                     applyBirthday = ProjUtils.toYYYYBirthday(applyBirthday);
                 }

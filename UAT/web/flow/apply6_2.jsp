@@ -44,7 +44,8 @@
                 </div>
             </div>
             <div class="banaman">
-                <h4>您已順利完成就學貸款線上申請書填寫，提醒您攜帶以下證件並連同保證人至預約對保分行辦理</h4>
+				<h4 id="hasNoIOU" style="display:none">您已順利完成就學貸款線上申請書填寫，提醒您攜帶以下證件至預約對保分行辦理</h4>          
+                <h4 id="hasIOU" style="display:none">您已順利完成就學貸款線上申請書填寫，提醒您攜帶以下證件並連同保證人至預約對保分行辦理</h4>
                 <ul class="nasiBtn" id="carryObjList">
                 </ul>
             </div>
