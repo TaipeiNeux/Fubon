@@ -761,6 +761,10 @@ public class DataServlet extends HttpServlet {
 
                     //修改的話要刪除原本的
                     if(StringUtils.isNotEmpty(docId)) {
+
+                        //先解開
+                        docId = ProjUtils.decodingNumber(docId);
+
                         SQLCommand delete = new SQLCommand("delete from Deferment_Doc where DocId = ?");
                         delete.addParamValue(docId);
                         dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
@@ -811,7 +815,7 @@ public class DataServlet extends HttpServlet {
                     jsonObject.put("size",file.length() + "");
                     jsonObject.put("fileNameExtension",file.getName().substring(file.getName().lastIndexOf(".") + 1));
                     jsonObject.put("showPath",file.getName());
-                    jsonObject.put("docId",docId);
+                    jsonObject.put("docId",ProjUtils.encodingNumber(docId));
                 }
 
 
@@ -856,6 +860,10 @@ public class DataServlet extends HttpServlet {
                     IDao dao = DaoFactory.getDefaultDao();
 
                     if(StringUtils.isNotEmpty(docId)) {
+
+                        //先解開
+                        docId = ProjUtils.decodingNumber(docId);
+
                         //先刪除原本的文件
                         SQLCommand delete = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where DocId = ?");
                         delete.addParamValue(docId);
@@ -906,7 +914,7 @@ public class DataServlet extends HttpServlet {
                     jsonObject.put("fileNameExtension",file.getName().substring(file.getName().lastIndexOf(".") + 1));
                     jsonObject.put("src",file.getName());
                     jsonObject.put("showPath",file.getName());
-                    jsonObject.put("docId",docId);
+                    jsonObject.put("docId",ProjUtils.encodingNumber(docId));
                 }
 
 
@@ -1432,6 +1440,10 @@ public class DataServlet extends HttpServlet {
 
         Connection conn = null;
         try{
+
+            //先解開
+            docId = ProjUtils.decodingNumber(docId);
+
             boolean isIE = userAgent.contains("MSIE") || userAgent.contains("Trident/7.0");
 
             conn = ((SQLConnection) ORMAPI.getConnection("db")).getConnection();
@@ -1487,6 +1499,11 @@ public class DataServlet extends HttpServlet {
 
         Connection conn = null;
         try{
+
+            //先解開
+            docId = ProjUtils.decodingNumber(docId);
+
+
             boolean isIE = userAgent.contains("MSIE") || userAgent.contains("Trident/7.0");
 
             conn = ((SQLConnection) ORMAPI.getConnection("db")).getConnection();
