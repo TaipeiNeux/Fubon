@@ -175,6 +175,9 @@ var GardenUtils = {
                         } //else
                     });
                 });
+				
+				//試看看能不能處理掉IE第一次灰色問題
+				$(window).resize();
             }
         },
 

@@ -130,7 +130,7 @@
                     <td class="file-en" id="studentIdNegativeImg_0">無</td>
                     <td class="file-upload">
 						
-					<a id="studentIdNegativeUpload_0">修改檔案</a>
+					<a id="studentIdNegativeUpload_0">修改檔案<input type="file" name="studentIdNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="studentIdNegativeView_0"></a>

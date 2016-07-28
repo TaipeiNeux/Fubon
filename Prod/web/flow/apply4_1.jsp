@@ -91,12 +91,38 @@
                     </td>
                 </tr>
 
-                <tr>
+                <tr id="register_view_0">
                     <td class="clickView" colspan="4" style="display:none" id="registerViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
                                 <!--<img id="registerViewImg_0" src="">-->
                                 <iframe id="registerViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr id="lowIncome_0" class="lowIncome" style="display:none">
+                    <td class="file-photo">
+                        <a>
+                            <img id="lowIncomePhoto_0" src="">
+                        </a>
+                    </td>
+                    <td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td>
+                    <td class="file-en" id="lowIncomeImg_0">無</td>
+                    <td class="file-upload"><a id="lowIncomeUpload_0">上傳檔案<input type="file" name="lowIncomeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    </td>
+                    <td class="file-view">
+                        <a id="lowIncomeView_0"></a>
+                    </td>
+                </tr>
+
+                <tr id="lowIncome_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="lowIncomeViewTag_0">
+                        <div class="dowitemContent" style="display:block">
+                            <div class="imgBox">
+
+                                <iframe id="lowIncomeViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>

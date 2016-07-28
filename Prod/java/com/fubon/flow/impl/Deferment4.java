@@ -33,7 +33,6 @@ public class Deferment4 implements ILogic {
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         String userId = loginUserBean.getUserId();
 
-		
         IDao dao = DaoFactory.getDefaultDao();
 
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
@@ -117,7 +116,14 @@ public class Deferment4 implements ILogic {
         mailBean.addResultParam("result",(result.equals("success") ? "您已成功送出申請資料!" : "申請失敗("+errorCode+")"+errorMsg));
         mailBean.addResultParam("imgSrc",result.equals("success") ? "{host}/img/na-14.png" : "{host}/img/deny.png");
         mailBean.addResultParam("eligibilityText",eligibilityText);
-        mailBean.addResultParam("ReasonDate","民國" + year + "年" + month + "月" + day + "日");
+
+        if("延畢".equalsIgnoreCase(eligibilityText)) {
+            mailBean.addResultParam("ReasonMemo","(延畢者應每學期申請延期一次)");
+        }
+        else {
+            mailBean.addResultParam("ReasonMemo",ReasonDate + " 民國" + year + "年" + month + "月" + day + "日");
+        }
+
 
         MessageUtils.sendEmail(mailBean);
 

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
 	
+	
 	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">
@@ -654,8 +655,9 @@
         <table class="mqua">
             <thead>
                 <tr>
-                    <th colspan="2">檔案名稱</th>
-                    <th>檔案上傳</th>
+                    <th></th>
+                    <th>檔案名稱</th>
+                    <th>上傳/修改</th>
                     <th>預覽</th>
                 </tr>
             </thead>
@@ -668,7 +670,7 @@
                     </td>
                     <td class="file-zh">身分證正面影本</td>
                     <td class="file-en" id="idPositiveImg_0">無</td>
-                    <td class="file-upload"><a id="idPositiveUpload_0">修改檔案<input type="file" name="idPositiveFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-upload"><a id="idPositiveUpload_0">上傳檔案<input type="file" name="idPositiveFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="idPositiveView_0" class=""></a>
@@ -695,7 +697,7 @@
                     </td>
                     <td class="file-zh">身分證反面影本</td>
                     <td class="file-en" id="idNegativeImg_0">無</td>
-                    <td class="file-upload"><a id="idNegativeUpload_0">修改檔案<input type="file" name="idNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-upload"><a id="idNegativeUpload_0">上傳檔案<input type="file" name="idNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="idNegativeView_0"></a>
@@ -723,19 +725,45 @@
                         <span>（含註冊繳費單、住宿費用）</span>
                     </td>
                     <td class="file-en" id="registerImg_0">無</td>
-                    <td class="file-upload"><a id="registerUpload_0">修改檔案<input type="file" name="registerFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    <td class="file-upload"><a id="registerUpload_0">上傳檔案<input type="file" name="registerFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="registerView_0"></a>
                     </td>
                 </tr>
 
-                <tr>
+                <tr id="register_view_0">
                     <td class="clickView" colspan="4" style="display:none" id="registerViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
                                 <!--<img id="registerViewImg_0" src="">-->
                                 <iframe id="registerViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr id="lowIncome_0" class="lowIncome" style="display:none">
+                    <td class="file-photo">
+                        <a>
+                            <img id="lowIncomePhoto_0" src="">
+                        </a>
+                    </td>
+                    <td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td>
+                    <td class="file-en" id="lowIncomeImg_0">無</td>
+                    <td class="file-upload"><a id="lowIncomeUpload_0">上傳檔案<input type="file" name="lowIncomeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
+                    </td>
+                    <td class="file-view">
+                        <a id="lowIncomeView_0"></a>
+                    </td>
+                </tr>
+
+                <tr id="lowIncome_view_0">
+                    <td class="clickView" colspan="4" style="display:none" id="lowIncomeViewTag_0">
+                        <div class="dowitemContent" style="display:block">
+                            <div class="imgBox">
+
+                                <iframe id="lowIncomeViewImg_0" src="" style="width:100%; height: 100%;"></iframe>
                             </div>
                         </div>
                     </td>

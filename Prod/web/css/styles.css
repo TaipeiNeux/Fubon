@@ -17239,12 +17239,16 @@ body.apply_map .fc-today {
     background: #0E89CB;
 }
 */
+
+
+/*
 body.apply_map .greyGrey,
 .fc-sat,
 .fc-sun {
     color: #DEDEDE;
     background-color: #F0F0F0;
 }
+*/
 .fc-past {
     background-color: #F0F0F0;
 }

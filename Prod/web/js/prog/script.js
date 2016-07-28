@@ -1585,7 +1585,6 @@ function getCarryObj(content) {
                     } else if (level2Picked == '2') {
                         parentsArr[1].checkMother = true;
                         var check = checkParents(parentsArr, adult, isGuarantor, isIncome);
-
                         if (check == 'checkMother') {
                             gaurantorObjArr.push('ab', 'ab');
                         } else {
@@ -1630,7 +1629,8 @@ function getCarryObj(content) {
                     gaurantorObjArr.push('c', 'c');
                     break;
             }
-        } else if (adult == 'Y') { //已成年未婚
+        } 
+		else if (adult == 'Y') { //已成年未婚
             switch (level1Picked) {
                 case '1':
                     if (level2Picked == '1') {
@@ -1692,7 +1692,7 @@ function getCarryObj(content) {
                     }
                     break;
                 case '4':
-                    gaurantorObjArr.push('c', 'ab', 'c', 'c');
+                    gaurantorObjArr.push('c', 'c', 'ab', 'c');
                     break;
             }
         }
@@ -1745,6 +1745,7 @@ function getCarryObj(content) {
 }
 
 function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
+//alert(isGuarantor);
     var returnString = '';
     if (isAdult == 'N') {
         $.each(parentsArr, function(index, obj) {
@@ -1753,6 +1754,7 @@ function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
                     var current = isGuarantor.substr(index, 1); //當前的人的值
                     if (current == '1') {
                         returnString = returnString + objIndex;
+						//alert('index:'+index);
                     }
                 }
             });
@@ -1769,6 +1771,7 @@ function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
             });
         });
     }
+	//alert('final:'+returnString);
     return returnString;
 }
 
@@ -1858,15 +1861,17 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
                 break;
             case 4: //(依判斷塞連帶保證人)之除戶謄本或死亡證明
                 var sameObj = '';
+				
                 for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
-                    if (g != gaurantorObjArray[k].length - 1) {
-                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex] + '、';
-                        gaurantorIndex += 1;
-                    } else {
+                    if (g != gaurantorObjArray[k].length - 1) {				
                         sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
+						sameObj = sameObj.split('(')[0] + '、';
+                        gaurantorIndex += 1;
+                    } else {               
+						sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
                         gaurantorIndex += 1;
                     }
-
+				
                     sameObj = sameObj.split('(')[0];
                     allObjArr[k] = sameObj + '之除戶謄本或死亡證明';
                 }

@@ -77,7 +77,17 @@ public class Apply1_2 implements ILogic {
         Document step1Doc = DocumentHelper.parseText(draftXML);
         Element step1Root = step1Doc.getRootElement();
 
-        birthday = step1Root.element("birthday").getText();
+        String yearBirthday = step1Root.element("birthday0").getText();
+        String monthBirthday = step1Root.element("birthday2").getText();
+        String dayBirthday = step1Root.element("birthday4").getText();
+
+        monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
+        dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
+
+        birthday = yearBirthday + monthBirthday + dayBirthday;
+//        birthday = ProjUtils.toYYYYBirthday(birthday);
+
+//        birthday = step1Root.element("birthday").getText();
         marryStatus = step1Root.element("marryStatus").getText();
 
         content.put("birthday",birthday);
