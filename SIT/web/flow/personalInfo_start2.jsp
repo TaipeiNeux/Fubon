@@ -20,7 +20,7 @@
         <!-- 由flow.js自己長 -->
         <div class="processTab"></div>
 
-        <div class="processArea" style="display:none;">
+        <div class="processArea">
             <div class="stepArea">
 
             </div>
@@ -28,11 +28,11 @@
             <div class="processOutBox">
                 <div class="processBox">
                     <form id="mainForm">
-                        <div class="processInner">
-                           <h2 class="who whos">申請人基本資料</h2>
+                        <h2 class="who whos">申請人基本資料</h2>
                             <div class="editBtnBoxTop editBtnbot">
                                     <a href="personalInfo_flow.jsp" class="editBtn">修改</a>
                                 </div>
+                        <div class="processInner">
                             <div class="dan">
                                 <div class="editBtnBoxTop">
                                     <a href="personalInfo_flow.jsp" class="editBtn">修改</a>
@@ -44,7 +44,7 @@
                                             <p>身分證字號</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>A123****89</p>
                                         </div>
                                     </div>
                                     <div class="joy ">
@@ -52,7 +52,7 @@
                                             <p>姓名</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>王*明</p>
                                         </div>
                                     </div>
                                     <div class="joy bgfff">
@@ -60,7 +60,7 @@
                                             <p>生日</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>民國75年10月8日</p>
                                         </div>
                                     </div>
                                     <div class="joy">
@@ -68,7 +68,7 @@
                                             <p>婚姻狀況</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>未婚</p>
                                         </div>
                                     </div>
                                     <div class="joy bgfff">
@@ -76,7 +76,7 @@
                                             <p>戶籍電話</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>(02) ******78</p>
                                         </div>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@
                                             <p>通訊電話</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>(02) ******78</p>
                                         </div>
                                     </div>
                                     <div class="joy">
@@ -94,7 +94,7 @@
                                             <p>Email</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>****45@gmail.com</p>
                                         </div>
                                     </div>
                                     <div class="joy bgfff">
@@ -102,7 +102,7 @@
                                             <p>行動電話</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>09*****541</p>
                                         </div>
                                     </div>
                                     <div class="joy ">
@@ -110,7 +110,7 @@
                                             <p>戶籍地址</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>新北市*********54號8樓</p>
                                         </div>
                                     </div>
                                     <div class="joy bgfff">
@@ -118,7 +118,7 @@
                                             <p>通訊地址</p>
                                         </div>
                                         <div class="right">
-                                            <p></p>
+                                            <p>新北市*********54號8樓</p>
                                         </div>
                                     </div>
                                 </div>
@@ -149,5 +149,5 @@
 
 <!-- 各別流程才各別載入所需的js -->
 
-<script src="js/prog/personalInfo_start.js?v=<%=System.currentTimeMillis()%>"></script>
+<script src="js/prog/personalInfo_start.js"></script>
 </body>

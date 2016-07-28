@@ -216,7 +216,6 @@ function deferment_1_valid() {
 }
 
 function deferment_2_valid() {
-    var result = true;
     var radioResult = true;
     //若原因為"繼續於國內升學",則多檢查是否有選擇"請確認學生證是否有本期註冊章"的radio
     var yes = $('#registerStamp_y:checked');
@@ -237,19 +236,35 @@ function deferment_2_valid() {
 
     //檢查文件是否都有上傳
 	var mustUploadFiles = ['isPositive', 'isNegative'];
+	var isPosTag = true;
+	var isNegTag = true;
+	var addTag = true;
+	var studentPosTag = true;
+	var studentNegTag = true;
 	
 	//先檢查有幾個相同類型文件的檔案
 	$.each(mustUploadFiles, function(index, value){
 		var len = $('.'+value+'').length;
 		if(len == 1){
 			var text =  $('#'+value+'Img_0').text();
+			
 			if( text == '無' ){
 				$('#hasDocument').show();
-				result = false;
+				if(value == 'isPositive'){
+					isPosTag = false;
+				}
+				else if(value == 'isNegative'){
+					isNegTag = false;
+				}
 			}
 			else{
 				$('#hasDocument').hide();
-				result = true;
+				if(value == 'isPositive'){
+					isPosTag = true;
+				}
+				else if(value == 'isNegative'){
+					isNegTag = true;
+				}
 			}
 		}
 	});
@@ -260,14 +275,15 @@ function deferment_2_valid() {
 			var text =  $('#additionalImg_0').text();
 			if( text == '無' ){
 				$('#hasDocument').show();
-				result = false;
+				addTag = false;
 			}
 			else{
 				$('#hasDocument').hide();
-				result = true;
+				addTag = true;
 			}
 		}
-    } else if (eliIndex == '1' || eliIndex == '3') {
+    } 
+	else if (eliIndex == '1' || eliIndex == '3') {
         if (yesLen != 0) {
             var selectUploadFiles = ['studentIdPositive', 'studentIdNegative'];
 	
@@ -278,11 +294,21 @@ function deferment_2_valid() {
 					var text =  $('#'+value+'Img_0').text();
 					if( text == '無' ){
 						$('#hasDocument').show();
-						result = false;
+						if(value == 'studentIdPositive'){
+							studentPosTag = false;
+						}
+						else if(value == 'studentIdNegative'){
+							studentNegTag = false;
+						}
 					}
 					else{
 						$('#hasDocument').hide();
-						result = true;
+						if(value == 'studentIdPositive'){
+							studentPosTag = true;
+						}
+						else if(value == 'studentIdNegative'){
+							studentNegTag = true;
+						}
 					}
 				}
 			});
@@ -292,11 +318,11 @@ function deferment_2_valid() {
 				var text =  $('#additionalImg_0').text();
 				if( text == '無' ){
 					$('#hasDocument').show();
-					result = false;
+					addTag = false;
 				}
 				else{
 					$('#hasDocument').hide();
-					result = true;
+					addTag = true;
 				}
 			}
         }
@@ -353,9 +379,21 @@ function deferment_2_valid() {
         $('#documentSize').hide();
         sizeResult = true;
     }
-	//sizeResult = true;
-
-    if (sizeResult == true && result == true && radioResult == true) {
+	
+	/*alert(isPosTag);
+	alert(isNegTag);
+	alert(addTag);
+	alert(studentPosTag);
+	alert(studentNegTag);*/
+	if(isPosTag == false || isNegTag == false || addTag == false || studentPosTag == false || studentNegTag == false){
+		$('#hasDocument').show();
+	}
+	else{
+		$('#hasDocument').hide();
+	}
+	
+	
+    if (sizeResult == true && radioResult == true && isPosTag == true && isNegTag == true && addTag == true && studentPosTag == true && studentNegTag == true) {
         return true;
     } else {
         return false;

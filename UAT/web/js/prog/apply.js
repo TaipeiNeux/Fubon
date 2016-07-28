@@ -6974,15 +6974,18 @@ function apply5_2(content) {
     /*申貸金額 (end)*/
     
     /*要攜帶的文件(start)*/
-    var signIOU = (content.signBill)?'Y':content.signBill; //是否需要簽立借據(須同時符合同一學程/同一學校/同一連帶保證人/同一申貸額度)
+    var signIOU = content.signBill; //是否需要簽立借據(須同時符合同一學程/同一學校/同一連帶保證人/同一申貸額度)
     var appoName = content.appoName; //本人姓名
     var loansPrice = content.loanPrice;
     var freedomLife = content.freedom.life;
     var accordingLife = content.accordingToBill.life;
     
     var objList = []; //要攜帶的物品
+	
+	console.debug(signIOU);
 
     if (signIOU == 'N') { //不需要簽立借據者
+	console.debug('NNNNNN');
         objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li><li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>');
 
         //判斷是否需要攜帶"政府機關出具之低收入戶或中低收入戶證明"
@@ -6998,6 +7001,7 @@ function apply5_2(content) {
 
     } 
 	else { //需要簽立借據者
+	console.debug('YYYYYY');
         var allObj = getCarryObj(content);
 		var objString = '';
         
