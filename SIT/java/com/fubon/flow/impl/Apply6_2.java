@@ -77,6 +77,7 @@ public class Apply6_2 implements ILogic {
         String branchName = "",branchAddr = "",branchTel="";
         String bookingTime = "";
         String objListHidden = "";
+        String signBill = "";
 
         //申請完了，要直接寫入AplyMemberTuitionLoanDtl
         String result = "申請成功-對保分行";
@@ -88,6 +89,8 @@ public class Apply6_2 implements ILogic {
 
             boolean isAdult = ProjUtils.isAdult(aplyMemberDataObject.getValue("AplyBirthday"));
             String aplyNo = aplyMemberDataObject.getValue("AplyNo");
+
+            signBill = "Y".equals(aplyMemberDataObject.getValue("signBill")) ? "Y" : "N";
 
             //去查連帶保證人的新開Table
             DataObject aplyMemberTuitionLoanDtlGuarantor = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Guarantor");
@@ -162,7 +165,14 @@ public class Apply6_2 implements ILogic {
             branchName = branch.getValue("BranchName");
             branchAddr = branch.getValue("Addr");
             branchTel = branch.getValue("Tel");
-            bookingTime = dateSelected + " " + timeSelected.substring(0,2) + ":" + timeSelected.substring(2);
+
+            String timeArea = "AM";
+            //如果小於早上九點，那就是下午時段
+            if(Integer.parseInt(timeSelected) < 900) {
+                timeArea = "PM";
+            }
+
+            bookingTime = DateUtil.convert14ToDate("yyyy/MM/dd",DateUtil.convertDateTo14(dateSelected)) + " " + timeArea + timeSelected.substring(0,2) + ":" + timeSelected.substring(2) + "-" + StringUtils.leftPad(Integer.parseInt(timeSelected.substring(0,2)) + 1 + "",2,"0") + ":00";
 
             content.put("branchName",branch.getValue("BranchName")); // 分行名稱
             content.put("addr",branchAddr);          // 分行地址
@@ -178,8 +188,9 @@ public class Apply6_2 implements ILogic {
             //依照申請人取得線上續貸資料
             ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
 
+
             //放是否借據
-            content.put("signBill","Y".equals(aplyMemberDataObject.getValue("signBill")) ? "Y" : "N");
+            content.put("signBill",signBill);
 
             content.put("father_RadioBtn",isFaGuarantor);
             content.put("mother_RadioBtn",isMaGuarantor);
@@ -253,6 +264,7 @@ public class Apply6_2 implements ILogic {
         mailBean.addResultParam("time",bookingTime);
         mailBean.addResultParam("result",(StringUtils.isEmpty(errorCode) ? "<img src=\"{host}/img/na-14.png\">您已成功送出申請資料" : "<img src=\"{host}/img/na-16.png\">送出申請資料失敗("+errorCode+")"+errorMsg));
         mailBean.addResultParam("document",objListHidden);
+        mailBean.addResultParam("signBill","Y".equals(signBill) ? "並連同保證人" : "");
         MessageUtils.sendEmail(mailBean);
 
     }

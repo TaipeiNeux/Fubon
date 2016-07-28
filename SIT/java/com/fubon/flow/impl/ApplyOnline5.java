@@ -9,6 +9,7 @@ import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -52,6 +53,8 @@ public class ApplyOnline5 implements ILogic {
         String isGuarantor = apply2Root.element("isGuarantor").getText(); //共四碼，只有0或1，0代表不是，1代表是。例如：0001代表只有配偶是連帶保證人
 
         String isAdult = content.getString("isAdult");
+
+
 
         String faID = "" , maID = "" , thirdPartID = "",spouseId = "";
         if(apply2Root.element("father_id") != null) faID = apply2Root.element("father_id").getText();
@@ -103,6 +106,9 @@ public class ApplyOnline5 implements ILogic {
         String loanAmt = content.getString("loanAmt");
         String eduStageCode = "";
 
+        //過濾半形逗點
+        loanAmt = StringUtils.replace(loanAmt, ",", "");
+
         SQLCommand query = new SQLCommand("select EduStageCode from SchoolEduStageCode where SchoolType1 = ? and SchoolType2 = ? and SchoolType3 = ?");
         query.addParamValue(content.getJSONObject("school").getString("isNational"));
         query.addParamValue(content.getJSONObject("school").getString("isDay"));
@@ -124,7 +130,8 @@ public class ApplyOnline5 implements ILogic {
 
 
         ProjUtils.checkSignBill(dao, aplyMemberDataObject, nowIdSet);
-        String signBill = aplyMemberDataObject.getValue("signBill");
+
+        String signBill = "Y".equals(aplyMemberDataObject.getValue("signBill")) ? "Y" : "N";
 
         //抓4的草稿，取得分行代碼，預約時間
         Element apply4Root = apply4Doc.getRootElement();
@@ -145,10 +152,10 @@ public class ApplyOnline5 implements ILogic {
 
         //配合最後寄發email，要先加下列參數讓前台判斷帶哪些文件
         content.put("signBill",signBill);
-        content.put("fatherName",fatherName);
-        content.put("motherName",motherName);
-        content.put("thirdPartyName",thirdPartyName);
-        content.put("spouseName",spouseName);
+        content.put("fatherName",ProjUtils.toNameMark(fatherName));
+        content.put("motherName",ProjUtils.toNameMark(motherName));
+        content.put("thirdPartyName",ProjUtils.toNameMark(thirdPartyName));
+        content.put("spouseName",ProjUtils.toNameMark(spouseName));
         content.put("appoName",content.getString("name"));
         content.put("loanPrice",content.getString("loans"));
         content.put("thirdPartyTitleHidden",content.getString("thirdPartyTitle"));

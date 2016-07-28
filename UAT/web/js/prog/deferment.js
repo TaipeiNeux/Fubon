@@ -1219,7 +1219,7 @@ function previewClickHandler(obj) {
         if(fileName != undefined) {
             fileName = fileName.substring(fileName.lastIndexOf('.')+1);
         }
-
+		fileName = fileName.toLowerCase();
 //			var fileName = $('[name="'+itemName+'Name_hidden'+fileIndex+'"]').val();
 
         previewDocument($('#'+itemName+'ViewTag_'+fileIndex+' iframe').attr('src'), fileName);

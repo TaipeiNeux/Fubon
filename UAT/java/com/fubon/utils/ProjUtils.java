@@ -2366,8 +2366,9 @@ public class ProjUtils {
     }
 
     public static String encodingNumber(String docId) throws Exception {
-        docId = docId + "01";
-        docId = StringUtils.leftPad(docId,20,"0");
+
+        docId = StringUtils.leftPad(docId,10,"0");
+        docId = "!@#$%" + docId + "!@#$%";
 
         docId = new String(Base64.encodeBase64(docId.getBytes("utf-8")),"utf-8");
         return docId;
@@ -2375,8 +2376,11 @@ public class ProjUtils {
 
     public static String decodingNumber(String docId) throws Exception {
         docId = new String(Base64.decodeBase64(docId.getBytes("utf-8")),"utf-8");
+
+        docId = docId.substring(5,docId.length()-5);
+
         docId = Integer.parseInt(docId) + "";
-        docId = docId.substring(0,docId.length()-2);
+
         return docId;
     }
 }

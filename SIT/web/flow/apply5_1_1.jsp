@@ -759,7 +759,7 @@
                 </tr>
 
                 <tr id="lowIncome_view_0">
-                    <td class="clickView" colspan="4" style="display:none" id="lowIncomeTag_0">
+                    <td class="clickView" colspan="4" style="display:none" id="lowIncomeViewTag_0">
                         <div class="dowitemContent" style="display:block">
                             <div class="imgBox">
 

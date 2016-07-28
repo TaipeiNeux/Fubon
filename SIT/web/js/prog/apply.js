@@ -5036,8 +5036,8 @@ function previewClickHandler(obj) {
         if(fileName != undefined) {
             fileName = fileName.substring(fileName.lastIndexOf('.')+1);
         }
-
-//			var fileName = $('[name="'+itemName+'Name_hidden'+fileIndex+'"]').val();
+		fileName = fileName.toLowerCase();
+		//alert(fileName);
 
         previewDocument($('#'+itemName+'ViewTag_'+fileIndex+' iframe').attr('src'), fileName);
     }
@@ -6983,8 +6983,7 @@ function apply5_2(content) {
     var objList = []; //要攜帶的物品
 
     if (signIOU == 'N') { //不需要簽立借據者
-        objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li>' +
-            '<li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>');
+        objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li><li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>');
 
         //判斷是否需要攜帶"政府機關出具之低收入戶或中低收入戶證明"
         if (loansPrice == '1') {
@@ -6997,8 +6996,10 @@ function apply5_2(content) {
             }
         }
 
-    } else { //需要簽立借據者
+    } 
+	else { //需要簽立借據者
         var allObj = getCarryObj(content);
+		var objString = '';
         
         console.debug(allObj);
 
@@ -7006,13 +7007,15 @@ function apply5_2(content) {
         objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li>');
         $.each(allObj, function(i, obj) {
             objList.push('<li><p class="nasi">' + obj + '</p></li>');
+			objString = objString + '<li><p class="nasi">' + obj + '</p></li>';
         });
     }
     
     //將要攜帶的物品塞入hidden中
-    $('[name="objListHidden"]').val(objList);
+    $('[name="objListHidden"]').val(objString);
     
     console.debug(objList);
+    console.debug(objString);
     /*要攜帶的文件(end)*/
 }
 
@@ -7061,7 +7064,6 @@ function setSchoolInformation(element, string) {
         ele.text(string[index]);
     });
 }
-
 
 function apply6_1(content) {
     var applyDate = new Date();
