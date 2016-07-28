@@ -6981,21 +6981,25 @@ function apply5_2(content) {
     var accordingLife = content.accordingToBill.life;
     
     var objList = []; //要攜帶的物品
+    var objString = '';
 	
 	console.debug(signIOU);
 
     if (signIOU == 'N') { //不需要簽立借據者
-	console.debug('NNNNNN');
+	console.debug('NNNNNN');      
         objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li><li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>');
-
+		objString = objString + '<li><p class="nasi">註冊繳費單/住宿費用單據</p></li><li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>';
+		
         //判斷是否需要攜帶"政府機關出具之低收入戶或中低收入戶證明"
         if (loansPrice == '1') {
             if (accordingLife > 0) {
                 objList.push('<li><p class="nasi">政府機關出具之低收入戶或中低收入戶證明</p></li>');
+                objString = objString + '<li><p class="nasi">政府機關出具之低收入戶或中低收入戶證明</p></li>';
             }
         } else if (loansPrice == '2') {
             if (freedomLife > 0) {
                 objList.push('<li><p class="nasi">政府機關出具之低收入戶或中低收入戶證明</p></li>');
+                objString = objString + '<li><p class="nasi">政府機關出具之低收入戶或中低收入戶證明</p></li>';
             }
         }
 
@@ -7003,7 +7007,6 @@ function apply5_2(content) {
 	else { //需要簽立借據者
 	console.debug('YYYYYY');
         var allObj = getCarryObj(content);
-		var objString = '';
         
         console.debug(allObj);
 

@@ -121,7 +121,7 @@ public class Deferment4 implements ILogic {
             mailBean.addResultParam("ReasonMemo","(延畢者應每學期申請延期一次)");
         }
         else {
-            mailBean.addResultParam("ReasonMemo","預計畢業日期 民國" + year + "年" + month + "月" + day + "日");
+            mailBean.addResultParam("ReasonMemo",ReasonDate + " 民國" + year + "年" + month + "月" + day + "日");
         }
 
 
