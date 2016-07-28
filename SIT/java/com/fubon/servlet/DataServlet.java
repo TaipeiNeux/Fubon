@@ -1695,7 +1695,7 @@ public class DataServlet extends HttpServlet {
                         "        <DLY_AMT>0</DLY_AMT>\n" +
                         "        <FILED_06/>\n" +
                         "        <TOT_AMT>1</TOT_AMT>\n" +
-                        "        <YR_TERM>0951</YR_TERM>\n" +
+                        "        <YR_TERM>0952</YR_TERM>\n" +
                         "        <MEMO/>\n" +
                         "        <FILED_07/>\n" +
                         "        <LOAN_BAL>38,337</LOAN_BAL>\n" +
@@ -1714,7 +1714,7 @@ public class DataServlet extends HttpServlet {
                         "        <DLY_AMT>0</DLY_AMT>\n" +
                         "        <FILED_06/>\n" +
                         "        <TOT_AMT>620</TOT_AMT>\n" +
-                        "        <YR_TERM>0951</YR_TERM>\n" +
+                        "        <YR_TERM>0950</YR_TERM>\n" +
                         "        <MEMO/>\n" +
                         "        <FILED_07/>\n" +
                         "        <LOAN_BAL>37,775</LOAN_BAL>\n" +

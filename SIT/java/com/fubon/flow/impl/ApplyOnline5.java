@@ -151,12 +151,13 @@ public class ApplyOnline5 implements ILogic {
         content.put("timeSelected",timeSelected);
 
         //配合最後寄發email，要先加下列參數讓前台判斷帶哪些文件
+        content.put("aplyName",content.getString("name"));
         content.put("signBill",signBill);
         content.put("fatherName",ProjUtils.toNameMark(fatherName));
         content.put("motherName",ProjUtils.toNameMark(motherName));
         content.put("thirdPartyName",ProjUtils.toNameMark(thirdPartyName));
         content.put("spouseName",ProjUtils.toNameMark(spouseName));
-        content.put("appoName",content.getString("name"));
+        content.put("appoName",ProjUtils.toNameMark(content.getString("name")));
         content.put("loanPrice",content.getString("loans"));
         content.put("thirdPartyTitleHidden",content.getString("thirdPartyTitle"));
         content.put("applicantAdult",isAdult);

@@ -288,7 +288,20 @@ var RepaymentInquiry_controller = (function(){
             $.each(detail.datas, function(j, col){
                 var val_str = col.value;
                 if(col.displayText == '學期別'){
-                    val_str = parseInt(val_str/10)+'年'+(parseInt(val_str%10)==1?'上':'下')+'學期';
+					console.debug('val_str ===> ' + val_str);
+					
+					var semister = val_str.substring(3,4);
+					console.debug('semister = ' + semister);
+					
+					var text = '';
+					if(semister == '1') {
+						text = '上';
+					}
+					else if(semister == '2') {
+						text = '下';
+					}
+					
+                    val_str = parseInt(val_str/10)+'年'+text+'學期';
                 }
 
                 trTmp.push({
