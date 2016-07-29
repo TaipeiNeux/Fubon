@@ -68,9 +68,15 @@ var GardenUtils = {
             if (isLoadGoogle) {
                 drawAddress(googleAddr);
             } else {
-                $.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
+                
+				
+				$.getScript("//maps.google.com/maps/api/js?key=AIzaSyChyBpKgg076pEK6saWdPUJ3_XlGdb6lCs&sensor=true").done(function() {
                     drawAddress(googleAddr);
                 });
+				/**
+				$.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
+                    drawAddress(googleAddr);
+                });**/
             }
 
             function drawAddress(googleAddr) {
