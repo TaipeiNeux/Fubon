@@ -998,7 +998,7 @@ public class DataServlet extends HttpServlet {
                         "and ExpectDate like ?\n" +
                         "order by ExpectDate,ExpectTime");
                 query.addParamValue(branchId);
-                query.addParamValue(todayYear + month + "%");
+                query.addParamValue(todayYear + "%");
                 Vector<DataObject> ret = new Vector<DataObject>();
                 dao.queryByCommand(ret,query,null,null);
 

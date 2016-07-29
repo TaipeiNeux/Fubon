@@ -6307,21 +6307,26 @@ function showUploadFiles(content, step) {
                         itemNameViewImg = $('#'+itemName+'ViewImg_'+index+'');
                         fileItemName = $('#'+itemName+'_'+index+' .file-zh');
 						
-						//如果是最後一個,就再多長一個"上傳更多"的li
-						if((docLen-1) == index){
-							var tr = $('#'+itemName+'_'+index);
-							var newTr = addNewFile(tr, itemName, docLen,'上傳更多');
+						//2016-07-29 added by titan 長預設值的時候多加上判斷是註冊單或低收入戶才有下一個按鈕
+						if(itemName == 'lowIncome' || itemName == 'register') {
+				            //如果是最後一個,就再多長一個"上傳更多"的li
+							if((docLen-1) == index){
+								var tr = $('#'+itemName+'_'+index);
+								var newTr = addNewFile(tr, itemName, docLen,'上傳更多');
 
-	                        itemNamePhoto_img_more = newTr.find('#'+itemName+'Photo_img_'+docLen+'');
-	                        itemNameImg_more = newTr.find('#'+itemName+'Img_'+docLen+'');
-	                        itemNameUpload_more = newTr.find('#'+itemName+'Upload_'+docLen+'');
-	                        itemNameView_more = newTr.find('#'+itemName+'View_'+docLen+'');
-	                        itemNameViewImg_more = newTr.find('#'+itemName+'ViewImg_'+docLen+'');
-	                        fileItemName_more = newTr.find('#'+itemName+'_'+docLen+' .file-zh');
-							
-							itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
-		                    fileItemName_more.text(item);
-						}
+		                        itemNamePhoto_img_more = newTr.find('#'+itemName+'Photo_img_'+docLen+'');
+		                        itemNameImg_more = newTr.find('#'+itemName+'Img_'+docLen+'');
+		                        itemNameUpload_more = newTr.find('#'+itemName+'Upload_'+docLen+'');
+		                        itemNameView_more = newTr.find('#'+itemName+'View_'+docLen+'');
+		                        itemNameViewImg_more = newTr.find('#'+itemName+'ViewImg_'+docLen+'');
+		                        fileItemName_more = newTr.find('#'+itemName+'_'+docLen+' .file-zh');
+								
+								itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
+			                    fileItemName_more.text(item);
+							}
+				        }
+				        
+						
 
                     }
                     else{    //第一個以後用動態長的
