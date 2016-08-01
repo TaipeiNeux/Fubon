@@ -70,7 +70,7 @@
                 <tr id="isNegative_0" class="isNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="isNegativePhoto_0" src="">
+                            <img id="isNegativePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">身分證反面影本</td>
@@ -96,7 +96,7 @@
                 <tr id="studentIdPositive_0" style="display:none" class="studentIdPositive">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdPositivePhoto_0" src="">
+                            <img id="studentIdPositivePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">學生證正面影本(須蓋有繼續升學學校之註冊章戳)</td>
@@ -122,7 +122,7 @@
                 <tr id="studentIdNegative_0" style="display:none" class="studentIdNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdNegativePhoto_0" src="">
+                            <img id="studentIdNegativePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">學生證反面影本(須蓋有繼續升學學校之註冊章戳)</td>

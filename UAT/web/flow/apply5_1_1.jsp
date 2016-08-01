@@ -692,7 +692,7 @@
                 <tr id="idNegative_0" class="idNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="idNegativePhoto_0" src="">
+                            <img id="idNegativePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">身分證反面影本</td>
@@ -718,7 +718,7 @@
                 <tr id="register_0" class="register">
                     <td class="file-photo">
                         <a>
-                            <img id="registerPhoto_0" src="">
+                            <img id="registerPhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">註冊繳費單
@@ -746,7 +746,7 @@
                 <tr id="lowIncome_0" class="lowIncome" style="display:none">
                     <td class="file-photo">
                         <a>
-                            <img id="lowIncomePhoto_0" src="">
+                            <img id="lowIncomePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">政府機關出具之低收入戶或中低收入戶證明</td>

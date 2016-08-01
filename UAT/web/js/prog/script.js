@@ -572,7 +572,7 @@ $(document).ready(function() {
         setBannerAreaHeight();
 
         $("body").css("width", $(window).width());
-        $(".bannerArea").css("min-width", "400px");
+        $(".bannerArea").css("min-width", $(window).width());
 
 
 
@@ -630,7 +630,7 @@ $(document).ready(function() {
 function setBannerAreaHeight() {
     if ($(window).width() >= 769) {
         // var BannerAreaH = ($(window).height()) - (146 + 300);
-        var BannerAreaH = 350;
+        var BannerAreaH = 320;
         $('.bannerArea').css({
             'height': BannerAreaH
         });
@@ -681,6 +681,7 @@ $(document).ready(function() {
                 window.location = 'register.jsp';
             });
 
+			/**
             $('a.apply').click(function(ev) {
                 ev.preventDefault();
                 window.location = 'memberLogin.jsp';
@@ -691,7 +692,7 @@ $(document).ready(function() {
                 window.location = 'memberLogin.jsp';
             });
 
-
+**/
         } else { //已經登入
             $('.smbtnArea').hide();
             $('#isNotLogin').hide();
@@ -1417,26 +1418,21 @@ function checkSize(size) {
 
 //判斷不同狀況下,分析需要攜帶的文件之狀況
 function getCarryObj(content) {
+    console.debug(content);
     var appoName = content.appoName;
     var fatherName = content.fatherName;
     var motherName = content.motherName;
     var thirdPartyName = content.thirdPartyName;
     var spouseName = content.spouseName;
     var loansPrice = content.loanPrice;
-    var father_RadioBtn = content.father_RadioBtn;
-    var mother_RadioBtn = content.mother_RadioBtn;
-    var thirdParty_RadioBtn = content.thirdParty_RadioBtn;
-    var spouse_RadioBtn = content.spouse_RadioBtn;
-    var father_checkbox = content.father_checkbox;
-    var mother_checkbox = content.mother_checkbox;
     var freedomLife = content.freedom.life;
     var accordingLife = content.accordingToBill.life;
     var adult = content.applicantAdult;
-    //var isGuarantor = content.isGuarantor;
     var marryStatus = content.marryStatus;
     var level1Picked = content.familyStatusLevel1;
     var level2Picked = content.familyStatusLevel2;
     var thirdPartyTitle = content.thirdPartyTitleHidden;
+    
     var gaurantorTitle = ["父親", "母親", thirdPartyTitle, "配偶"]; //放父親, 母親, 第三人, 配偶 的字串 
     var gaurantorName = ['(' + fatherName + ')', '(' + motherName + ')', '(' + thirdPartyName + ')', '(' + spouseName + ')']; //放父親, 母親, 第三人, 配偶的名字的字串
     var carryObjArr = []; //放1~6

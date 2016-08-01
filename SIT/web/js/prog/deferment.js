@@ -610,8 +610,6 @@ function deferment_3_1(content) {
     var date = $('[name="date"]');
     var cell = $('#cell');
 
-    
-
     //日期
     graDate.text(selectYear + '年' + selectMonth + '月' + selectDay + '日');
     date.val(selectYear + '年' + selectMonth + '月' + selectDay + '日');
@@ -935,8 +933,6 @@ function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
         trView = tr.next();  
     }
 
-
-    
 	console.debug('---------------------------');
 	console.debug(compareName);
 	
@@ -985,7 +981,7 @@ function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
 }
 
 //帶預設值for上傳檔案
-function showUploadFiles(content, hasRadio,step) {
+function showUploadFiles(content, hasRadio, step) {
 	console.debug(content);
     eliIndex = content.eliIndex;
 
@@ -1018,16 +1014,17 @@ function showUploadFiles(content, hasRadio,step) {
             if (hasRadio == 'Y') { //step2
                 studentIdRadioPicked.on('click', function(ev) {
 					
-					var addition = $('.additional');
                     var pickId = $(this).attr('id');
                     if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
-                        studentIdPositive.show();
+                        var addition = $('.additional');
+						studentIdPositive.show();
                         studentIdPositive_view.show();
                         studentIdNegative.show();
                         studentIdNegative_view.show();
                         RadioClickedHidden.val('Y');
                         addition.hide();
                     } else if (pickId == 'registerStamp_n') { //若學生證無本期註冊章,就顯示在學證明
+						var addition = $('.additional');
                         studentIdPositive.hide();
                         studentIdPositive_view.hide();
                         studentIdNegative.hide();
@@ -1080,9 +1077,9 @@ function showUploadFiles(content, hasRadio,step) {
             var studentIdNegative_view = $('#studentIdNegative_view_0');
             var studentIdRadioPicked = studentIdCardRadio.find('input');
             var itemName = 'additional';
+			var addition = $('.additional');
             var additionName = showFileString(itemName);
             addNewFile(null, itemName, fileIndex++,defaultName);
-            var addition = $('.additional');
             var RadioClicked = content.RadioClicked;
             var RadioClickedHidden = $('[name="RadioClicked"]');
             //檢查是否需要點選radio
@@ -1092,14 +1089,16 @@ function showUploadFiles(content, hasRadio,step) {
                     var pickId = $(this).attr('id');
 
                     if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
-                        studentIdPositive.show();
+                        var addition = $('.additional');
+						studentIdPositive.show();
                         studentIdPositive_view.show();
                         studentIdNegative.show();
                         studentIdNegative_view.show();
                         RadioClickedHidden.val('Y');
                         addition.hide();
                     } else if (pickId == 'registerStamp_n') { //若學生證無本期註冊章,就顯示在學證明
-                        studentIdPositive.hide();
+                        var addition = $('.additional');
+						studentIdPositive.hide();
                         studentIdPositive_view.hide();
                         studentIdNegative.hide();
                         studentIdNegative_view.hide();
@@ -1125,10 +1124,10 @@ function showUploadFiles(content, hasRadio,step) {
             }
 
             if (hasRadio == 'Y') {
-                addition.hide();
+                $('.additional').hide();
             } else {
                 if (RadioClicked == 'Y') {
-                    addition.hide();
+                    $('.additional').hide();
                 }
             }
             break;

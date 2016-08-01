@@ -3319,9 +3319,14 @@ body.memberLogin_1 .inputArea {
 
 /*---------------------------------------------------------------*/
 
-body.memberLogin_1 .register_1 {
-    display: none;
-    outline: 2px solid #FFF;
+
+@media (min-width:769px) {
+    
+    body.memberLogin_1 .register_1 {
+        display: none;
+        outline: 2px solid #FFF;
+    }
+    
 }
 
 
