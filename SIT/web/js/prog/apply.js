@@ -175,7 +175,7 @@ function apply1_1_valid() {
         group: 'birthday'
     }, {
         name: 'email',
-        msg: 'Email'
+        msg: 'Email，如有疑問，請洽客戶服務專線02-8751-6665按5'
     }, {
         name: 'DomicileArea',
         msg: '戶籍電話',
@@ -194,7 +194,7 @@ function apply1_1_valid() {
         group: 'tel'
     }, {
         name: 'cellPhone',
-        msg: '行動電話'
+        msg: '行動電話，如有疑問，請洽客戶服務專線02-8751-6665按5'
     }, {
         name: 'address',
         msg: '通訊地址',
@@ -355,6 +355,9 @@ function apply1_1_valid() {
 			var year = parseInt($('[name="birthday0"]').val());
 			var month = parseInt($('[name="birthday2"]').val());
 			var day = $('[name="birthday4"]').val();
+			var now = new Date();
+			var now_year = now.getFullYear() - 1911;
+			
 			if(day.indexOf('*') == -1){
 				 day = parseInt($('[name="birthday4"]').val());
 				 if (day > 31 || day < 1) {
@@ -371,6 +374,15 @@ function apply1_1_valid() {
                     msg: '生日格式錯誤'
                 });
             }
+			else{
+				var yearInt = parseInt(year);
+				if(now_year < yearInt){
+					customizeValidResult.push({
+	                    obj: $('[name="birthday0"]'),
+	                    msg: '生日格式錯誤'
+	                });
+				}
+			}
 			
 			if (month > 12 || month < 1) {
                 customizeValidResult.push({
@@ -1467,28 +1479,40 @@ function apply3_2_valid() {
 function apply4_1_valid() {
     //Foolproof
     //檢查文件是否都有上傳
+	
+	var result = true;
+	var lowIncomeTaxResult = true;
 
     $.each($(".file-en"),function(i,input){
 		console.debug(input);
         input = $(input);
-        if(!input.hasClass('new')) {
-            var thisText = input.text();
-            if (thisText == '無') {
-                $('#hasDocument').show();
-                result = false;
-				if($('#lowIncomeImg_0').is(':hidden')){
-					$('#hasDocument').hide();
-					result = true;
-				}
-
-            } else {
-                $('#hasDocument').hide();
-                result = true;
-            }
-        }
-
-
+		if(input.attr('id') == 'lowIncomeImg_0'){   //如果要檢查低收入戶,要先檢查低收入戶的選項是否有展開
+			if(!($('#lowIncomeImg_0').is(':hidden'))){
+				if(!input.hasClass('new')) {
+		            var thisText = input.text();
+		            if (thisText == '無') {
+		                $('#hasDocument').show();
+		                lowIncomeTaxResult = false;
+		            } 
+		        }
+			}
+		}	
+		else{
+	        if(!input.hasClass('new')) {
+	            var thisText = input.text();
+	            if (thisText == '無') {
+	                $('#hasDocument').show();
+	                result = false;
+	            } 
+				//else {
+	                //$('#hasDocument').hide();
+	                //result = true;
+	            //}
+	        }
+		}
     });
+	
+	//alert(result);
 
     //檢查上傳文件合計大小是否超過10MB
     //var size = $('.fileSize');
@@ -1541,7 +1565,7 @@ function apply4_1_valid() {
     }
      **/
 
-    if (result == true && sizeTag == true) {
+    if (result == true && sizeTag == true && lowIncomeTaxResult == true) {
         return true;
     } else {
         return false;
@@ -4849,28 +4873,43 @@ function apply4_1(content) {
     var lifePriceOfFree = content.freedom.life;
     var lowIncomesArr = [];
     var uploadObj = $('#uploadObj');
-  
+	
     if (loansIndex == '1') {
         if (lifePriceOfBill > 0) {
             $('.lowIncome').show();
 			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
+		else{
+			$('.lowIncome').hide();
+		}
     } else if (loansIndex == '2') {
         if (lifePriceOfFree > 0) {
             $('.lowIncome').show();
 			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
+		else{
+			$('.lowIncome').hide();
+		}
     }
 //alert($('.file-view a').length);
     uploadEvent();
-
     showUploadFiles(content, '4');
 
     //綁預覽事件
-	
     $('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });
+	
+	if (loansIndex == '1') {
+        if (lifePriceOfBill == 0) {
+            $('.lowIncome').hide();
+		}
+    } 
+	else if (loansIndex == '2') {
+        if (lifePriceOfFree == 0) {
+            $('.lowIncome').hide();
+		}
+    }
 }
 
 function uploadEvent(input) {
@@ -4959,6 +4998,7 @@ function uploadEvent(input) {
                             if(tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多'){
                                 var nextIndex = parseInt(currentIndex) +1;
 								if( inputTitle == 'lowIncome' || inputTitle == 'register' ){
+
 									addNewFile(tr, inputTitle, nextIndex,'上傳更多');
 								}
 								$('.processInner').prepend(sizeArray);
@@ -5050,8 +5090,6 @@ function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
     if(tr != null){
         trView = tr.next();
     }
-
-
 
     console.debug('---------------------------');
     console.debug(compareName);
@@ -5210,7 +5248,8 @@ function apply4_2(content) {
             placeBranch.append(branchArray.join(''));
             branchArray = [];
 
-            var branchId;
+            
+	    var branchId;
             var reservation = $('.reservation');
             var region = $('.regionText');
             var firstAddress = $('.branchAddr:first').text(); //google map
@@ -5242,7 +5281,8 @@ function apply4_2(content) {
                     var siblings = thisBtn.siblings();
 
                     branchId = thisText.find('.branchId').attr('name'); //分行代碼
-
+console.debug('branchId:'+branchId);
+$('[name="idSelected"]').val(branchId);
                     //改分行資訊的底色
                     $('.regionText').removeClass('active');
                     thisText.addClass('active');
@@ -5284,7 +5324,7 @@ function apply4_2(content) {
                     dTime.text('');
                     timeSelected.val('0');
                     dateSelected.val('0');
-                    idSelected.val('0');
+                    //idSelected.val('0');
                     name.text(thisName);
                     addr.text(thisAddr);
                     /*var teleTemp = thisTel.split(')')[1];
@@ -5307,6 +5347,9 @@ function apply4_2(content) {
                     var calFull;
 
                     //抓這個分行的每時段最多預約人數
+branchId = idSelected.val();
+console.debug('branchId:'+branchId);
+
                     jsonBranch = modal.getFullString(month, branchId);
                     //jsonBranch = modal.getFullString(dateAppo, branchId); //傳日期及分行資訊去撈上可預約人物
                     console.debug(jsonBranch);
@@ -5521,11 +5564,14 @@ function apply4_2(content) {
                                 var clickMonth = parseInt(dateAppo.substr(5, 2));
                                 console.debug(clickMonth);
 
-                                idSelected.val(branchId);
+                         //idSelected.val(branchId);
 
                                 //長底下的時段
                                 $.each(valueTimeArray, function(i, value) {
-
+console.debug(valueTimeArray);
+console.debug(branchId);
+console.debug(maxPeople);
+console.debug(data_date);
                                     var timeMaxPeople = maxPeople; //先預設帶入這間分行每個時段的預設人數
                                     var timeCount = maxPeople; //該時段尚可預約人數
                                     var timeTotal = maxPeople; //該時段可預約總人數
@@ -5545,6 +5591,7 @@ function apply4_2(content) {
                                     if (bookingObj != undefined) {
                                         var times = bookingObj.times; //預約時段
                                         $.each(times, function(timeIndex, timeObj) {
+console.debug(times);
                                             timeTotal = timeObj.total; //該時段可預約總人數
                                             var timeCount2 = timeObj.count; //已被預約人數
                                             var timeStr = timeObj.time; //時段
@@ -5559,6 +5606,8 @@ function apply4_2(content) {
 
                                     //放入該時段目前還可預約人數
                                     $('#number' + (i + 1)).text(timeCount);
+console.debug(timeCount);
+console.debug(branchId);
 
                                     //if over time set full
                                     if(isToday) {
@@ -5769,6 +5818,7 @@ function apply4_2(content) {
     }
 }
 
+
 function apply5_1_1(content) {
     console.debug(content);
     var status1 = $('#status1');
@@ -5943,35 +5993,6 @@ function apply5_1_1(content) {
     setSchoolInformation(schoolElementArr, schoolStringArr);
 
     //保證人資料
-    /**
-     var array = ['father','mother','thirdParty','spouse'];
-     $.each(array,function(i,name){
-		var showInfoD = showInfo.substr(i, 1);
-		var putDiv = $('#' + name);
-		
-		modal.getFamilyInfo(name, 'Y', function(familyInfo) {
-                        // setInfoValue(fatherInfo, fatherDiv);
-                        setInfoText(familyInfo, fatherDiv);
-                        var dayBirthday = familyInfo.birthday.substr(5, 2);
-                        var monthBirthday = familyInfo.birthday.substr(3, 2);
-                        var yearBirthday = familyInfo.birthday.substr(0, 3);
-
-                        if (yearBirthday.length == 2) {
-                            yearBirthday = '0' + yearBirthday;
-                        }
-                        if (monthBirthday.length == 1) {
-                            monthBirthday = '0' + monthBirthday;
-                        }
-                        if (dayBirthday.length == 1) {
-                            dayBirthday = '0' + dayBirthday;
-                        }
-
-                        var birthdayStr = '民國' + yearBirthday + '年' + monthBirthday + '月' + dayBirthday + '日';
-                        $('[name="'+name+'_birthday"]').text(birthdayStr);
-                    });
-	});
-     **/
-
     for (var i = 0; i <= 3; i++) {
         var showInfoD = showInfo.substr(i, 1);
         fatherDiv = $('#father');
@@ -6228,6 +6249,17 @@ function apply5_1_1(content) {
     $('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });
+	
+	if (loansIndex == '1') {
+        if (lifePriceOfBill == 0) {
+            $('.lowIncome').hide();
+		}
+    } 
+	else if (loansIndex == '2') {
+        if (lifePriceOfFree == 0) {
+            $('.lowIncome').hide();
+		}
+    }
 }
 
 //帶預設值for上傳檔案
@@ -6307,9 +6339,8 @@ function showUploadFiles(content, step) {
                         itemNameViewImg = $('#'+itemName+'ViewImg_'+index+'');
                         fileItemName = $('#'+itemName+'_'+index+' .file-zh');
 						
-						//2016-07-29 added by titan 長預設值的時候多加上判斷是註冊單或低收入戶才有下一個按鈕
-						if(itemName == 'lowIncome' || itemName == 'register') {
-				            //如果是最後一個,就再多長一個"上傳更多"的li
+						if( itemName == 'lowIncome' || itemName == 'register' ){	
+							//如果是最後一個,就再多長一個"上傳更多"的li
 							if((docLen-1) == index){
 								var tr = $('#'+itemName+'_'+index);
 								var newTr = addNewFile(tr, itemName, docLen,'上傳更多');
@@ -6324,10 +6355,7 @@ function showUploadFiles(content, step) {
 								itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
 			                    fileItemName_more.text(item);
 							}
-				        }
-				        
-						
-
+						}	
                     }
                     else{    //第一個以後用動態長的
                         console.debug('長下一個：' + $('#'+itemName+'_'+(index-1)).length);
