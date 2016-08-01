@@ -175,7 +175,7 @@ function apply1_1_valid() {
         group: 'birthday'
     }, {
         name: 'email',
-        msg: 'Email'
+        msg: 'Email，如有疑問，請洽客戶服務專線02-8751-6665按5'
     }, {
         name: 'DomicileArea',
         msg: '戶籍電話',
@@ -194,7 +194,7 @@ function apply1_1_valid() {
         group: 'tel'
     }, {
         name: 'cellPhone',
-        msg: '行動電話'
+        msg: '行動電話，如有疑問，請洽客戶服務專線02-8751-6665按5'
     }, {
         name: 'address',
         msg: '通訊地址',
@@ -355,6 +355,9 @@ function apply1_1_valid() {
 			var year = parseInt($('[name="birthday0"]').val());
 			var month = parseInt($('[name="birthday2"]').val());
 			var day = $('[name="birthday4"]').val();
+			var now = new Date();
+			var now_year = now.getFullYear() - 1911;
+			
 			if(day.indexOf('*') == -1){
 				 day = parseInt($('[name="birthday4"]').val());
 				 if (day > 31 || day < 1) {
@@ -371,6 +374,15 @@ function apply1_1_valid() {
                     msg: '生日格式錯誤'
                 });
             }
+			else{
+				var yearInt = parseInt(year);
+				if(now_year < yearInt){
+					customizeValidResult.push({
+	                    obj: $('[name="birthday0"]'),
+	                    msg: '生日格式錯誤'
+	                });
+				}
+			}
 			
 			if (month > 12 || month < 1) {
                 customizeValidResult.push({
@@ -1467,28 +1479,40 @@ function apply3_2_valid() {
 function apply4_1_valid() {
     //Foolproof
     //檢查文件是否都有上傳
+	
+	var result = true;
+	var lowIncomeTaxResult = true;
 
     $.each($(".file-en"),function(i,input){
 		console.debug(input);
         input = $(input);
-        if(!input.hasClass('new')) {
-            var thisText = input.text();
-            if (thisText == '無') {
-                $('#hasDocument').show();
-                result = false;
-				if($('#lowIncomeImg_0').is(':hidden')){
-					$('#hasDocument').hide();
-					result = true;
-				}
-
-            } else {
-                $('#hasDocument').hide();
-                result = true;
-            }
-        }
-
-
+		if(input.attr('id') == 'lowIncomeImg_0'){   //如果要檢查低收入戶,要先檢查低收入戶的選項是否有展開
+			if(!($('#lowIncomeImg_0').is(':hidden'))){
+				if(!input.hasClass('new')) {
+		            var thisText = input.text();
+		            if (thisText == '無') {
+		                $('#hasDocument').show();
+		                lowIncomeTaxResult = false;
+		            } 
+		        }
+			}
+		}	
+		else{
+	        if(!input.hasClass('new')) {
+	            var thisText = input.text();
+	            if (thisText == '無') {
+	                $('#hasDocument').show();
+	                result = false;
+	            } 
+				//else {
+	                //$('#hasDocument').hide();
+	                //result = true;
+	            //}
+	        }
+		}
     });
+	
+	//alert(result);
 
     //檢查上傳文件合計大小是否超過10MB
     //var size = $('.fileSize');
@@ -1541,7 +1565,7 @@ function apply4_1_valid() {
     }
      **/
 
-    if (result == true && sizeTag == true) {
+    if (result == true && sizeTag == true && lowIncomeTaxResult == true) {
         return true;
     } else {
         return false;
@@ -4849,28 +4873,43 @@ function apply4_1(content) {
     var lifePriceOfFree = content.freedom.life;
     var lowIncomesArr = [];
     var uploadObj = $('#uploadObj');
-  
+	
     if (loansIndex == '1') {
         if (lifePriceOfBill > 0) {
             $('.lowIncome').show();
 			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
+		else{
+			$('.lowIncome').hide();
+		}
     } else if (loansIndex == '2') {
         if (lifePriceOfFree > 0) {
             $('.lowIncome').show();
 			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
+		else{
+			$('.lowIncome').hide();
+		}
     }
 //alert($('.file-view a').length);
     uploadEvent();
-
     showUploadFiles(content, '4');
 
     //綁預覽事件
-	
     $('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });
+	
+	if (loansIndex == '1') {
+        if (lifePriceOfBill == 0) {
+            $('.lowIncome').hide();
+		}
+    } 
+	else if (loansIndex == '2') {
+        if (lifePriceOfFree == 0) {
+            $('.lowIncome').hide();
+		}
+    }
 }
 
 function uploadEvent(input) {
@@ -4959,6 +4998,7 @@ function uploadEvent(input) {
                             if(tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多'){
                                 var nextIndex = parseInt(currentIndex) +1;
 								if( inputTitle == 'lowIncome' || inputTitle == 'register' ){
+
 									addNewFile(tr, inputTitle, nextIndex,'上傳更多');
 								}
 								$('.processInner').prepend(sizeArray);
@@ -5050,8 +5090,6 @@ function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
     if(tr != null){
         trView = tr.next();
     }
-
-
 
     console.debug('---------------------------');
     console.debug(compareName);
@@ -5955,35 +5993,6 @@ function apply5_1_1(content) {
     setSchoolInformation(schoolElementArr, schoolStringArr);
 
     //保證人資料
-    /**
-     var array = ['father','mother','thirdParty','spouse'];
-     $.each(array,function(i,name){
-		var showInfoD = showInfo.substr(i, 1);
-		var putDiv = $('#' + name);
-		
-		modal.getFamilyInfo(name, 'Y', function(familyInfo) {
-                        // setInfoValue(fatherInfo, fatherDiv);
-                        setInfoText(familyInfo, fatherDiv);
-                        var dayBirthday = familyInfo.birthday.substr(5, 2);
-                        var monthBirthday = familyInfo.birthday.substr(3, 2);
-                        var yearBirthday = familyInfo.birthday.substr(0, 3);
-
-                        if (yearBirthday.length == 2) {
-                            yearBirthday = '0' + yearBirthday;
-                        }
-                        if (monthBirthday.length == 1) {
-                            monthBirthday = '0' + monthBirthday;
-                        }
-                        if (dayBirthday.length == 1) {
-                            dayBirthday = '0' + dayBirthday;
-                        }
-
-                        var birthdayStr = '民國' + yearBirthday + '年' + monthBirthday + '月' + dayBirthday + '日';
-                        $('[name="'+name+'_birthday"]').text(birthdayStr);
-                    });
-	});
-     **/
-
     for (var i = 0; i <= 3; i++) {
         var showInfoD = showInfo.substr(i, 1);
         fatherDiv = $('#father');
@@ -6240,6 +6249,17 @@ function apply5_1_1(content) {
     $('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });
+	
+	if (loansIndex == '1') {
+        if (lifePriceOfBill == 0) {
+            $('.lowIncome').hide();
+		}
+    } 
+	else if (loansIndex == '2') {
+        if (lifePriceOfFree == 0) {
+            $('.lowIncome').hide();
+		}
+    }
 }
 
 //帶預設值for上傳檔案
@@ -6319,22 +6339,23 @@ function showUploadFiles(content, step) {
                         itemNameViewImg = $('#'+itemName+'ViewImg_'+index+'');
                         fileItemName = $('#'+itemName+'_'+index+' .file-zh');
 						
-						//如果是最後一個,就再多長一個"上傳更多"的li
-						if((docLen-1) == index){
-							var tr = $('#'+itemName+'_'+index);
-							var newTr = addNewFile(tr, itemName, docLen,'上傳更多');
+						if( itemName == 'lowIncome' || itemName == 'register' ){	
+							//如果是最後一個,就再多長一個"上傳更多"的li
+							if((docLen-1) == index){
+								var tr = $('#'+itemName+'_'+index);
+								var newTr = addNewFile(tr, itemName, docLen,'上傳更多');
 
-	                        itemNamePhoto_img_more = newTr.find('#'+itemName+'Photo_img_'+docLen+'');
-	                        itemNameImg_more = newTr.find('#'+itemName+'Img_'+docLen+'');
-	                        itemNameUpload_more = newTr.find('#'+itemName+'Upload_'+docLen+'');
-	                        itemNameView_more = newTr.find('#'+itemName+'View_'+docLen+'');
-	                        itemNameViewImg_more = newTr.find('#'+itemName+'ViewImg_'+docLen+'');
-	                        fileItemName_more = newTr.find('#'+itemName+'_'+docLen+' .file-zh');
-							
-							itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
-		                    fileItemName_more.text(item);
-						}
-
+		                        itemNamePhoto_img_more = newTr.find('#'+itemName+'Photo_img_'+docLen+'');
+		                        itemNameImg_more = newTr.find('#'+itemName+'Img_'+docLen+'');
+		                        itemNameUpload_more = newTr.find('#'+itemName+'Upload_'+docLen+'');
+		                        itemNameView_more = newTr.find('#'+itemName+'View_'+docLen+'');
+		                        itemNameViewImg_more = newTr.find('#'+itemName+'ViewImg_'+docLen+'');
+		                        fileItemName_more = newTr.find('#'+itemName+'_'+docLen+' .file-zh');
+								
+								itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
+			                    fileItemName_more.text(item);
+							}
+						}	
                     }
                     else{    //第一個以後用動態長的
                         console.debug('長下一個：' + $('#'+itemName+'_'+(index-1)).length);
