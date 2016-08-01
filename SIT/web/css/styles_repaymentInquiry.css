@@ -1,0 +1,85 @@
+.repaymentInquiry_ .contentArea {
+    padding-top: 180px;
+}
+
+.repaymentInquiry_ .searchResult .repayTable {
+    border: solid 1px #676868;
+}
+
+.repaymentInquiry_ .searchResult .repayTable .rema th {
+    background: #ededed;
+    padding: 15px 0px;
+    color: #2b2c2c;
+    font-weight: 100;
+    font-size: 17px;
+    text-align: center;
+}
+.repaymentInquiry_ .searchResult .repayTable .rema td {
+    color: #0872bb;
+    font-size: 20px;
+    padding: 25px 5px;
+    position: relative;
+    border-top: solid 1px #AAA;
+    text-align: center;
+}
+
+.repaymentInquiry_ .searchResult .repayTable .rema tr:nth-child(odd) td {
+    background: #F0F9FF;
+}
+
+.repaymentInquiry_ .searchResult .repayTable .lgVersion .rema td:not(:last-child), .repaymentInquiry_ .repayTable .rema th:not(:last-child) {
+    border-right: solid 1px #AAA;
+}
+
+.repaymentInquiry_ .searchResult .smVersion {
+    display: none;
+}
+
+@media screen and (max-width: 769px) {
+    .repaymentInquiry_ .searchResult .repayTable {
+        border: none;
+    }
+
+    .repaymentInquiry_ .searchResult .repayTable .lgVersion .rema {
+        display: none;
+    }
+
+    .repaymentInquiry_ .searchResult .smVersion {
+        display: block;
+    }
+
+    .repaymentInquiry_ .searchResult .lightWon {
+        background: #F0F9FF;
+    }
+
+    .repaymentInquiry_ .searchResult .lightWon.detailOpen {
+        background: white;
+    }
+
+    .repaymentInquiry_ .searchResult .lightWon .busus li, .repaymentInquiry_ .lightWon .busus li:first-child {
+        width: 50%;
+        border: none;
+    }
+
+    .repaymentInquiry_ .searchResult .lightWon .busus li:nth-child(even) {
+        padding-left: 15px;
+    }
+
+    .repaymentInquiry_ .searchResult .lightWon .detailBtn {
+        text-align: right;
+    }
+
+    .repaymentInquiry_ .searchResult .lightWon .detailBtn .picabtn {
+        width: 40%;
+        margin: 5%;
+    }
+
+    .repaymentInquiry_ .searchResult .lightWon.detailOpen .detailBtn .picabtn {
+        background: grey;
+    }
+
+    .repaymentInquiry_ .searchResult .repayTable .smVersion .rema td, .repaymentInquiry_ .searchResult .repayTable .smVersion .rema th {
+        border: none;
+    }
+
+}

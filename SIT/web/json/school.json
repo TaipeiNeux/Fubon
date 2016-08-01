@@ -1,0 +1,12 @@
+{
+    "school" : [
+        {
+            "schoolId" : "1",
+            "schoolName" : "台灣大學"
+        },
+        {
+            "schoolId" : "1",
+            "schoolName" : "台灣大學"
+        }
+    ]
+}

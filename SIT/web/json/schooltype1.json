@@ -1,0 +1,12 @@
+{
+    "schooltype1" : [
+        {
+            "type" : "1",
+            "typeName" : "公立"
+        },
+        {
+            "type" : "2",
+            "typeName" : "私立"
+        }
+    ]
+}

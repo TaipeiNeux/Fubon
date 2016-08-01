@@ -1,0 +1,74 @@
+{
+    "Header": {
+        "errorCode": "0",
+        "errorMsg" : "(當errorCode不為0時，請alert出errorMsg)"
+    },
+    "Content": {
+        "flow" : {
+            "flowId" : "apply",
+            "viewURL" : "flow/apply1_1.jsp",
+            "currentMainStep" : "apply1",
+            "currentSubStep" : "apply1_1",
+            "mainStep" : [
+                {
+                    "id" : "apply1",
+                    "name" : "申請人基本資料"
+                },
+                {
+                    "id" : "apply2",
+                    "name" : "關係人基本資料"
+                },
+                {
+                    "id" : "apply3",
+                    "name" : "就讀學校及申貸金額"
+                },
+                {
+                    "id" : "apply4",
+                    "name" : "確認資料"
+                },
+                {
+                    "id" : "apply5",
+                    "name" : "申請結果"
+                }
+            ],
+            "subStep" : [
+                {
+                    "id" : "apply1_1",
+                    "name" : "基本資料"
+                },
+                {
+                    "id" : "apply1_2",
+                    "name" : "家庭狀況"
+                }
+            ]
+        },
+        "isOnlineService" : "N",
+        "isRecord":"Y",
+        "id" : "A123****89",
+        "name" : "陳*明",
+        "birthday" : "731108",
+        "marryStatus" : "Y",
+        "domicilePhone" : {
+            "regionCode" : "03",
+            "phone" : "11111111"
+        },
+        "telePhone" : {
+            "regionCode" : "02",
+            "phone" : "12345678"
+        },
+        "mobile" : "0975035390",
+        "email" : "neux.titanteng@gmail.com",
+        "domicileAddress" : {
+            "cityId" : "03",
+            "zipCode" : "222",
+            "liner":"村",
+            "neighborhood" : "4",
+            "address" : "xxxx路44號"
+        },
+        "teleAddress" : {
+            "cityId" : "04",
+            "zipCode" : "267",
+            "address" : "xxxx路35號"
+        }
+    }
+}

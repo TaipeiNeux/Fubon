@@ -1,0 +1,12 @@
+{
+    "schooltype3" : [
+        {
+            "type" : "1",
+            "typeName" : "科系1"
+        },
+        {
+            "type" : "2",
+            "typeName" : "科系2"
+        }
+    ]
+}

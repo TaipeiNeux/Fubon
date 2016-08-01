@@ -1,0 +1,72 @@
+{
+    "Header": {
+        "errorCode": "0",
+        "errorMsg" : "(當errorCode不為0時，請alert出errorMsg)"
+    },
+    "Content": {
+        "flow" : {
+            "flowId" : "apply",
+            "viewURL" : "flow/apply5_2.jsp",
+            "currentMainStep" : "apply5",
+            "currentSubStep" : "apply5_2",
+            "mainStep" : [
+                {
+                    "id" : "apply1",
+                    "name" : "申請人基本資料"
+                },
+                {
+                    "id" : "apply2",
+                    "name" : "關係人基本資料"
+                },
+                {
+                    "id" : "apply3",
+                    "name" : "就讀學校及申貸金額"
+                },
+                {
+                    "id" : "apply4",
+                    "name" : "確認資料"
+                },
+                {
+                    "id" : "apply5",
+                    "name" : "申請結果"
+                }
+            ],
+            "subStep" : []
+        },
+		"familyStatusLevel1Text" : "父母雙方健在且婚姻關係持續中",
+        "familyStatusLevel2Text" : "母親因特殊情況，無法擔任連帶保證人",
+        "guarantorText" : "父親 母親 配偶",
+        "showInfo" : "1121",
+        "isGuarantor" : "1231",
+		"isOnlineService" : "N",
+        "id" : "A123****89",
+        "name" : "陳*明",
+        "birthday" : "731108",
+        "marryStatus" : "Y",
+        "domicilePhone" : {
+            "regionCode" : "03",
+            "phone" : "11111111"
+        },
+        "telePhone" : {
+            "regionCode" : "02",
+            "phone" : "12345678"
+        },
+        "mobile" : "0975035390",
+        "email" : "neux.titanteng@gmail.com",
+        "domicileAddress" : {
+            "cityId" : "桃園市",
+            "zipCode" : "八德區",
+            "liner":"xx里",
+            "neighborhood" : "4",
+            "address" : "建國路776號"
+        },
+        "teleAddress" : {
+            "cityId" : "台中市",
+            "zipCode" : "北區",
+            "liner":"xx里",
+            "neighborhood" : "2",
+            "address" : "雙十路2段30號"
+        },
+        "loansPrice" : "13,914"
+    }
+}

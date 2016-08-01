@@ -1,0 +1,3389 @@
+@charset "UTF-8";
+.branchInfo {
+    display: inline;
+}
+
+.ss,
+.mipa,
+.death {
+    display: inline;
+}
+
+.oneLine {
+    float: left;
+}
+
+.zoe2 {
+    padding: 10px 0;
+    font-size: 20px;
+}
+
+.bInfo {
+    display: inline;
+}
+
+.gra {
+    display: inline;
+}
+
+.number {
+    font-size: 14px;
+}
+
+.processMap {
+    min-height: 700px;
+}
+
+#addrZip,
+#zipUl {
+    /* min-height: 84px; */
+    /* 忠毅 */
+    min-height: 130px;
+}
+
+
+/*增加錯誤訊息的樣式(底色為白色時)*/
+
+.error-msg {
+    color: red;
+    font-size: 14px;
+}
+
+
+/*增加錯誤訊息的樣式(底色為藍色時)*/
+
+.error-message {
+    color: red;
+    font-size: 16px;
+}
+
+
+/*增加錯誤訊息的樣式(貸款試算時)*/
+
+.err-message {
+    color: red;
+    font-size: 16px;
+    clear: both;
+    text-align: right;
+    margin-right: 5%;
+}
+
+@media (max-width: 769px) {
+    .err-message {
+        color: red;
+        font-size: 16px;
+        clear: both;
+        text-align: initial;
+        margin-right: 0%;
+    }
+}
+
+.branchInfoBr p {
+    margin: 0 0;
+}
+
+
+/*@media (max-width: 769px) {
+    .computeList li{
+        height: 18px;
+    } 
+}*/
+
+
+/*自已先加上儲存的i字樣*/
+
+
+/*.nextBtn a.info{
+    background: #0db3ab;
+    float: left;
+    width: 4%;
+}
+.nextBtn a.info:before{
+display: block;
+    content: '';
+    position: relative;
+    margin-bottom: 5px;
+    background-image: url(../img/fu-04.png);
+    background-size: 100%;
+    width: 24px;
+    height: 30px;
+    left: -5px;
+}*/
+
+
+/*因為上傳檔案要在底下多加透明度100的file，所以要設relative*/
+
+.processInner table.mqua .file-upload {
+    position: relative;
+}
+
+
+/** Register **/
+
+.toggleBtn {
+    text-align: center;
+}
+
+.toggleBtn a {
+    margin: 20px auto;
+    color: white;
+    font-size: 25px;
+}
+
+.toggleBtn a.green {
+    background: #0db3ab;
+    float: left;
+    width: 20%;
+}
+
+.deny {
+    position: relative;
+    padding-left: 40px;
+}
+
+.deny:before {
+    display: inline-block;
+    content: '';
+    width: 22px;
+    height: 22px;
+    top: 5px;
+    position: absolute;
+    left: 8px;
+    background-size: 100%;
+    background-image: url(../img/na-16.png);
+    background-position: top;
+}
+
+.bootstrap-select.btn-group .dropdown-toggle .caret.bootstrap_select_arrow_up {
+    border-top: 0;
+    border-bottom: 4px solid;
+}
+
+
+/** ForgetPwd **/
+
+.ubt p.beforeImg {
+    display: inline-table;
+}
+
+.modal.forgetPwd .modal-body {
+    text-align: center;
+}
+
+.modal.forgetPwd .modal-body a {
+    font-size: 20px;
+    color: #fff;
+    display: inline-block;
+    max-width: 320px;
+    text-align: center;
+    padding: 10px;
+    width: 20%;
+}
+
+.noticeTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.notice {
+    font-size: 17px;
+}
+
+@media (max-width: 769px) {
+    .modal.forgetPwd .modal-body a {
+        font-size: 16px;
+        max-width: 90px;
+        padding: 10px;
+    }
+    .noticeTitle,
+    .notice {
+        font-size: 14px;
+    }
+}
+
+
+/*2016-05-12 added by titan*/
+
+.seOutArea .seAreaUL li {
+    padding: 13px;
+}
+
+.Download .downloadtab {
+    font-size: 18px;
+}
+
+.dowContent ul h2 {
+    font-size: 18px;
+}
+
+.QAListTab > ul > li > a {
+    font-size: 16px;
+    z-index:20;
+}
+
+.QAList ul > li a p {
+    font-size: 16px;
+}
+
+
+/**
+.Anser {
+    max-height:300px;
+    overflow-y:scroll;
+}
+**/
+
+.dowContent ul li {
+    overflow: hidden;
+}
+
+
+/**
+.sidebarArea {
+    display:block  !important;
+}
+
+.sub .sidebarArea .sidebar {
+    display:none  !important;
+}
+**/
+
+.apply .QandAtab {
+    top: 189px;
+}
+
+.files {
+    font-size: 18px;
+}
+
+.news p {
+    font-size: 12px;
+}
+
+.fixtop {
+    width: 100%;
+    top: 0px;
+    position: fixed;
+}
+
+
+/****/
+
+.seOutArea .seArea h4:before {
+    content: "";
+    height: 30%;
+    display: inline-block;
+}
+
+.seOutArea .seArea h4 {
+    font-size: 18px
+}
+
+.mapSelectArea.active .placeholder:after {
+    content: '\f0dd';
+}
+
+.navContent ul li {
+    margin: 100px 0;
+}
+
+.dowContent {
+    min-height: 330px;
+}
+
+.subApplication {
+    min-height: 500px;
+}
+
+.mobileMenu_left_area ul li ul {
+    display: block;
+}
+
+.personalin {
+    padding: 20px 55px 20px 40px;
+}
+
+
+/* mike 2016/7/4 */
+
+.mobileMenu {
+    z-index: 0;
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+
+.menu-show {
+    display: block!important;
+}
+
+.stop-scroll-body {
+    overflow: hidden!important;
+    position: fixed;
+    width: 100vw !important;
+    /* z-index:20;    */
+}
+
+.stop-scroll {
+    overflow: hidden!important;
+    position: fixed;
+    z-index: 20;
+}
+
+.mobileMenu_right_area {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: auto;
+}
+
+.scroll a:visited,
+.scroll a:active {
+    text-decoration: none;
+}
+
+.scroll a:visited,
+.scroll a:active {
+    text-decoration: none;
+}
+
+
+/*
+a.scrollToTop{
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    background-color: #FFFFFF;
+    box-shadow: 0px 0px 5px #555;
+    font-weight: bold;
+    color: #444;
+    text-decoration: none;
+    position: fixed;
+    bottom: 20px;
+    right: 65px;
+    display: none;
+    z-index: 999999;
+    opacity: 0.5;
+    font-size: 40px;
+    border-radius: 25px;
+}
+*/
+
+a.scrollToTop i {
+    line-height: 50px;
+    vertical-align: middle;
+}
+
+@media (max-width:769px) {
+    .QandAtab {
+        opacity: 0.7
+    }
+    .QandAtab a:after {
+        display: none;
+    }
+    .navContent {
+        display: none;
+    }
+    .navContent.active {
+        display: none;
+    }
+    .SerBox .umopen.active {
+        display: none;
+    }
+    /*body.sub .mapArea{
+        display:none;
+    }*/
+    #branchMap {
+        display: none;
+    }
+    .seOutArea .seAreaUL li {
+        padding: 7px;
+    }
+    a.scrollToTop {
+        bottom: 12px;
+        right: 12px;
+    }
+    .QandAContent {
+        /* max-height:500px; */
+        overflow-y: scroll;
+    }
+    .intrBox #dot1,
+    .intrBox #dot2 {
+        color: white;
+    }
+}
+
+.processInner table.mqua .file-modify {
+    position: relative;
+}
+
+.processInner table.mqua .file-upload {
+    position: relative;
+}
+
+h3.google_dialog_title {
+    font-size: 10px
+}
+
+.google_dialog_addr,
+.google_dialog_tel {
+    font-size: 10px;
+    margin-bottom: 0px;
+}
+
+#registerMobile {
+    background: #0e89cb;
+    color: #ffffff;
+}
+
+#loginMobile {
+    background: #8e8e8d;
+}
+
+.intr {
+    display: inline;
+}
+
+#dot1,
+#dot2 {
+    margin-left: -12px;
+    color: #0e89cb;
+}
+
+@media (max-width:769px) {
+    #dot1,
+    #dot2 {
+        display: none;
+    }
+}
+
+.intrP {
+    padding-top: 20px;
+}
+
+.mobileMenu_left_area > ul > li:nth-child(5):before {
+    width: 24px;
+}
+
+.mobileMenu_left_area > ul > li:nth-child(6):before {
+    height: 20px;
+}
+
+
+/*
+.news .title{
+    position: relative;
+    padding-left: 0px;
+    font-size: 13px;
+    margin: 9px 0 0px 8px;
+}
+*/
+
+#deferralTip {
+    margin-left: 15px;
+}
+
+ul.umopen_s > div.umopen ul > li:first-child > a.files {
+    border-top: solid 1px rgba(255, 255, 255, 0.4)
+}
+
+ul.SerBox .umArea .himg img {
+    width: 70%;
+}
+
+.schoolSelector {
+    display: inline-block;
+    padding: 0px 5px 11px 9px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.gr {
+    display: inline-block;
+    padding-left: 20px;
+}
+
+.gra {
+    padding-left: 32px;
+}
+
+.navContent.fix {
+    margin-top: 60px;
+}
+
+.QandAtab.fix {
+    top: 65px;
+}
+
+.sidebar.fix {
+    padding-top: 170px;
+}
+
+.sub .QandAtab {
+    top: 140px;
+}
+
+.dowitemContent .imgBox {
+    max-height: 100%;
+    overflow-y: hidden;
+}
+
+.branchBlue {
+    margin: 0;
+    font-size: 12px;
+    padding-left: 25px;
+    width: 135%;
+    color: #0E89CB;
+}
+
+.pho img {
+    width: 75px;
+}
+
+.noteLi li {
+    font-size: 14px;
+}
+
+.saArea:before {
+    /*  bottom: -128px;
+    left: 125px;
+        width: 500px;
+    height: 451px;*/
+    /* pic_01 */
+    bottom: -112px;
+    left: 30px;
+    width: 550px;
+    height: 465px;
+}
+
+.saArea h3 {
+    margin: 15px 0 10px;
+}
+
+.saArea {
+    margin-right: 1 0px;
+    margin-bottom: 45px;
+}
+
+
+/* add by aaron */
+
+.sub .contentArea {
+    padding-top: 127px;
+}
+
+@media (max-width:769px) {
+    .sub .contentArea {
+        padding-top: 46px;
+    }
+    .border_title {
+        padding: 30px 20px 20px 20px;
+    }
+    .magicScrollbar_total {
+        margin: 0;
+    }
+    #mainForm {
+        margin-bottom: 0px;
+    }
+    .sidebar ul {
+        margin-top: 0px;
+    }
+    .sidebar ul li a br {
+        display: none;
+    }
+    /*2016-05-24 added by titan*/
+    .news h3 {
+        font-size: 17px;
+    }
+    .news h5.title {
+        margin-left: 20px;
+        padding-left: 0px;
+    }
+}
+
+#top {
+    padding-left: 9px;
+}
+
+@media (max-width:769px) {
+    #topLi {
+        display: none;
+    }
+}
+
+.brTi {
+    background-color: white;
+    padding-left: 15px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.regionArea .region {
+    padding: 30px 15px;
+    background: #0E89CB;
+    margin-top: -20px;
+}
+
+.inlineBr {
+    display: inline;
+}
+
+@media (max-width: 320px) {
+    .QandAContent {
+        /* max-height: 422px; */
+        top: 146px;
+        padding-bottom: 44px;
+    }
+    .QAListArea {
+        /* max-height: 378px; */
+        /* overflow-y: scroll; */
+    }
+}
+
+@media (max-width: 769px) {
+    #mapArea {
+        display: none;
+    }
+}
+
+@media (max-width: 769px) {
+    .subApplication {
+        min-height: 430px;
+    }
+}
+
+@media (max-width: 769px) {
+    .changeHeight1 {
+        min-height: 710px;
+    }
+}
+
+@media (max-width: 769px) {
+    .changeHeight2 {
+        min-height: 815px;
+    }
+}
+
+@media (max-width: 769px) {
+    .changeHeight3 {
+        min-height: 920px;
+    }
+}
+
+@media (max-width: 769px) {
+    .QandAContent {
+        overflow-y: scroll;
+        height: 684px;
+        top: 52px;
+        max-height: none;
+        background-color: rgb(247, 250, 251);
+    }
+}
+
+@media (max-width: 769px) {
+    .minMap {
+        margin: 0px 20px 0px 20px;
+    }
+}
+
+
+}
+
+/**/
+.processTab {
+    padding: 0 20px;
+}
+.processTab > div.processBox {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+@media (max-width: 769px) {
+    .path {
+        margin-top: 50px;
+    }
+    
+    .contentArea {
+        padding-top: 60px;
+    }
+    
+    [class^='apply_'] .processTab ul li.active {
+        width: 44%
+    }
+    
+    [class^='apply_'] .processTab ul li {
+        width: 12%
+    }
+    
+    .processTab ul li a {
+        padding: 0px 0px 0px 32%
+    }
+    
+    .path ul li a {
+        font-size: 13px;
+    }
+    /* .path ul li:nth-child(2) a{
+    padding:7px;
+ }*/
+    
+    .tab_arrow {
+        display: none;
+    }
+    
+    .processOutBox {
+        margin: 15px auto;
+    }
+    
+    [class^='apply_1_'] .nextBtn {
+        padding-left: 0px;
+    }
+    
+    .processTab ul li.active a:before {
+        left: 12%;
+    }
+    
+    body.deferment .processTab ul {
+        height: 50px;
+        width: 100%;
+    }
+}
+.refrashBranch {
+    margin-left: -275px;
+    width: 100%;
+}
+#mapInputS {
+    width: 107%;
+    padding-left: 23px;
+}
+#triangleInput {
+    margin-right: 260px;
+    margin-top: 10px;
+}
+@media (max-width: 769px) {
+    #mapInputS {
+        width: 95%;
+    }
+    
+    #triangleInput {
+        margin-right: 300px;
+        margin-top: 10px;
+    }
+}
+@media (max-width:769px) {
+    .sidebar {
+        display: none;
+    }
+}
+#gBtn {
+    background-color: #aaaaa9;
+    margin-right: 25px;
+    color: white;
+}
+#label_DomicileNeighborhood {
+    display: inline;
+}
+#label_DomicileAddress {
+    display: inline;
+}
+.incomeTaxString {
+    font-weight: bold;
+}
+#fatherCkeckbox,
+#motherCkeckbox {
+    font-weight: bold;
+}
+.fathermather {
+    margin-left: 20px;
+}
+
+/**  0530  **/
+@media (max-width: 769px) {
+    .lightWon .busus li:nth-child(2) {
+        border-right: solid 1px #DFDFDF;
+        width: 30%;
+    }
+    
+    .lightWon .busus li:nth-child(3) {
+        border-right: solid 1px #DFDFDF;
+        width: 30%;
+    }
+    
+    .lightWon .busus li:nth-child(4) {
+        border-right: solid 0px #DFDFDF;
+        width: 30%;
+    }
+    
+    .resa li:nth-child(1) {
+        /* border-right: solid 1px #DFDFDF */
+        ;
+        width: 30%;
+    }
+}
+.myloan_Box {
+    padding-top: 60px;
+}
+.myloan_Inner {
+    padding: 40px;
+}
+#sumTitle {
+    visibility: visible;
+}
+
+/**  0530  **/
+
+/* add by JiaRu 160531 for 還款查詢功能 */
+.repaymentInquiry_ .contentArea {
+    padding-top: 180px;
+    padding-bottom: 130px;
+}
+.repaymentInquiry_ .nextBtn.innerBtn {
+    display: none;
+}
+.repaymentInquiry_ .nextBtn.inner a.lan {
+    width: 25%;
+}
+.repaymentInquiry_ .nextBtn.outer a.lan {
+    width: 20%;
+}
+.repaymentInquiry_ .searchResult .repayTable {
+    border: solid 1px #676868;
+}
+.repaymentInquiry_ .searchResult .repayTable .rema th {
+    background: #ededed;
+    padding: 15px 0px;
+    color: #2b2c2c;
+    font-weight: 100;
+    font-size: 17px;
+    text-align: center;
+}
+.repaymentInquiry_ .searchResult .repayTable .rema td {
+    color: #0872bb;
+    /*font-size: 20px;*/
+    
+    font-size: 16px;
+    padding: 25px 5px;
+    position: relative;
+    border-top: solid 1px #AAA;
+    text-align: center;
+}
+.repaymentInquiry_ .searchResult .repayTable .rema tr:nth-child(odd) td {
+    background: #F0F9FF;
+}
+.repaymentInquiry_ .searchResult .repayTable .lgVersion .rema td:not(:last-child),
+.repaymentInquiry_ .repayTable .rema th:not(:last-child) {
+    border-right: solid 1px #AAA;
+}
+.repaymentInquiry_ .searchResult .smVersion {
+    display: none;
+}
+@media screen and (max-width: 769px) {
+    .repaymentInquiry_ .contentArea {
+        padding-top: 80px;
+        padding-bottom: 0px;
+    }
+    
+    .repaymentInquiry_ .processInner {
+        padding: 10px 0px;
+    }
+    
+    .repaymentInquiry_ .snopy.detail {
+        /*padding-left: 55px;*/
+        padding-left: 46px;
+        padding-right: 0px;
+    }
+    
+    .repaymentInquiry_ .snopy..detail:before {
+        left: 10px;
+    }
+    
+    .repaymentInquiry_ .snopy.detail span {
+        font-size: 12px;
+    }
+    
+    .repaymentInquiry_ .joy.nina {
+        /*padding-left: 10px;*/
+        padding-left: 20px;
+    }
+    
+    .repaymentInquiry_ .nextBtn.innerBtn {
+        display: block;
+    }
+    
+    .repaymentInquiry_ .nextBtn.outerBtn {
+        display: none;
+    }
+    
+    .repaymentInquiry_ .nextBtn.innerBtn a.lan {
+        float: none;
+        font-size: 16px;
+    }
+    
+    .repaymentInquiry_ .searchResult .processInner {
+        /*padding: 10px;*/
+        padding: inherit;
+    }
+    
+    .repaymentInquiry_ .searchResult .repayTable {
+        border: none;
+    }
+    
+    .repaymentInquiry_ .searchResult .repayTable .lgVersion .rema {
+        display: none;
+    }
+    
+    .repaymentInquiry_ .searchResult .smVersion {
+        display: block;
+    }
+    
+    .repaymentInquiry_ .searchResult .smVersion .rema {
+        border: none;
+        border-top: solid 1px#ccced2;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon {
+        background: #F0F9FF;
+        /*border: solid 1px #ccced2;*/
+        border: none;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon.detailOpen {
+        background: white;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon .busus li,
+    .repaymentInquiry_ .lightWon .busus li:first-child {
+        width: 50%;
+        border: none;
+        padding-left: 10px;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon .busus li:nth-child(even) {
+        padding-left: 15px;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon .detailBtn {
+        text-align: right;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon .detailBtn .picabtn {
+        width: 40%;
+        margin: 5%;
+        top: -11px;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon.detailOpen .detailBtn .picabtn {
+        background: grey;
+    }
+    
+    .repaymentInquiry_ .searchResult .repayTable .smVersion .rema td,
+    .repaymentInquiry_ .searchResult .repayTable .smVersion .rema th {
+        border: none;
+    }
+}
+
+/* end：add by JiaRu 160531 for 還款查詢功能*/
+
+/*  0531  陳拓  */
+.myloan_Box {
+    padding-top: 50px;
+}
+.myloan .contentArea {
+    padding-bottom: 150px;
+}
+body.myloan .processArea {
+    padding: 0 17%;
+}
+@media (max-width:769px) {
+    .path {
+        margin-top: 45px;
+    }
+    
+    .myloan_Box {
+        padding-top: 0;
+    }
+    
+    span.morebig {
+        display: inline;
+    }
+    
+    .myloan_Inner {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .myloan_Box {
+        padding-top: 0;
+    }
+    
+    .processOutBox {
+        margin-top: 0;
+    }
+    
+    .lightWon .busus li {
+        text-align: center;
+    }
+    
+    .lightWon .busus li:nth-child(3) {
+        padding-left: 7%;
+    }
+    
+    .lightWon .busus li:nth-child(4) {
+        padding-left: 5%;
+    }
+    
+    .lightWon .picabtn {
+        margin-right: 2%;
+    }
+}
+.navContent.fix {
+    margin-top: 49px;
+}
+.regionIcon {
+    display: none;
+}
+
+/* 0601 by 陳拓 */
+h4.brTi {
+    padding-top: 15px;
+}
+.regionArea ul.regionPlace {
+    border-top: none;
+}
+#carryObjTip {
+    font-weight: bold;
+}
+#registerQR,
+#loginQR {
+    margin: 15% 7% 0 9%;
+}
+#hi2 p {
+    padding-bottom: 7px;
+}
+@media (max-width:769px) {
+    .processOutBox {
+        margin: 15px auto;
+    }
+}
+
+/*memberLoginMobile.jsp 0602 by Foi */
+#mobileContent {
+    padding-top: 55px;
+    width: 289px;
+}
+#body .bannerRight .mobile {
+    display: block;
+}
+
+/* 陳拓0602 */
+
+/* deferment */
+body.sub .contentArea {
+    padding-top: 50px;
+    padding-bottom: 0;
+}
+body.apply_1_step1.processTab {
+    padding: 0;
+}
+@media (max-width:769px) {
+    body.deferment .contentArea {
+        padding-top: 80px;
+    }
+    
+    body.deferment .processOutBox {
+        margin-top: 5px;
+    }
+    /*
+body#body.deferment_1 .processInner {
+    padding-left: 25px;
+}
+*/
+    
+    body.deferment .wrapper .input_m {
+        max-width: 100%;
+    }
+    
+    body.deferment .processTab ul li:last-child a:after {
+        content: "";
+        background: url(../img/smile.png);
+        width: 33px;
+        height: 76px;
+        display: block;
+        position: absolute;
+        top: -13px;
+        right: -70%;
+    }
+    
+    body.deferment .processOutBox {
+        margin-top: 15px;
+        width: inherit;
+    }
+    
+    body.sub .contentArea {
+        padding-top: 41px;
+    }
+}
+body.deferment .processTab > div.processBox {
+    width: 100%;
+    text-align: center;
+    max-width: inherit;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/** Foi 0603 **/
+.labelInline {
+    display: inline;
+}
+
+/* 陳拓0603 */
+#registerQR,
+#loginQR {
+    margin: 0 auto;
+}
+
+/* 0604 by 韋杰 .repaymentInquiry */
+@media (max-width:769px) {
+    .repaymentInquiry_ .searchResult .repayTable .smVersion .rema th {
+        width: 30%;
+    }
+    
+    .repaymentInquiry_ .searchResult .repayTable .rema tr td {
+        text-align: left;
+        padding-left: 20px;
+    }
+    
+    .repaymentInquiry_ .searchResult .smVersion .rema {
+        border: none;
+    }
+}
+
+/* 0606 by Foi */
+.wrapper .stageLength {
+    max-width: 222px;
+    margin-bottom: 5px;
+}
+@media (max-width: 769px) {
+    .wrapper .stageLength {
+        max-width: 72.333%;
+    }
+}
+.wrapper .nameLength {
+    max-width: 240px;
+    margin-bottom: 5px;
+}
+@media (max-width: 769px) {
+    .wrapper .nameLength {
+        max-width: 75.333%;
+    }
+}
+
+/* 0606 by 陳拓 */
+@media (max-width:769px) {
+    body.apply_2 #mainForm {
+        padding-left: 0;
+        padding-right: 0;
+        background: #f8fafc;
+        border-radius: 10px;
+    }
+}
+
+/*0607 by titan start*/
+.nextBtn a.cancel {
+    background: #aaaaa9;
+    float: right;
+    width: 20%;
+    position: relative;
+}
+.nextBtn a.submit {
+    background: #0872bb;
+    float: right;
+    width: 20%;
+    margin-left: 6px;
+    position: relative;
+}
+a {
+    cursor: pointer;
+}
+
+/*0607 by titan end*/
+
+/* 陳拓0608 */
+@media (max-width:769px) {
+    [class^='apply_'] .processTab ul li.active {
+        width: 35%;
+    }
+}
+.processTab > div.processBox {
+    max-width: initial;
+}
+.processTab ul {
+    width: 73%;
+}
+.processOutBox {
+    max-width: initial;
+}
+#mainForm {
+    width: 73%;
+    margin: 0 auto;
+}
+body#body .nextBtn {
+    width: 73%;
+    padding: 0;
+}
+body.deferment_0 .processArea {
+    padding: 0 20px;
+}
+body.deferment .processTab ul li a p {
+    line-height: 50px;
+}
+body.deferment .processTab ul li a {
+    padding-left: 13%;
+}
+body.index #mainForm,
+body.sub #mainForm {
+    width: 100%;
+}
+body#body .personalinfoAath {
+    padding: 0 20px;
+}
+.path ul {
+    max-width: initial;
+    width: 73%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+.personalinfo_0 .processOutBox {
+    margin: 0;
+}
+div.notice {
+    width: 73%;
+    margin: 0 auto;
+}
+.processTab ul,
+.nextBtn {
+    max-width: initial;
+}
+body.deferment_0 .container {
+    max-width: initial;
+    width: 73%;
+    padding: 0 20px;
+}
+body.myloan .processArea {
+    padding: 0;
+}
+body.myloan .processOutBox {
+    width: 73%;
+}
+.navArea {
+    padding: 0 20px;
+}
+.navArea ul {
+    width: 73%;
+    max-width: initial;
+}
+
+/*0611 by aaron*/
+.forgetPassword_1 .processOutBox {
+    max-width: inherit;
+}
+.forgetPassword_1 .processTab ul {
+    max-width: inherit;
+}
+.forgetPassword_1 .nextBtn {
+    max-width: inherit;
+}
+.forgetPassword_3_step1 .stepArea ul,
+.forgetPassword_3_step2 .stepArea ul {
+    left: inherit;
+}
+@media (max-width:769px) {
+    .processTab ul {
+        width: 100%;
+    }
+    
+    body#body .nextBtn {
+        width: 100%;
+    }
+    
+    .processTab ul li a:before {
+        width: 20px;
+        height: 20px;
+    }
+    
+    body#body .processTab ul li.active {
+        width: 45%;
+    }
+    
+    .processTab ul li {
+        height: initial;
+    }
+    
+    body#body .processTab ul li:last-child a:after {
+        top: -12px;
+        right: -72%;
+    }
+    
+    body.deferment_0 #mainForm {
+        width: 100%;
+    }
+    
+    body.deferment #mainForm {
+        width: 100%;
+    }
+    /*0611 by aaron*/
+    
+    body.forgetPassword #mainForm {
+        width: 100%;
+    }
+    
+    body#body .processTab ul li p {
+        height: 36px;
+        min-height: initial;
+        line-height: 36px;
+    }
+    
+    body#body .processTab ul li a:before {
+        top: 15px;
+    }
+    
+    body.personalinfo_0 #mainForm,
+    div.notice {
+        width: 100%;
+    }
+    /*
+    body#body .processArea {
+        padding: 0 5%;
+    }
+*/
+    /*0611 by aaron */
+    
+    body.forgetPassword .processTab {
+        padding: 0 5%;
+    }
+    
+    .path ul {
+        width: 100%;
+    }
+    
+    body.deferment_0 .container {
+        width: 100%;
+        padding: 0;
+    }
+    
+    body.myloan .processOutBox {
+        width: 100%;
+    }
+}
+
+/**  6/11 Foi **/
+.twoDiv {
+    display: inline-block;
+    width: 180px;
+}
+.twoDiv .left {
+    width: 60px;
+}
+
+/* 陳拓0613 */
+body.myloan .processArea {
+    padding: 0 20px;
+}
+body.myloan .processOutBox {
+    width: 73%;
+    margin: 0 auto;
+}
+body.myloan .myloan_Box {
+    padding-top: 30px;
+}
+@media (max-width:769px) {
+    body.myloan .processOutBox {
+        width: 100%;
+    }
+    
+    body#body.myloan .processArea {
+        padding: 0;
+    }
+    
+    body.myloan .contentArea {
+        padding-top: 76px;
+    }
+    
+    body.myloan .myloan_Inner {
+        padding-top: 0;
+    }
+    
+    body.myloan .detail:before {
+        bottom: -1px;
+        left: -5px;
+        top: initial;
+    }
+    
+    .morebig {
+        font-size: 25px;
+    }
+    
+    body.myloan .lightWon .busus li {
+        min-height: 40px;
+        vertical-align: top;
+        padding-right: 0;
+    }
+    
+    body.myloan .lightWon .busus li {
+        padding-left: 2%;
+    }
+    
+    .lightWon .busus li h3 {
+        font-size: 14px;
+    }
+    
+    .lightWon .picabtn {
+        margin-right: 5%;
+    }
+    
+    a[class^="pobtn-"] {
+        /**  0706 忠毅  **/
+        max-width: 110px;
+        font-size: 14px;
+    }
+    
+    .casomTitle {
+        margin-left: 10px;
+    }
+    
+    .casom {
+        margin-left: 25px;
+    }
+    
+    body.myloan#body .processInner {
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    
+    #mainForm {
+        width: 100%;
+    }
+}
+body.apply_map .bInfo {
+    display: block;
+}
+@media (max-width:769px) {
+    body.personalInfo_2_step2 .processOutBox {
+        margin: 30px auto;
+    }
+    
+    .repaymentInquiry_ .searchResult .processInner {
+        padding: 10px 0;
+    }
+    
+    .repaymentInquiry_ .nextBtn.innerBtn a.lan,
+    .repaymentInquiry_ .snopy,
+    .lightWon .picabtn {
+        font-size: 14px;
+    }
+    
+    .repaymentInquiry_ .processOutBox {
+        margin-bottom: 0;
+        margin-top: 5px;
+    }
+    
+    .repaymentInquiry_ .processOutBox:last-child {
+        margin-top: 0;
+    }
+    
+    .repaymentInquiry_ .searchResult .lightWon .detailBtn .picabtn {
+        width: 35%;
+    }
+    
+    body.myloan .lightWon .busus li {
+        padding-left: 0;
+    }
+    
+    body.myloan .casomTitle {
+        margin-left: 0;
+    }
+    
+    body.myloan .casom {
+        margin-left: 15px;
+    }
+}
+body.apply_3_step1 .gr {
+    padding-left: 21px;
+}
+body.apply_3_step1 #mm {
+    padding-left: 26px;
+}
+body.apply_00 #gBtn {
+    margin-right: 0;
+}
+body#body.repaymentInquiry_ .nextBtn {
+    width: 100%;
+}
+.repaymentInquiry_ .searchResult .repayTable {
+    width: 96%;
+    margin: 0 auto;
+}
+a.underline {
+    text-decoration: underline;
+}
+body.index a.underline {
+    text-decoration: none;
+}
+.zoe2 {
+    font-size: 16px;
+    padding-left: 30px;
+}
+.schoolSelector {
+    font-size: 16px;
+    font-weight: 100;
+}
+
+/*2016-06-18 added by titan*/
+.hyperlink {
+    color: #0E89CB;
+}
+@media screen and (min-width: 769px) {
+    .apply_00 div.tonypan .pobtn-srb {
+        margin-left: 20px
+    }
+    
+    #body .stepArea ul,
+    body.apply_3_step1 .stepArea ul {
+        left: -20%;
+    }
+    
+    #body .stepArea ul {
+        position: relative;
+    }
+}
+.modal-dialog .modal-content .btn-default {
+    margin-left: 10px;
+}
+
+/*修正小版的子步驟，目前只有兩階，故針對subStep1跟subStep2的class搭配active併用控制*/
+@media (max-width: 769px) {
+    .stepArea ul li.active.subStep1:before {
+        left: -2px;
+    }
+    
+    .stepArea ul li.active.subStep1:after {
+        right: -0px;
+    }
+    
+    .stepArea ul li.subStep2:after {
+        right: -75px !important;
+    }
+    
+    body.forgetPassword_3_step1 .stepArea ul li.subStep2:after {
+        right: -85px !important;
+    }
+    
+    .stepArea ul li.active.subStep1 {
+        right: -30px;
+    }
+    
+    .stepArea ul li.active.subStep2:after {
+        right: -74px;
+    }
+}
+
+/*2016-06-18 added by titan end*/
+
+/*  陳拓6/20 */
+body.register_1 label.sqr-label {
+    background: url(../img/blueSquare.png);
+}
+@media (min-width:769px) {
+    body.apply_map input[type=radio].css-checkbox_c + label.css-label_c {
+        color: white;
+    }
+    /*
+    body#body .earth {
+        padding: 0;
+    }
+*/
+    
+    body.register_2 .wrapper .input_L {
+        max-width: 280px;
+    }
+    
+    #body .processInner {
+        min-height: 340px;
+    }
+    
+    body.apply_3_step2 .vic {
+        width: 828px;
+        padding-right: 50px;
+        font-size: 15px;
+    }
+    
+    body.apply_3_step2 .baka {
+        font-size: 15px;
+    }
+    
+    body.apply_3_step2 .vic h5 {
+        font-size: 18px;
+    }
+    
+    .apply_1_step1 .modal-title {
+        text-align: center;
+    }
+    
+    .pomodal .modal-content {
+        padding-top: 3px;
+    }
+    
+    body.index a[class^="pobtn-"] {
+        max-width: 190px;
+    }
+    
+    .processOutBox {
+        max-width: 100%;
+    }
+    
+    body.personalInfo_0 .joy p {
+        font-size: 15px;
+    }
+    
+    body.personalInfo_0 .who:before {
+        top: -17px;
+    }
+    
+    .personalinfo_0 .dan h2 {
+        margin-bottom: 10px;
+    }
+    
+    body.deferment_1 .wrapper .input_m {
+        max-width: 330px;
+    }
+    
+    body.deferment_1 .processInner {
+        padding: 30px 0;
+    }
+    
+    body.deferment_1 div#selectDate {
+        padding-left: 110px;
+    }
+    /**
+    body#body.deferment_1 .nextBtn {
+        width: 20%;
+        margin: 0;
+        margin-left: 6px;
+    }
+    
+    body#body.deferment_1 .nextBtn a.blu {
+        width: 100%;
+    }
+    
+    body#body.deferment_1 .nextBtn,
+    body#body.deferment_1 a.grey {
+        display: inline-block;
+    }
+    
+    body#body.deferment_1 a.grey {
+        width: 20%;
+        text-align: center;
+        vertical-align: top;
+        padding: 10px;
+        background: #aaaaa9;
+        color: #fff;
+        position: relative;
+    }
+    **/
+    
+    body.deferment .hi {
+        display: none;
+    }
+    
+    body.deferment_1 .defermentBtns {
+        width: 73%;
+        margin: 0 auto;
+        text-align: right;
+        margin-top: 20px;
+        display: block;
+        visibility: inherit;
+    }
+    
+    body.deferment_1 a.grey {
+        visibility: inherit;
+    }
+    
+    .processInner table.mqua tbody td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    
+    .deferment_2 .processInner .xica img {
+        width: 70%;
+    }
+    
+    body.deferment_2 .xica {
+        margin-top: 15px;
+    }
+    
+    body.deferment_2 .processInner table.mqua {
+        margin-top: 0;
+    }
+    
+    .processInner table.mqua .file-en:before {
+        display: none;
+    }
+    
+    .processInner,
+    .processTab ul {
+        max-width: 100%;
+    }
+    
+    .path_home a {
+        text-decoration: underline;
+    }
+    
+    .processTab > div.processBox,
+    .path ul,
+    .navArea ul {
+        max-width: 100%;
+    }
+    
+    .nextBtn {
+        max-width: 100%;
+    }
+    
+    #deferralTip p {
+        padding-left: 180px;
+    }
+    
+    body.deferment_2 .processInner {
+        padding: 15px 10%;
+    }
+    
+    body.deferment_2 .modal-body ul li:first-child {
+        text-indent: 0;
+    }
+    
+    body.deferment_2 div.modal-body ul {
+        padding-left: 0;
+    }
+    
+    body.deferment_2 .modal-body {
+        text-align: left;
+    }
+    
+    #body .processBox {
+        padding-left: 0;
+    }
+    
+    body.deferment_3_step1 .snopy .editBtnBoxbottom {
+        top: 46px;
+    }
+    
+    body.deferment_3_Step1 .swata .left {
+        text-align: left;
+        width: 150px;
+        padding-right: 0;
+    }
+    
+    body.deferment_3_step1 .ubt {
+        position: relative;
+    }
+    
+    body.deferment_3_step1 .processInner {
+        padding: 20px 5%;
+    }
+    
+    body.deferment_3_step1 .snopy {
+        margin-bottom: 0;
+    }
+    
+    body.memberLogin_1 .loginbox a.register {
+        display: none!important;
+    }
+    
+    body.myloan ul.busus li:nth-child(2) {
+        /*padding-left: 5%;*/
+        text-align: center;
+    }
+    
+    .forgetPassword_2 .casom {
+        padding-left: 30px;
+    }
+    
+    .kim div:nth-child(3) {
+        text-align: center;
+    }
+    
+    .repaymentInquiry_ .input-group-addon.active .datIcon:before {
+        background: url(../img/dat2.png);
+        display: inline-block;
+        content: '';
+        width: 20px;
+        height: 19px;
+        top: 0;
+        left: -2px;
+        position: absolute;
+        background-size: 100%;
+    }
+    
+    body.repaymentInquiry_ .input-group-addon.active {
+        background: #0872bb;
+    }
+    
+    body.apply_3_step2 .baka input {
+        max-width: 100%;
+    }
+}
+@media (max-width:769px) {
+    body.index a#loginBtn {
+        max-width: 200px;
+        padding: 8px;
+        font-size: 15px;
+    }
+    
+    body.forgetPassword_3_step1 .joy {
+        background: #FFF;
+    }
+    
+    body.forgetPassword_3_step1 .may .joy {
+        padding: 0 15px;
+    }
+    
+    body.forgetPassword_3_step1 #userAccount {
+        border-bottom: 1px solid #eee;
+        padding-top: 0;
+        font-size: 14px;
+        padding-bottom: 10px;
+    }
+    
+    .forgetPassword_3_step1 .joy .left p {
+        padding-top: 10px;
+    }
+    
+    .forgetPassword .processInner {
+        padding: 25px 3%;
+    }
+    
+    .forgetPassword_3_step1 .joy .left p {
+        font-size: 14px;
+    }
+    
+    .forgetPassword .may {
+        margin-left: 0;
+    }
+    
+    .changePwd_2_step1 .joy p {
+        font-size: 14px;
+    }
+    
+    body.changePwd_2_step1 .processInner {
+        padding: 25px 3%;
+    }
+    
+    body.changePwd_2_step1 #userAccount {
+        border-bottom: 1px solid #eee;
+        padding-top: 0;
+        font-size: 14px;
+        padding-bottom: 10px;
+    }
+    
+    .changePwd_2_step1 .joy .right {
+        width: 100%;
+    }
+    
+    body.changepwd_2_step1 .may .joy {
+        padding: 0 15px;
+    }
+    
+    .changePwd_1 .joy p {
+        font-size: 14px;
+    }
+    
+    .casom li {
+        font-size: 12px;
+    }
+    
+    .casomTitle {
+        font-size: 14px;
+    }
+    
+    .myloan .contentArea {
+        padding-bottom: 10px;
+    }
+    
+    .contentArea {
+        padding-top: 90px;
+    }
+    
+    .earth {
+        width: 100%;
+    }
+    
+    .ubt:before {
+        left: 6px;
+    }
+    
+    .ubt {
+        padding: 0 15px;
+    }
+    
+    .editBtn {
+        background: none;
+    }
+    
+    .personalinfo_0 .editBtnBoxTop {
+        top: 0;
+    }
+    
+    .personalinfo_0 .who:before {
+        background-size: 70%;
+        background-repeat: no-repeat;
+    }
+    
+    div.notice {
+        padding: 0 5px;
+    }
+    
+    .repaymentInquiry_ .input-group-addon.active .datIcon:before {
+        background: url(../img/X.png);
+        display: inline-block;
+        content: '';
+        width: 20px;
+        height: 19px;
+        top: 0;
+        left: -2px;
+        position: absolute;
+        background-size: 80%;
+        background-repeat: no-repeat;
+    }
+    
+    body.repaymentInquiry_ .input-group-addon.active {
+        background: #0872bb;
+    }
+}
+
+/*  陳拓0621 */
+@media (min-width:769px) {
+    body.register_2 .wrapper .input_L {
+        max-width: 285px;
+        width: 285px;
+    }
+    
+    body.register_2 .pen:before {
+        top: 0;
+    }
+    
+    body.register_1 input[type=checkbox].sqr-checkbox:checked + label.sqr-label {
+        background: url(../img/blueSquare2.png);
+        background-repeat: no-repeat;
+    }
+    
+    body.apply_5_step1 .father:before {
+        top: -29px;
+    }
+    
+    body.apply_5_step1 .mather:before {
+        top: -27px;
+    }
+    
+    body.apply_5_step1 .joy .left p {
+        font-weight: 100;
+    }
+    
+    .tic {
+        font-size: 15px;
+    }
+    /**  0716 為了讓: 我要申請=>3-2: "本次申貸金額" 能夠全部顯示 ; 另外的調整在: style.css的 @media screen and (min-width: 769px)body.apply_3_step2 .sum input { }**/
+    
+    .sum input {
+        /* max-width: 210px; */
+        max-width: 230px;
+    }
+    
+    .register_4 .pen:before {
+        top: 15px;
+    }
+    
+    body.register_4 .snopy {
+        font-size: 18px;
+    }
+}
+@media (max-width:769px) {
+    body.register_1 .nextBtn a:before {
+        display: none;
+    }
+    
+    body.apply_2 .stepArea {
+        display: none;
+    }
+    
+    body.apply_2 div.processOutBox {
+        margin-top: 0;
+    }
+    
+    .thirdParty:before,
+    .spouse:before {
+        top: 0;
+        left: 0;
+    }
+    
+    body.apply_2 .left p.stringOrRadio {
+        padding-right: 0;
+    }
+    
+    .processInner table.mqua .file-photo {
+        display: block;
+    }
+    
+    #body.index #loginMobile {
+        color: white;
+        background: #8c8c8c;
+    }
+    
+    .personalinfo_1 .joy {
+        margin-top: 10px;
+    }
+}
+.forgetPassword_3_step1 .tip_d:before,
+.forgetPassword_3_step1 .ubt:before {
+    display: none;
+}
+
+/*2016-06-22 added by titan 控制最新消息區塊超連結加底線跟藍色*/
+#owl-carousel_news p.news_content a {
+    text-decoration: underline;
+    color: #0E89D4;
+}
+.zoe2 {
+    font-size: 15px;
+}
+@media (max-width:769px) {
+    body#body .path ul {
+        /*padding: 0;*/
+        padding: 7px 0 0 0;
+    }
+    
+    body#body .path {
+        padding: 0;
+    }
+}
+@media (min-width:769px) {
+    body.deferment_1 .wrapper .input_m {
+        max-width: 350px;
+    }
+    
+    body.apply_1_step1 .twoDiv {
+        width: 270px;
+    }
+    
+    body.apply_1_step1 .wrapper .input_m {
+        max-width: 275px;
+    }
+    
+    body.apply_1_step1 .wrapper .input_L {
+        max-width: 356px;
+    }
+    
+    body.apply_1_step1 .joy .right.right_name {
+        width: 195px;
+    }
+    
+    #body .nextBtn a {
+        font-size: 15px;
+    }
+    
+    body.forgetPassword .joy .right {
+        font-size: 15px;
+    }
+}
+@media (max-width:769px) {
+    .personalinfo_2_step1 .may .bgfff,
+    .personalinfo_2_step1 .dan h2 {
+        background: #faf8fc;
+    }
+    
+    .personalinfo_2_step1 .dan h2 {
+        margin: 0;
+        padding: 20px 0;
+    }
+    
+    body.changepwd_2_step1 .steparea ul li.active:after {
+        right: -17px;
+    }
+    
+    .changePwd_2_step1 .stepArea ul li.subStep2:after {
+        right: -85px!important;
+    }
+    
+    .changePwd_2_step1 .joy p {
+        font-size: 15px;
+    }
+    
+    body.myElectronicPay_1 .repayTable .resa li:first-child h4 {
+        padding: 19.5px 0;
+    }
+    
+    body.PaymentInstructions .qusp h4,
+    body.PaymentInstructions .PaymentloanUL .jubif {
+        font-size: 15px;
+    }
+    
+    #body .joy .verfi {
+        font-size: 15px;
+    }
+    
+    .tip_d p {
+        font-size: 14px;
+    }
+    
+    body.apply_4 .processInner table.mqua .file-zh,
+    body.apply_5_step1 .processInner table.mqua .file-zh {
+        font-size: 15px;
+    }
+    
+    #body .snopy {
+        font-size: 17px;
+    }
+    
+    body.apply .joy p {
+        font-size: 15px;
+    }
+    
+    body.personalInfo_1 #birth_tmp_2 {
+        width: 100%;
+    }
+    
+    body.personalinfo_1 .wrapper .input_flow {
+        max-width: 190px;
+    }
+    
+    .personalInfo_1 .sandy p {
+        font-size: 15px;
+    }
+    
+    .personalInfo_0 .contentArea {
+        padding-top: 60px;
+    }
+    
+    .notice h3 {
+        font-size: 16px;
+    }
+    
+    body#body .notice p {
+        font-size: 14px;
+    }
+    
+    .personalinfo_0 .may .joy .left p,
+    .personalinfo_0 .may .right p {
+        font-size: 15px;
+    }
+    
+    .joy p,
+    .fi,
+    .joy .right,
+    input[type=radio].css-checkbox_c + label.css-label_c,
+    .processInner table.mqua tbody tr {
+        font-size: 15px;
+    }
+    
+    body.deferment .joy .verfi {
+        font-size: 15px;
+    }
+    
+    body#body .casomTitle {
+        font-size: 14px;
+    }
+    
+    body#body .casom {
+        font-size: 12px;
+    }
+    
+    .forgetPassword_3_step1 .stepArea {
+        margin: 0 auto;
+    }
+    
+    body#body.forgetPassword .snopy {
+        font-size: 17px;
+    }
+    
+    body#body .nextBtn a {
+        font-size: 14px;
+    }
+    
+    .forgetPassword .processInner {
+        padding: 25px 5%;
+    }
+    
+    #body .tic span,
+    #body .tic,
+    #body .processInner .mipa,
+    body.forgetPassword_3_step2 .joy .verfi,
+    body.forgetPassword_3_step2 .joy .ss {
+        font-size: 15px;
+        margin-top: 10px;
+    }
+    
+    .forgetPassword .may .inputArea input {
+        font-size: 14px;
+    }
+    
+    body#body .loginBtn {
+        font-size: 14px;
+    }
+    
+    .forgetPassword_3_step1 .stepArea ul li.active:after {
+        left: -29px;
+    }
+    
+    body.register .snopy {
+        font-size: 17px;
+    }
+    
+    .register .joy .right {
+        font-size: 14px;
+        position: relative;
+    }
+    
+    .register .may .inputArea input {
+        font-size: 14px;
+    }
+    
+    .register_3 .smrtq .joy .left {
+        text-align: left;
+    }
+    
+    .register .pen:before {
+        top: 0px;
+    }
+    
+    .index .inputArea input {
+        font-size: 14px;
+    }
+    
+    h4.modal-title {
+        text-align: center;
+    }
+    
+    body.deferment .contentArea {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    body.deferment .processTab > div.processBox {
+        padding: 0;
+    }
+    
+    body.deferment_2 .processInner {
+        padding-top: 0;
+    }
+    
+    body.deferment tbody#uploadObj tr td {
+        font-size: 14px;
+    }
+    
+    body.deferment_2 .processInner table.mqua .file-upload a,
+    .processInner table.mqua .file-modify a {
+        font-size: 14px;
+    }
+    
+    body#body .modal-body ul li {
+        text-align: left;
+        margin-left: 10px;
+    }
+    
+    div.modal-body ul {
+        padding-left: 0;
+    }
+    
+    .modal-body ul li:first-child {
+        text-indent: 0;
+    }
+    
+    .pomodal h3 {
+        font-size: 17px;
+    }
+    
+    body#body.deferment .processInner {
+        padding-top: 10px;
+    }
+}
+@media (min-width:769px) {
+    .joy .verfi {
+        font-size: 15px;
+    }
+    
+    .register .joy .right {
+        font-size: 15px;
+    }
+    
+    body.register .pen:before {
+        top: 10px;
+    }
+    
+    body.register_4 .pen:before {
+        top: 30px;
+    }
+    
+    .register_4 a[class^="pobtn-"] {
+        font-size: 15px;
+    }
+    
+    .register_4 .may {
+        width: 410px;
+    }
+    
+    body#body .processInner {
+        min-height: 210px;
+    }
+}
+@media (max-width:769px) {
+    .index .personalin {
+        padding: 10px;
+    }
+    
+    div#isLogin a.pdfImg,
+    div#isLogin a.printerImgf {
+        width: 20px;
+    }
+    
+    body#body.index a.printerImgf,
+    body#body.index a.pdfImg {
+        float: none;
+        margin: 0;
+    }
+}
+@media (min-width:769px) {
+    .repaymentInquiry_ .searchResult .repayTable .rema td {
+        position: static;
+    }
+    
+    .personalInfo_3 .myData .joy .left {
+        width: 40%;
+    }
+    
+    .index div#isLogin a.immediately {
+        width: 60px;
+        margin-left: 10px;
+        color: yellow;
+    }
+    
+    .index div#isLogin a.relatedDocuments {
+        width: 60px;
+        color: yellow;
+    }
+    
+    .apply_6_step1 .nasi {
+        border: none;
+    }
+}
+.apply_6_step1 .modal-dialog .modal-content .modal-body p {
+    /*    text-align: center;*/
+}
+
+/* mentis 3568 */
+.apply_00 .modal-dialog .modal-content .modal-body p {
+    text-align: left;
+}
+@media (max-width:769px) {
+    .branchInfoBr {
+        margin-left: 15px;
+    }
+    
+    .index div#isLogin a.immediately {
+        width: 60px;
+        margin-right: 10px;
+        margin-left: 0;
+        color: yellow;
+        float: none;
+    }
+    
+    .index div#isLogin a.relatedDocuments {
+        width: 60px;
+        margin-right: 10px;
+        margin-left: 0;
+        color: yellow;
+        float: none;
+    }
+    
+    body.myElectronicPay_1 .ABBA {
+        display: block;
+    }
+    
+    body.myElectronicPay_1 .cheetah {
+        padding-top: 0;
+    }
+    
+    body.myElectronicPay_1 .detail:before {
+        top: -6px;
+    }
+    
+    body.myElectronicPay_1 .lightWon .busus li:first-child {
+        width: 26%;
+    }
+    
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(2) {
+        width: 74%;
+    }
+    
+    body.myElectronicPay_1 .lightWon .busus li h3 {
+        font-size: 12px;
+    }
+    
+    body.myElectronicPay_1 .processOutBox {
+        margin-top: 0;
+    }
+    
+    body.myElectronicPay_1 .repayTable .resa li h5 {
+        font-size: 12px;
+    }
+    
+    body.myElectronicPay_1 .cheetah h3.oom {
+        color: #0872BB;
+    }
+    
+    body.myElectronicPay_1 .repayTable .resa li:first-child h5 {
+        padding: 10px 3px;
+    }
+    
+    body.myElectronicPay_1 .resaTable {
+        overflow: hidden;
+    }
+    
+    body.myElectronicPay_1 .repayTable .resa li h4 span {
+        display: block;
+    }
+    
+    body.myElectronicPay_1 .repayTable .resa li:nth-child(4) h4 {
+        padding: 13px 0;
+    }
+}
+@media (min-width:769px) {
+    body.myElectronicPay_1 .processInner .mipa {
+        padding: 0;
+    }
+    
+    body.myElectronicPay_1 h4#name {
+        margin-right: 10px;
+    }
+    
+    body.myElectronicPay_1 .lightWon .busus {
+        padding: 20px 10px;
+    }
+    
+    body.myElectronicPay_1 .pomodal p {
+        min-height: 0;
+    }
+    
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(2) p,
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(2) h3,
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(3) p,
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(3) h3,
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(4) p,
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(4) h3,
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(5) p,
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(5) h3 {
+        text-align: left;
+    }
+    
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(2),
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(3),
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(4),
+    body.myElectronicPay_1 .lightWon .busus li:nth-child(5) {
+        padding-left: 10px;
+    }
+    
+    body.myElectronicPay_1 .detail:before {
+        top: -3px;
+    }
+    
+    body.myElectronicPay_1 .resa li:nth-child(2) h5,
+    body.myElectronicPay_1 .resa li:nth-child(3) h5,
+    body.myElectronicPay_1 .resa li:nth-child(4) h5,
+    body.myElectronicPay_1 .resa li:nth-child(5) h5 {
+        padding-right: 10px;
+        text-align: right;
+    }
+    
+    body.myElectronicPay_1 .repayTable .resa li h4,
+    body.myElectronicPay_1 .repayTable .resa li h5 {
+        font-size: 15px;
+    }
+    
+    body.myElectronicPay_1 .repayTable .jbway li h5 {
+        width: 130px;
+    }
+    
+    body.myElectronicPay_1 .repayTable .jbway li h4 {
+        font-size: 18px;
+    }
+    
+    body.myElectronicPay_1 .processBox {
+        width: 73%;
+        margin: 0 auto;
+    }
+    
+    body.myElectronicPay_1 .processInner {
+        width: 100%;
+    }
+}
+
+/* IE11 fix 查詢繳款明細 datIcon and password隱碼大小 */
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    
+    body#body input[type="password"] {
+        font-family: sans-serif;
+    }
+    
+    .repaymentInquiry_ .datIcon:before,
+    .repaymentInquiry_ .input-group-addon.active .datIcon:before {
+        top: 6px;
+        left: -2px;
+    }
+}
+@media (max-width:769px) and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .repaymentInquiry_ .datIcon:before,
+    .repaymentInquiry_ .input-group-addon.active .datIcon:before {
+        top: 8px;
+    }
+}
+
+/*2016-06-25 added by titan 加入底線樣式*/
+.underline {
+    text-decoration: underline;
+}
+
+/* 陳拓0627 */
+@media (min-width:769px) {
+    #body .stepArea ul,
+    body.apply_3_step1 .stepArea ul {
+        left: -40%;
+    }
+    /*
+    body#body.register #mainForm .processInner {
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+*/
+    
+    .register_1 .moArea {
+        width: 100%;
+    }
+    
+    body.apply_4 .processInner table.mqua {
+        font-size: 15px;
+    }
+    
+    .personalin {
+        padding-right: 100px;
+    }
+}
+@media (max-width:769px) {
+    .QAListTab > ul > li > a.active {
+        border-bottom: none;
+        border-left: 20px solid #666767;
+        z-index:20;
+    }
+    
+    .sub .container {
+        min-width: 0;
+    }
+    
+    #body.forgetPassword_4 .processInner {
+        padding: 0;
+        background: none;
+    }
+    
+    .forgetPassword_4 .antcoco {
+        border-radius: 3px;
+        background: #faf8fc;
+        border-radius: 3px;
+    }
+    
+    .forgetPassword_4 .antcoco.overflow {
+        overflow: auto;
+        margin-top: 10px!important;
+    }
+    
+    body#body.register_2 #mainForm .processInner {
+        padding: 0;
+        background: none;
+    }
+    
+    body.register_2 .antcoco {
+        border-radius: 3px;
+        background: #faf8fc;
+        padding: 10px 5%;
+        margin-bottom: 10px;
+    }
+    /*
+    body#body .nextBtn a.gray {
+        width: 25%;
+    }
+*/
+    
+    .deferment .earth li {
+        font-size: 12px;
+    }
+    
+    body.deferment tbody#uploadObj tr td,
+    body.deferment .processInner h4 {
+        font-size: 15px;
+    }
+    
+    body.deferment .processInner table.mqua .file-upload a {
+        font-size: 15px;
+    }
+    
+    body.deferment .mqua input {
+        height: 30px;
+        top: 0;
+        cursor: pointer;
+    }
+}
+@media (min-width:510px) {
+    body.myloan .repayTable ul.resa li:last-child h4 {
+        line-height: 30px;
+    }
+}
+
+/* 陳拓0629 */
+@media (min-width:769px) {
+    body.apply_1_step1 .twoDiv.nameArea {
+        width: 233px;
+    }
+    
+    body#body.apply_1_step1 .right_name .input_m {
+        text-align: left;
+        padding: 6px 12px;
+    }
+    
+    #body .tic span {
+        font-size: 18px;
+    }
+    
+    body.apply_1_step1 .joy .right.right_name {
+        width: 163px;
+    }
+    
+    body.apply_1_step1 .wrapper .input_m {
+        max-width: 243px;
+    }
+    
+    body.apply_1_step1 .wrapper .input_L {
+        max-width: 324px;
+    }
+    
+    body.index .personal a[class^="pobtn-"] {
+        max-width: 100%;
+        width: 52%;
+    }
+    
+    body.index .personal .inputArea {
+        max-width: 380px;
+    }
+    /*2016-07-09 modify by titan
+    #body.index .personal .inputArea input {
+        
+        width: 100%;
+        
+    }
+    */
+    
+    body.index .personal .insideArea {
+        width: 52%;
+    }
+    
+    body.index .personal a[class^="pobtn-"] {
+        width: 55%;
+        max-width: 100%;
+    }
+    /*2016-07-09 modify by titan
+    #body.index .personal .inputArea input {
+    
+        width: 60%;
+        */
+}
+.index .loginBtn {
+    max-width: 100%;
+}
+#body.index .personal .inputArea .error {
+    width: 37%;
+}
+.personalin {
+    padding-left: 15px;
+    padding-right: 70px;
+}
+.footer {
+    padding-left: 100px;
+}
+.opt {
+    left: 80px;
+}
+.seOutArea .seArea h4 {
+    left: -17px;
+}
+.mapSelectArea {
+    margin-left: 245px;
+}
+.seOutArea .seAreaUL {
+    width: 100%;
+    margin-left: 0;
+}
+.intrBox p {
+    margin-top: 10px;
+}
+.mapInput {
+    padding-left: 20px;
+}
+
+}
+body.myloan .myloan_Box {
+    padding-top: 10px;
+}
+@media (max-width:769px) {
+    .index .news h3 {
+        font-size: 17px;
+    }
+    .news p,
+    #body.index .news h5.title {
+        font-size: 15px;
+    }
+    .sidebar ul li a {
+        font-size: 15px;
+    }
+    .footer {
+        padding: 0 0 0 10px;
+    }
+    .application_step li h2:before {
+        top: -2px;
+    }
+    a[class^="pobtn-"] {
+        font-size: 17px;
+    }
+    .smbtnArea .pobtn-srw,
+    .smbtnArea .pobtn-srb {
+        height: 50px;
+        padding-top: 0;
+        line-height: 50px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .copyright {
+        padding: 15px 5px!important;
+    }
+}
+
+/* 陳拓0630 */
+@media (min-width:769px) {
+    #hi2 p {
+        padding-bottom: 0;
+    }
+}
+@media (max-width:769px) {
+    body#body td.file-photo {
+        width: 34px;
+        height: 34px;
+    }
+}
+body.index a.underline {
+    text-decoration: underline;
+}
+@media (min-width:769px) {
+    #body.index .personal .inputArea input,
+    body.index .personal a[class^="pobtn-"] {
+        width: 100%;
+        max-width: 235px;
+        /**/
+    }
+    #body.index .personal .inputArea .error {
+        width: 103px;
+    }
+    div.loginBox {
+        margin-right: 20px;
+    }
+}
+@media (width:1024px) {
+    #body.index .personal .inputArea input,
+    body.index .personal a[class^="pobtn-"] {
+        /**/
+        
+        max-width: 190px;
+    }
+}
+@media (min-width:1366px) {
+    #body.index .personal .inputArea {
+        width: 80%;
+    }
+}
+.application_step li a {
+    cursor: default;
+}
+
+/* IE11 fix */
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    body.repaymentInquiry_ .detail:before {
+        width: 53px;
+        background-repeat: no-repeat;
+    }
+    a.underline {
+        text-decoration: underline;
+    }
+}
+body.index .modal-body a.hyperlink {
+    color: #0E89CB;
+    background: none;
+}
+
+/*
+#body.index .personal .inputArea input, body.index .personal a[class^="pobtn-"] {
+    max-width: 150px;
+}
+*/
+@media (min-width:769px) {
+    .personalin p {
+        margin: 25px 0;
+    }
+    .personalin {
+        padding-left: 50px;
+    }
+}
+.underline a,
+.underline {
+    text-decoration: underline;
+}
+@media (max-width:769px) {
+    .modal button.close {
+        width: 30px;
+        height: 30px;
+        background: url(../img/close2.png);
+        background-size: contain;
+    }
+    .modal button.close span {
+        display: none;
+    }
+    .sub .navIcon,
+    .sub .right_navIcon {
+        display: none;
+    }
+}
+.fc-today-button {
+    display: none;
+}
+.pomodal h3 {
+    margin-bottom: 30px;
+}
+.modal-body {
+    padding: 40px 15px;
+}
+
+/*
+body#body .modal-content {
+    padding-bottom: 0;
+}
+*/
+.regionArea .regionPlace .regionPlaceBtn a.active {
+    background: #58595b;
+}
+.regionArea .regionPlace .regionText h4.active:before {
+    display: inline-block;
+    content: '';
+    width: 15px;
+    height: 25px;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    background-size: 100%;
+    background-image: url(../img/na-05-blue.png);
+}
+
+/* 陳拓0705 */
+@media (min-width:769px) {
+    .personalin {
+        padding-right: 100px;
+    }
+    .forgetPassword .joy .left_step3 {
+        width: 150px;
+    }
+    .personalin {
+        padding-left: 35px;
+    }
+    .personalin p {
+        margin: 10px 0;
+    }
+    .forgetPassword_4 .nina .left {
+        width: 90px;
+        padding-right: 0;
+    }
+    #body .modal-content {
+        padding: 40px 15px;
+    }
+    #body .modal-body,
+    #body .modal-footer,
+    #body .modal-header {
+        padding: 0;
+    }
+}
+@media (max-width:1024px) and (min-width:769px) {
+    body.apply_3_step2 .vic {
+        width: 428px;
+    }
+    body.apply_3_step2 .tyg {
+        padding-left: 0;
+    }
+    .personalin {
+        padding-right: 70px;
+    }
+}
+@media (min-width:769px) {
+    body.apply_5_step1 .father:before {
+        top: -34px;
+    }
+    body.apply_5_step1 .mather:before {
+        top: -30px;
+    }
+}
+@media (min-width:769px) {
+    .toggleBtn a.green {
+        margin-left: 44px;
+    }
+    .apply_map .regionArea .regionPlace .regionText {
+        padding-left: 5px;
+        padding-right: 5px;
+        min-height: 100px;
+    }
+    .apply_map .mapInput {
+        height: 40px;
+        border-radius: 4px;
+    }
+    .apply_map .placeholder {
+        top: 0px;
+    }
+    .regionArea .region {
+        padding-bottom: 20px;
+    }
+    .personalin {
+        padding-top: 15px;
+    }
+    .personalin p {
+        margin: 10px 0;
+    }
+    .sub #triangleInput {
+        margin-top: 0;
+    }
+    .sub #triangleInput {
+        margin-right: 360px;
+    }
+    .sub .appHf {
+        width: 42.5%;
+    }
+}
+
+/*2016-07-09 added by titan加上假日行事曆反灰*/
+/*
+body.apply_map .greyDeepgrey,
+body.apply_map .fc-sat,
+body.apply_map .greyDeepgrey,
+body.apply_map .fc-sun {
+    color: #828686;
+    background-color: #F0F0F0;
+}
+*/
+
+/* 2016-07-25 added by fernando行事曆holiday樣式 */
+
+body.apply_map .greyDeepgrey,
+body.apply_map .fc-holiday {
+    color: #826868;
+    background: #F0F0F0;
+}
+
+
+
+@media (max-width:769px) {
+    body.apply_map .fc-event span {
+        font-size: 6px;
+    }
+    body.apply_map .fc-toolbar h2 {
+        font-size: 18px;
+    }
+    body.apply_map .reservationArea .fc-view-container {
+        padding: 0px 10px;
+    }
+}
+
+/* 陳拓0711 */
+
+/*
+@media (max-width:769px) {
+    .apply_5_step1 .snopy {
+        background: #faf8fc;
+    }
+}*/
+.personalin h4 {
+    font-weight: bold;
+}
+.pomodal h3 {
+    font-size: 14px;
+}
+@media (max-width:769px) {
+    body#body.register_1 .nextBtn a {
+        width: 30%;
+    }
+    .changePwd_2_step2 .pomodal h3 {
+        font-size: 14px;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    /* ios zoom in fix */
+    textarea:focus,
+    select:focus {
+        font-size: 16px;
+    }
+}
+h4.modal-title {
+    margin-bottom: 10px;
+}
+.pomodal h3 {
+    color: inherit;
+    margin-bottom: 10px;
+}
+.index h4.modal-title {
+    display: none;
+}
+.myElectronicPay_1 .processArea {
+    margin-top: 0;
+}
+
+/* 陳拓0712 mentis3984 */
+@media (min-width:769px) {
+    body.apply_5_step1 .father:before {
+        width: 34px;
+        height: 50px;
+        top: -23px;
+    }
+    body.apply_5_step1 .mather:before {
+        top: -24px;
+        width: 37px;
+        height: 50px;
+    }
+    .repaymentInquiry_ .processArea {
+        margin-top: 0;
+    }
+    .repaymentInquiry_ .searchResult .repayTable .rema td {
+        padding: 25px 0;
+        text-align: right;
+    }
+    .repaymentInquiry_ .searchResult .repayTable .rema td:first-child,
+    .repaymentInquiry_ .searchResult .repayTable .rema td:nth-child(2),
+    .repaymentInquiry_ .searchResult .repayTable .rema td:nth-child(3) {
+        text-align: center;
+    }
+}
+@media (max-width:769px) {
+    .index div#isLogin a.relatedDocuments {
+        margin-right: 0;
+    }
+    .index div#isLogin a.relatedDocuments,
+    .index div#isLogin a.immediately {
+        text-decoration: underline;
+    }
+}
+@media (max-width:1024px) and (min-width:769px) {
+    body.apply_3_step2 .vic {
+        width: 588px;
+    }
+    body.apply_3_step2 .sum {
+        padding-left: 135px;
+    }
+}
+@media (min-width:769px) {
+    body#body.apply_00 .processInner,
+    body#body.noPermit .processInner {
+        min-height: 400px;
+    }
+}
+.bootstrap-datetimepicker-widget .today {
+    background-color: #337ab7;
+}
+@media (max-width:1024px) and (min-width:769px) and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .personalinfo_1 .processInner {
+        padding: 10px 3%;
+    }
+}
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    body.apply_5_step1 div.noob p {
+        margin-right: 22.4%;
+    }
+}
+@media (max-width:320px) {
+    .QAList {
+        overflow: scroll;
+        max-height: none;
+    }
+}
+@media (max-width:769px) {
+    .repaymentInquiry_ .searchResult .repayTable .rema th {
+        font-size: 14px;
+    }
+    .repaymentInquiry_ .searchResult .repayTable .rema td {
+        padding: 15px 5px;
+    }
+}
+@media (max-width:1024px) and (min-width:769px) {
+    body.apply_1_step1 .nameArea.twoDiv {
+        width: 213px;
+    }
+}
+@media (min-width:769px) {
+    body.apply_5_step1 div.noob p {
+        margin-right: 206px;
+    }
+}
+@media (max-width:1024px) and (min-width:769px) {
+    body.apply_5_step1 div.noob p {
+        margin-right: 180px;
+    }
+}
+@media (max-width:769px) {
+    .noPermit .wrapper {
+        background: #fff;
+    }
+    #body.noPermit .processInner {
+        background: #f8fafc;
+        border: dashed 1px #CCCED2;
+        border-radius: 10px;
+    }
+    #body .talkwall {
+        width: 100%;
+    }
+}
+/*
+@media (min-width:769px) {
+    body.apply_4 h4.bsc {
+        position: relative;
+        top: 20px;
+    }
+}
+*/
+
+/**  0716 忠毅 調整網路服務註記文字置中  **/
+@media (max-width:769px) {
+    .apply_1_step1 .modal-title {
+        text-align: center;
+    }
+}
+
+/**  0716 忠毅 repaymentInquiry 中, 針對小版才有br去調整  **/
+@media (min-width:770px) {
+    .repaymentInquiry_br {
+        display: none;
+    }
+}
+@media (max-width:769px) {
+    .repaymentInquiry_br {
+        display: block;
+    }
+}
+@media (max-width:769px) {
+    .repaymentInquiry_ .searchResult .repayTable .rema th {
+        font-weight: 500;
+    }
+}
+
+/*---------------------------IE10--------------------------------*/
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+
+/* IE10+ CSS styles go here by Wade */
+    
+    #body .tab_arrow {
+        top: 3px;
+    }
+
+    .path ul li a:after {
+        width: 5px;
+        height: 12px;
+        top: 5px;
+    }
+
+    body.personalinfo_1 .sandy {
+        width: 200px;
+        padding-right: 0;
+        padding-top: 10px;
+    }
+
+    body.personalinfo_1 .twoDiv {
+        width: 280px;
+        padding-right:0;
+    }
+    body.personalinfo_1 .nina .left_name {
+        width: 50px;
+    }
+    body.personalinfo_1 .nina .right_name {
+        width: 225px;
+    }
+    body.personalinfo_1 .joy p {
+        font-size: 15px;
+    }
+
+    body.personalinfo_1 #birth_tmp_1 {
+        width: 225px;
+    }
+
+    body.memberLogin_1 input[name="studentCode"] {
+/*      padding-top: 6px;
+        padding-bottom: 6px;*/
+        min-height: 30.25px;        
+    }
+
+    body.memberLogin_1 input[name="studentPassword"] {
+/*      padding-top: 6px;
+        padding-bottom: 6px;*/
+        min-height: 31.25px;     
+    }
+
+}
+
+/*---------------------------IE9--------------------------------*/
+
+body.personalinfo_0 .editBtnBoxTop {
+    right: 0\9\0;
+}
+
+.path ul li a:after {
+    top: 7px\9\0;
+}
+
+body.personalinfo_1 .sandy {
+    width: 200px\9\0;
+    padding-right: 0\9\0;
+    padding-top: 10px\9\0;
+}
+
+body.personalinfo_1 .twoDiv {
+    width: 280px\9\0;
+    padding-right:0\9\0;
+}
+body.personalinfo_1 .nina .left_name {
+    width: 50px\9\0;
+}
+body.personalinfo_1 .nina .right_name {
+    width: 225px\9\0;
+}
+body.personalinfo_1 .joy p {
+    font-size: 15px\9\0;
+}
+
+body.personalinfo_1 #birth_tmp_1 {
+    width: 225px\9\0;
+}
+
+/*@media (max-width: 1024px) and (min-width: 769px) {
+    body.personalinfo_1 .twoDiv {
+        width: 170px\9\0;
+    }
+    body.personalInfo_1 .wrapper .input_m#joyName {
+        width: 120px\9\0;    
+    }
+}*/
+body.deferment_4 .joy .left {
+    text-align: right;
+}
+body.deferment_4 .joy .right {
+    padding-top: 4px\9\0;
+}
+
+body.deferment_2 .modal-body li {
+    margin-left: 40px\9\0;
+}
+
+body.deferment_2 .modal-body li:first-child {
+    margin-left: 0\9\0;
+}
+
+body.personalinfo_1 .joy .sandy:nth-of-type(1) {
+    padding-top: 15px\9\0;
+}
+
+body.personalinfo_1 .joy.midd {
+    padding: 6px 0 0 0\9\0;
+}
+
+body.personalinfo_1 div#birth_tmp_2 {
+    padding: 10px 0 0 0\9\0;
+}
+
+body.memberLogin_1 .inputArea {
+    height: 36px\9\0;
+}
+
+/*---------------------------------------------------------------*/
+
+
+@media (min-width:769px) {
+    
+    body.memberLogin_1 .register_1 {
+        display: none;
+        outline: 2px solid #FFF;
+    }
+    
+}
+
+
+@media (min-width:769px) {
+    
+    #body.repaymentInquiry_ .casomTitle,
+    #body.repaymentInquiry_ .casom {
+         margin-left:2%
+    }
+
+    #body.repaymentInquiry_ .casom li {
+         margin-left:20px;
+    }
+    
+    #body.repaymentInquiry_ .nina .left {
+        text-align: right;
+    }
+    
+    .deferment_3_step1 h3.snopy {
+        padding-left: 60px;
+    }
+    
+    .deferment_3_step1 .pen:before {
+        left: 35px;
+    }
+    
+    body.deferment_3_step2 .joy .left p {
+        padding-right: 20px;
+    }
+    
+    body.register_2 .abon .left {
+        width: 95px;
+    }
+}
+
+@media (min-width:1025px) {
+    #body td.file-view {
+        width: 200px;
+    }
+}
+
+@media (min-width:769px) and (max-width:1366px) {
+    .kim div:nth-child(3) {
+        margin-bottom: 37px;
+    }
+}
+
+/* mentis 4457 */
+
+@media (max-width:769px) {
+    body.deferment_4 .joy .left {
+        text-align: left;
+    }
+    
+    body.deferment_4 .nina .right {
+        max-width: 600px;
+    }
+}
+
+
