@@ -286,14 +286,7 @@ function apply1_1_valid() {
             group: 'tel',
             hasHiddenCode: true,
             hiddenTarget: $('input[name="t_phone"]').val()
-        }
-            /*因為現在測試機行動電話都是隱碼，所以傳出去都會被擋, 
-             {
-             name: 'cellPhone',
-             msg: '行動電話',
-             allowEmpty : false
-             }*/
-        ],
+        }],
         validDecimal: [],
         validEmail: [{
             name: 'email',
@@ -408,7 +401,7 @@ function apply1_1_valid() {
                     group: 'domicilePhone'
                 });
             } 
-            /*else {
+            else {
                 if (domicileAreaVal.length + domicilePhoneVal.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="DomicileArea"]'),
@@ -416,7 +409,7 @@ function apply1_1_valid() {
                         group: 'domicilePhone'
                     });
                 }
-            }*/
+            }
             
             var marryStatus = $('[name="marryStatus"]').val();
             if (marryStatus == "") {
@@ -434,7 +427,7 @@ function apply1_1_valid() {
                     group: 'tel'
                 });
             } 
-            /*else {
+            else {
                 if (areaTelephone.length + telephone.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="areaTelephone"]'),
@@ -442,7 +435,7 @@ function apply1_1_valid() {
                         group: 'tel'
                     });
                 }
-            }*/
+            }
 
         }
     });
@@ -718,31 +711,22 @@ function apply2_valid() {
                     });
                 }
 
+                var telephone = $('[name="' + family.input + 'phone"]').val();
                 var areaTelephone = $('[name="' + family.input + 'regionCode"]').val();
-                if (areaTelephone.length < 2) {
+                if (areaTelephone.length < 2 || telephone.length < 5) {
                     customizeValidResult.push({
                         obj: $('[name="' + family.input + 'regionCode"]'),
                         msg: '通訊電話格式錯誤',
                         group: '' + family.input + 'telephone'
                     });
                 }
-
-                var telephone = $('[name="' + family.input + 'phone"]').val();
-                if (telephone.length < 5) {
+                else if (areaTelephone.length + telephone.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="' + family.input + 'phone"]'),
                         msg: '通訊電話格式錯誤',
                         group: '' + family.input + 'telephone'
                     });
                 }
-
-                /*if (areaTelephone.length + telephone.length > 10) {
-                    customizeValidResult.push({
-                        obj: $('[name="' + family.input + 'phone"]'),
-                        msg: '通訊電話格式錯誤',
-                        group: '' + family.input + 'telephone'
-                    });
-                }*/
 
                 /*var birthdayY = $('[name="' + family.input + 'birthday0"]').val();
                  var now = new Date();
@@ -1284,6 +1268,7 @@ function apply3_2_valid() {
     var freeLen = free.length;
     var loanChoiced = $('[name="loanPrice"]').val();
     var sSelectValue = $('[name="stageSelectValue"]').val();
+    var whiteList = $('[name="whiteListHidden"]').val();
 
     if (billLen <= 0 && freeLen <= 0) {
         errorTip.show();
@@ -1292,7 +1277,6 @@ function apply3_2_valid() {
         errorTip.hide();
         errRes = true;
     }
-
 
     var res = GardenUtils.valid.validForm({
         type: "show",
@@ -1312,18 +1296,13 @@ function apply3_2_valid() {
                 var life = $('#accordingToBill_life').val();
 
                 if (register <= 0 || register == null) {
-                    customizeValidResult.push({
-                        obj: $('#loansSum'),
-                        msg: '請輸入申貸金額'
-                    });
+                    if(whiteList == 'N'){
+                        customizeValidResult.push({
+                            obj: $('#loansSum'),
+                            msg: '請輸入申貸金額'
+                        });
+                    }                   
                 }
-
-                /*if (sum <= 0) {
-                 //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
-                 $('.modalBtn').trigger('click');
-                 } else {
-                 loanHidden.val(sum);
-                 }*/
 
                 if (life > 40000) {
                     //alert("生活費不可大於30,000");
@@ -1381,13 +1360,6 @@ function apply3_2_valid() {
                 var books = $('#freedom_book').val();
                 var life = $('#freedom_life').val();
 
-                /*if (sum <= 0) {
-                 //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
-                 $('.modalBtn').trigger('click');
-                 } else {
-                 loanHidden.val(sum);
-                 }*/
-
                 if (life > 40000) {
                     //alert("生活費不可大於30,000");
                     customizeValidResult.push({
@@ -1443,9 +1415,7 @@ function apply3_2_valid() {
     });
     if (loanChoiced == '1') {
         var sum = $('[name="accordingToBill_sum_hidden"]').val();
-
-        if (sum <= 0) {
-            //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
+        if (sum <= 0 && whiteList == 'N') {
             result = false;
             $('.modalBtn').trigger('click');
         } else {
@@ -1455,8 +1425,7 @@ function apply3_2_valid() {
     } else if (loanChoiced == '2') {
         var sum = $('[name="freedom_sum"]').val();
 
-        if (sum <= 0) {
-            //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
+        if (sum <= 0 && whiteList == 'N') {
             result = false;
             $('.modalBtn').trigger('click');
         } else {
@@ -1464,10 +1433,6 @@ function apply3_2_valid() {
             loanHidden.val(sum);
         }
     }
-
-    /*alert(res);
-     alert(errRes);
-     alert(result);*/
 
     if (res == true && errRes == true && result == true) {
         return true;
@@ -4545,7 +4510,6 @@ function apply3_1(content) {
     var sday = content.school.isDay;
     var sNational = content.school.isNational;
     var sName = content.school.name;
-    var gGrade = content.gradeClass.grade;
     var enterDateYear = content.enterDate.year;
     var enterDateMonth = content.enterDate.month;
 
@@ -4558,7 +4522,7 @@ function apply3_1(content) {
     isDaySelect.trigger('change');
     isNationalSelect.trigger('change');
 
-//    gradeSelect.val(gGrade);
+    gradeSelect.val(gGrade);
     gradeSelect.trigger('change');
     nameSelect.val(sName);
     nameSelect.trigger('change');
@@ -4675,9 +4639,13 @@ function apply3_2(content) {
     var freeHidden = $('[name="freedom_sum"]');
     var loanPriceHidden = $('[name="loanPrice"]');
     var stageSelectValueHidden = $('[name="stageSelectValue"]');
+    var whiteListHidden = $('[name="whiteListHidden"]');
     loanHidden = $('[name="loansPrice"]');
     var sSelectValue = content.stageSelectValue;
+    var whiteList = (content.whiteList == undefined)?'N':content.whiteList;
 
+    whiteListHidden.val(whiteList);
+    
     stageSelectValueHidden.val(sSelectValue);
 
     //選擇貸款的方式
@@ -5164,6 +5132,17 @@ function apply4_2(content) {
     var branchIndex = content.btnId;
     var datePicked = content.date;
     var timePicked = content.time;
+    var isPopUp = content.historyIsOnlineDocument;  //Y代表上次是線上續貸
+    
+    //若前次申請案件為線上續貸的客戶,若因更改資料導致本次申請需分行對保,彈跳壓黑視窗
+    if(isPopUp == 'Y'){
+        GardenUtils.display.popup({
+            title: '',
+            content: '<p>你好，可能因為以下原因使你本學期的就學貸款無法辦理線上續貸，請選擇預約分行，並於預約時間前往分行辦理就學貸款。</p><ul><li>1.學程異動，例如高中升大學</li><li>2.同一學程但學校異動，例如轉學</li><li>3.連帶保證人異動，例如本次申貸就學貸款的保證人與前次申貸時不同</li></ul>',
+            closeCallBackFn: function() {},
+            isShowSubmit: false
+        });   
+    }
 
     var getDefaultAddress = modal.getDefaultAddress();
     console.debug(getDefaultAddress);
