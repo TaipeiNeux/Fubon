@@ -950,7 +950,7 @@ function personalInfo_1_valid() {
                 group: 'birth',
             },{
                 name: 'email',
-                msg: 'Email'
+                msg: 'Email，如有疑問，請洽客戶服務專線02-8751-6665按5'
             }, {
                 name: 'DomicileArea',
                 msg: '戶籍電話',
@@ -969,7 +969,7 @@ function personalInfo_1_valid() {
                 group: 'tel'
             }, {
                 name: 'cellPhone',
-                msg: '行動電話'
+                msg: '行動電話，如有疑問，請洽客戶服務專線02-8751-6665按5'
             }, {
                 name: 'address',
                 msg: '通訊地址',
@@ -1130,7 +1130,7 @@ function personalInfo_1_valid() {
                     group: 'domicilePhone'
                 });
             } 
-            /*else {
+            else {
                 if (domicileAreaVal.length + domicilePhoneVal.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="DomicileArea"]'),
@@ -1138,10 +1138,12 @@ function personalInfo_1_valid() {
                         group: 'domicilePhone'
                     });
                 }
-            }*/
+            }
 			var year = parseInt($('[name="birth_year"]').val());
 			var month = parseInt($('[name="birth_month"]').val());
 			var day = $('[name="birth_day"]').val();
+			var now = new Date();
+			var now_year = now.getFullYear() - 1911;
 			if(day.indexOf('*') == -1){
 				 day = parseInt($('[name="birth_day"]').val());
 				 if (day > 31 || day < 1) {
@@ -1158,6 +1160,15 @@ function personalInfo_1_valid() {
                     msg: '生日格式錯誤'
                 });
             }
+			else{
+				var yearInt = parseInt(year);
+				if(now_year < yearInt){
+					customizeValidResult.push({
+	                    obj: $('[name="birth_year"]'),
+	                    msg: '生日格式錯誤'
+	                });
+				}
+			}
 			
 			if (month > 12 || month < 1) {
                 customizeValidResult.push({
@@ -1183,7 +1194,7 @@ function personalInfo_1_valid() {
                     group: 'tel'
                 });
             } 
-            /*else {
+            else {
                 if (areaTelephone.length + telephone.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="areaTelephone"]'),
@@ -1191,7 +1202,7 @@ function personalInfo_1_valid() {
                         group: 'tel'
                     });
                 }
-            }*/
+            }
 
         }
     });

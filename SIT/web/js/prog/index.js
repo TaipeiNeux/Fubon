@@ -417,7 +417,7 @@ g_ajax({
     callback: function(json) {
         window.loginInfo = json;
 
-        if (json.isLogin == 'Y') { //還沒有登入
+        if (json.isLogin == 'Y') { //有登入
             //產生招呼語
             var contentArr = eightGreeting(json);
 			console.debug(contentArr);
@@ -430,6 +430,14 @@ g_ajax({
 
                 modal.resetApply();
                 window.location = 'apply.jsp';
+            });
+           
+            //點選"立即申請"
+            $('.immediately').on('click', function(ev){
+                ev.preventDefault();
+                
+                modal.resetApply();
+                window.location = 'apply.jsp';              
             });
 			
 			$('#isLogin').show();
@@ -450,8 +458,6 @@ g_ajax({
 
 		    $('#owl-carousel_news').empty().append(newsArray.join(''));
 
-
-
 		    $('#owl-carousel_news').owlCarousel({
 		        items: 5,
 		        loop: true,
@@ -467,8 +473,6 @@ g_ajax({
 		            }
 		        }
 		    });
-
-
 		});
     }
 });

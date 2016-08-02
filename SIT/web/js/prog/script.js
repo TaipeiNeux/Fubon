@@ -1,23 +1,41 @@
-var parentsWidth = 0;
+//防右鍵
+document.oncontextmenu=function(){
+	return false;
+}
+
+//Backspace轉到特定位置
+/*$(window).on('popstate', function(e) {
+    alert('backspace');
+});
+$(window).trigger( 'popstate') ;*/
+
+
 $(document).ready(function() {
-
-
-
+    
     // $(window).width(parent.document.getElementById("frame1").width);
+
 
     console.log($(window).width());
 
-    // $("body").css("width", $(window).width());
+    if (inIframe()) {
+        console.log("start");
+        // $(window).width(700);
+        // parent.document.getElementById("frame1").width=700;
+        // $('body').css('max-width', '100% !important');
+        // parent.document.body.style.width="100px";
 
-    try {
-        parentsWidth = window.top.getWidth();
-    } catch (e) {
-        console.debug(e);
+
+    } else {
+
     }
 
-
-
-
+    function inIframe() {
+        try {
+            return window.self !== window.top;
+        } catch (e) {
+            return true;
+        }
+    }
 
 
     $('body').attr('id', 'body');
@@ -242,17 +260,9 @@ $(document).ready(function() {
 
         if (isLeftMenuOpen == 0) // 左側選單關閉
         {
-            window.setTimeout(function() {
-                $(".mobileMenu").removeClass('menu-show');
-                GardenUtils.plugin.screenMoveToDiv({
-                    moveToDivObj: 'body'
-                });
-            }, 500);
+            window.setTimeout(function() { $(".mobileMenu").removeClass('menu-show'); }, 500);
             $("wrapper").removeClass("stop-scroll");
             $("body").removeClass("stop-scroll-body");
-            GardenUtils.plugin.screenMoveToDiv({
-                moveToDivObj: 'body'
-            });
         } else //左側選單開啟
         {
             $(".mobileMenu").addClass('menu-show');
@@ -261,43 +271,12 @@ $(document).ready(function() {
         }
         $('.wrapper').animate({
             left: $('.wrapper').css('left') == "275px" ? "0px" : "275px"
-        }, 300, function() {
-
-        });
+        }, 300);
         $('.headerArea').animate({
             left: $('.headerArea').css('left') == "275px" ? "0px" : "275px"
-        }, 300, function() {
-
-        });
-
-        // window.setTimeout(function() {}, 1500);
-        // $('html, body').animate({ scrollTop: 0 }, 5000);
-        scrollTopinFrame();
+        }, 300);
 
     });
-
-    // $("footer.footer").on("click", function() {
-
-
-    //     scrollTopinFrame();
-
-    // });
-
-
-    function scrollTopinFrame() {
-        GardenUtils.plugin.screenMoveToDiv({
-            moveToDivObj: 'body'
-        });
-        $(window).scrollTop(0);
-        $(document).scrollTop(0);
-
-        try {
-            window.top.iframeScrollTop();
-        } catch (e) {
-            console.debug(e);
-        }
-    }
-
 
     // 手機板 右 選單收合
     $(document).on('click', '.right_navIcon a', function() {
@@ -321,16 +300,11 @@ $(document).ready(function() {
         $(".mobileMenu").addClass('menu-show');
         $('.wrapper').animate({
             left: $('.wrapper').css('left') == "-275px" ? "0px" : "-275px"
-        }, 300, function() {
-
-        });
+        }, 300);
 
         $('.headerArea').animate({
             left: $('.headerArea').css('left') == "-275px" ? "0px" : "-275px"
-        }, 300, function() {
-
-        });
-        //
+        }, 300);
     });
 
 
@@ -596,23 +570,6 @@ $(document).ready(function() {
         console.log($(document).scrollLeft());
 
 
-        try {
-            parentsWidth = window.top.getWidth();
-        } catch (e) {
-            console.debug(e);
-        }
-
-
-        if (parentsWidth) {
-            $("body").css("width", parentsWidth);
-            $(".bannerArea").css("min-width", parentsWidth);
-
-        } else {
-            $("body").css("width", $(window).width());
-            $(".bannerArea").css("min-width", $(window).width());
-
-        }
-        //
 
     });
 
@@ -626,9 +583,8 @@ $(document).ready(function() {
         wilbeckset();
         setBannerAreaHeight();
 
-
-
-
+        $("body").css("width", $(window).width());
+        $(".bannerArea").css("min-width", $(window).width());
 
 
 
@@ -679,15 +635,7 @@ $(document).ready(function() {
 
     //$(window).resize();
     //mike
-    // $("body").css("width", $(window).width());
-    if (parentsWidth) {
-        $("body").css("width", parentsWidth);
-        // $(".bannerArea").css("min-width", parentsWidth);
-    } else {
-        $("body").css("width", $(window).width());
-        // $(".bannerArea").css("min-width", $(window).width());
-    }
-
+    $("body").css("width", $(window).width());
     // $("body").css("height", $(window).height());
 }); //(document).ready
 
@@ -745,7 +693,7 @@ $(document).ready(function() {
                 window.location = 'register.jsp';
             });
 
-            /**
+			/**
             $('a.apply').click(function(ev) {
                 ev.preventDefault();
                 window.location = 'memberLogin.jsp';
@@ -1276,10 +1224,10 @@ function isMobileWidth() {
 function previewDocument(src, name) {
     var kindOfTag = '';
     //alert(name);
-    if (name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif') {
-        kindOfTag = '<img src="' + src + '"/>';
-    } else if (name == 'pdf' || name == 'tif') {
-        kindOfTag = '<iframe src="' + src + '" style="width: 100%; height: 100%;"><frame/>'
+    if (name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif' || name == 'tif') {
+        kindOfTag = '<div class="docContent"><img src="' + src + '"/></div>';
+    } else if (name == 'pdf') {
+        kindOfTag = '<div class="docContent"><iframe src="' + src + '" style="width: 100%; height: 100%;"><frame/></div>'
     }
 
     GardenUtils.display.popup({
@@ -1496,7 +1444,7 @@ function getCarryObj(content) {
     var level1Picked = content.familyStatusLevel1;
     var level2Picked = content.familyStatusLevel2;
     var thirdPartyTitle = content.thirdPartyTitleHidden;
-
+    
     var gaurantorTitle = ["父親", "母親", thirdPartyTitle, "配偶"]; //放父親, 母親, 第三人, 配偶 的字串 
     var gaurantorName = ['(' + fatherName + ')', '(' + motherName + ')', '(' + thirdPartyName + ')', '(' + spouseName + ')']; //放父親, 母親, 第三人, 配偶的名字的字串
     var carryObjArr = []; //放1~6
@@ -1689,7 +1637,8 @@ function getCarryObj(content) {
                     gaurantorObjArr.push('c', 'c');
                     break;
             }
-        } else if (adult == 'Y') { //已成年未婚
+        } 
+		else if (adult == 'Y') { //已成年未婚
             switch (level1Picked) {
                 case '1':
                     if (level2Picked == '1') {
@@ -1804,7 +1753,7 @@ function getCarryObj(content) {
 }
 
 function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
-    //alert(isGuarantor);
+//alert(isGuarantor);
     var returnString = '';
     if (isAdult == 'N') {
         $.each(parentsArr, function(index, obj) {
@@ -1813,7 +1762,7 @@ function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
                     var current = isGuarantor.substr(index, 1); //當前的人的值
                     if (current == '1') {
                         returnString = returnString + objIndex;
-                        //alert('index:'+index);
+						//alert('index:'+index);
                     }
                 }
             });
@@ -1830,7 +1779,7 @@ function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
             });
         });
     }
-    //alert('final:'+returnString);
+	//alert('final:'+returnString);
     return returnString;
 }
 
@@ -1920,17 +1869,17 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
                 break;
             case 4: //(依判斷塞連帶保證人)之除戶謄本或死亡證明
                 var sameObj = '';
-
+				
                 for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
-                    if (g != gaurantorObjArray[k].length - 1) {
+                    if (g != gaurantorObjArray[k].length - 1) {				
                         sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
-                        sameObj = sameObj.split('(')[0] + '、';
+						sameObj = sameObj.split('(')[0] + '、';
                         gaurantorIndex += 1;
-                    } else {
-                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
+                    } else {               
+						sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
                         gaurantorIndex += 1;
                     }
-
+				
                     sameObj = sameObj.split('(')[0];
                     allObjArr[k] = sameObj + '之除戶謄本或死亡證明';
                 }
