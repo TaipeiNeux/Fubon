@@ -4,10 +4,12 @@ document.oncontextmenu=function(){
 }
 
 //Backspace轉到特定位置
-/*$(window).on('popstate', function(e) {
-    alert('backspace');
-});
-$(window).trigger( 'popstate') ;*/
+/*$(document).keydown(function(ev) {   //抓按鍵事件的keycode
+    if (ev.which == 8){     //keycode代表backspace 
+        ev.preventDefault();
+        alert('backspace');
+    }
+});*/
 
 
 $(document).ready(function() {
