@@ -22926,8 +22926,14 @@ body#body.apply_map label#timeLabel6 {
     }
 }
 
+/* 0803 陳拓 */
+
 @media (max-width:769px) {
     body.apply_5_step1 .appcont {
         font-weight: bold;
+    }
+    
+    body.myloan .casom li {
+        margin-left: 10px;
     }
 }

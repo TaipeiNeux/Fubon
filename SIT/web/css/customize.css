@@ -3386,4 +3386,9 @@ body.memberLogin_1 .inputArea {
     }
 }
 
-
+/* 0803 陳拓 */
+@media (max-width:769px) {
+    body#body.myloan .casomTitle {
+        margin-left: 10px;
+    }
+}
