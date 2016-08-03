@@ -3387,6 +3387,7 @@ body.memberLogin_1 .inputArea {
 }
 
 /* 0803 陳拓 */
+
 @media (max-width:769px) {
     body#body.myloan .casomTitle {
         margin-left: 10px;
@@ -3410,7 +3411,13 @@ body.memberLogin_1 .inputArea {
 /* stepBar 陳拓 */
 
 @media (width:768px) {
-    .stepArea ul li.subStep2:after {
+    
+    .stepArea ul li.subStep2:after,
+    .changePwd_2_step1 .stepArea ul li.subStep2:after {
         right: 40px!important;
+    }
+    
+    body.changePwd_2_step2 .stepArea ul li:after {
+        right: -45px!important;
     }
 }

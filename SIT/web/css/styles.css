@@ -22941,6 +22941,10 @@ body#body.apply_map label#timeLabel6 {
         margin: 0;
         background: #f8fafc;
     }
+    
+    body.changePwd_3 .casom {
+        width: inherit;
+    }
 }
 
 body.apply_1_step1 .threeDiv .right_year {
