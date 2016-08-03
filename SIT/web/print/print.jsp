@@ -56,7 +56,7 @@
     DataObject branch = ret.size() != 0 ? ret.get(0) : DaoFactory.getDefaultDataObject("Branch");
 
     // 申請人資料
-    String aplyNo = aplyMemberCase.getValue("BillNo");
+    String verifyNo = aplyMemberCase.getValue("VerifyNo");
     String aplyIdNo = aplyMemberCase.getValue("AplyIdNo");
     String aplyName = aplyMemberCase.getValue("Applicant");
     String marriageDesc = ProjUtils.toMarryNewName(aplyMemberCase.getValue("Marriage"));
@@ -1718,7 +1718,7 @@
 
                     <%--<span class="text-12 lh-16">簽立借據：<span class="data-text"></span></span><br>--%>
 
-                    <span class="text-12 lh-16">對保編號：<span class="data-text"><%=aplyNo%></span></span><br>
+                    <span class="text-12 lh-16">對保編號：<span class="data-text"><%=verifyNo%></span></span><br>
 
                     <%--<span class="text-12 lh-16">排序編號：<span class="data-text"></span></span><br>--%>
 
@@ -1749,6 +1749,10 @@
 <% } } %>
 
 </form>
+
+<script>
+	window.print();
+</script>
 
 </body>
 

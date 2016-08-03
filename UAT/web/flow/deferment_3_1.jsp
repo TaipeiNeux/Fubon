@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
-       
+        
         <h3 class="snopy pen">申請原因
                 <div class="editBtnBoxbottom">
                   <a href="deferment.jsp?step=deferment1" class="editBtn">修改</a>
@@ -71,7 +71,7 @@
                 <tr id="isNegative_0" class="isNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="isNegativePhoto_0" src="">
+                            <img id="isNegativePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">身分證反面影本</td>
@@ -97,7 +97,7 @@
                 <tr id="studentIdPositive_0" style="display:none" class="studentIdPositive">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdPositivePhoto_0" src="">
+                            <img id="studentIdPositivePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">學生證正面影本(須蓋有繼續升學學校之註冊章戳)</td>
@@ -123,14 +123,12 @@
                 <tr id="studentIdNegative_0" style="display:none" class="studentIdNegative">
                     <td class="file-photo">
                         <a>
-                            <img id="studentIdNegativePhoto_0" src="">
+                            <img id="studentIdNegativePhoto_img_0" src="">
                         </a>
                     </td>
                     <td class="file-zh">學生證反面影本(須蓋有繼續升學學校之註冊章戳)</td>
                     <td class="file-en" id="studentIdNegativeImg_0">無</td>
-                    <td class="file-upload">
-						
-					<a id="studentIdNegativeUpload_0">修改檔案</a>
+                    <td class="file-upload"><a id="studentIdNegativeUpload_0">修改檔案<input type="file" name="studentIdNegativeFile_0" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>
                     </td>
                     <td class="file-view">
                         <a id="studentIdNegativeView_0"></a>

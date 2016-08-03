@@ -29,7 +29,7 @@
             <img src="img/fu-155.png" alt="">
             <div class="btnArea">
                 <a href="sub_2.jsp#?1" class="pobtn-srw">了解更多</a>
-                <a id="applyButton" class="pobtn-srb apply">立即申請</a>
+                <a href="apply_00.jsp" id="applyButton" class="pobtn-srb">立即申請</a>
 
             </div>
             <div class="smbtnArea">

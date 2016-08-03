@@ -37,17 +37,20 @@ public class Apply1_1 extends MarkFlow {
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         String userId = loginUserBean.getUserId();
 
-		
         IDao dao = DaoFactory.getDefaultDao();
 
         String isPopUp = ProjUtils.isPopupPromoDialog(userId,dao) ? "Y" : "N";//此學期是否已經彈跳過
         String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N";//紀錄是否有簽訂線上服務註記
-        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",birthday = "",marryStatus = "",cellPhone = "", email = "";
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
         String domicileAddressCityId = "", domicileAddressCityName = "", domicileAddressZipCode = "",domicileAddressZipCodeName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "",teleAddressAddress = "";
         String sameAddrHidden = "";
+
+        //2016-07-27 修改生日一個欄位拆成三個欄位
+        String yearBirthday = "",monthBirthday = "",dayBirthday = "";
+        String birthday = "";//確認頁會用到
 
 //        //如果有強制回來，清除文件跟資料
 //        if("apply1_1".equalsIgnoreCase(queryStringInfo.getParam("step"))) {
@@ -62,7 +65,12 @@ public class Apply1_1 extends MarkFlow {
             Element root = draftData.getRootElement();
             if(root.element("id") != null) id = root.element("id").getText();
             if(root.element("name") != null) name = root.element("name").getText();
-            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+//            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+
+            if(root.element("birthday0") != null) yearBirthday = root.element("birthday0").getText();
+            if(root.element("birthday2") != null) monthBirthday = root.element("birthday2").getText();
+            if(root.element("birthday4") != null) dayBirthday = root.element("birthday4").getText();
+
             if(root.element("cellPhone") != null) cellPhone = root.element("cellPhone").getText();
 
             if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
@@ -87,9 +95,9 @@ public class Apply1_1 extends MarkFlow {
 
             if(root.element("sameAddrHidden") != null) sameAddrHidden = root.element("sameAddrHidden").getText();
 
-            if(StringUtils.isNotEmpty(birthday)) {
-                birthday = StringUtils.replace(birthday,"/","");
-            }
+//            if(StringUtils.isNotEmpty(birthday)) {
+//                birthday = StringUtils.replace(birthday,"/","");
+//            }
 
         }
         else {
@@ -182,6 +190,11 @@ public class Apply1_1 extends MarkFlow {
 
             //DB是西元轉民國
             birthday = ProjUtils.toBirthday(birthday);
+
+            //再拆成三個欄位
+            yearBirthday = birthday.substring(0,3);
+            monthBirthday = birthday.substring(3,5);
+            dayBirthday = birthday.substring(5,7);
         }
 
         //轉成中文
@@ -207,6 +220,8 @@ public class Apply1_1 extends MarkFlow {
             GardenLog.log(GardenLog.DEBUG,"teleAddressZipCode = " + teleAddressZipCode);
             GardenLog.log(GardenLog.DEBUG,"teleAddressAddress = " + teleAddressAddress);
         }
+
+        birthday = yearBirthday + monthBirthday + dayBirthday;
 
         //隱碼
         if(isMark()) {
@@ -241,8 +256,11 @@ public class Apply1_1 extends MarkFlow {
             markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressAllMark(teleAddressAddress));
             teleAddressAddress = ProjUtils.toAddressAllMark(teleAddressAddress);
 
-            markBean.addCode("birthday",birthday,ProjUtils.toBirthdayMark(birthday));
-            birthday = ProjUtils.toBirthdayMark(birthday);
+            markBean.addCode("birthday4",dayBirthday,dayBirthday.substring(0,1) + "*");
+            dayBirthday = dayBirthday.substring(0,1) + "*";
+
+//            markBean.addCode("birthday",birthday,ProjUtils.toBirthdayMark(birthday));
+//            birthday = ProjUtils.toBirthdayMark(birthday);
 
             queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
         }
@@ -255,6 +273,9 @@ public class Apply1_1 extends MarkFlow {
         content.put("isRecord",isRecord);
         content.put("id",id);
         content.put("name",name);
+        content.put("yearBirthday",yearBirthday);
+        content.put("monthBirthday",monthBirthday);
+        content.put("dayBirthday",dayBirthday);
         content.put("birthday",birthday);
         content.put("marryStatus",marryStatus);
 

@@ -96,8 +96,13 @@ public class Apply2 implements ILogic {
         Element step1Root = step1Doc.getRootElement();
         Element step2Root = step2Doc.getRootElement();
 
+        String yearBirthday = step1Root.element("birthday0").getText();
+        String monthBirthday = step1Root.element("birthday2").getText();
+        String dayBirthday = step1Root.element("birthday4").getText();
+        birthday = yearBirthday + monthBirthday + dayBirthday;
 
-        if(step1Root.element("birthday") != null) birthday = step1Root.element("birthday").getText();
+
+//        if(step1Root.element("birthday") != null) birthday = step1Root.element("birthday").getText();
         if(step1Root.element("domicileCityId") != null) domicileAddressCityId = step1Root.element("domicileCityId").getText();
         if(step1Root.element("domicileZipCode") != null) domicileAddressZipCode = step1Root.element("domicileZipCode").getText();
         if(step1Root.element("domicileLinerName") != null) domicileLinerName = step1Root.element("domicileLinerName").getText();

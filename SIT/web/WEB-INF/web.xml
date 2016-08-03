@@ -25,7 +25,7 @@
         <filter-class>com.fubon.filter.LoginFilter</filter-class>
         <init-param>
             <param-name>needLoginPage</param-name>
-            <param-value>apply_00.jsp,apply.jsp,myloan.jsp,repaymentInquiry.jsp,deferment.jsp,myElectronicPay_1.jsp,personalInfo_start.jsp,personalInfo_flow.jsp,changePwd.jsp</param-value>
+            <param-value>apply_00.jsp,apply.jsp,myloan.jsp,repaymentInquiry.jsp,deferment.jsp,deferment_0.jsp,myElectronicPay_1.jsp,personalInfo_start.jsp,personalInfo_flow.jsp,changePwd.jsp</param-value>
         </init-param>
     </filter>
 	

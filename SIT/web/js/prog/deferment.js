@@ -9,7 +9,6 @@ $(document).ready(function() {
         "deferment4": deferment_4
     };
 
-	
     var nextEventHanlder = {
         "deferment1": deferment_1_valid,
         "deferment2": deferment_2_valid,
@@ -217,7 +216,6 @@ function deferment_1_valid() {
 }
 
 function deferment_2_valid() {
-    var result = true;
     var radioResult = true;
     //若原因為"繼續於國內升學",則多檢查是否有選擇"請確認學生證是否有本期註冊章"的radio
     var yes = $('#registerStamp_y:checked');
@@ -238,19 +236,35 @@ function deferment_2_valid() {
 
     //檢查文件是否都有上傳
 	var mustUploadFiles = ['isPositive', 'isNegative'];
+	var isPosTag = true;
+	var isNegTag = true;
+	var addTag = true;
+	var studentPosTag = true;
+	var studentNegTag = true;
 	
 	//先檢查有幾個相同類型文件的檔案
 	$.each(mustUploadFiles, function(index, value){
 		var len = $('.'+value+'').length;
 		if(len == 1){
 			var text =  $('#'+value+'Img_0').text();
+			
 			if( text == '無' ){
 				$('#hasDocument').show();
-				result = false;
+				if(value == 'isPositive'){
+					isPosTag = false;
+				}
+				else if(value == 'isNegative'){
+					isNegTag = false;
+				}
 			}
 			else{
 				$('#hasDocument').hide();
-				result = true;
+				if(value == 'isPositive'){
+					isPosTag = true;
+				}
+				else if(value == 'isNegative'){
+					isNegTag = true;
+				}
 			}
 		}
 	});
@@ -261,14 +275,15 @@ function deferment_2_valid() {
 			var text =  $('#additionalImg_0').text();
 			if( text == '無' ){
 				$('#hasDocument').show();
-				result = false;
+				addTag = false;
 			}
 			else{
 				$('#hasDocument').hide();
-				result = true;
+				addTag = true;
 			}
 		}
-    } else if (eliIndex == '1' || eliIndex == '3') {
+    } 
+	else if (eliIndex == '1' || eliIndex == '3') {
         if (yesLen != 0) {
             var selectUploadFiles = ['studentIdPositive', 'studentIdNegative'];
 	
@@ -279,11 +294,21 @@ function deferment_2_valid() {
 					var text =  $('#'+value+'Img_0').text();
 					if( text == '無' ){
 						$('#hasDocument').show();
-						result = false;
+						if(value == 'studentIdPositive'){
+							studentPosTag = false;
+						}
+						else if(value == 'studentIdNegative'){
+							studentNegTag = false;
+						}
 					}
 					else{
 						$('#hasDocument').hide();
-						result = true;
+						if(value == 'studentIdPositive'){
+							studentPosTag = true;
+						}
+						else if(value == 'studentIdNegative'){
+							studentNegTag = true;
+						}
 					}
 				}
 			});
@@ -293,11 +318,11 @@ function deferment_2_valid() {
 				var text =  $('#additionalImg_0').text();
 				if( text == '無' ){
 					$('#hasDocument').show();
-					result = false;
+					addTag = false;
 				}
 				else{
 					$('#hasDocument').hide();
-					result = true;
+					addTag = true;
 				}
 			}
         }
@@ -354,9 +379,21 @@ function deferment_2_valid() {
         $('#documentSize').hide();
         sizeResult = true;
     }
-	//sizeResult = true;
-
-    if (sizeResult == true && result == true && radioResult == true) {
+	
+	/*alert(isPosTag);
+	alert(isNegTag);
+	alert(addTag);
+	alert(studentPosTag);
+	alert(studentNegTag);*/
+	if(isPosTag == false || isNegTag == false || addTag == false || studentPosTag == false || studentNegTag == false){
+		$('#hasDocument').show();
+	}
+	else{
+		$('#hasDocument').hide();
+	}
+	
+	
+    if (sizeResult == true && radioResult == true && isPosTag == true && isNegTag == true && addTag == true && studentPosTag == true && studentNegTag == true) {
         return true;
     } else {
         return false;
@@ -573,16 +610,17 @@ function deferment_3_1(content) {
     var date = $('[name="date"]');
     var cell = $('#cell');
 
-    //延後/提前還款原因
-    causeText.text(eligibilityText);
-
     //日期
     graDate.text(selectYear + '年' + selectMonth + '月' + selectDay + '日');
     date.val(selectYear + '年' + selectMonth + '月' + selectDay + '日');
 
     if (eligibilityText == '延畢') {
         $('#gDate').hide();
+        eligibilityText = eligibilityText + ' (延畢者應每學期申請延期一次)';
     }
+    
+    //延後/提前還款原因
+    causeText.text(eligibilityText);
 	
 	//動態長紀錄size和副檔名的hidden
 	console.debug(content.uploadFile);
@@ -613,7 +651,8 @@ function deferment_3_1(content) {
 
     //帶入前步驟上傳的文件
     showUploadFiles(content, 'N','3_1');
-
+	var upload = $('.file-upload');
+	upload.removeClass('file-upload').addClass('file-modify');
 
 
     //帶入電話號碼
@@ -714,8 +753,9 @@ function deferment_4(content) {
 
     if (eligibilityText != '延畢') {
         $('#applyReasonDate').text(ReasonDate + ' 民國' + ReasonTime);
-    } else {
-        $('#applyReasonDate').text(ReasonDate);
+    } 
+    else {
+        $('#applyReasonDate').text('('+ReasonDate+')');
     }
 }
 
@@ -796,16 +836,21 @@ function uploadEvent(input) {
                 GardenUtils.ajax.uploadFile(form, 'data?action=uploadDefermentDocument&docId=' + docId, function(response) {
 
                     console.debug(response);
-
+					var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
+					var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
+						
                     if (response.isSuccess == 'Y') {   //上傳成功
 						var newFile = response.docId;
 					
-						if(tr.find('td.file-upload a').text() == '上傳檔案'){
+						if(tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多'){
 							var nextIndex = parseInt(currentIndex) +1;
-							addNewFile(tr, inputTitle, nextIndex,'上傳檔案');
+							if( inputTitle == 'additional' ){
+                                addNewFile(tr, inputTitle, nextIndex,'上傳更多');
+                            }
+							$('.processInner').prepend(sizeArray);
+							$('.processInner').prepend(FilenameExtension);
 						}
 						
-
                         tr.find('td.file-upload a').text('修改檔案');
                         tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
                         tr.find('td.file-en').text(response.src);
@@ -814,10 +859,13 @@ function uploadEvent(input) {
 						tr.find('td.file-modify').attr('docid',newFile);
 						
 						//塞副檔名和size到hidden中
-						var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
-						var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
-						$('.processInner').prepend(sizeArray);
-						$('.processInner').prepend(FilenameExtension);
+						
+						/*alert(inputTitle);
+						alert(currentIndex);
+						alert($('[name="'+inputTitle+'_hidden'+currentIndex+'"]').length);
+						alert($('[name="'+inputTitle+'Name_hidden'+currentIndex+'"]').length);
+						*/
+						
 						var sizeHidden = $('[name="'+inputTitle+'_hidden'+currentIndex+'"]');
 						var nameHidden = $('[name="'+inputTitle+'Name_hidden'+currentIndex+'"]');
 						sizeHidden.val(fileSize);
@@ -885,8 +933,6 @@ function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
         trView = tr.next();  
     }
 
-
-    
 	console.debug('---------------------------');
 	console.debug(compareName);
 	
@@ -935,7 +981,7 @@ function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
 }
 
 //帶預設值for上傳檔案
-function showUploadFiles(content, hasRadio,step) {
+function showUploadFiles(content, hasRadio, step) {
 	console.debug(content);
     eliIndex = content.eliIndex;
 
@@ -961,22 +1007,24 @@ function showUploadFiles(content, hasRadio,step) {
             var itemName = 'additional';
             var additionName = showFileString(itemName);
             addNewFile(null, itemName, fileIndex++,defaultName);
-            var addition = $('.additional');
+            
             var RadioClicked = content.RadioClicked;
             var RadioClickedHidden = $('[name="RadioClicked"]');
             //檢查是否需要點選radio
             if (hasRadio == 'Y') { //step2
                 studentIdRadioPicked.on('click', function(ev) {
-
+					
                     var pickId = $(this).attr('id');
                     if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
-                        studentIdPositive.show();
+                        var addition = $('.additional');
+						studentIdPositive.show();
                         studentIdPositive_view.show();
                         studentIdNegative.show();
                         studentIdNegative_view.show();
                         RadioClickedHidden.val('Y');
                         addition.hide();
                     } else if (pickId == 'registerStamp_n') { //若學生證無本期註冊章,就顯示在學證明
+						var addition = $('.additional');
                         studentIdPositive.hide();
                         studentIdPositive_view.hide();
                         studentIdNegative.hide();
@@ -987,7 +1035,8 @@ function showUploadFiles(content, hasRadio,step) {
                 });
 
             } else if (hasRadio == 'N') { //step3-1
-                if (RadioClicked == 'Y') { //若前一步是選擇"是",就顯示學生證正反面
+                var addition = $('.additional');
+				if (RadioClicked == 'Y') { //若前一步是選擇"是",就顯示學生證正反面
                     studentIdPositive.show();
                     studentIdPositive_view.show();
                     studentIdNegative.show();
@@ -1003,10 +1052,10 @@ function showUploadFiles(content, hasRadio,step) {
             }
 
             if (hasRadio == 'Y') {
-                addition.hide();
+                $('.additional').hide();
             } else {
                 if (RadioClicked == 'Y') {
-                    addition.hide();
+                    $('.additional').hide();
                 }
             }
 
@@ -1028,9 +1077,9 @@ function showUploadFiles(content, hasRadio,step) {
             var studentIdNegative_view = $('#studentIdNegative_view_0');
             var studentIdRadioPicked = studentIdCardRadio.find('input');
             var itemName = 'additional';
+			var addition = $('.additional');
             var additionName = showFileString(itemName);
             addNewFile(null, itemName, fileIndex++,defaultName);
-            var addition = $('.additional');
             var RadioClicked = content.RadioClicked;
             var RadioClickedHidden = $('[name="RadioClicked"]');
             //檢查是否需要點選radio
@@ -1040,14 +1089,16 @@ function showUploadFiles(content, hasRadio,step) {
                     var pickId = $(this).attr('id');
 
                     if (pickId == 'registerStamp_y') { //若學生證有本期註冊章,就顯示學生證正反面
-                        studentIdPositive.show();
+                        var addition = $('.additional');
+						studentIdPositive.show();
                         studentIdPositive_view.show();
                         studentIdNegative.show();
                         studentIdNegative_view.show();
                         RadioClickedHidden.val('Y');
                         addition.hide();
                     } else if (pickId == 'registerStamp_n') { //若學生證無本期註冊章,就顯示在學證明
-                        studentIdPositive.hide();
+                        var addition = $('.additional');
+						studentIdPositive.hide();
                         studentIdPositive_view.hide();
                         studentIdNegative.hide();
                         studentIdNegative_view.hide();
@@ -1073,10 +1124,10 @@ function showUploadFiles(content, hasRadio,step) {
             }
 
             if (hasRadio == 'Y') {
-                addition.hide();
+                $('.additional').hide();
             } else {
                 if (RadioClicked == 'Y') {
-                    addition.hide();
+                    $('.additional').hide();
                 }
             }
             break;
@@ -1205,7 +1256,7 @@ function previewClickHandler(obj) {
         if(fileName != undefined) {
             fileName = fileName.substring(fileName.lastIndexOf('.')+1);
         }
-
+		fileName = fileName.toLowerCase();
 //			var fileName = $('[name="'+itemName+'Name_hidden'+fileIndex+'"]').val();
 
         previewDocument($('#'+itemName+'ViewTag_'+fileIndex+' iframe').attr('src'), fileName);

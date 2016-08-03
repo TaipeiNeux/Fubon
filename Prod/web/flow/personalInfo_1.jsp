@@ -158,7 +158,7 @@
 		    <ol>
 		        <li>不開放線上修改之個人資料，您可透過以下兩種方式辦理：
 		            <ul>
-		                <li>(1)透過客服:可撥打客服專線02-8751-6665按5由專人為您服務</li>
+		                <li>(1)透過客服:可撥打客戶服務專線02-8751-6665按5由專人為您服務</li>
 		                <li>(2)透過臨櫃:請您本人攜帶身分證正本及原留印鑑，至本行各<a href="https://www.fubon.com/banking/locations/locations.htm?type=branch&zoned=0" class="underblue" target="_blank">服務據點</a>辦理個人基本資料變更</li>
 		            </ul>
 		        </li>

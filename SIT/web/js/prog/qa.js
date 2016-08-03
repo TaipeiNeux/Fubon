@@ -12,7 +12,7 @@ if ($('.QAListTab').length != 0) {
                 contentArray.push('<li class="application"><a href="#"><span class="maicon">Q' + (j + 1) + '</span><p>' + d.Question + '</p></a><div class="AnserContent"><span class="qaa"></span><span class="ber">A:</span><div class="Anser">' + d.Answer + '</div></div></li>');
             });
 
-            QAListTabArray.push('<li><a href="#" target="topic_' + i + '">' + qa.TopicDesc + '</a><div class="QAArea_s topic_' + i + '"><div class="QAList qaList-1" style="display: block;"><ul>' + contentArray.join('') + '</ul></div></div></li>');
+            QAListTabArray.push('<li id="qa_1"><a href="#" target="topic_' + i + '">' + qa.TopicDesc + '</a><div class="QAArea_s topic_' + i + '"><div class="QAList qaList-1" style="display: block;"><ul>' + contentArray.join('') + '</ul></div></div></li>');
             QAAreaArray.push('<div class="QAList topic_' + i + '"><ul>' + contentArray.join('') + '</ul></div>');
         });
 
@@ -23,6 +23,7 @@ if ($('.QAListTab').length != 0) {
             console.log("click1");
 
             var $this = $(this);
+			var $thisLi = $this.parent().attr('id');
             var target = $this.attr('target');
             console.log(target);
             var isActive = $this.hasClass('active');
@@ -42,6 +43,10 @@ if ($('.QAListTab').length != 0) {
                 } else {
                     $('.QAArea_s.' + target).show();
                 }
+				
+				GardenUtils.plugin.screenMoveToDiv({
+                    moveToDivObj: $thisLi
+                });
             }
 
             ev.preventDefault();

@@ -46,6 +46,20 @@
             $("#frame1").css("max-width", $(window).width());
 
         });
+
+        function getWidth(){
+            return $(window).width();
+        }
+
+        function iframeScrollTop(){
+           // $("#frame1").contents().scrollTop(0);
+           console.log("iframeScrollTop");
+            var myIframe = document.getElementById('frame1');
+            myIframe.onload = function () {
+                myIframe.contentWindow.scrollTo(0,0);
+            }
+           console.log("iframeScrollTop finish");
+        }
     </script>
     <style>
         #frame1{

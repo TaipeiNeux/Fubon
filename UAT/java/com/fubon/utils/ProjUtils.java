@@ -16,6 +16,7 @@ import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.JSPUtils;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -852,12 +853,19 @@ public class ProjUtils {
                 }
             }
 
+            String yearBirthday = apply1_1Root.element("birthday0").getText();
+            String monthBirthday = apply1_1Root.element("birthday2").getText();
+            String dayBirthday = apply1_1Root.element("birthday4").getText();
+
+            monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
+            dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
+
             aplyMemberDataObject.setValue("AplyWay", "IB"); // 申請途徑
             aplyMemberDataObject.setValue("AplyDate",  applyDate); // 申請日期
             aplyMemberDataObject.setValue("AplyTime",  applyTime); // 申請時間
             aplyMemberDataObject.setValue("IP",  ip);   // 資料更新IP
             aplyMemberDataObject.setValue("AplyIdNo", id);  // 申請人身分證字號
-            aplyMemberDataObject.setValue("AplyBirthday", toYYYYBirthday(apply1_1Root.element("birthday").getText()));  // 申請人出生年月日
+            aplyMemberDataObject.setValue("AplyBirthday", toYYYYBirthday(yearBirthday + monthBirthday + dayBirthday));  // 申請人出生年月日
             aplyMemberDataObject.setValue("Applicant", apply1_1Root.element("name").getText());// 申請人姓名
             aplyMemberDataObject.setValue("Marriage", marryiage);// 婚姻狀況
             aplyMemberDataObject.setValue("AplyTelNo1_1", apply1_1Root.element("DomicileArea").getText()); // 申請人戶籍電話區碼
@@ -1228,7 +1236,7 @@ public class ProjUtils {
     }
 
     // 檢核需不需簽立借據
-    private static void checkSignBill(IDao dao,DataObject aplyMemberDataObject,Set<String> nowIdSet) throws Exception {
+    public static void checkSignBill(IDao dao,DataObject aplyMemberDataObject,Set<String> nowIdSet) throws Exception {
         String signBill = null;
 
         String aplyIdNo = aplyMemberDataObject.getValue("AplyIdNo");//申請人身分證字號
@@ -2355,6 +2363,25 @@ public class ProjUtils {
             e.printStackTrace();
         }
         return addr;
+    }
+
+    public static String encodingNumber(String docId) throws Exception {
+
+        docId = StringUtils.leftPad(docId,10,"0");
+        docId = "!@#$%" + docId + "!@#$%";
+
+        docId = new String(Base64.encodeBase64(docId.getBytes("utf-8")),"utf-8");
+        return docId;
+    }
+
+    public static String decodingNumber(String docId) throws Exception {
+        docId = new String(Base64.decodeBase64(docId.getBytes("utf-8")),"utf-8");
+
+        docId = docId.substring(5,docId.length()-5);
+
+        docId = Integer.parseInt(docId) + "";
+
+        return docId;
     }
 }
 

@@ -81,7 +81,7 @@ public class Apply4 implements ILogic {
 
                 JSONObject tmp = new JSONObject();
                 tmp.put("fileName",originalFileName);
-                tmp.put("docId",docId);
+                tmp.put("docId",ProjUtils.encodingNumber(docId));
 
                 if("1".equalsIgnoreCase(docType)) {
                     idCardPosition.put(tmp);

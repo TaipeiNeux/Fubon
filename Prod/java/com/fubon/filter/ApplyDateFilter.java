@@ -61,8 +61,6 @@ public class ApplyDateFilter implements Filter {
 
             boolean hasPreiod = (Long.parseLong(today) >= Long.parseLong(applySDate) && Long.parseLong(today) <= Long.parseLong(applyEDate));
 
-            //為了驗證Prod
-            hasPreiod = true;
 
             if(hasPreiod) {
                 filterChain.doFilter(servletRequest,servletResponse);

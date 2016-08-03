@@ -6,6 +6,8 @@
         <input type="hidden" name="branchAddr" value="" />
         <input type="hidden" name="branchTel" value="" />
         <input type="hidden" name="reservation" value="" />
+        <input type="hidden" name="objListHidden" value="" />
+		
 	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">

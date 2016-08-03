@@ -68,9 +68,16 @@ var GardenUtils = {
             if (isLoadGoogle) {
                 drawAddress(googleAddr);
             } else {
-                $.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
+                
+			
+				$.getScript("//maps.googleapis.com/maps/api/js?key=AIzaSyChyBpKgg076pEK6saWdPUJ3_XlGdb6lCs").done(function() {
                     drawAddress(googleAddr);
                 });
+			/**
+				$.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
+                    drawAddress(googleAddr);
+                });
+				**/
             }
 
             function drawAddress(googleAddr) {
@@ -127,6 +134,8 @@ var GardenUtils = {
                     geocoder.geocode({
                         'address': address
                     }, function(results, status) {
+					
+					
                         if (status == google.maps.GeocoderStatus.OK) {
                             map.setCenter(results[0].geometry.location);
 
@@ -175,6 +184,9 @@ var GardenUtils = {
                         } //else
                     });
                 });
+				
+				//試看看能不能處理掉IE第一次灰色問題
+				$(window).resize();
             }
         },
 

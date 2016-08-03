@@ -111,7 +111,7 @@ var RepaymentInquiry_controller = (function(){
 			        });
 
 			        /** Search click **/
-			        $('.loadSearchBtn').off('click').on('click', function(ev){
+			        $('.loadSearchBtn').off('click').on('click', function(ev) {
 
 			            ev.preventDefault();
 
@@ -161,6 +161,7 @@ var RepaymentInquiry_controller = (function(){
 			                b_sn = nDate - sDate,
 			                b_en = nDate - eDate;
 
+							
 			            if(start_str == '' || end_str == '') {
 			                isAcceptedSearch = false;
 			                errorMsg.text('請輸入查詢期間');
@@ -176,12 +177,15 @@ var RepaymentInquiry_controller = (function(){
 			                errorMsg.text('僅提供查詢近一年');
 			            }
 
+						var account = $('#accounts').val();
 
-
+						if(account == '') {
+							isAcceptedSearch = false;
+			                errorMsg.text('請輸入貸款帳號');
+						}
+						
 			            if( isAcceptedSearch ) {
-			                var account = $('#accounts').val();
-
-							
+		
 							
 							//顯示Ajax轉轉圖，另外讓主頁面hide	
 							$('.ajax-loader').show();
@@ -284,7 +288,20 @@ var RepaymentInquiry_controller = (function(){
             $.each(detail.datas, function(j, col){
                 var val_str = col.value;
                 if(col.displayText == '學期別'){
-                    val_str = parseInt(val_str/10)+'年'+(parseInt(val_str%10)==1?'上':'下')+'學期';
+					console.debug('val_str ===> ' + val_str);
+					
+					var semister = val_str.substring(3,4);
+					console.debug('semister = ' + semister);
+					
+					var text = '';
+					if(semister == '1') {
+						text = '上';
+					}
+					else if(semister == '2') {
+						text = '下';
+					}
+					
+                    val_str = parseInt(val_str/10)+'年'+text+'學期';
                 }
 
                 trTmp.push({
@@ -351,11 +368,11 @@ var RepaymentInquiry_view = (function(){
 			var options = '';
 
 			if(accounts.length > 1) {
-				options = '<option>請選擇</option>';
+				options = '<option value="">請選擇</option>';
 			}
 			
             for(var i =0;i<accounts.length;i++) {
-                options += '<option>'+accounts[i]+'</option>';			
+                options += '<option value="'+accounts[i]+'">'+accounts[i]+'</option>';			
 			}
 			
             //var final_select = '<select class="selectpicker input_m" placeholder="請選擇">'+options+'</select>';

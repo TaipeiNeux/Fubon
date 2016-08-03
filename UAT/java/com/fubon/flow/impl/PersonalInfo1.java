@@ -184,13 +184,13 @@ public class PersonalInfo1 implements ILogic {
         markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressAllMark(teleAddressAddress));
         teleAddressAddress = ProjUtils.toAddressAllMark(teleAddressAddress);
 
-        String noMarkYear = birthday.substring(0,3);
-        String noMarkMM = birthday.substring(0,3);
-        String noMarkDD = birthday.substring(0,3);
+//        String noMarkYear = birthday.substring(0,3);
+//        String noMarkMM = birthday.substring(0,3);
+//        String noMarkDD = birthday.substring(5,7);
         String markYear = ProjUtils.toBirthdayMark(birthday).substring(0,3);
         String markMM = ProjUtils.toBirthdayMark(birthday).substring(3,5);
         String markDD = ProjUtils.toBirthdayMark(birthday).substring(5,7);
-        markBean.addCode("birthday",birthday,markYear + "/" + markMM + "/" + markDD);
+        markBean.addCode("birthday_day",birthday.substring(5,7),markDD);
 
         queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
 
@@ -200,6 +200,11 @@ public class PersonalInfo1 implements ILogic {
         content.put("id",ProjUtils.toIDMark(id));
         content.put("name",ProjUtils.toNameMark(name));
         content.put("birthday",ProjUtils.toBirthdayMark(birthday));
+
+        content.put("b_year",markYear);
+        content.put("b_month",markMM);
+        content.put("b_day",markDD);
+
         content.put("marryStatus",marryStatus);
 
         JSONObject domicilePhone = new JSONObject();

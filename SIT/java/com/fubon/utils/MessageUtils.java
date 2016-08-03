@@ -37,12 +37,15 @@ public class MessageUtils {
 
     //標題
     public final static String OTPTitle = "台北富邦銀行就學貸款服務專區交易驗證碼發送通知";
+    public final static String applyBankTitle = "台北富邦銀行就學貸款服務專區申請就學貸款分行對保交易「{result}」通知";
+    public final static String applyOnlineTitle = "台北富邦銀行就學貸款服務專區申請就學貸款線上續貸交易「{result}」通知";
     public final static String registerTitle = "台北富邦銀行就學貸款服務專區註冊會員「{result}」通知";
     public final static String forgetTitle = "台北富邦銀行就學貸款服務區重設代碼/密碼交易「{result}」通知";
     public final static String personalTitle = "台北富邦銀行就學貸款服務專區變更基本資料「{result}」通知";
     public final static String resetPwdTitle = "台北富邦銀行就學貸款服務專區變更代碼/密碼交易「{result}」通知";
     public final static String defermentTitle = "台北富邦銀行就學貸款服務專區延後/提前還款交易「{result}」通知";
     public final static String loginFailTitle = "台北富邦銀行就學貸款服務專區立即登入交易「失敗｣通知";
+
 
     //內文
     public final static String SMSOTPContent = "台北富邦銀行就學貸款服務專區交易代碼{otpNumber}，交易驗證碼「{otpCode}」，如有疑問請洽本行客服專線，謝謝。";
@@ -98,7 +101,7 @@ public class MessageUtils {
 
         GardenLog.log(GardenLog.DEBUG,"==sendEmail==");
         GardenLog.log(GardenLog.DEBUG,"title = " + mailInfo.getTitle());
-        GardenLog.log(GardenLog.DEBUG,"content = " + mailInfo.getContent());
+//        GardenLog.log(GardenLog.DEBUG,"content = " + mailInfo.getContent());
         GardenLog.log(GardenLog.DEBUG,"from = " + mailInfo.getFrom());
         GardenLog.log(GardenLog.DEBUG,"toMail = " + mailInfo.getToMailString());
         GardenLog.log(GardenLog.DEBUG,"host = " + mailInfo.getHost());

@@ -30,11 +30,14 @@ public class PersonalInfo2_1 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
-        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "", birthday = "",marryStatus = "",cellPhone = "", email = "";
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
         String domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "", teleAddressAddress = "";
+
+        //生日改為三個輸入框
+        String birthYear = "",birthMonth = "",birthDay = "";
 
         //拿第一步輸入的值
         String personalInfo1XML = FlowUtils.getDraftData(userId, "personalInfo", "personalInfo1", dao);
@@ -46,7 +49,11 @@ public class PersonalInfo2_1 implements ILogic {
         if(root.element("name") != null) name = root.element("name").getText();
 
         if(root.element("cellPhone") != null) cellPhone = root.element("cellPhone").getText();
-        if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+//        if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+
+        if(root.element("birthday_year") != null) birthYear = root.element("birthday_year").getText();
+        if(root.element("birthday_month") != null) birthMonth = root.element("birthday_month").getText();
+        if(root.element("birthday_day") != null) birthDay = root.element("birthday_day").getText();
 
         if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
 
@@ -70,9 +77,9 @@ public class PersonalInfo2_1 implements ILogic {
 
         if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
 
-        if(StringUtils.isNotEmpty(birthday)) {
-            birthday = StringUtils.replace(birthday,"/","");
-        }
+//        if(StringUtils.isNotEmpty(birthday)) {
+//            birthday = StringUtils.replace(birthday,"/","");
+//        }
 
         if(StringUtils.isNotEmpty(domicileAddressCityId)) {
             domicileAddressCityId = ProjUtils.toCityName(domicileAddressCityId,dao);
@@ -92,6 +99,12 @@ public class PersonalInfo2_1 implements ILogic {
 
         domicileAddressAddress = domicileAddressCityId + domicileAddressZipCode + domicileLinerName + domicileAddressLiner + domicileAddressNeighborhood + "鄰" + domicileAddressAddress;
         teleAddressAddress = teleAddressCityId + teleAddressZipCode + teleAddressAddress;
+
+        birthYear = StringUtils.leftPad(birthYear,3,"0");
+        birthMonth = StringUtils.leftPad(birthMonth,2,"0");
+        birthDay = StringUtils.leftPad(birthDay,2,"0");
+
+        String birthday = birthYear + birthMonth + birthDay;
 
         //裝值到content
         content.put("isRecord",isRecord);

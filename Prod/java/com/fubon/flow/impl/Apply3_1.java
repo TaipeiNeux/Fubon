@@ -33,9 +33,9 @@ public class Apply3_1 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
-        String educationStage = "",department = "",onTheJob = "",studentId = "";
+        String educationStageCode = "",educationStage = "",department = "",onTheJob = "",studentId = "";
 
-        String schoolIsNational = "",schoolName = "",schoolIsDay = "";
+        String schoolIsNational = "",schoolCode = "",schoolName = "",schoolIsDay = "";
         String gradeClassGrade = "",gradeClassClass = "";
         String enterDateYear = "",enterDateMonth = "";
         String graduationDateYear = "",graduationDateMonth = "";
@@ -44,6 +44,8 @@ public class Apply3_1 implements ILogic {
 
         String month_graduation_hidden = "" , year_graduation_hidden = "";
         String department_hidden = "";
+
+        String loanAmt = "";
 
         //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
         DataObject aplyMemberData = null;
@@ -77,6 +79,8 @@ public class Apply3_1 implements ILogic {
             if(root.element("month_graduation_hidden") != null) month_graduation_hidden = root.element("month_graduation_hidden").getText();
             if(root.element("year_graduation_hidden") != null) year_graduation_hidden = root.element("year_graduation_hidden").getText();
             if(root.element("department_hidden") != null) department_hidden = root.element("department_hidden").getText();
+
+            if(root.element("loanAmt") != null) loanAmt = root.element("loanAmt").getText();
         }
         else {
 
@@ -110,6 +114,8 @@ public class Apply3_1 implements ILogic {
             lastEnterDate = ProjUtils.toBirthday(lastEnterDate);
         }
 
+        educationStageCode = educationStage;
+        schoolCode = schoolName;
 
         //要將代碼將成中文(資料確認頁會使用到)
         if(convertChinese) {
@@ -152,12 +158,15 @@ public class Apply3_1 implements ILogic {
         }
 
         content.put("isRecord",isRecord);
+        content.put("EducationStageCode",educationStageCode);
         content.put("EducationStage",educationStage);
+        content.put("loanAmt",loanAmt);
 
         JSONObject school = new JSONObject();
         school.put("isNational",schoolIsNational);
         school.put("name",schoolName);
         school.put("isDay",schoolIsDay);
+        school.put("code",schoolCode);
         content.put("school",school);
 
         content.put("department",department);

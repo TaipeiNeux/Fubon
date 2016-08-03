@@ -80,7 +80,7 @@ public class Apply5_1 implements ILogic {
 
                 JSONObject tmp = new JSONObject();
                 tmp.put("fileName",originalFileName);
-                tmp.put("docId",docId);
+                tmp.put("docId",ProjUtils.encodingNumber(docId));
                 tmp.put("size",size);
                 tmp.put("fileNameExtension",originalFileName.substring(originalFileName.lastIndexOf(".") + 1));
 

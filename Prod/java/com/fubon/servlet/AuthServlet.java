@@ -569,9 +569,6 @@ public class AuthServlet extends HttpServlet {
 
                         boolean hasPreiod = (Long.parseLong(today) >= Long.parseLong(applySDate) && Long.parseLong(today) <= Long.parseLong(applyEDate));
 
-                        //為了Prod先驗證
-                        hasPreiod = true;
-
                         //先取得「本學期」申請資料
                         Map<String,String> queryMap = new HashMap<String,String>();
                         queryMap.put("EduYear",eduYearInfo.get("eduYear"));

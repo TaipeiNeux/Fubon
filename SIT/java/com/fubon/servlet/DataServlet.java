@@ -761,6 +761,10 @@ public class DataServlet extends HttpServlet {
 
                     //修改的話要刪除原本的
                     if(StringUtils.isNotEmpty(docId)) {
+
+                        //先解開
+                        docId = ProjUtils.decodingNumber(docId);
+
                         SQLCommand delete = new SQLCommand("delete from Deferment_Doc where DocId = ?");
                         delete.addParamValue(docId);
                         dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
@@ -811,7 +815,7 @@ public class DataServlet extends HttpServlet {
                     jsonObject.put("size",file.length() + "");
                     jsonObject.put("fileNameExtension",file.getName().substring(file.getName().lastIndexOf(".") + 1));
                     jsonObject.put("showPath",file.getName());
-                    jsonObject.put("docId",docId);
+                    jsonObject.put("docId",ProjUtils.encodingNumber(docId));
                 }
 
 
@@ -856,6 +860,10 @@ public class DataServlet extends HttpServlet {
                     IDao dao = DaoFactory.getDefaultDao();
 
                     if(StringUtils.isNotEmpty(docId)) {
+
+                        //先解開
+                        docId = ProjUtils.decodingNumber(docId);
+
                         //先刪除原本的文件
                         SQLCommand delete = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where DocId = ?");
                         delete.addParamValue(docId);
@@ -906,7 +914,7 @@ public class DataServlet extends HttpServlet {
                     jsonObject.put("fileNameExtension",file.getName().substring(file.getName().lastIndexOf(".") + 1));
                     jsonObject.put("src",file.getName());
                     jsonObject.put("showPath",file.getName());
-                    jsonObject.put("docId",docId);
+                    jsonObject.put("docId",ProjUtils.encodingNumber(docId));
                 }
 
 
@@ -957,9 +965,9 @@ public class DataServlet extends HttpServlet {
                 //讀一張可以選擇的營業日的BUSINESS_DAY Table
                 List<String> noBusinessDays = new ArrayList<String>();
 
+                //放入當月/及後兩個月
                 String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
                 if(!"sit".equalsIgnoreCase(env)) {
-                    //放入當月/及後兩個月
                     DBUtils.getNoBusinessDay(todayYear,month,noBusinessDays);
                 }
                 else {
@@ -990,7 +998,7 @@ public class DataServlet extends HttpServlet {
                         "and ExpectDate like ?\n" +
                         "order by ExpectDate,ExpectTime");
                 query.addParamValue(branchId);
-                query.addParamValue(todayYear + month + "%");
+                query.addParamValue(todayYear + "%");
                 Vector<DataObject> ret = new Vector<DataObject>();
                 dao.queryByCommand(ret,query,null,null);
 
@@ -1103,7 +1111,12 @@ public class DataServlet extends HttpServlet {
 
                 if(StringUtils.isNotEmpty(draftXML1)) {
                     //抓申請人生日
-                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+                    String yearBirthday = root1.element("birthday0").getText();
+                    String monthBirthday = root1.element("birthday2").getText();
+                    String dayBirthday = root1.element("birthday4").getText();
+
+//                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+                    applyBirthday = yearBirthday + monthBirthday + dayBirthday;
 
                     applyBirthday = ProjUtils.toYYYYBirthday(applyBirthday);
                 }
@@ -1427,6 +1440,10 @@ public class DataServlet extends HttpServlet {
 
         Connection conn = null;
         try{
+
+            //先解開
+            docId = ProjUtils.decodingNumber(docId);
+
             boolean isIE = userAgent.contains("MSIE") || userAgent.contains("Trident/7.0");
 
             conn = ((SQLConnection) ORMAPI.getConnection("db")).getConnection();
@@ -1482,6 +1499,11 @@ public class DataServlet extends HttpServlet {
 
         Connection conn = null;
         try{
+
+            //先解開
+            docId = ProjUtils.decodingNumber(docId);
+
+
             boolean isIE = userAgent.contains("MSIE") || userAgent.contains("Trident/7.0");
 
             conn = ((SQLConnection) ORMAPI.getConnection("db")).getConnection();
@@ -1673,7 +1695,7 @@ public class DataServlet extends HttpServlet {
                         "        <DLY_AMT>0</DLY_AMT>\n" +
                         "        <FILED_06/>\n" +
                         "        <TOT_AMT>1</TOT_AMT>\n" +
-                        "        <YR_TERM>0951</YR_TERM>\n" +
+                        "        <YR_TERM>0952</YR_TERM>\n" +
                         "        <MEMO/>\n" +
                         "        <FILED_07/>\n" +
                         "        <LOAN_BAL>38,337</LOAN_BAL>\n" +
@@ -1692,7 +1714,7 @@ public class DataServlet extends HttpServlet {
                         "        <DLY_AMT>0</DLY_AMT>\n" +
                         "        <FILED_06/>\n" +
                         "        <TOT_AMT>620</TOT_AMT>\n" +
-                        "        <YR_TERM>0951</YR_TERM>\n" +
+                        "        <YR_TERM>0950</YR_TERM>\n" +
                         "        <MEMO/>\n" +
                         "        <FILED_07/>\n" +
                         "        <LOAN_BAL>37,775</LOAN_BAL>\n" +

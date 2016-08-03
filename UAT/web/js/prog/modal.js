@@ -321,30 +321,34 @@ var modal = {
         });
         
     },
-	getQA: function(callback) {
-        
+	getQA: function() {
+        var resp;
         $.ajax({
-			async : true,
+			async : false,
             url: 'data?action=getQA&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
-				
-                callback.apply(window,[json]);
+				resp = json;
+                //callback.apply(window,[json]);
 				
             }
         });
+		
+		return resp;
     },
-	getDocument: function(callback) {
+	getDocument: function() {
         
+		var resp;
         $.ajax({
+			async : false,
             url: 'data?action=getDocument&v=' + new Date().getTime(),
             datatype: 'json',
             success: function(json) {
-				
-                callback.apply(window,[json]);
-				
+				resp = json;
             }
         });
+		
+		return resp;
     },
     //getAppointment: function(date, branchId) {
 	getAppointment: function() {

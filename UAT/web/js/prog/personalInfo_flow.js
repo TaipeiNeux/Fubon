@@ -153,13 +153,13 @@ function personalInfo_1(content) {
     email_hidden.val(email);
     domicileAddress_hidden.val(domiAddr);
     teleAddress_hidden.val(addr);
-	if(birthday.length == 7){
+	/*if(birthday.length == 7){
 		var yy = birthday.substr(0, 3);
 		var mm = birthday.substr(3, 2);
 		var dd = birthday.substr(5, 2);
 		birthday_hidden.val( yy + '/'+ mm + '/' +dd );
 		birthday_match.val(yy + '/'+ mm + '/' +dd );
-	}
+	}*/
 
     //限制輸入的長度
     userDomiCode.attr('maxlength', '3');
@@ -206,9 +206,18 @@ function personalInfo_1(content) {
     zipSelect.trigger('change');
     
     //將生日拆成三塊,並放在hidden
-    var b_year = birthday.substring(0, 3);
+    /*var b_year = birthday.substring(0, 3);
     var b_month = birthday.substring(3, 5);
-    var b_day = birthday.substring(5, 7);
+    var b_day = birthday.substring(5, 7);*/
+	
+	var b_year = content.b_year;
+    var b_month = content.b_month;
+    var b_day = content.b_day;
+	
+	birthday_hidden.val( b_year + '/'+ b_month + '/' +b_day );
+	birthday_match.val(b_day);
+	
+	//有撥貸紀錄的要轉字串
     if (content.isRecord == 'Y') {
         $('#birth_tmp_1').show();
         console.log(b_year + ' ' + b_month + ' ' + b_day);
@@ -244,6 +253,7 @@ function personalInfo_1(content) {
         }
 
         $('input[name="birthday"]').val(y + '/' +  m + '/'+ d);
+		$('[name=birthday_year]').val(y);
     });
 
     birthday2.on('blur', function() {
@@ -261,6 +271,7 @@ function personalInfo_1(content) {
         }
         
 		$('input[name="birthday"]').val(y + '/' +  m + '/'+ d);
+		$('[name=birthday_month]').val(m);
     });
 
     birthday4.on('blur', function() {
@@ -278,6 +289,7 @@ function personalInfo_1(content) {
         }
         
 		$('input[name="birthday"]').val(y + '/' +  m + '/'+ d);
+		$('[name=birthday_day]').val(d);
     });
     
     $('.processInner').prepend('<input type="hidden" value="' + content.mobile + '" name="mobile_hidden"/>');
@@ -1002,7 +1014,7 @@ function personalInfo_1_valid() {
             group: 'domicileAddr'
         });
     }
-
+//alert( $('input[name="birthday_day"]').val());
     var res = GardenUtils.valid.validForm({
         type: "show",
         showAllErr: false,
@@ -1024,7 +1036,7 @@ function personalInfo_1_valid() {
 				allowEmpty: false,
                 group: 'birth',
 				hasHiddenCode: true,
-				hiddenTarget: $('input[name="birthday_day"]').val()
+				hiddenTarget: $('input[name="birthday_match"]').val()
             }, {
                 name: 'DomicileArea',
                 msg: '戶籍電話',
@@ -1064,7 +1076,7 @@ function personalInfo_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="email_hidden"]').val()
         }],
-        validDate: [{
+        /*validDate: [{
             name: ['birth_year', 'birth_month', 'birth_day'],
             msg: '生日',
             //val: $('[name="' + family + 'birthday0' + '"]').val() + '/' + $('[name="' + family + 'birthday2' + '"]').val() + '/' + $('[name="' + family + 'birthday4' + '"]').val(),
@@ -1074,7 +1086,7 @@ function personalInfo_1_valid() {
             group: 'birth',
 			hasHiddenCode: true,
 			hiddenTarget: $('input[name="birthday_match"]').val()
-        }],
+        }],*/
         validMobile: [{
             name: 'cellPhone',
             msg: '行動電話',
@@ -1111,13 +1123,14 @@ function personalInfo_1_valid() {
 			
             var domicilePhoneVal = $('[name="Domicile_Phone"]').val();
             var domicileAreaVal = $('[name="DomicileArea"]').val();
-            if (domicileAreaVal.length < 2 || domicilePhoneVal.length < 7) {
+            if (domicileAreaVal.length < 2 || domicilePhoneVal.length < 5) {
                 customizeValidResult.push({
                     obj: $('[name="DomicileArea"]'),
                     msg: '戶籍電話格式錯誤',
                     group: 'domicilePhone'
                 });
-            } else {
+            } 
+            /*else {
                 if (domicileAreaVal.length + domicilePhoneVal.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="DomicileArea"]'),
@@ -1125,7 +1138,34 @@ function personalInfo_1_valid() {
                         group: 'domicilePhone'
                     });
                 }
+            }*/
+			var year = parseInt($('[name="birth_year"]').val());
+			var month = parseInt($('[name="birth_month"]').val());
+			var day = $('[name="birth_day"]').val();
+			if(day.indexOf('*') == -1){
+				 day = parseInt($('[name="birth_day"]').val());
+				 if (day > 31 || day < 1) {
+		            customizeValidResult.push({
+		                obj: $('[name="birth_year"]'),
+		                msg: '生日格式錯誤'
+		            });		            
+				}
+			}
+
+            if (year.length < 2) {
+                customizeValidResult.push({
+                    obj: $('[name="birth_year"]'),
+                    msg: '生日格式錯誤'
+                });
             }
+			
+			if (month > 12 || month < 1) {
+                customizeValidResult.push({
+                    obj: $('[name="birth_year"]'),
+                    msg: '生日格式錯誤'
+                });
+            }
+			
 
             var marryStatus = $('[name="marryStatus"]').val();
             if (marryStatus == "") {
@@ -1136,13 +1176,14 @@ function personalInfo_1_valid() {
             }
             var telephone = $('[name="telephone"]').val();
             var areaTelephone = $('[name="areaTelephone"]').val();
-            if (areaTelephone.length < 2 || telephone.length < 7) {
+            if (areaTelephone.length < 2 || telephone.length < 5) {
                 customizeValidResult.push({
                     obj: $('[name="areaTelephone"]'),
                     msg: '通訊電話格式錯誤',
                     group: 'tel'
                 });
-            } else {
+            } 
+            /*else {
                 if (areaTelephone.length + telephone.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="areaTelephone"]'),
@@ -1150,7 +1191,7 @@ function personalInfo_1_valid() {
                         group: 'tel'
                     });
                 }
-            }
+            }*/
 
         }
     });
