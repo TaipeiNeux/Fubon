@@ -3406,3 +3406,11 @@ body.memberLogin_1 .inputArea {
         display: none;
     }
 }
+
+/* stepBar 陳拓 */
+
+@media (width:768px) {
+    .stepArea ul li.subStep2:after {
+        right: 40px!important;
+    }
+}
