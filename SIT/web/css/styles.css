@@ -16626,6 +16626,7 @@ body.forgetPassword_4 .pen:before {
     height: 26px;
     background-repeat: no-repeat;
     background-size: contain;
+    top: 0;
 }
 body.forgetPassword_4 .snopy {
     border-bottom: 1px solid #8e8e8d;
