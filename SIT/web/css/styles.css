@@ -22925,3 +22925,9 @@ body#body.apply_map label#timeLabel6 {
         left: -3px;
     }
 }
+
+@media (max-width:769px) {
+    body.apply_5_step1 .appcont {
+        font-weight: bold;
+    }
+}
