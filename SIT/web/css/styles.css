@@ -22937,3 +22937,7 @@ body#body.apply_map label#timeLabel6 {
         margin-left: 10px;
     }
 }
+
+body.apply_1_step1 .threeDiv .right_year {
+    width: 250px;
+}
