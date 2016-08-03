@@ -3392,3 +3392,17 @@ body.memberLogin_1 .inputArea {
         margin-left: 10px;
     }
 }
+
+@media (min-width:769px) {
+    
+    .modal button.close {
+        width: 30px;
+        height: 30px;
+        background: url(../img/close2.png);
+        background-size: contain;
+    }
+    
+    .modal button.close span {
+        display: none;
+    }
+}
