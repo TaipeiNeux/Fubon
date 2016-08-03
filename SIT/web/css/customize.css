@@ -3386,4 +3386,38 @@ body.memberLogin_1 .inputArea {
     }
 }
 
+/* 0803 陳拓 */
 
+@media (max-width:769px) {
+    body#body.myloan .casomTitle {
+        margin-left: 10px;
+    }
+}
+
+@media (min-width:769px) {
+    
+    .modal button.close {
+        width: 30px;
+        height: 30px;
+        background: url(../img/close2.png);
+        background-size: contain;
+    }
+    
+    .modal button.close span {
+        display: none;
+    }
+}
+
+/* stepBar 陳拓 */
+
+@media (width:768px) {
+    
+    .stepArea ul li.subStep2:after,
+    .changePwd_2_step1 .stepArea ul li.subStep2:after {
+        right: 40px!important;
+    }
+    
+    body.changePwd_2_step2 .stepArea ul li:after {
+        right: -45px!important;
+    }
+}
