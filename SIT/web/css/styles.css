@@ -22936,8 +22936,168 @@ body#body.apply_map label#timeLabel6 {
     body.myloan .casom li {
         margin-left: 10px;
     }
+    
+    body.personalinfo_2_step1 .dan .ubt {
+        margin: 0;
+        background: #f8fafc;
+    }
 }
 
 body.apply_1_step1 .threeDiv .right_year {
     width: 250px;
 }
+
+/* 結構大魔王 by fernando */
+
+@media (min-width:769px) {
+
+    body.personalinfo_2_step1 .background,
+    body.apply_5_step1 .background,
+    body.personalInfo_0 .background,
+    body.personalInfo_3 .background {
+        background: #fff;
+    }
+
+    body.personalinfo_2_step1 .background.grey,
+    body.apply_5_step1 .background.grey,
+    body.personalInfo_0 .background.grey,
+    body.personalInfo_3 .background.grey {
+        background: #f8fafc;
+    }
+
+    body.personalinfo_2_step1 .background .joy,
+    body.apply_5_step1 .background .joy,
+    body.personalInfo_0 .background .joy,
+    body.personalInfo_3 .background .joy {
+        width: 49%;
+        display: inline-block;
+        padding-left: 10px;
+        vertical-align: top;
+    }
+
+
+    body.personalinfo_2_step1 .background .joy.bg,
+    body.apply_5_step1 .background .joy.bg,
+    body.personalInfo_0 .background .joy.bg,
+    body.personalInfo_3 .background .joy.bg {
+        border-right: 20px solid #f8fafc;
+    }
+
+    body.personalinfo_2_step1 .background .joy.bgfff,
+    body.apply_5_step1 .background .joy.bgfff,
+    body.personalInfo_0 .background .joy.bgfff,
+    body.personalInfo_3 .background .joy.bgfff {
+        border-left: 20px solid #f8fafc;
+        margin-left: -24px;
+    }
+
+    body.personalinfo_2_step1 .bgfff,
+    body.personalInfo_3 .bgfff {
+        background: none;
+    }
+
+    body.personalinfo_2_step1 .background .right p,
+    body.apply_5_step1 .background .joy .right p,
+    body.personalInfo_0 .background .joy .right p,
+    body.personalInfo_3 .background .joy .right p {
+        color: #0872bb;
+    }
+    
+    body.personalInfo_0 .bgfff {
+        background: none;
+    }
+    
+    body.personalInfo_0 .joy .left,
+    body.personalInfo_3 .joy .left {
+        text-align: right;
+    }
+    
+    body.personalInfo_0 .background .joy {
+        padding-left: 0;
+    }
+    
+    body.apply_5_step1 .background {
+        background: #fff;
+    }
+    
+    body.apply_5_step1 .storeRight,
+    body.apply_5_step1 .storeLeft {
+        float: none;
+        width: 49%;
+        display: inline-block;
+        vertical-align: top;
+    }
+    
+    body.apply_5_step1 .storeLeft {
+        border-right: 20px solid #f8fafc;
+    }
+    
+    body.apply_5_step1 .storeRight {
+        border-left: 20px solid #f8fafc;
+        margin-left: -24px;
+    }
+    
+    body.apply_5_step1 .storeLeft .left,
+    body.apply_5_step1 .storeLeft .right,
+    body.apply_5_step1 .storeRight .left,
+    body.apply_5_step1 .storeRight .right {
+        display: inline-block;
+    }
+    
+    body.apply_5_step1 .storeLeft .left {
+        vertical-align: top;
+    }
+    
+    body.apply_5_step1 .storeLeft,
+    body.apply_5_step1 .storeRight {
+        padding: 10px;
+    }
+    
+    body.apply_5_step1 .storeLeft p,
+    body.apply_5_step1 .storeRight p {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width:769px) {
+    body.personalinfo_2_step1 .background .joy.bg {
+        border-right: none;
+    }
+
+    body.personalinfo_2_step1 .background .joy.bgfff {
+        border-left: none;
+        margin-left: 0;
+    }
+    
+    body.personalinfo_2_step1 .background .right p {
+        color: #0872bb;
+    }
+    
+    body.personalinfo_2_step1 .background .joy {
+        padding-left: 10px;
+    }
+    
+    body.personalinfo_2_step1 .background .joy.bgfff {
+        background: #f8fafc;
+    }
+    
+    body.personalinfo_0 .background .joy.bg,
+    body.personalinfo_3 .background .joy.bg {
+        background: #fff;
+    }
+    
+    body.personalinfo_0 .background .joy.bgfff,
+    body.personalinfo_3 .background .joy.bgfff {
+        background: #f8fafc;
+    }
+    
+    body.personalinfo_0 .background .right p,
+    body.personalinfo_3 .background .right p {
+        color: #0872bb;
+    }
+    
+    body.personalinfo_3 .dan {
+        border: none;
+    }
+}
+
