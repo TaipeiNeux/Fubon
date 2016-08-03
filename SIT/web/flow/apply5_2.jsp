@@ -6,8 +6,7 @@
         <input type="hidden" name="branchAddr" value="" />
         <input type="hidden" name="branchTel" value="" />
         <input type="hidden" name="reservation" value="" />
-        <input type="hidden" name="objListHidden" value="" />
-		
+		<input type="hidden" name="objListHidden" value="" />
 	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">
@@ -609,8 +608,9 @@
             <div class="editBtnBoxbottom lastBtn">
                 <a href="apply.jsp?step=apply_online_4" class="editBtn">修改</a>
             </div>
+        <div class="background">
             <div class="maya may storeLeft">
-                <div class="joy abon bgfff">
+                <div class="bgfff">
                     <div class="left">
                         <p>預約對保分行</p>
                     </div>
@@ -621,7 +621,7 @@
                 </div>
             </div>
             <div class="maya may storeRight">
-                <div class="joy abon bgfff">
+                <div class="bgfff">
                     <div class="left">
                         <p>預約對保時間</p>
                     </div>
@@ -632,4 +632,5 @@
             </div>
         </div>
     </div>
+</div>
        
