@@ -68,11 +68,16 @@ var GardenUtils = {
             if (isLoadGoogle) {
                 drawAddress(googleAddr);
             } else {
-                $.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
-                    drawAddress(googleAddr);
-                });
+                try {
+                    console.debug('try');
+                    $.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
+                        drawAddress(googleAddr);
+                    });
+                } catch (err) {
+                    console.debug(err.message);
+                }
             }
-
+			
             function drawAddress(googleAddr) {
                 var geocoder = new google.maps.Geocoder();
 
