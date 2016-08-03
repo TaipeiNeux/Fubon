@@ -136,6 +136,7 @@ function personalInfo_1(content) {
     var teleAddress_hidden = $('[name="teleAddress_hidden"]');
     var birthday_hidden = $('[name="birthday"]');
 	var birthday_match = $('[name="birthday_match"]');
+	var birthday_fullMatch = $('[name="birthday_fullMatch"]');
 	var isRecord_hidden = $('[name="isRecord_hidden"]');
     
 	var addressObj = {
@@ -215,6 +216,7 @@ function personalInfo_1(content) {
     var b_day = content.b_day;
 	
 	birthday_hidden.val( b_year + '/'+ b_month + '/' +b_day );
+	birthday_fullMatch.val( b_year + b_month + b_day );
 	birthday_match.val(b_day);
 	
 	//有撥貸紀錄的要轉字串
@@ -1020,7 +1022,10 @@ function personalInfo_1_valid() {
         showAllErr: false,
         formId: ["mainForm"],
         validEmpty: validEmptyArray,
-        validNumber: [{
+        validNumber: [/*{
+		        name: 'joyName',
+		        msg: '姓名'
+		    }, */{
                 name: 'birth_year',
                 msg: '生日',
 				allowEmpty: false,
@@ -1085,7 +1090,7 @@ function personalInfo_1_valid() {
             allowEmpty: false,
             group: 'birth',
 			hasHiddenCode: true,
-			hiddenTarget: $('input[name="birthday_match"]').val()
+			hiddenTarget: $('input[name="birthday_fullMatch"]').val()
         }],*/
         validMobile: [{
             name: 'cellPhone',
@@ -1093,6 +1098,12 @@ function personalInfo_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="mobile_hidden"]').val()
         }],
+        /*validChinese: [{
+            name: 'joyName',
+            msg: '姓名',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="name"]').val()
+        }],*/
         errorDel: [],
         customizeFun: function(customizeValidResult) {
 			//檢查全部的地址字數是否為40個字以內

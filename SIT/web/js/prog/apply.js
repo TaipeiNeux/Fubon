@@ -295,7 +295,7 @@ function apply1_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="email_hidden"]').val()
         }],
-        /*validDate: [{
+        validDate: [{
             name: ['birthday0', 'birthday2', 'birthday4'],
             msg: '生日',
             splitEle: '/',
@@ -304,7 +304,7 @@ function apply1_1_valid() {
             group: 'birthday',
             hasHiddenCode: true,
             hiddenTarget: $('input[name="birthTarget_hidden"]').val()
-        }],*/
+        }],
         validMobile: [{
             name: 'cellPhone',
             msg: '行動電話',
@@ -5132,17 +5132,6 @@ function apply4_2(content) {
     var branchIndex = content.btnId;
     var datePicked = content.date;
     var timePicked = content.time;
-    var isPopUp = content.historyIsOnlineDocument;  //Y代表上次是線上續貸
-    
-    //若前次申請案件為線上續貸的客戶,若因更改資料導致本次申請需分行對保,彈跳壓黑視窗
-    if(isPopUp == 'Y'){
-        GardenUtils.display.popup({
-            title: '',
-            content: '<p>你好，可能因為以下原因使你本學期的就學貸款無法辦理線上續貸，請選擇預約分行，並於預約時間前往分行辦理就學貸款。</p><ul><li>1.學程異動，例如高中升大學</li><li>2.同一學程但學校異動，例如轉學</li><li>3.連帶保證人異動，例如本次申貸就學貸款的保證人與前次申貸時不同</li></ul>',
-            closeCallBackFn: function() {},
-            isShowSubmit: false
-        });   
-    }
 
     var getDefaultAddress = modal.getDefaultAddress();
     console.debug(getDefaultAddress);
@@ -5183,6 +5172,7 @@ function apply4_2(content) {
         var dateSelected = $('[name="dateSelected"]');
         var idSelected = $('[name="idSelected"]');
         var timeSelected = $('[name="timeSelected"]');
+        var people = $('[name="people"]');
 
         var citySelectpicked = $('#citySelectpicker button').attr('title');
         var zipSelectpicked = $('#zipSelectpicker button').attr('title');
@@ -5227,8 +5217,8 @@ function apply4_2(content) {
             placeBranch.append(branchArray.join(''));
             branchArray = [];
 
-            
-	    var branchId;
+
+            var branchId;
             var reservation = $('.reservation');
             var region = $('.regionText');
             var firstAddress = $('.branchAddr:first').text(); //google map
@@ -5260,8 +5250,8 @@ function apply4_2(content) {
                     var siblings = thisBtn.siblings();
 
                     branchId = thisText.find('.branchId').attr('name'); //分行代碼
-console.debug('branchId:'+branchId);
-$('[name="idSelected"]').val(branchId);
+                    console.debug('branchId:' + branchId);
+                    $('[name="idSelected"]').val(branchId);
                     //改分行資訊的底色
                     $('.regionText').removeClass('active');
                     thisText.addClass('active');
@@ -5306,17 +5296,6 @@ $('[name="idSelected"]').val(branchId);
                     //idSelected.val('0');
                     name.text(thisName);
                     addr.text(thisAddr);
-                    /*var teleTemp = thisTel.split(')')[1];
-                     var telepre;
-                     var telePost;
-                     if (teleTemp.length == 7) {
-                     telepre = teleTemp.substr(0, 3);
-                     telePost = teleTemp.substr(3, 4);
-                     } else if (teleTemp.length == 8) {
-                     telepre = teleTemp.substr(0, 4);
-                     telePost = teleTemp.substr(4, 4);
-                     }
-                     tel.text(thisTel.substr(4, 4) + telepre + '-' + telePost);*/
                     tel.text(thisTel);
                     branchsInfo.show();
                     branchDate.show();
@@ -5325,9 +5304,9 @@ $('[name="idSelected"]').val(branchId);
                     var calDate;
                     var calFull;
 
-                    //抓這個分行的每時段最多預約人數
-branchId = idSelected.val();
-console.debug('branchId:'+branchId);
+                    //抓這個分行的id
+                    branchId = idSelected.val();
+                    console.debug('branchId:' + branchId);
 
                     jsonBranch = modal.getFullString(month, branchId);
                     //jsonBranch = modal.getFullString(dateAppo, branchId); //傳日期及分行資訊去撈上可預約人物
@@ -5336,7 +5315,7 @@ console.debug('branchId:'+branchId);
                     var noBusiness = jsonBranch.noBusiness;
                     var maxPeople = jsonBranch.maxPeople; //每個時段最多的人數
                     var booking = jsonBranch.booking; //已被預約
-
+                    people.val(maxPeople);
                     hasBookingObj = [];
                     $.each(booking, function(index, bookingObj) {
                         var date = bookingObj.date; //已被預約日期
@@ -5356,7 +5335,7 @@ console.debug('branchId:'+branchId);
 
 
                     //2016-07-16 added by titan，修改判斷分行已滿寫法
-                    var valueTimeArray = ['0900', '1000', '1100', '0100','0200','0300'];
+                    var valueTimeArray = ['0900', '1000', '1100', '0100', '0200', '0300'];
                     var totalTimeCount = valueTimeArray.length; //總時段，以後會改成吃json的count					
 
                     $.each(jsonBranch.booking, function(index, obj) {
@@ -5427,10 +5406,10 @@ console.debug('branchId:'+branchId);
 
                             //TODO for online open 9/30
                             //var date = new Date('2016-09-30 23:59:59');
-                            var date = new Date(2016,8,30,23,59,59);
+                            var date = new Date(2016, 8, 30, 23, 59, 59);
 
 
-                            if(compressDate - date > 0) {
+                            if (compressDate - date > 0) {
                                 $('td [data-date="' + data_date + '"]').addClass('fc-holiday');
                             }
 
@@ -5481,9 +5460,9 @@ console.debug('branchId:'+branchId);
                             console.debug(view);
                             console.debug(element);
 
-                            $.each(noBusiness,function(i,noBusinessDay){
+                            $.each(noBusiness, function(i, noBusinessDay) {
                                 console.debug('noBusinessDay = ' + noBusinessDay);
-                                var td = element.find('[data-date="'+noBusinessDay+'"]');
+                                var td = element.find('[data-date="' + noBusinessDay + '"]');
                                 console.debug(td.length);
                                 //td.addClass('fc-sat');
                                 td.addClass('fc-holiday');
@@ -5543,17 +5522,14 @@ console.debug('branchId:'+branchId);
                                 var clickMonth = parseInt(dateAppo.substr(5, 2));
                                 console.debug(clickMonth);
 
-                         //idSelected.val(branchId);
+                                //idSelected.val(branchId);
 
                                 //長底下的時段
                                 $.each(valueTimeArray, function(i, value) {
-console.debug(valueTimeArray);
-console.debug(branchId);
-console.debug(maxPeople);
-console.debug(data_date);
-                                    var timeMaxPeople = maxPeople; //先預設帶入這間分行每個時段的預設人數
-                                    var timeCount = maxPeople; //該時段尚可預約人數
-                                    var timeTotal = maxPeople; //該時段可預約總人數
+
+                                    var timeMaxPeople = $('[name="people"]').val(); //先預設帶入這間分行每個時段的預設人數
+                                    var timeCount = $('[name="people"]').val(); //該時段尚可預約人數
+                                    var timeTotal = $('[name="people"]').val(); //該時段可預約總人數
                                     var timeIsFull = 'N';
                                     var appoRadio = $('#time' + (i + 1));
                                     var appoLabel = $('#timeLabel' + (i + 1));
@@ -5568,11 +5544,13 @@ console.debug(data_date);
 
                                     //如果當日當時段已有預約資料，就覆蓋預設值
                                     if (bookingObj != undefined) {
+                                        console.debug(bookingObj);
                                         var times = bookingObj.times; //預約時段
+                                        console.debug(times);
                                         $.each(times, function(timeIndex, timeObj) {
-console.debug(times);
                                             timeTotal = timeObj.total; //該時段可預約總人數
                                             var timeCount2 = timeObj.count; //已被預約人數
+                                            console.debug(timeObj);
                                             var timeStr = timeObj.time; //時段
                                             var timeIsFull2 = timeObj.isFull; //該時段是否已滿
 
@@ -5580,26 +5558,33 @@ console.debug(times);
                                                 timeCount = timeTotal - timeCount2;
                                                 timeIsFull = timeIsFull2;
                                             }
+                                            //放入該時段目前還可預約人數
+                                            $('#number' + (i + 1)).text(timeCount);
+
                                         });
+                                    } else {
+                                        //否則時段為最大預約人數
+                                        var max = people.val();
+                                        $('#number' + (i + 1)).text(max);
+                                        console.debug('max:' + max);
+
                                     }
 
-                                    //放入該時段目前還可預約人數
-                                    $('#number' + (i + 1)).text(timeCount);
-console.debug(timeCount);
-console.debug(branchId);
+
+
 
                                     //if over time set full
-                                    if(isToday) {
+                                    if (isToday) {
                                         var nowHour = myDate.getHours();
 
-                                        var compareStr = value.substring(0,2);
-                                        if(parseInt(compareStr) < 9) {
+                                        var compareStr = value.substring(0, 2);
+                                        if (parseInt(compareStr) < 9) {
                                             compareStr = parseInt(compareStr) + 12;
                                         }
 
                                         console.debug(nowHour);
                                         console.debug(compareStr);
-                                        if(nowHour >= compareStr) {
+                                        if (nowHour >= compareStr) {
                                             timeIsFull = 'Y';
                                         }
                                     }
@@ -5796,7 +5781,6 @@ console.debug(branchId);
             break;
     }
 }
-
 
 function apply5_1_1(content) {
     console.debug(content);
