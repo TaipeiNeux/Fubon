@@ -63,23 +63,21 @@
                     <img class="openBtn" src="img/phoneopen.png" alt="open">
                 </a>
                 <h3 class="snopy father"><span class="oneLine" id="fatherTitle">父親</span>
-                <span class="sspy">
-                    <div class="oneLine">
-                        <div class="left">
-                            <p class="stringOrRadio"></p>
+                        <span class="oneLine">
+                           <div class="left">
+                             <p class="stringOrRadio"></p>
                         </div>
-                    </div>
-                        <div class="oneLine">
-                            <div class="right radioGuarantor" style="display:none">
-                                <div class="sp">
-                                    <input type="radio" name="father_purchaser" id="dadT" class="css-checkbox_c">
-                                    <label for="dadT" class="css-label_c" >是</label>
-                                    <input type="radio" name="father_purchaser" id="dadF" class="css-checkbox_c">
-                                    <label for="dadF" class="css-label_c" >否</label>
-                                </div>
+                   </span>
+                <span class="oneLine">
+                        <div class="right radioGuarantor" style="display:none">
+                            <div class="sp">
+                                <input type="radio" name="father_purchaser" id="dadT" class="css-checkbox_c">
+                                <label for="dadT" class="css-label_c" >是</label>
+                                <input type="radio" name="father_purchaser" id="dadF" class="css-checkbox_c">
+                                <label for="dadF" class="css-label_c" >否</label>
                             </div>
                         </div>
-                </span>
+                   </span>
 <div class="error-msg" id="tip0" style="display:none">請勾選是否擔任連帶保證人</div> 
 
                 </h3>
