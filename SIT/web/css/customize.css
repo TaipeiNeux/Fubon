@@ -3421,3 +3421,15 @@ body.memberLogin_1 .inputArea {
         right: -45px!important;
     }
 }
+
+
+@media (max-width:769px) {
+    #body .stepArea ul li {
+        visibility: hidden;
+    }
+    
+    #body .stepArea ul li:before,
+    #body .stepArea ul li:after {
+        visibility: visible;
+    }
+}
