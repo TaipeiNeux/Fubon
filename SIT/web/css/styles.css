@@ -16626,6 +16626,7 @@ body.forgetPassword_4 .pen:before {
     height: 26px;
     background-repeat: no-repeat;
     background-size: contain;
+    top: 0;
 }
 body.forgetPassword_4 .snopy {
     border-bottom: 1px solid #8e8e8d;
@@ -22930,6 +22931,7 @@ body#body.apply_map label#timeLabel6 {
     }
 }
 
+<<<<<<< HEAD
 /* mentis 4498 */
 @media (max-width:769px) {
     .apply_2 .sp label {
@@ -23000,6 +23002,32 @@ body#body.apply_map label#timeLabel6 {
         border-radius: 0 0 10px 10px;
     } 
 }*/
+=======
+/* 0803 陳拓 */
+
+@media (max-width:769px) {
+    body.apply_5_step1 .appcont {
+        font-weight: bold;
+    }
+    
+    body.myloan .casom li {
+        margin-left: 10px;
+    }
+    
+    body.personalinfo_2_step1 .dan .ubt {
+        margin: 0;
+        background: #f8fafc;
+    }
+    
+    body.changePwd_3 .casom {
+        width: inherit;
+    }
+}
+
+body.apply_1_step1 .threeDiv .right_year {
+    width: 250px;
+}
+>>>>>>> 23ed9b61cc91e7a7f8d6f1e7068ed8a5ee64f2d9
 
 /* 結構大魔王 by fernando */
 
@@ -23155,6 +23183,7 @@ body#body.apply_map label#timeLabel6 {
     }
 }
 
+<<<<<<< HEAD
 /* mentis 4502 */
 
 @media (min-width:769px) {
@@ -23193,3 +23222,5 @@ body#body.apply_map label#timeLabel6 {
         text-indent: 0;
     }
 }
+=======
+>>>>>>> 23ed9b61cc91e7a7f8d6f1e7068ed8a5ee64f2d9

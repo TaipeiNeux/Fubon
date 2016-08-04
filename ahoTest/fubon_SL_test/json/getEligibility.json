@@ -1,0 +1,32 @@
+{
+    "eligibility" : [
+        {
+            "getEligibilityId" : "1",
+            "getEligibilityName" : "繼續於國內升學"
+        },
+        {
+            "getEligibilityId" : "2",
+            "getEligibilityName" : "繼續於國外升學(須個案經中央教育主管機關核准)"
+        },
+        {
+            "getEligibilityId" : "3",
+            "getEligibilityName" : "延畢"
+        },
+        {
+            "getEligibilityId" : "4",
+            "getEligibilityName" : "服義務兵役"
+        },
+        {
+            "getEligibilityId" : "5",
+            "getEligibilityName" : "參加教育實習"
+        },
+        {
+            "getEligibilityId" : "6",
+            "getEligibilityName" : "休學/退學"
+        },
+        {
+            "getEligibilityId" : "7",
+            "getEligibilityName" : "提早畢業"
+        }
+    ]
+}

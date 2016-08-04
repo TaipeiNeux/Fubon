@@ -608,7 +608,9 @@
             <div class="editBtnBoxbottom lastBtn">
                 <a href="apply.jsp?step=apply_online_4" class="editBtn">修改</a>
             </div>
+
         <div class="background">
+
             <div class="maya may storeLeft">
                 <div class="bgfff">
                     <div class="left">
@@ -630,6 +632,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>

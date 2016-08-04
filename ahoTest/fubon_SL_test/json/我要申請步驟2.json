@@ -1,0 +1,56 @@
+{
+    "Header": {
+        "errorCode": "0",
+        "errorMsg" : "(當errorCode不為0時，請alert出errorMsg)"
+    },
+    "Content": {
+        "flow" : {
+            "flowId" : "apply",
+            "viewURL" : "flow/apply2.jsp",
+            "currentMainStep" : "apply2",
+            "currentSubStep" : "",
+            "mainStep" : [
+                {
+                    "id" : "apply1",
+                    "name" : "申請人基本資料"
+                },
+                {
+                    "id" : "apply2",
+                    "name" : "關係人基本資料"
+                },
+                {
+                    "id" : "apply3",
+                    "name" : "就讀學校及申貸金額"
+                },
+                {
+                    "id" : "apply4",
+                    "name" : "確認資料"
+                },
+                {
+                    "id" : "apply5",
+                    "name" : "申請結果"
+                }
+            ],
+            "subStep" : []
+        },
+        "isChange": "Y",
+        "familyStatus": "1200",
+        "applicantAdult": "Y",
+        "guarantorStatus": "1200",
+        "incomeTax": "1000",
+		"domicileAddress" : {
+            "cityId" : "02",
+            "zipCode" : "100",
+            "liner":"1",
+            "neighborhood" : "4",
+            "address" : "xxxx路44號"
+        },
+        "teleAddress" : {
+            "cityId" : "01",
+            "zipCode" : "100",
+            "liner":"1",
+            "neighborhood" : "5",
+            "address" : "xxxx路35號"
+        }
+    }
+}

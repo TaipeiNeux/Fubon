@@ -1,0 +1,9 @@
+{
+    "isLogin" : "Y",
+        "hasData" : "Y",
+        "isArrears" : "Y",
+        "isEtabs" : "Y",
+        "hasAccount" : "N",
+        "hasDelay" : "Y",
+        "notesTag" : "Y"
+}

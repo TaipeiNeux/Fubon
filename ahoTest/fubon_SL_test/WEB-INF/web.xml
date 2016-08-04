@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><web-app id="WebApp_1461635152183" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	      
+	<filter>
+		<filter-name>GZIPFilter</filter-name>
+		<filter-class>com.neux.garden.filter.GZIPFilter</filter-class>
+	</filter>
+ 
+	<filter>
+        <filter-name>Set Character Encoding</filter-name>
+        <filter-class>com.neux.garden.filter.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+	
+	
+	<filter>
+        <filter-name>TokenFilter</filter-name>
+        <filter-class>com.fubon.filter.TokenFilter</filter-class>
+    </filter>
+	
+	<filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>com.fubon.filter.LoginFilter</filter-class>
+        <init-param>
+            <param-name>needLoginPage</param-name>
+            <param-value>apply_00.jsp,apply.jsp,myloan.jsp,repaymentInquiry.jsp,deferment.jsp,deferment_0.jsp,myElectronicPay_1.jsp,personalInfo_start.jsp,personalInfo_flow.jsp,changePwd.jsp</param-value>
+        </init-param>
+    </filter>
+	
+	<filter>
+        <filter-name>ApplyDateFilter</filter-name>
+        <filter-class>com.fubon.filter.ApplyDateFilter</filter-class>
+    </filter>	
+	
+	<filter-mapping>
+        <filter-name>Set Character Encoding</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>		
+	
+	<filter-mapping>
+        <filter-name>TokenFilter</filter-name>
+        <url-pattern>/index.jsp</url-pattern>
+    </filter-mapping>	
+	
+	<filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<filter-mapping>
+        <filter-name>ApplyDateFilter</filter-name>
+        <url-pattern>/apply.jsp</url-pattern>
+    </filter-mapping>	
+	
+	<listener>
+        <listener-class>com.neux.garden.listener.SessionMgrListener</listener-class>
+    </listener>
+	
+	<listener>
+        <listener-class>com.fubon.listener.SessionListener</listener-class>
+    </listener>
+	
+	<servlet>
+        <servlet-name>InitResourceServlet</servlet-name>
+        <servlet-class>com.neux.garden.servlet.InitResourceServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>	
+
+	
+	<servlet>
+		<servlet-name>QuartzInitializer</servlet-name>
+		<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+		<init-param>
+			<param-name>config-file</param-name>
+			<param-value>/quartz.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>shutdown-on-unload</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>start-scheduler-on-load</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	
+	<servlet>
+        <servlet-name>OptionsServlet</servlet-name>
+        <servlet-class>com.fubon.servlet.OptionsServlet</servlet-class>
+    </servlet>
+	
+	
+	<servlet>
+        <servlet-name>DataServlet</servlet-name>
+        <servlet-class>com.fubon.servlet.DataServlet</servlet-class>
+    </servlet>
+	
+	<servlet>
+        <servlet-name>FlowServlet</servlet-name>
+        <servlet-class>com.fubon.servlet.FlowServlet</servlet-class>
+    </servlet>
+	
+	
+	<servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>com.fubon.servlet.AuthServlet</servlet-class>
+    </servlet>
+	
+
+	<servlet-mapping>                    
+        <servlet-name>OptionsServlet</servlet-name>
+        <url-pattern>/options</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>                    
+        <servlet-name>FlowServlet</servlet-name>
+        <url-pattern>/flow</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>                    
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>                    
+        <servlet-name>DataServlet</servlet-name>
+        <url-pattern>/data</url-pattern>
+    </servlet-mapping>
+	 
+	<welcome-file-list>
+		<welcome-file>home.jsp</welcome-file>		
+	</welcome-file-list>
+</web-app>

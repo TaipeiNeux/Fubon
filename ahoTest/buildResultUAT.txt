@@ -1,0 +1,59 @@
+Buildfile: F:\5Current_batch\fubon\sub\build_JBossZip.xml
+
+init:
+
+delete classes:
+
+compiling classes:
+    [javac] Compiling 67 source files to F:\6tmp
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:5: error: package org.quartz does not exist
+    [javac] import org.quartz.Job;
+    [javac]                  ^
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:6: error: package org.quartz does not exist
+    [javac] import org.quartz.JobExecutionContext;
+    [javac]                  ^
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:7: error: package org.quartz does not exist
+    [javac] import org.quartz.JobExecutionException;
+    [javac]                  ^
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:18: error: cannot find symbol
+    [javac] public class HouseKeeping implements Job {
+    [javac]                                      ^
+    [javac]   symbol: class Job
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:20: error: cannot find symbol
+    [javac]     public void execute(JobExecutionContext context)
+    [javac]                         ^
+    [javac]   symbol:   class JobExecutionContext
+    [javac]   location: class HouseKeeping
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:21: error: cannot find symbol
+    [javac]             throws JobExecutionException {
+    [javac]                    ^
+    [javac]   symbol:   class JobExecutionException
+    [javac]   location: class HouseKeeping
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:5: error: package org.quartz does not exist
+    [javac] import org.quartz.Job;
+    [javac]                  ^
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:6: error: package org.quartz does not exist
+    [javac] import org.quartz.JobExecutionContext;
+    [javac]                  ^
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:7: error: package org.quartz does not exist
+    [javac] import org.quartz.JobExecutionException;
+    [javac]                  ^
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:18: error: cannot find symbol
+    [javac] public class HouseKeeping implements Job {
+    [javac]                                      ^
+    [javac]   symbol: class Job
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:20: error: cannot find symbol
+    [javac]     public void execute(JobExecutionContext context)
+    [javac]                         ^
+    [javac]   symbol:   class JobExecutionContext
+    [javac]   location: class HouseKeeping
+    [javac] F:\1GitSource\2_project\2016\fubon\fubon_SL\UAT\java\com\fubon\schedule\HouseKeeping.java:21: error: cannot find symbol
+    [javac]             throws JobExecutionException {
+    [javac]                    ^
+    [javac]   symbol:   class JobExecutionException
+    [javac]   location: class HouseKeeping
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 6 errors
+    [javac] 1 warning
