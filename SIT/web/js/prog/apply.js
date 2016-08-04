@@ -351,15 +351,6 @@ function apply1_1_valid() {
 			var now = new Date();
 			var now_year = now.getFullYear() - 1911;
 			
-			if(day.indexOf('*') == -1){
-				 day = parseInt($('[name="birthday4"]').val());
-				 if (day > 31 || day < 1) {
-		            customizeValidResult.push({
-		                obj: $('[name="birthday0"]'),
-		                msg: '生日格式錯誤'
-		            });		            
-				}
-			}
 
             if (year.length < 2) {
                 customizeValidResult.push({
@@ -376,13 +367,6 @@ function apply1_1_valid() {
 	                });
 				}
 			}
-			
-			if (month > 12 || month < 1) {
-                customizeValidResult.push({
-                    obj: $('[name="birthday0"]'),
-                    msg: '生日格式錯誤'
-                });
-            }
 			
             var userName = $('[name="name"]').val();
             if (userName.length < 2 || userName.length > 20) {
@@ -528,17 +512,6 @@ function apply2_valid() {
         //若值為1,則表示此關係人的表格有展開,即需要有防呆
         switch (i) {
             case 0:
-                /*if ($('#incomeTaxRadio').is(':visible')) {
-                    var fCheckbox = $('[name="father_checkbox"]');
-                    var mCheckbox = $('[name="mother_checkbox"]');
-                    if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
-                        $('#checkboxGroup').hide();
-                    } else {
-                        $('#checkboxGroup').text('請勾選合計所得對象');
-                        $('#checkboxGroup').show();
-                        radioResult = false;
-                    }
-                }*/
                 if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'father_';
                     //familyName = '父親';
@@ -553,17 +526,6 @@ function apply2_valid() {
                 }
                 break;
             case 1:
-                /*if ($('#incomeTaxRadio').is(':visible')) {
-                    var fCheckbox = $('[name="father_checkbox"]');
-                    var mCheckbox = $('[name="mother_checkbox"]');
-                    if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
-                        $('#checkboxGroup').hide();
-                    } else {
-                        $('#checkboxGroup').text('請勾選合計所得對象');
-                        $('#checkboxGroup').show();
-                        radioResult = false;
-                    }
-                }*/
                 if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'mother_';
                     //familyName = '母親';
@@ -667,20 +629,6 @@ function apply2_valid() {
                         group: '' + family.input + 'telephone'
                     });
                 }
-
-                /*var birthdayY = $('[name="' + family.input + 'birthday0"]').val();
-                 var now = new Date();
-                 var yy = now.getFullYear() - 1911;
-                 //alert('yy:'+yy+';type:'+typeof(yy));
-                 //alert('birthdayY:'+birthdayY+';type:'+typeof(birthdayY));
-                 if (birthdayY >= yy) {
-                 customizeValidResult.push({
-                 obj: $('[name="' + family.input + 'birthday0"]'),
-                 msg: '生日格式錯誤',
-                 group: '' + family.input + 'birthday'
-                 });
-                 }*/
-
                 var user_birthday = $('[name="user_birthday_hidden"]').val();
                 console.log('user_birthday:', user_birthday);
                 var birth = new Date(parseInt($('[name="' + family.input + 'birthday0"]').val()) + 1911, $('[name="' + family.input + 'birthday2"]').val());
@@ -712,8 +660,6 @@ function apply2_valid() {
                         });
                     }
                 }
-                //}
-
                 var userId = $('[name="' + family.input + 'id"]').val();
                 var userId_arr = userId.split("");
                 var isFatherForeigner = isIncomeTaxTag.val().substr(0, 1);
@@ -758,14 +704,6 @@ function apply2_valid() {
                         });
                     }
                 }
-
-                /*var userName = $('[name="' + family.input + 'name"]').val();
-                 if (userName.length > 20 || userName.length < 2) {
-                 customizeValidResult.push({
-                 obj: $('[name="' + family.input + 'name"]'),
-                 msg: '輸入長度不符'
-                 });
-                 }*/
             });
         }
     });
@@ -936,8 +874,6 @@ function familyFoolproof(family, familyName, validArr, canForeigner, lastIsG, no
         hiddenTarget: $('div#' + guarantorName + ' input[name="phone_hidden"]').val()
     });
 
-    //alert(family+';'+guarantorName+':'+ $('div#' + guarantorName + ' input[name="telePhone_hidden"]').val());
-
     // 需檢查身分證格式之欄位
     var id_numObj = {
         name: '' + family + 'id',
@@ -966,7 +902,7 @@ function familyFoolproof(family, familyName, validArr, canForeigner, lastIsG, no
     validArr.validIdentity_arr.push(id_numObj);
 
     // 需檢查日期格式之欄位
-    /*validArr.validDate_arr.push({
+    validArr.validDate_arr.push({
         name: [family + 'birthday0', family + 'birthday2', family + 'birthday4'],
         msg: '生日',
         //val: $('[name="' + family + 'birthday0' + '"]').val() + '/' + $('[name="' + family + 'birthday2' + '"]').val() + '/' + $('[name="' + family + 'birthday4' + '"]').val(),
@@ -974,7 +910,7 @@ function familyFoolproof(family, familyName, validArr, canForeigner, lastIsG, no
         format: 'ch',
         allowEmpty: false,
         group: family + 'birthday'
-    });*/
+    });
 
     // 需檢查手機格式之欄位
     var mobileObj = {
@@ -1194,16 +1130,6 @@ function apply3_1_valid() {
                     });
                 }
             }
-
-
-            /*
-             if (student_month_enter > 12 || student_month_enter <= 0) {
-             customizeValidResult.push({
-             obj: $('[name="student_month_enter"]'),
-             msg: '入學日期錯誤'
-             });
-             }
-             */
         }
     });
 
@@ -2755,7 +2681,7 @@ function apply2(content) {
     /*綁地址的下拉式選單之連動事件(end)*/
 
     /*塞全部關係人的資料(start)*/
-    var lastIsGuarantor = (content.lastIsGuarantor == undefined)?'0000':content.lastIsGuarantor;
+    var lastIsGuarantor = content.lastIsGuarantor;
     $('[name="lastIsGuarantor"]').val(lastIsGuarantor);
     //alert(lastIsGuarantor);
     $.each(familyArray, function(index, value) {
@@ -2962,7 +2888,7 @@ function apply2(content) {
             //alert($('div#father input[name="id_hidden"]').length);
             if ($('div#father input[name="id_hidden"]').length == 0) {
                 modal.getFamilyInfo('father', 'N', function(fatherInfo) {
-                    setInfoValue(fatherInfo, fatherDiv);
+                    setInfoValue(fatherInfo, $('#father'));
                 });
             }
             father_checkboxHidden.val('1');
@@ -3071,7 +2997,7 @@ function apply2(content) {
             }
             if ($('div#mother input[name="id_hidden"]').length == 0) {
                 modal.getFamilyInfo('mother', 'N', function(motherInfo) {
-                    setInfoValue(motherInfo, motherDiv);
+                    setInfoValue(motherInfo, $('#mother'));
                 });
             }
             mother_checkboxHidden.val('1');
@@ -3254,9 +3180,9 @@ function apply2(content) {
     /*帶radio button or checkbox的預設值 (end)*/
 
 	/*舊戶要帶入radio box 和 checkbox上次的值, 新戶直接帶否 (start) */
+    var radioArr = ['father', 'mother', 'thirdParty', 'spouse'];
 	if(isRecord == 'N'){
 		var radioBtn = $('.parents .radioGuarantor');
-		var radioArr = ['father', 'mother', 'thirdParty', 'spouse'];
 		$.each(radioArr, function(index, value){
 			console.debug(value);
 			var radioGuarantorDiv = $('#'+value+' .radioGuarantor');
@@ -3268,9 +3194,52 @@ function apply2(content) {
 			}
 		});
 	}
-	//else if(isRecord == 'Y'){
-		
-	//}
+	else if(isRecord == 'Y'){
+	   	var lastIsGuarantor = (content.lastIsGuarantor == '')?'0000':content.lastIsGuarantor;
+	   	var lastIncomeTax = (content.lastIncomeTax == '')?'0000':content.lastIncomeTax;
+        if(adultTag == 'N'){  //未成年檢查連帶保證人
+            $.each(radioArr, function(index, value){
+                var currentLastGua = lastIsGuarantor.substr(index,1);
+                var radioGuarantorDiv = $('#'+value+' .radioGuarantor');
+			    var radioGuarantorInputYes = $('#'+value+' .css-checkbox_c').eq(0); 
+			    var radioGuarantorInputNo = $('#'+value+' .css-checkbox_c').eq(1); 
+                
+                if(radioGuarantorDiv.is(':visible')){
+                    if(currentLastGua == '0'){   //連帶保證人的radio button選否
+                        radioGuarantorInputNo.trigger('click');
+                    }
+                    else if(currentLastGua == '1'){   //連帶保證人的radio button選是
+                        radioGuarantorInputYes.trigger('click');   
+                    }
+                }             
+            });            
+        }
+        else if(adultTag == 'Y'){   //成年檢查合計所得對象
+            var checkboxArr = ['Father', 'Mother'];
+            var incomeTaxCheckBox = $('#incomeTaxRadio');
+            if(incomeTaxCheckBox.is(':visible')){
+                $.each(checkboxArr, function(index, value){
+                    var currentLastTax = lastIncomeTax.substr(index,1);                     
+			        var checkboxInputFather = $('#incomeTaxFather'); 
+			        var checkboxInputMother = $('#incomeTaxMother'); 
+                    console.debug('==========================');
+                    console.debug(value);    
+                    console.debug(checkboxInputFather.length);    
+                    console.debug(checkboxInputMother.length);
+                    
+                    if(currentLastTax == '1'){
+                        if(index == 0){
+                            checkboxInputFather.trigger("click");                               
+                        }
+                        else if(index == 1){
+                            checkboxInputMother.trigger("click");                             
+                        }
+                                               
+                    }                   
+                });   
+            }
+        }
+	}
 	/*舊戶要帶入radio box 和 checkbox上次的值, 新戶直接帶否 (end) */
 	
 
@@ -4624,7 +4593,7 @@ function apply3_2(content) {
     var whiteListHidden = $('[name="whiteListHidden"]');
     loanHidden = $('[name="loansPrice"]');
     var sSelectValue = content.stageSelectValue;
-    var whiteList = (content.whiteList == undefined)?'N':content.whiteList;
+    var whiteList = content.whiteList;
 
     whiteListHidden.val(whiteList);
     
