@@ -5165,6 +5165,11 @@ function apply4_2(content) {
     var datePicked = content.date;
     var timePicked = content.time;
 
+	var defaultCalendarDate = new Date();
+	if(datePicked != '') {
+		defaultCalendarDate = new Date(datePicked);
+	}
+	
     var getDefaultAddress = modal.getDefaultAddress();
     console.debug(getDefaultAddress);
     addressMap(mapId, [getDefaultAddress.branchName], [getDefaultAddress.addr], [getDefaultAddress.tel]);
@@ -5420,7 +5425,7 @@ console.debug('branchId:'+branchId);
                     $('#calendar').fullCalendar({
                         header: {},
                         //height: 400,
-                        defaultDate: new Date(),
+                        defaultDate: defaultCalendarDate,
                         select: function(startDate, endDate) {
                             if (liveDate > startDate) {
                                 alert('Selected date has been passed');
