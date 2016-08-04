@@ -521,18 +521,14 @@ function apply2_valid() {
             validChinese_arr: []
         };
 
-    var radioResult = true; //檢查radio或checkbox有沒有點選
-
-
     for (var i = 0; i <= 3; i++) { //依序檢查父親,母親,第三人,配偶的表格是否有展開
         var foolproofFamily = show.substr(i, 1);
-
         var canForeigner = isGuarantorTag.val().substr(i, 1) == '1' ? '0' : '1'; //可以是1，不可以是0
 
         //若值為1,則表示此關係人的表格有展開,即需要有防呆
         switch (i) {
             case 0:
-                if ($('#incomeTaxRadio').is(':visible')) {
+                /*if ($('#incomeTaxRadio').is(':visible')) {
                     var fCheckbox = $('[name="father_checkbox"]');
                     var mCheckbox = $('[name="mother_checkbox"]');
                     if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
@@ -542,23 +538,7 @@ function apply2_valid() {
                         $('#checkboxGroup').show();
                         radioResult = false;
                     }
-                }
-                if (foolproofFamily == '2' || foolproofFamily == '3') {
-                    var adultTag = adultHidden.val();
-                    var radio_Btn = $('[name="father_RadioBtn"]');
-
-                    if (adultTag == 'N') { //未成年檢查連帶保證人的radio
-                        if (radio_Btn.val() == '') {
-                            $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                            $('#tip' + i).show();
-                            radioResult = false;
-                        } else {
-                            $('#tip' + i).hide();
-                            radioResult = true;
-                        }
-
-                    }
-                }
+                }*/
                 if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'father_';
                     //familyName = '父親';
@@ -573,7 +553,7 @@ function apply2_valid() {
                 }
                 break;
             case 1:
-                if ($('#incomeTaxRadio').is(':visible')) {
+                /*if ($('#incomeTaxRadio').is(':visible')) {
                     var fCheckbox = $('[name="father_checkbox"]');
                     var mCheckbox = $('[name="mother_checkbox"]');
                     if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
@@ -583,23 +563,7 @@ function apply2_valid() {
                         $('#checkboxGroup').show();
                         radioResult = false;
                     }
-                }
-                if (foolproofFamily == '2' || foolproofFamily == '3') {
-                    var adultTag = adultHidden.val();
-                    var radio_Btn = $('[name="mother_RadioBtn"]');
-
-                    if (adultTag == 'N') { //未成年檢查連帶保證人的radio
-                        if (radio_Btn.val() == '') {
-                            $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                            $('#tip' + i).show();
-                            radioResult = false;
-                        } else {
-                            $('#tip' + i).hide();
-                            radioResult = true;
-                        }
-
-                    }
-                }
+                }*/
                 if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'mother_';
                     //familyName = '母親';
@@ -618,19 +582,7 @@ function apply2_valid() {
                 }
                 break;
             case 2:
-                if (foolproofFamily == '2') {
-                    var adultTag = adultHidden.val();
-                    var radio_Btn = $('[name="thirdParty_RadioBtn"]');
-                    if (radio_Btn.val() == '') {
-                        $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                        $('#tip' + i).show();
-                        radioResult = false;
-                    } else {
-                        $('#tip' + i).hide();
-                        radioResult = true;
-                    }
-
-                } else if (foolproofFamily == '1' || foolproofFamily == '3') {
+                if (foolproofFamily == '1' || foolproofFamily == '3') {
                     //console.debug(thirdPartyTitle.text());
                     family = 'thirdParty_';
                     //familyName = thirdPartyTitle.text();
@@ -649,19 +601,7 @@ function apply2_valid() {
                 }
                 break;
             case 3:
-                if (foolproofFamily == '2') {
-                    var adultTag = adultHidden.val();
-                    var radio_Btn = $('[name="spouse_RadioBtn"]');
-                    if (radio_Btn.val() == '') {
-                        $('#tip' + i).text('請選擇是否擔任連帶保證人');
-                        $('#tip' + i).show();
-                        radioResult = false;
-                    } else {
-                        $('#tip' + i).hide();
-                        radioResult = true;
-                    }
-
-                } else if (foolproofFamily == '1' || foolproofFamily == '3') {
+                if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'spouse_';
                     //familyName = '配偶';
                     familyName = '';
@@ -827,10 +767,34 @@ function apply2_valid() {
                  });
                  }*/
             });
-
         }
-
     });
+	
+	
+	var radioResult = true; //檢查radio或checkbox有沒有點選
+	//檢查合計所得對象是否有勾選
+	if ($('#incomeTaxRadio').is(':visible')) {
+        var fCheckbox = $('[name="father_checkbox"]');
+        var mCheckbox = $('[name="mother_checkbox"]');
+        if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
+            $('#checkboxGroup').hide();
+        } else {
+            $('#checkboxGroup').text('請勾選合計所得對象');
+            $('#checkboxGroup').show();
+            radioResult = false;
+        }
+    }
+	
+	//如果已經輸入框都無誤, 則把error的文字刪除
+	if(res){
+		$.each($('.error-msg'), function(i, v){
+			var div = $(v);
+			if(div.attr('id') != 'checkboxGroup'){
+				div.text('');		
+			}
+		});
+	}
+	
     //2016-06-10 by added 因為resultFinal不可能是true，因為在上面的for loop就已經被回傳物件了
     //if( resultFinal == true && res == true && radioResult == true ){   
     if (res == true && radioResult == true) {
@@ -2671,8 +2635,6 @@ function apply2(content) {
     var mother_sameAddr = content.mother_sameAddr;
     var thirdParty_sameAddr = content.thirdParty_sameAddr;
     var spouse_sameAddr = content.spouse_sameAddr;
-
-
     var level1 = content.familyStatusLevel1;
     var level2 = content.familyStatusLevel2;
 
@@ -3291,6 +3253,26 @@ function apply2(content) {
     }
     /*帶radio button or checkbox的預設值 (end)*/
 
+	/*舊戶要帶入radio box 和 checkbox上次的值, 新戶直接帶否 (start) */
+	if(isRecord == 'N'){
+		var radioBtn = $('.parents .radioGuarantor');
+		var radioArr = ['father', 'mother', 'thirdParty', 'spouse'];
+		$.each(radioArr, function(index, value){
+			console.debug(value);
+			var radioGuarantorDiv = $('#'+value+' .radioGuarantor');
+			var radioGuarantorInput = $('#'+value+' .css-checkbox_c').eq(1);
+			console.debug(radioGuarantorInput.attr('id'));
+			
+			if(radioGuarantorDiv.is(':visible')){
+				radioGuarantorInput.trigger('click');
+			}
+		});
+	}
+	//else if(isRecord == 'Y'){
+		
+	//}
+	/*舊戶要帶入radio box 和 checkbox上次的值, 新戶直接帶否 (end) */
+	
 
     /*綁小網的收合按鈕之事件 (start)*/
     var father_close = $('#father .closeBtn');
