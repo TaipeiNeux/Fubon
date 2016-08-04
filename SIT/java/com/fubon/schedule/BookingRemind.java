@@ -26,7 +26,7 @@ public class BookingRemind implements Job {
 	        Vector<DataObject> ret = new Vector<DataObject>();
 	        dao.query(ret, AplyMemberTuitionLoanDtl_Booking, null);
 	        
-	        GardenLog.log(GardenLog.INFO, "BookingRemind Info=>" + DateUtil.convert14ToDate("yyyy/MM/dd", DateUtil.addDate(DateUtil.getTodayString(), 1)));
+	        GardenLog.log(GardenLog.DEBUG, "BookingRemind Info=>" + DateUtil.convert14ToDate("yyyy/MM/dd", DateUtil.addDate(DateUtil.getTodayString(), 1)));
 	        
             for(DataObject d : ret) {
             	//寄送預約通知資料
@@ -49,6 +49,7 @@ public class BookingRemind implements Job {
 	            dao.queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
             }
 		}catch(Exception e){
+            e.printStackTrace();
 			GardenLog.log(GardenLog.DEBUG, "BookingRemind Exception=>" + e.getMessage());
 		}
 	}

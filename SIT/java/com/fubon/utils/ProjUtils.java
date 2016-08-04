@@ -890,8 +890,11 @@ public class ProjUtils {
 
             //2016-08-04 added by titan 因為行動電話要改成一律問390，不然舊戶的電話改了後就收不到後續的OTP
             String mobile = "";
+            String isRecord = ProjUtils.isPayHistory(id,dao) ? "Y" : "N";
+
+            //2016-08-04 added by titan 舊戶要抓390手機
             String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
-            if(!"sit".equalsIgnoreCase(env)) {
+            if(!"sit".equalsIgnoreCase(env) && "Y".equalsIgnoreCase(isRecord)) {
                 RQBean rqBean54 = new RQBean();
                 rqBean54.setTxId("EB032154");
                 rqBean54.addRqParam("CUST_NO",id);

@@ -16,7 +16,10 @@
 				<group>triggerGroup</group>
 				<job-name>TestJob</job-name>
 				<job-group>JobGroup</job-group>
+				<!--
 				<cron-expression>0 0 22 * * ?</cron-expression>
+				-->
+				<cron-expression>0 0/5 * * * ?</cron-expression>
 			</cron>
 		</trigger>
     </schedule>

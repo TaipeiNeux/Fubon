@@ -65,6 +65,9 @@ public class Apply1_1 extends MarkFlow {
 //            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
 //        }
 
+        //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
+        DataObject aplyMemberData = null;
+
         //若有草稿就裝到content，沒有才走邏輯判斷
         if(draftData != null) {
             Element root = draftData.getRootElement();
@@ -139,9 +142,6 @@ public class Apply1_1 extends MarkFlow {
             teleAddressZipCode = zipCode2;
             teleAddressAddress = loginUserBean.getCustomizeValue("AplyAddr2");
 
-            //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
-            DataObject aplyMemberData = null;
-
             //有撥款紀錄要額外帶入：身分證字號、姓名、生日、行動電話、Email、婚姻狀況、戶籍電話、通訊電話、戶籍地址、通訊地址
             if("Y".equalsIgnoreCase(isRecord)) {
                 //帶入撥款紀錄
@@ -201,7 +201,11 @@ public class Apply1_1 extends MarkFlow {
             monthBirthday = birthday.substring(3,5);
             dayBirthday = birthday.substring(5,7);
 
-            //2016-08-04 added by titan 因為行動電話要改成一律問390，不然舊戶的電話改了後就收不到後續的OTP
+
+        }
+
+        //2016-08-04 added by titan 因為行動電話要改成一律問390，不然舊戶的電話改了後就收不到後續的OTP
+        if(aplyMemberData != null) {
             String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
             if(!"sit".equalsIgnoreCase(env)) {
                 RQBean rqBean54 = new RQBean();
