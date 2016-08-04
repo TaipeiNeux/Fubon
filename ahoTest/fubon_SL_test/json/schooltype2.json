@@ -1,0 +1,12 @@
+{
+    "schooltype2" : [
+        {
+            "type" : "1",
+            "typeName" : "日間"
+        },
+        {
+            "type" : "2",
+            "typeName" : "夜間"
+        }
+    ]
+}
