@@ -50,9 +50,9 @@
   <ul>
     
 	<!--<li><a href="javascript:;">Q&A</a></li>-->
-    <li><a href="sub_1.jsp?target=1">貸款試算</a></li>
-    <li><a href="sub_1.jsp?target=2">對保分行</a></li>
-    <li><a href="sub_1.jsp?target=3">表單．文件下載</a></li>
+    <li><a href="sub_1.jsp?target=1" target="_blank">貸款試算</a></li>
+    <li><a href="sub_1.jsp?target=2" target="_blank">對保分行</a></li>
+    <li><a href="sub_1.jsp?target=3" target="_blank">表單．文件下載</a></li>
   </ul>
 </nav>
 <!-- /手機板_右邊選單 -->
