@@ -216,7 +216,7 @@ function personalInfo_1(content) {
     var b_day = content.b_day;
 	
 	birthday_hidden.val( b_year + '/'+ b_month + '/' +b_day );
-	birthday_fullMatch.val( b_year + b_month + b_day );
+	birthday_fullMatch.val( b_year + '/'+ b_month + '/' +b_day );
 	birthday_match.val(b_day);
 	
 	//有撥貸紀錄的要轉字串
@@ -1081,7 +1081,7 @@ function personalInfo_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="email_hidden"]').val()
         }],
-        /*validDate: [{
+        validDate: [{
             name: ['birth_year', 'birth_month', 'birth_day'],
             msg: '生日',
             //val: $('[name="' + family + 'birthday0' + '"]').val() + '/' + $('[name="' + family + 'birthday2' + '"]').val() + '/' + $('[name="' + family + 'birthday4' + '"]').val(),
@@ -1091,7 +1091,7 @@ function personalInfo_1_valid() {
             group: 'birth',
 			hasHiddenCode: true,
 			hiddenTarget: $('input[name="birthday_fullMatch"]').val()
-        }],*/
+        }],
         validMobile: [{
             name: 'cellPhone',
             msg: '行動電話',
@@ -1155,7 +1155,7 @@ function personalInfo_1_valid() {
 			var day = $('[name="birth_day"]').val();
 			var now = new Date();
 			var now_year = now.getFullYear() - 1911;
-			if(day.indexOf('*') == -1){
+			/*if(day.indexOf('*') == -1){
 				 day = parseInt($('[name="birth_day"]').val());
 				 if (day > 31 || day < 1) {
 		            customizeValidResult.push({
@@ -1163,7 +1163,7 @@ function personalInfo_1_valid() {
 		                msg: '生日格式錯誤'
 		            });		            
 				}
-			}
+			}*/
 
             if (year.length < 2) {
                 customizeValidResult.push({
@@ -1181,12 +1181,12 @@ function personalInfo_1_valid() {
 				}
 			}
 			
-			if (month > 12 || month < 1) {
+			/*if (month > 12 || month < 1) {
                 customizeValidResult.push({
                     obj: $('[name="birth_year"]'),
                     msg: '生日格式錯誤'
                 });
-            }
+            }*/
 			
 
             var marryStatus = $('[name="marryStatus"]').val();

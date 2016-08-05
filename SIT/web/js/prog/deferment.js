@@ -203,13 +203,15 @@ function deferment_1_valid() {
                     if(eliIndex_hidden.val() == '7'){
                         var lastGraduationDate = $('[name="lastGraduationDateHidden"]').val();    
                         
-                        if(lastGraduationDate.length == 7){
-                            var graduation_year = lastGraduationDate.substr(0,3);   
-                            var graduation_month = lastGraduationDate.substr(3,2); 
-                            var graduation_day = lastGraduationDate.substr(5,2); 
-                            var lastDate = new Date( graduation_year + '/' + graduation_month + '/' + graduation_day );
+                        if(lastGraduationDate.length == 5){
+                            //上次畢業日期格式只有年月共五碼
+                            //所以以下個月的1日比較  ex:上次10706 就以1070701比較 
+                            var graduation_year = parseInt(lastGraduationDate.substr(0,3)) + 1911;   
+                            var graduation_month = parseInt(lastGraduationDate.substr(3,2)) + 1; 
+                            var lastDate = new Date( graduation_year + '/' + graduation_month );
 
-                            if(input - lastDate > 0){
+                            //輸入的日期大於等於上次日期就表示晚於上次填寫之應畢業日期
+                            if(input - lastDate > (-86400000)){   //一天86400000毫秒
                                 customizeValidResult.push({
                                     obj: $('[name="selectYear"]'),
                                     msg: '不得晚於上次填寫之應畢業日期'
@@ -484,7 +486,7 @@ function deferment_1(content) {
     var seMonth = content.selectMonth;
     var seDay = content.selectDay;
     var eligibilityText0 = content.eligibilityText0; //步驟0選擇的原因
-    var lastGraduationDate = (content.lastGraduationDate == undefined)?'0':content.lastGraduationDate; //步驟0選擇的原因
+    var lastGraduationDate = content.lastGraduationDate; //步驟0選擇的原因
     //var radioInput = $('#reasonSelector');
     var reasonSelector = $('#reasonSelector'); //下拉式選單
     var selectDate = $('#selectDate'); //日期選項
