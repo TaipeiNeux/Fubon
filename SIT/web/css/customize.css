@@ -3433,3 +3433,13 @@ body.memberLogin_1 .inputArea {
         visibility: visible;
     }
 }
+
+/* 上傳文件小幫手 小版內容調整 */
+
+
+
+@media (max-width:769px) {
+    body#body .modal-body ul li {
+        margin-left: 50px;
+    }
+}
