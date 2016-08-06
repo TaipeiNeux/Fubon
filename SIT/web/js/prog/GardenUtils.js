@@ -562,16 +562,21 @@ var GardenUtils = {
                                 if( !number.hasOwnProperty('hiddenEle') ){
                                     number['hiddenEle'] = '*';
                                 }
-
+								
+								
                                 var hiddenVal  = '', hiddenIndex = 0;
-                                var splitDate = number.hiddenTarget.split(number.splitEle);
-                                for(var i=0; i<splitDate.length; ++i){
-                                    console.log('splitDate', splitDate[i], splitDate[i].indexOf(number.hiddenEle));
-                                    if( splitDate[i].indexOf(number.hiddenEle) != -1 ){
-                                        hiddenVal = splitDate[i];
-                                        hiddenIndex = i;
-                                    }
-                                }
+								//因為可能會是空字串, 所以加一個判斷 by Foi 0803
+								console.debug(number.hiddenTarget);
+								if(number.hiddenTarget != '' && number.hiddenTarget != undefined){
+	                                var splitDate = number.hiddenTarget.split(number.splitEle);
+	                                for(var i=0; i<splitDate.length; ++i){
+	                                    console.log('splitDate', splitDate[i], splitDate[i].indexOf(number.hiddenEle));
+	                                    if( splitDate[i].indexOf(number.hiddenEle) != -1 ){
+	                                        hiddenVal = splitDate[i];
+	                                        hiddenIndex = i;
+	                                    }
+	                                }
+								}
                                 //var val = number.val;
                                 if(!number.hasOwnProperty('hasHiddenCode')){
                                     number['hasHiddenCode'] = false;
@@ -612,7 +617,9 @@ var GardenUtils = {
                                             val : val
                                         });
                                     }
-                                } else {
+                                } 
+								
+								else {
                                     //日期不可為空
                                     if (!checkHiddenCode(hiddenConf) && val != "") {
                                         /**
