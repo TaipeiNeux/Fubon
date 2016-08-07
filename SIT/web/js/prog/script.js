@@ -685,7 +685,7 @@ $(document).ready(function() {
 
             //$('#mobileMenu_left_area > ul > li:first').hide();
             $('#mobileMenu_left_area > ul > li:first').on('click', function() {
-                window.location = 'memberLogin.jsp';
+                window.location = 'memberLogin.jsp?action=index';
             });
 
             $('.loginArea').hide();
