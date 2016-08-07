@@ -94,7 +94,8 @@ public class Apply3_1 implements ILogic {
                 department = aplyMemberData.getValue("subject");
                 onTheJob = "0".equals(aplyMemberData.getValue("schoolWorkFlag")) ? "N" : "Y";
 
-                gradeClassGrade = aplyMemberData.getValue("class1");
+                //不帶入上次升學年級
+//                gradeClassGrade = aplyMemberData.getValue("class1");
                 gradeClassClass = aplyMemberData.getValue("class2");
 
                 studentId = aplyMemberData.getValue("learnId");

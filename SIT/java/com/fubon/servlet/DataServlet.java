@@ -1042,7 +1042,7 @@ public class DataServlet extends HttpServlet {
                     String isFull = "Y";
                     for(String time : timeMap.keySet()) {
                         Integer count = timeMap.get(time);
-                        String timeFull = (total == count.intValue() ? "Y" : "N");
+                        String timeFull = (total <= count.intValue() ? "Y" : "N");
 
                         if("N".equalsIgnoreCase(timeFull)) isFull = "N";
 

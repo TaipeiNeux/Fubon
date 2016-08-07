@@ -55,6 +55,7 @@ public class Apply2 implements ILogic {
         String father_String = "", mother_String = "",thirdParty_String = "",spouse_String = "";
 
         String lastIsGuarantor = "";//上次撥款紀錄中的保人(4碼)
+        String lastIncomeTax = "";//上次撥款紀錄的合計所得對象
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -172,6 +173,13 @@ public class Apply2 implements ILogic {
 
             lastIsGuarantor += set.contains("1A") ? "1" : "0";
 
+            //2016-08-04 added by titan帶出上次撥款的合計所得對象
+
+            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Fa_IncomeAddOn")) ? "1" : "0";
+            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Ma_IncomeAddOn")) ? "1" : "0";
+            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Gd1_IncomeAddOn")) ? "1" : "0";
+            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Pa_IncomeAddOn")) ? "1" : "0";
+
             String familyStatusVal = aplyMemberData.getValue("FamilyStatus");
             if(StringUtils.isNotEmpty(familyStatusVal) && familyStatusVal.length() >= 3) {
                 String[] statusArray = familyStatusVal.split("_");
@@ -227,6 +235,7 @@ public class Apply2 implements ILogic {
         content.put("relationship",thirdParty_relationship);
         content.put("thirdPartyTitle",thirdPartyTitle);
         content.put("lastIsGuarantor",lastIsGuarantor);
+        content.put("lastIncomeTax",lastIncomeTax);
 
         content.put("familyStatusLevel1",familyStatusLevel1);
         content.put("familyStatusLevel2",familyStatusLevel2);

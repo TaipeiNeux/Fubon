@@ -7,6 +7,7 @@
     request.setCharacterEncoding("utf-8");
     JSPQueryStringInfo queryStringInfo = JSPUtils.setParams(request,false);
     String action = queryStringInfo.getParam("action");
+	String target = queryStringInfo.getParam("target");
 
     String pageURL = "index.jsp";
     if("login".equalsIgnoreCase(action)) {
@@ -14,6 +15,9 @@
     }
     else if("register".equalsIgnoreCase(action)) {
         pageURL = "register.jsp";
+    }
+	else if("sub1".equalsIgnoreCase(action)) {
+        pageURL = "sub_1.jsp?target=" + target;
     }
 
     String uuid = UUID.randomUUID().toString();

@@ -8,6 +8,7 @@ import com.fubon.utils.ProjUtils;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -36,6 +37,7 @@ public class Apply3_2 implements ILogic {
         String accordingToBill_sum = "", freedom_sum = "";
 
         String stageSelectValue = "";
+        String whiteList = "";//此身份是否在白名單中
 
         IDao dao = DaoFactory.getDefaultDao();
         String applyDraftXML3 = FlowUtils.getDraftData(userId,"apply","apply3_1",dao);
@@ -44,6 +46,7 @@ public class Apply3_2 implements ILogic {
 
         stageSelectValue = draftRoot.element("stageSelectValue") != null ? draftRoot.element("stageSelectValue").getText() : "";
         OnTheJob = draftRoot.element("onTheJobHidden").getText();
+
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -107,6 +110,9 @@ public class Apply3_2 implements ILogic {
 //            }
         }
 
+        //0804 added by titan 加上白名單
+        whiteList = ProjUtils.queryApplyWhiteRecord(userId,dao);
+        whiteList = StringUtils.isEmpty(whiteList) ? "N" : "Y";
 
         content.put("loans",loans);
 
@@ -139,6 +145,7 @@ public class Apply3_2 implements ILogic {
 
         content.put("stageSelectValue",stageSelectValue);
 
+        content.put("whiteList",whiteList);
     }
 
     @Override
