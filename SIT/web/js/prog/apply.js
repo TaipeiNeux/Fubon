@@ -15,6 +15,8 @@ $(document).ready(function() {
         "apply_document_6": apply6_1,
         "apply_online_6": apply6_2
     };
+	
+	alert('test');
 
     var nextEventHanlder = {
         "apply1_1": apply1_1_valid,
@@ -5062,6 +5064,7 @@ function apply4_2(content) {
     var datePicked = content.date;
     var timePicked = content.time;
 
+	
     var getDefaultAddress = modal.getDefaultAddress();
     console.debug(getDefaultAddress);
     addressMap(mapId, [getDefaultAddress.branchName], [getDefaultAddress.addr], [getDefaultAddress.tel]);
