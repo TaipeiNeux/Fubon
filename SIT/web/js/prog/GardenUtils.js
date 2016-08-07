@@ -68,9 +68,14 @@ var GardenUtils = {
             if (isLoadGoogle) {
                 drawAddress(googleAddr);
             } else {
-                $.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
-                    drawAddress(googleAddr);
-                });
+                try {
+                    console.debug('try');
+                    $.getScript("//maps.google.com/maps/api/js?sensor=true").done(function() {
+                        drawAddress(googleAddr);
+                    });
+                } catch (err) {
+                    console.debug(err.message);
+                }
             }
 
             function drawAddress(googleAddr) {
@@ -175,9 +180,9 @@ var GardenUtils = {
                         } //else
                     });
                 });
-				
-				//試看看能不能處理掉IE第一次灰色問題
-				$(window).resize();
+                
+                //試看看能不能處理掉IE第一次灰色問題
+                $(window).resize();
             }
         },
 
@@ -371,7 +376,7 @@ var GardenUtils = {
                                             type : 'empty',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                     } else if(empty_groupArr.indexOf(number.group) == -1) {
                                         hasErrName.push(errName);
@@ -382,7 +387,7 @@ var GardenUtils = {
                                             type : 'empty',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                     }
 
@@ -417,7 +422,7 @@ var GardenUtils = {
                                         type : 'number',
                                         msg : number.msg,
                                         obj : $this,
-										val : val
+                                        val : val
                                     });
                                 }
                                 else {
@@ -446,7 +451,7 @@ var GardenUtils = {
                                             type : 'number',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                     }
                                 }
@@ -473,7 +478,7 @@ var GardenUtils = {
                                         type : 'decimal',
                                         msg : number.msg,
                                         obj : $this,
-										val : val
+                                        val : val
                                     });
                                 }
                                 else {
@@ -486,7 +491,7 @@ var GardenUtils = {
                                             type : 'decimal',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                     }
                                 }
@@ -518,7 +523,7 @@ var GardenUtils = {
                             }
 
 
-                            console.error('validDate', number);
+                            console.debug('validDate', number);
 
                             if ($this.length != 0 && (($this.length == 1 && $this.parents(":hidden").length == 0) || ($this.length == 3 && $this[0].parents(":hidden").length == 0))) {
                                 var val = '';
@@ -553,21 +558,41 @@ var GardenUtils = {
 
                                 }
                                 number['val'] = val;
+
+                                if( !number.hasOwnProperty('hiddenEle') ){
+                                    number['hiddenEle'] = '*';
+                                }
+								
+								
+                                var hiddenVal  = '', hiddenIndex = 0;
+								//因為可能會是空字串, 所以加一個判斷 by Foi 0803
+								console.debug(number.hiddenTarget);
+								if(number.hiddenTarget != '' && number.hiddenTarget != undefined){
+	                                var splitDate = number.hiddenTarget.split(number.splitEle);
+	                                for(var i=0; i<splitDate.length; ++i){
+	                                    console.log('splitDate', splitDate[i], splitDate[i].indexOf(number.hiddenEle));
+	                                    if( splitDate[i].indexOf(number.hiddenEle) != -1 ){
+	                                        hiddenVal = splitDate[i];
+	                                        hiddenIndex = i;
+	                                    }
+	                                }
+								}
                                 //var val = number.val;
                                 if(!number.hasOwnProperty('hasHiddenCode')){
                                     number['hasHiddenCode'] = false;
                                 }
+
                                 var hiddenConf = {
                                     hasHiddenCode: number.hasHiddenCode,
-                                    src: val,
-                                    target: number.hiddenTarget,
+                                    src: val.split(number.splitEle)[hiddenIndex],
+                                    target: hiddenVal,
                                     checkFun: function(conf){
                                         return IsDate(conf);
                                     },
                                     checkFunParam: number
                                 };
-								
-								console.debug(hiddenConf);
+                                
+                                console.debug(hiddenConf);
 
                                 if (number.allowEmpty) {
                                     //日期可為空
@@ -589,10 +614,12 @@ var GardenUtils = {
                                             type : 'date',
                                             msg : number.msg,
                                             obj : $this.length == 1 ? $this : $this[0],
-											val : val
+                                            val : val
                                         });
                                     }
-                                } else {
+                                } 
+								
+								else {
                                     //日期不可為空
                                     if (!checkHiddenCode(hiddenConf) && val != "") {
                                         /**
@@ -612,7 +639,7 @@ var GardenUtils = {
                                             type : 'date',
                                             msg : number.msg,
                                             obj : $this.length == 1 ? $this : $this[0],
-											val : val
+                                            val : val
                                         });
                                     }
                                 }
@@ -653,7 +680,7 @@ var GardenUtils = {
                                         type : 'email',
                                         msg : number.msg,
                                         obj : $this,
-										val : val
+                                        val : val
                                     });
                                 } else {
                                     if (val != "" && !checkHiddenCode(hiddenConf) ) {
@@ -664,7 +691,7 @@ var GardenUtils = {
                                             type : 'email',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                     }
                                 }
@@ -711,7 +738,7 @@ var GardenUtils = {
                                             type : 'identity',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                         //message.push("請輸入正確的身分證字號");
                                     }
@@ -725,7 +752,7 @@ var GardenUtils = {
                                             type : 'identity',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                         //message.push("身分證字號不得為空");
                                     } else if (!checkHiddenCode(hiddenConf)) {
@@ -736,7 +763,7 @@ var GardenUtils = {
                                             type : 'identity',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                         //message.push("請輸入正確的身分證字號");
                                     }
@@ -778,7 +805,7 @@ var GardenUtils = {
                                         type : 'mobile',
                                         msg : number.msg,
                                         obj : $this,
-										val : val
+                                        val : val
                                     });
                                 } else {
                                     if (!checkHiddenCode(hiddenConf) && val != "") {
@@ -789,7 +816,7 @@ var GardenUtils = {
                                             type : 'mobile',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                     }
                                 }
@@ -830,7 +857,7 @@ var GardenUtils = {
                                         type : 'chinese',
                                         msg : number.msg,
                                         obj : $this,
-										val : val
+                                        val : val
                                     });
                                 } else {
                                     if (!checkHiddenCode(hiddenConf) && val != "") {
@@ -841,7 +868,7 @@ var GardenUtils = {
                                             type : 'chinese',
                                             msg : number.msg,
                                             obj : $this,
-											val : val
+                                            val : val
                                         });
                                     }
                                 }
@@ -871,41 +898,41 @@ var GardenUtils = {
                         var type = obj.type;
                         var msg = obj.msg;
                         var validObj = obj.obj;
-						var val = obj.val;
+                        var val = obj.val;
 
-						if(val.indexOf('*') != -1) {
-							msg = msg + '勿輸入遮掩字元，請重新輸入';
-						}
-						else {
-							if(type == 'empty') {
+                        if(val.indexOf('*') != -1) {
+                            msg = msg + '勿輸入遮掩字元，請重新輸入';
+                        }
+                        else {
+                            if(type == 'empty') {
                             /*if(validObj[0].tagName.toLowerCase() == 'input') {
-	                                msg = '請輸入' + msg;
-	                            }
-	                            else {
-	                                msg = '請選擇' + msg;
-	                            }*/
-	                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
-	                            msg = '請輸入' + msg;    
-	                        }
-	                        else if(type == 'number') {
-	                            msg = msg + '限輸入數字';
-	                        }
-	                        else if(type == 'decimal') {
-	                            msg = msg + '限輸入數字';
-	                        }
-	                        else if(type == 'chinese') {
-	                            msg = msg + '限輸入中文字';
-	                        }
-	                        else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
-								if(val.indexOf('*') != -1) {
-									msg = msg + '勿輸入遮掩字元，請重新輸入';
-								}
-								else {
-									msg = msg + '格式錯誤';
-								}
-	                        }
-						}
-						
+                                    msg = '請輸入' + msg;
+                                }
+                                else {
+                                    msg = '請選擇' + msg;
+                                }*/
+                                //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
+                                msg = '請輸入' + msg;    
+                            }
+                            else if(type == 'number') {
+                                msg = msg + '限輸入數字';
+                            }
+                            else if(type == 'decimal') {
+                                msg = msg + '限輸入數字';
+                            }
+                            else if(type == 'chinese') {
+                                msg = msg + '限輸入中文字';
+                            }
+                            else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
+                                if(val.indexOf('*') != -1) {
+                                    msg = msg + '勿輸入遮掩字元，請重新輸入';
+                                }
+                                else {
+                                    msg = msg + '格式錯誤';
+                                }
+                            }
+                        }
+                        
                        
 
                         message.push(msg);
@@ -920,64 +947,64 @@ var GardenUtils = {
 
                     //先跑基本的
                     $.each(noPass,function(i,obj){
-						console.debug(obj);
+                        console.debug(obj);
 
                         var name = obj.name;
                         var type = obj.type;
                         var msg = obj.msg;
                         var validObj = obj.obj;
-						var val = obj.val;
-						
-						if(val.indexOf('*') != -1) {
-							msg = msg + '勿輸入遮掩字元，請重新輸入';
-						}
-						else {
-							if(type == 'empty') {
-	                            //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
-	                            msg = '請輸入' + msg;
-	                        }
-	                        else if(type == 'number') {
-	                            msg = msg + '限輸入數字';
-	                        }
-	                        else if(type == 'decimal') {
-	                            msg = msg + '限輸入數字';
-	                        }
-	                        else if(type == 'chinese') {
-	                            msg = msg + '限輸入中文字';
-	                        }
-	                        else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
-	                           
-	                            /** --start 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
-	                            if(type == 'identity'){
-																		
-									/**  0716 忠毅  輸入非英數字,規定要顯示: 限輸入英數字  **/
-									if(/^[a-zA-Z0-9- ]*$/.test(obj.val) == false) {
-										//alert('string contains non english characters');
-										msg = '限輸入英數字';
-									}
-									/**  0716 忠毅  長度不符,規定要顯示: 輸入長度不符  **/									
-									else if(obj.val.length<10)
-										msg = '輸入長度不符';
-									
-									else 
-										msg = msg + '驗證錯誤';
-	                            
-								
-								}
-	                            else {
-	                            /** --end 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
-								
-									if(val.indexOf('*') != -1) {
-										msg = msg + '勿輸入遮掩字元，請重新輸入';
-									}
-									else {
-										msg = msg + '格式錯誤';
-									}
-								}
-	                            
-	                        }
-						}
-						
+                        var val = obj.val;
+                        
+                        if(val.indexOf('*') != -1) {
+                            msg = msg + '勿輸入遮掩字元，請重新輸入';
+                        }
+                        else {
+                            if(type == 'empty') {
+                                //富邦一律要顯示請輸入,不論是下拉式選單還是輸入框 by Foi 2016/07/12
+                                msg = '請輸入' + msg;
+                            }
+                            else if(type == 'number') {
+                                msg = msg + '限輸入數字';
+                            }
+                            else if(type == 'decimal') {
+                                msg = msg + '限輸入數字';
+                            }
+                            else if(type == 'chinese') {
+                                msg = msg + '限輸入中文字';
+                            }
+                            else if(type == 'date' || type == 'email' || type == 'identity' || type == 'mobile') {
+                               
+                                /** --start 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
+                                if(type == 'identity'){
+                                                                        
+                                    /**  0716 忠毅  輸入非英數字,規定要顯示: 限輸入英數字  **/
+                                    if(/^[a-zA-Z0-9- ]*$/.test(obj.val) == false) {
+                                        //alert('string contains non english characters');
+                                        msg = '限輸入英數字';
+                                    }
+                                    /**  0716 忠毅  長度不符,規定要顯示: 輸入長度不符  **/                                   
+                                    else if(obj.val.length<10)
+                                        msg = '輸入長度不符';
+                                    
+                                    else 
+                                        msg = msg + '驗證錯誤';
+                                
+                                
+                                }
+                                else {
+                                /** --end 0629  忠毅 register的錯誤訊息是: 身分證字號驗證錯誤  **/
+                                
+                                    if(val.indexOf('*') != -1) {
+                                        msg = msg + '勿輸入遮掩字元，請重新輸入';
+                                    }
+                                    else {
+                                        msg = msg + '格式錯誤';
+                                    }
+                                }
+                                
+                            }
+                        }
+                        
                         
 
                         var validObjParent = validObj.parents('div.right:first');
@@ -1024,12 +1051,12 @@ var GardenUtils = {
             // 確認隱碼
             function checkHiddenCode(conf){
 
-                //console.log('checkHiddenCode conf:', conf);
+                console.log('checkHiddenCode conf:', conf);
 
                 if( conf.hasHiddenCode && conf.src === conf.target ){
                     return true;
                 } else {
-					if(conf.src.indexOf('*') != -1) return false
+                    if(conf.src.indexOf('*') != -1) return false
                     else return conf.checkFun(conf.checkFunParam);
                 }
             }
@@ -1287,7 +1314,7 @@ var GardenUtils = {
             // 檢核外國人統一證號(AA12345675)
             // 第一碼：縣市別代碼；第二碼：性別；第三～九碼：流水號；第十碼：檢核碼
             function isValidFrgnID(s) {
-			
+            
                 s = s.toUpperCase();
                 if (!s.match(/^[A-Z]{1}[A-D]{1}[0-9]{8}$/)) return false;
 
@@ -1461,164 +1488,164 @@ var GardenUtils = {
             $.each(obj.name,function(i,name){
                 var input = $('input[name="'+name+'"][type="text"]');
 
-				console.debug(name + ':' + input.length);
+                console.debug(name + ':' + input.length);
                 input.on('blur',function(){
                     var val = input.val();
-					console.debug('val = ' + val);
+                    console.debug('val = ' + val);
                     input.val(GardenUtils.valid.removeSpace(val));
                 });
             });
         },
-		inputConvertFullWidth : function(obj) {
-			//var obj = {
+        inputConvertFullWidth : function(obj) {
+            //var obj = {
             //    name : ['name','id']
             //};
-			
-			
-			$.each(obj.name,function(i,name){
+            
+            
+            $.each(obj.name,function(i,name){
                 var input = $('input[name="'+name+'"][type="text"]');
 
-				console.debug(name + ':' + input.length);
+                console.debug(name + ':' + input.length);
                 input.on('blur',function(){
                     var val = input.val();
-					console.debug('val = ' + val);
-					
-					var after = '';
-				    for(i=0; i<val.length; i++) {
-				     if(val.charCodeAt(i)  >= 33 && val.charCodeAt(i) <= 270) {
-				      after += String.fromCharCode(val.charCodeAt(i) + 65248);
-				     } else if(val.charCodeAt(i) == 32) {
-				      after += String.fromCharCode(12288);
-				     }else {
-					  after += val.substring(i,i+1);
-					 }
-				    }
-					
+                    console.debug('val = ' + val);
+                    
+                    var after = '';
+                    for(i=0; i<val.length; i++) {
+                     if(val.charCodeAt(i)  >= 33 && val.charCodeAt(i) <= 270) {
+                      after += String.fromCharCode(val.charCodeAt(i) + 65248);
+                     } else if(val.charCodeAt(i) == 32) {
+                      after += String.fromCharCode(12288);
+                     }else {
+                      after += val.substring(i,i+1);
+                     }
+                    }
+                    
                     input.val(after);
                 });
             });
-			
-		},		
-		inputFocusBlurEventHandler : function(obj){
-		
-			console.debug(obj);
-		
-			/*
-			var obj = {
-				inputs : [
-								{
-									inputName : 'inputName1', //輸入框name
-									trimSpace : true, //是否離開輸入框過濾空白
-									convertFullWidth : true, //是否離開輸入框後半形轉全形
-									focusClearVal : true //是否點擊時清空值，離開後若沒改過則還原
-								},
-								{
-									inputName : 'inputName1',
-									trimSpace : true,
-									convertFullWidth : true,
-									focusClearVal : true
-								}
-						]
-			};
-			*/
-			
-			$.each(obj.inputs,function(i,obj){
-			
-				obj = $.extend({
-	                trimSpace: false,
-	                convertFullWidth: false,
-	                focusClearVal: false
-	            }, obj);
-			
-				console.debug(obj);
-			
-				var name = obj.inputName;
-				var trimSpace = obj.trimSpace;
-				var convertFullWidth = obj.convertFullWidth;
-				var focusClearVal = obj.focusClearVal;
-				
-				var input = $('input[name="'+name+'"][type="text"]');
+            
+        },      
+        inputFocusBlurEventHandler : function(obj){
+        
+            console.debug(obj);
+        
+            /*
+            var obj = {
+                inputs : [
+                                {
+                                    inputName : 'inputName1', //輸入框name
+                                    trimSpace : true, //是否離開輸入框過濾空白
+                                    convertFullWidth : true, //是否離開輸入框後半形轉全形
+                                    focusClearVal : true //是否點擊時清空值，離開後若沒改過則還原
+                                },
+                                {
+                                    inputName : 'inputName1',
+                                    trimSpace : true,
+                                    convertFullWidth : true,
+                                    focusClearVal : true
+                                }
+                        ]
+            };
+            */
+            
+            $.each(obj.inputs,function(i,obj){
+            
+                obj = $.extend({
+                    trimSpace: false,
+                    convertFullWidth: false,
+                    focusClearVal: false
+                }, obj);
+            
+                console.debug(obj);
+            
+                var name = obj.inputName;
+                var trimSpace = obj.trimSpace;
+                var convertFullWidth = obj.convertFullWidth;
+                var focusClearVal = obj.focusClearVal;
+                
+                var input = $('input[name="'+name+'"][type="text"]');
 
-				//去掉disabled
-				if(!input.is(':disabled')) {
-				
-					console.debug(name + ':' + input.length);
+                //去掉disabled
+                if(!input.is(':disabled')) {
+                
+                    console.debug(name + ':' + input.length);
 
-					
-					//如果有需要點擊空白，離開後判斷是否有修改過，就要綁onFocus事件
-					if(focusClearVal) {
-						input.on('focus',function(){
-							var val = input.val();
-							console.debug('val = ' + val);
-							
-							//先把值存下來
-							input.attr('original',val);
-							
-							//清空值
-							input.val('');
-						});
-					}
+                    
+                    //如果有需要點擊空白，離開後判斷是否有修改過，就要綁onFocus事件
+                    if(focusClearVal) {
+                        input.on('focus',function(){
+                            var val = input.val();
+                            console.debug('val = ' + val);
+                            
+                            //先把值存下來
+                            input.attr('original',val);
+                            
+                            //清空值
+                            input.val('');
+                        });
+                    }
 
-	                input.on('blur',function(){
-	                    var val = input.val();
-						console.debug('val = ' + val);
-						
-						//如果有需要點擊空白，離開後判斷是否有修改過，就要綁onFocus事件
-						var valIsChange = false;
-						if(focusClearVal) {
-							var original = input.attr('original');
-							//如果空白，就帶回原本的值
-							if(val == '') {
-								val = original;
-							}
-							else {
-								valIsChange = true;
-							}
-						}
-						
-						if(valIsChange) {
-							//去掉空白
-							if(trimSpace) {
-								val = GardenUtils.valid.removeSpace(val);
-							}
-							
-							//半形轉全形
-							if(convertFullWidth) {
-								var after = '';
-							    for(i=0; i<val.length; i++) {
-							     if(val.charCodeAt(i)  >= 33 && val.charCodeAt(i) <= 270) {
-							      after += String.fromCharCode(val.charCodeAt(i) + 65248);
-							     } else if(val.charCodeAt(i) == 32) {
-							      after += String.fromCharCode(12288);
-							     }else {
-								  after += val.substring(i,i+1);
-								 }
-							    }
-								
-								val = after;
-							}
-						}
-						
-	                    input.val(val);
-	                });
-				}
-			});
-		},
-		convertThousandComma : function(number) {
-		
-		
-			console.debug('convertThousandComma number = ' + number);
-		
-			var num = number.toString();
-			 var pattern = /(-?\d+)(\d{3})/;
-			  
-			 while(pattern.test(num))
-			 {
-			  num = num.replace(pattern, "$1,$2");
-			  
-			 }
-			 return num;
-		}
+                    input.on('blur',function(){
+                        var val = input.val();
+                        console.debug('val = ' + val);
+                        
+                        //如果有需要點擊空白，離開後判斷是否有修改過，就要綁onFocus事件
+                        var valIsChange = false;
+                        if(focusClearVal) {
+                            var original = input.attr('original');
+                            //如果空白，就帶回原本的值
+                            if(val == '') {
+                                val = original;
+                            }
+                            else {
+                                valIsChange = true;
+                            }
+                        }
+                        
+                        if(valIsChange) {
+                            //去掉空白
+                            if(trimSpace) {
+                                val = GardenUtils.valid.removeSpace(val);
+                            }
+                            
+                            //半形轉全形
+                            if(convertFullWidth) {
+                                var after = '';
+                                for(i=0; i<val.length; i++) {
+                                 if(val.charCodeAt(i)  >= 33 && val.charCodeAt(i) <= 270) {
+                                  after += String.fromCharCode(val.charCodeAt(i) + 65248);
+                                 } else if(val.charCodeAt(i) == 32) {
+                                  after += String.fromCharCode(12288);
+                                 }else {
+                                  after += val.substring(i,i+1);
+                                 }
+                                }
+                                
+                                val = after;
+                            }
+                        }
+                        
+                        input.val(val);
+                    });
+                }
+            });
+        },
+        convertThousandComma : function(number) {
+        
+        
+            console.debug('convertThousandComma number = ' + number);
+        
+            var num = number.toString();
+             var pattern = /(-?\d+)(\d{3})/;
+              
+             while(pattern.test(num))
+             {
+              num = num.replace(pattern, "$1,$2");
+              
+             }
+             return num;
+        }
     },
     display: {
 
@@ -1631,6 +1658,8 @@ var GardenUtils = {
                 showCallBackFn : function(){popupView},
                 isShowSubmit : true,
                 isShowClose : true,
+         closeText : true,
+         submitText: true
                 styleCSS:''
             };
              **/
@@ -1640,16 +1669,26 @@ var GardenUtils = {
                 obj.isShowClose = true;
             }
             
+            var closeText = '確定';
+            if(obj.closeText !== undefined || obj.closeText !== false){  //如果沒有給obj.closeText 的值, 按鈕的文字就叫"確定", 否則叫"取消"
+                closeText = '取消';
+            }
+            
+            var submitText = '確認';
+            if(obj.submitText !== undefined || obj.submitText !== false){  //如果沒有給obj.submitText 的值, 按鈕的文字就叫"確認", 否則叫"確定"
+                submitText = '確定';
+            }
+            
             if(obj.styleCSS == undefined) {
                 obj.styleCSS = '';
             }
 
-            var submitButton = obj.isShowSubmit ? '<button type="button" class="btn btn-primary">確認</button>' : '';
-            var closeButton = obj.isShowClose ? '<button type="button" class="btn btn-default" data-dismiss="modal">確定</button>' : '';
+            var submitButton = obj.isShowSubmit ? '<button type="button" class="btn btn-primary">'+submitText+'</button>' : '';
+            var closeButton = obj.isShowClose ? '<button type="button" class="btn btn-default" data-dismiss="modal">'+closeText+'</button>' : '';
 
             var popupView = $('<div class="modal fade" id="_popup"><div class="modal-dialog" style="'+obj.styleCSS+'"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title">'+obj.title+'</h4></div><div class="modal-body">'+obj.content+'</div><div class="modal-footer">'+closeButton+submitButton+'</div></div></div></div>').appendTo($('body'));
             
-			popupView.on('hidden.bs.modal', function (e) {
+            popupView.on('hidden.bs.modal', function (e) {
                 console.debug('====close modal=====');
                 popupView.remove();
 
@@ -1664,8 +1703,8 @@ var GardenUtils = {
                     obj.showCallBackFn.apply(window,[popupView]);
                 }
             });
-			
-			popupView.modal('toggle');
+            
+            popupView.modal('toggle');
             popupView.find('.modal-dialog').css('z-index',9999);
             
         },

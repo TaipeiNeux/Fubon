@@ -10,6 +10,7 @@
 
     <div class="headerArea">
         <%@ include file="include/headerArea.jsp" %>
+		
     </div>
 <form id="mainForm">					
  <input type="hidden" class="loginMsg" name="loginMsg" value="" />

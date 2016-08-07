@@ -4,7 +4,9 @@
 
         <div class="processMap">
             <input type="hidden" name="idSelected" value="" />
+			<input type="hidden" name="people" value="" />
             <input type="hidden" name="dateSelected" value="" />
+            <input type="hidden" name="dateTemp" value="" />
             <input type="hidden" name="timeSelected" value="" />
             <input type="hidden" name="btnId" value="" />
 

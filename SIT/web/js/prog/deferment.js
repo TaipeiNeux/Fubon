@@ -198,6 +198,29 @@ function deferment_1_valid() {
                             msg: '不得早於系統日五年'
                         });
                     }
+                    
+                    //如果選擇的是"提早畢業",「預定畢業日期」不得晚於會員歷史資料最近一次貸款紀錄之應畢業日期
+                    if(eliIndex_hidden.val() == '7'){
+                        var lastGraduationDate = $('[name="lastGraduationDateHidden"]').val();    
+                        
+                        if(lastGraduationDate.length == 5){
+                            //上次畢業日期格式只有年月共五碼
+                            //所以以下個月的1日比較  ex:上次10706 就以1070701比較 
+                            var graduation_year = parseInt(lastGraduationDate.substr(0,3)) + 1911;   
+                            var graduation_month = parseInt(lastGraduationDate.substr(3,2)) + 1; 
+                            var lastDate = new Date( graduation_year + '/' + graduation_month );
+
+                            //輸入的日期大於等於上次日期就表示晚於上次填寫之應畢業日期
+                            if(input - lastDate > (-86400000)){   //一天86400000毫秒
+                                customizeValidResult.push({
+                                    obj: $('[name="selectYear"]'),
+                                    msg: '不得晚於上次填寫之應畢業日期'
+                                });
+                            }
+                            
+                        }
+                        
+                    }
                 }
             }
         });
@@ -463,6 +486,7 @@ function deferment_1(content) {
     var seMonth = content.selectMonth;
     var seDay = content.selectDay;
     var eligibilityText0 = content.eligibilityText0; //步驟0選擇的原因
+    var lastGraduationDate = content.lastGraduationDate; //步驟0選擇的原因
     //var radioInput = $('#reasonSelector');
     var reasonSelector = $('#reasonSelector'); //下拉式選單
     var selectDate = $('#selectDate'); //日期選項
@@ -473,16 +497,19 @@ function deferment_1(content) {
     selectDay = $('[name="selectDay"]');
     ReasonDate = $('[name="ReasonDate"]');
     var eliIndexSelector = $('[name="eliIndex"]'); //紀錄下拉式選單中選取的值是哪一個
+    var lastGraduationDateHidden = $('[name="lastGraduationDateHidden"]'); //紀錄下拉式選單中選取的值是哪一個
     var jsonEligibility = modal.getEligibilityStatus();
     console.debug(jsonEligibility);
     var eligibilityArr = jsonEligibility.eligibility;
-
     var eligibilityArray = [];
 
     //限制輸入的長度
     selectYear.attr('maxLength', '3');
     selectMonth.attr('maxLength', '2');
     selectDay.attr('maxLength', '2');
+    
+    //將之前填寫的畢業日期塞入hidden
+    lastGraduationDateHidden.val(lastGraduationDate);
 
     //長選項
     eligibilityArray.push('<option value="">請選擇</option>');
@@ -585,7 +612,7 @@ function deferment_1(content) {
 
 //上傳證明文件須依上步驟學生所選定的申請原因，連動帶出以下學生要上傳的證明文件名稱
 function deferment_2(content) {
-    showUploadFiles(content, 'Y','2');
+    showUploadFiles(content, 'Y', '2');
     uploadEvent();
 }
 
@@ -792,28 +819,31 @@ function uploadEvent(input) {
         console.debug(inputTitle);
         console.debug(fileSize);
         console.debug(selected_file_name.substr(-3, 3));
-
+        
         var selectedFileArr = selected_file_name.split("\\");
         var thisFileName = selectedFileArr.pop();
-
         var fileType = selected_file_name.substr(-3, 3);
+        
+        
 
+        //先檢查上傳文件格式
         fileType = fileType.toLowerCase();
-        //alert(fileType);
-
         if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
             $('#documentType').show();
             $('#documentLength').hide();
             $('.ajax-loader').hide();
-        } else {
+        } 
+        else {
             $('#documentType').hide();
             $('.ajax-loader').hide();
 			
+            //再檢查字數
             if (thisFileName.length > 24) {
                 $('#documentLength').show();
                 $('#documentType').hide();
                 $('.ajax-loader').hide();
             }
+            
             // not click cancel
             else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
                 $('#documentType').hide();

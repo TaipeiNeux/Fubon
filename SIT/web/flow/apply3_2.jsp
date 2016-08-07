@@ -9,6 +9,8 @@
            <input type="hidden" name="loanPrice" value="0" />
            <input type="hidden" name="loanAmt" value="" />
            <input type="hidden" name="stageSelectValue" value="" />
+           <input type="hidden" name="whiteListHidden" value="" />
+           
             <h3 class="snopy appmoney">申貸金額</h3>
             <div class="zoe2">請選擇申貸金額計算方式<div class="error-msg" id="errorTip" style="display:none">請勾選計算方式</div></div>
             <div class="baka firstTitle">

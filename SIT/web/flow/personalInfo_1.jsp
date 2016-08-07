@@ -12,6 +12,7 @@
 			<input type="hidden" name="birthday_month" value=""/>
 			<input type="hidden" name="birthday_day" value=""/>
 			<input type="hidden" name="birthday_match" value=""/>
+			<input type="hidden" name="birthday_fullMatch" value=""/>
 			<input type="hidden" name="d_phone" value=""/>
 			<input type="hidden" name="t_phone" value=""/>
 			<input type="hidden" name="email_hidden" value=""/>
@@ -26,7 +27,7 @@
             <div class="sandy twoDiv">
                 <p>姓名</p>
 				<input type="text" class="input_m" name="joyName" id="joyName" maxlength="20">
-       
+				<div class="error-msg"/>
             </div>
            <div class="sandy threeDiv" id="birth_tmp_1" style='display:none;'>
                 <p>生日</p>

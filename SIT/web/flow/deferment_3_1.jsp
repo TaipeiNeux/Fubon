@@ -31,6 +31,7 @@
               <div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
             <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
 			<div class="error-msg" id="documentSize" style="display:none">上傳檔案大小合計限10MB</div>
+            <div class="error-msg" id="documentNumber" style="display:none">上傳檔案個數限10個</div>
         <table class="mqua">
             <thead>
                 <tr>

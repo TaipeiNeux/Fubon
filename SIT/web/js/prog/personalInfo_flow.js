@@ -136,6 +136,7 @@ function personalInfo_1(content) {
     var teleAddress_hidden = $('[name="teleAddress_hidden"]');
     var birthday_hidden = $('[name="birthday"]');
 	var birthday_match = $('[name="birthday_match"]');
+	var birthday_fullMatch = $('[name="birthday_fullMatch"]');
 	var isRecord_hidden = $('[name="isRecord_hidden"]');
     
 	var addressObj = {
@@ -215,6 +216,7 @@ function personalInfo_1(content) {
     var b_day = content.b_day;
 	
 	birthday_hidden.val( b_year + '/'+ b_month + '/' +b_day );
+	birthday_fullMatch.val( b_year + '/'+ b_month + '/' +b_day );
 	birthday_match.val(b_day);
 	
 	//有撥貸紀錄的要轉字串
@@ -950,7 +952,7 @@ function personalInfo_1_valid() {
                 group: 'birth',
             },{
                 name: 'email',
-                msg: 'Email'
+                msg: 'Email，如有疑問，請洽客戶服務專線02-8751-6665按5'
             }, {
                 name: 'DomicileArea',
                 msg: '戶籍電話',
@@ -969,7 +971,7 @@ function personalInfo_1_valid() {
                 group: 'tel'
             }, {
                 name: 'cellPhone',
-                msg: '行動電話'
+                msg: '行動電話，如有疑問，請洽客戶服務專線02-8751-6665按5'
             }, {
                 name: 'address',
                 msg: '通訊地址',
@@ -1020,7 +1022,10 @@ function personalInfo_1_valid() {
         showAllErr: false,
         formId: ["mainForm"],
         validEmpty: validEmptyArray,
-        validNumber: [{
+        validNumber: [/*{
+		        name: 'joyName',
+		        msg: '姓名'
+		    }, */{
                 name: 'birth_year',
                 msg: '生日',
 				allowEmpty: false,
@@ -1076,7 +1081,7 @@ function personalInfo_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="email_hidden"]').val()
         }],
-        /*validDate: [{
+        validDate: [{
             name: ['birth_year', 'birth_month', 'birth_day'],
             msg: '生日',
             //val: $('[name="' + family + 'birthday0' + '"]').val() + '/' + $('[name="' + family + 'birthday2' + '"]').val() + '/' + $('[name="' + family + 'birthday4' + '"]').val(),
@@ -1085,14 +1090,20 @@ function personalInfo_1_valid() {
             allowEmpty: false,
             group: 'birth',
 			hasHiddenCode: true,
-			hiddenTarget: $('input[name="birthday_match"]').val()
-        }],*/
+			hiddenTarget: $('input[name="birthday_fullMatch"]').val()
+        }],
         validMobile: [{
             name: 'cellPhone',
             msg: '行動電話',
             hasHiddenCode: true,
             hiddenTarget: $('input[name="mobile_hidden"]').val()
         }],
+        /*validChinese: [{
+            name: 'joyName',
+            msg: '姓名',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="name"]').val()
+        }],*/
         errorDel: [],
         customizeFun: function(customizeValidResult) {
 			//檢查全部的地址字數是否為40個字以內
@@ -1130,7 +1141,7 @@ function personalInfo_1_valid() {
                     group: 'domicilePhone'
                 });
             } 
-            /*else {
+            else {
                 if (domicileAreaVal.length + domicilePhoneVal.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="DomicileArea"]'),
@@ -1138,11 +1149,13 @@ function personalInfo_1_valid() {
                         group: 'domicilePhone'
                     });
                 }
-            }*/
+            }
 			var year = parseInt($('[name="birth_year"]').val());
 			var month = parseInt($('[name="birth_month"]').val());
 			var day = $('[name="birth_day"]').val();
-			if(day.indexOf('*') == -1){
+			var now = new Date();
+			var now_year = now.getFullYear() - 1911;
+			/*if(day.indexOf('*') == -1){
 				 day = parseInt($('[name="birth_day"]').val());
 				 if (day > 31 || day < 1) {
 		            customizeValidResult.push({
@@ -1150,7 +1163,7 @@ function personalInfo_1_valid() {
 		                msg: '生日格式錯誤'
 		            });		            
 				}
-			}
+			}*/
 
             if (year.length < 2) {
                 customizeValidResult.push({
@@ -1158,13 +1171,22 @@ function personalInfo_1_valid() {
                     msg: '生日格式錯誤'
                 });
             }
+			else{
+				var yearInt = parseInt(year);
+				if(now_year < yearInt){
+					customizeValidResult.push({
+	                    obj: $('[name="birth_year"]'),
+	                    msg: '生日格式錯誤'
+	                });
+				}
+			}
 			
-			if (month > 12 || month < 1) {
+			/*if (month > 12 || month < 1) {
                 customizeValidResult.push({
                     obj: $('[name="birth_year"]'),
                     msg: '生日格式錯誤'
                 });
-            }
+            }*/
 			
 
             var marryStatus = $('[name="marryStatus"]').val();
@@ -1183,7 +1205,7 @@ function personalInfo_1_valid() {
                     group: 'tel'
                 });
             } 
-            /*else {
+            else {
                 if (areaTelephone.length + telephone.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="areaTelephone"]'),
@@ -1191,7 +1213,7 @@ function personalInfo_1_valid() {
                         group: 'tel'
                     });
                 }
-            }*/
+            }
 
         }
     });

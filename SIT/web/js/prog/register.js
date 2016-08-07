@@ -171,7 +171,6 @@ function register4(content) {
 /** Register Valid **/
 
 function register1_valid() {
-
     /** 確認勾選同意事項 **/
     var checkBoxEle = $('input[name="purchaser"]');
     //console.log('register1_valid', checkBoxEle.prop('checked'));
@@ -308,32 +307,40 @@ function register2_valid() {
                     msg: '姓名長度過長'
                 });
             }
+            
+            var year = parseInt($('[name="birthday_y"]').val())+1911;
+            var month = $('[name="birthday_m"]').val();
+            var day = $('[name="birthday_d"]').val();
 
-            var birth = new Date(parseInt($('[name="birthday_y"]').val())+1911, $('[name="birthday_m"]').val(), $('[name="birthday_d"]').val());
+            var birth = new Date(year +'/'+ month +'/'+ day);
             var today = new Date();
             var b_birthNow = birth - today;
 
             if( b_birthNow > 0 ){
-
+                customizeValidResult.push({
+                    obj: $('[name="birthday_y"]'),
+                    msg: '生日格式錯誤'
+                });
+                
                 /** --start  0629 若已有生日錯誤出現,則不要在顯示   **/
-                var birth_check = 0;
+                /**var birth_check = 0;
                 $('.error-msg').each(function(){
 
                     var str1 = "生日格式";
                     var str2 = $(this).text();
+                    alert(str2);
                     var s_num = str1.indexOf(str2);
-                 //   alert(str2);
                     if ( s_num >= 0)
                         birth_check++;
+                    alert(birth_check);
                 });
 
-                if( birth_check == 0 ){
-                    
+                if( birth_check == 0 ){                  
                     customizeValidResult.push({
                         obj: $('[name="birthday_y"]'),
                         msg: '生日格式錯誤'
                     });
-                }   
+                }**/   
                 /** --end  0629 若已有生日錯誤出現,則不要在顯示   **/
             }
 

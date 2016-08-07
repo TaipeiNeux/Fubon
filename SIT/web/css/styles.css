@@ -484,7 +484,7 @@ table {
 @font-face {
     font-family: 'FontAwesome';
     src: url("../fonts/fontawesome-webfont.eot?");
-    src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff?") format("woff"), url("../fonts/fontawesome-webfont.ttf") format("truetype"), url("../fonts/fontawesome-webfont.svg?#fontawesomeregular") format("svg");
+    src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?") format("woff2"), url("../fonts/fontawesome-webfont.woff?") format("woff"), url("../fonts/fontawesome-webfont.ttf") format("truetype"), url("../fonts/fontawesome-webfont.svg?#fontawesomeregular") format("svg");
     font-weight: normal;
     font-style: normal;
 }
@@ -5064,8 +5064,8 @@ body.personalinfo_1 .wrapper .twoDiv .right_name .input_s {
 
 .mobileMenu_left_area > ul > li:nth-child(3):before {
     background-image: url(../img/nn_5.png);
-    width: 23px;
-    height: 27px;
+    width: 25px;
+    height: 25px;
 }
 
 .mobileMenu_left_area > ul > li:nth-child(4):before {
@@ -17240,16 +17240,12 @@ body.apply_map .fc-today {
     background: #0E89CB;
 }
 */
-
-
-/*
 body.apply_map .greyGrey,
 .fc-sat,
 .fc-sun {
     color: #DEDEDE;
     background-color: #F0F0F0;
 }
-*/
 .fc-past {
     background-color: #F0F0F0;
 }
@@ -17331,9 +17327,11 @@ body.personalInfo .processBox {
 .path_home {
     text-decoration: underline;
 }
+/*
 body.register_1 .toggleBtn a.green {
     max-width: 90px;
 }
+*/
 .may .inputArea span {
     top: 8px;
 }
@@ -18224,7 +18222,7 @@ body.myloan span.blu {
         margin-left: 0;
     }
     body.personalinfo_0 .joy .left {
-        width: 100px;
+        width: 95px;
     }
     body.personalinfo_0 .joy .right {
         width: 66%;
@@ -18238,7 +18236,9 @@ body.myloan span.blu {
         font-size: 15px;
     }
     body.personalinfo_2_step1 .joy .left {
-        width: 100px;
+        width: 95px;
+        text-align: right;
+        padding-right: 10px;
     }
     body.personalinfo_2_step1 .joy .right {
         width: 67%;
@@ -18251,10 +18251,10 @@ body.myloan span.blu {
         font-size: 15px;
     }
     body.personalInfo_3 .myData .joy .left {
-        width: 100px;
+        width: 95px;
     }
     body.personalinfo_3 .joy .right {
-        width: 67%;
+        width: 66%;
     }
     body.personalinfo_3 .joy .left p {
         font-weight: bold;
@@ -18290,7 +18290,7 @@ body.myloan span.blu {
         font-weight: bold;
     }
     body.personalinfo_3 .nina {
-        width: 50%;
+        width: inherit;
     }
 }
 
@@ -19327,7 +19327,7 @@ body.changePwd_2_step2 .stepArea {
         width: 80%;
     }
     body.apply_2 .mather .sspy {
-        width: 80%;
+        width: 60%;
     }
     body.apply_2 .mather .sspy > .oneLine {
         width: 100%;
@@ -19415,10 +19415,10 @@ body.changePwd_2_step2 .stepArea {
         height: 26px;
     }
     body.apply_2 .sspyMid {
-        width: 60%;
+        width: 50%;
     }
     body.apply_2 .onenigh {
-        width: 84px;
+        /*width: 70px;*/
         left: -10px;
     }
     body.apply_2 .oneHigh {
@@ -19608,7 +19608,7 @@ body.personalinfo_2_step2 div.processBox {
         height: 47px;
     }
     body.apply_2 .thirdparty:before {
-        top: 0;
+        top: 11;
         left: 6px;
     }
     body.apply_2 .famyInner {
@@ -19653,7 +19653,7 @@ body.personalinfo_2_step2 div.processBox {
 /* 陳拓0606 */
 @media (max-width:769px) {
     body.register_1 .toggleBtn a.green {
-        width: 20%;
+        width: 25%;
     }
     body#body.register_2 .processInner {
         padding: 10px 5%;
@@ -21440,7 +21440,9 @@ body.apply .processTab ul:before {
     }
     /* !!! 小板 */
     body.personalinfo_2_step1 .dan .ubt {
-        margin: 10px 0 0;
+        margin-top: 0;
+        padding-top: 10px;
+        background: #f8fafc;
     }
     body.personalinfo_2_step1 .dan p.ubt:before {
         display: inline-block;
@@ -21596,7 +21598,7 @@ body.deferment .path ul li:nth-child(2) a:after {
 /*0626 by Wade 首頁主視覺  for 5s*/
 @media (max-width:321px) {
     body.index .bannerLeft {
-        min-height: 200px;
+        min-height: 230px;
     }
 }
 
@@ -21738,9 +21740,11 @@ body.apply_00 .modal-dialog .modal-content .modal-body p {
     .personalinfo_3 .nike:before {
         left: 0;
     }
+/*
     .minMap {
         height: 100%;
     }
+*/
 }
 @media (min-width:769px) {
     .personalinfo_2_step1 .may .bgfff {
@@ -22927,6 +22931,78 @@ body#body.apply_map label#timeLabel6 {
     }
 }
 
+<<<<<<< HEAD
+/* mentis 4498 */
+@media (max-width:769px) {
+    .apply_2 .sp label {
+        color: #000;
+    }
+}
+
+/* mantis 4450 by Wade */
+
+@media (max-width:769px) { 
+    body.apply_map .branchMap {
+        width: 100%;
+    }
+    body.sub .regionArea .regionPlace .regionText p {
+        width: 100%;
+    }
+    body.sub .minMap {
+        height: auto;
+    }
+    body.sub .regionArea .regionPlace .regionText {
+        width: 100%;
+    }
+    body.sub .mapArea {
+        width: 90%;
+    }
+    body.sub .regionArea {
+        width: 90%;
+        margin: 0 auto;
+    }
+}    
+
+/* google_map */
+
+/*@media (max-width:769px) {  
+    body.sub .subApplication .baelArea {
+        position: absolute;
+        width: 100%;
+    }
+    body.sub .minMap {
+        position: absolute;
+        margin: 0;
+        width: 100%;
+        padding: 10px;
+    }
+    body.sub .mapArea {
+        max-height: inherit;
+        width: 100%;
+    }
+    body.sub .changeHeight1 {
+        min-height: initial;
+    }
+    body.sub .subApplication {
+        padding: 0;
+    }
+    body.sub .changeHeight2 {
+        min-height: initial;    
+    }
+    body.sub .changeHeight3 {
+        min-height: initial;
+    }
+    body.sub .regionArea .region {
+        border-radius: 10px 10px 0 0;
+    }
+    body.sub ul.regionPlace {
+        border-radius: 0 0 10px 10px;
+    }
+    body.sub ul.regionPlace li.branchLi:last-child {
+        border-radius: 0 0 10px 10px;
+    } 
+}*/
+=======
 /* 0803 陳拓 */
 
 @media (max-width:769px) {
@@ -22951,6 +23027,7 @@ body#body.apply_map label#timeLabel6 {
 body.apply_1_step1 .threeDiv .right_year {
     width: 250px;
 }
+>>>>>>> 23ed9b61cc91e7a7f8d6f1e7068ed8a5ee64f2d9
 
 /* 結構大魔王 by fernando */
 
@@ -23106,3 +23183,44 @@ body.apply_1_step1 .threeDiv .right_year {
     }
 }
 
+<<<<<<< HEAD
+/* mentis 4502 */
+
+@media (min-width:769px) {
+    body.apply_3_step1 .wrapper .input_m.nameLength {
+        max-width: 260px;
+    }
+}
+
+@media (max-width:769px) { 
+    body.apply_2 .famyInner {
+        margin-top: 10px;
+    }
+}
+
+@media (min-width:769px) {
+    .apply_6_step1 .raby {
+        margin-left: 0;
+    }
+    
+    body.apply_6_step1 .joy .left {
+        width: 75px;
+    }
+}
+
+@media (min-width:769px) {
+    .apply_map div.modal-body ul {
+        padding-left: 0;
+    }
+    
+    .apply_map div.modal-body ul li {
+        margin-left: 0;
+        text-align: left;
+    }
+    
+    .apply_map .modal-body ul li:first-child {
+        text-indent: 0;
+    }
+}
+=======
+>>>>>>> 23ed9b61cc91e7a7f8d6f1e7068ed8a5ee64f2d9

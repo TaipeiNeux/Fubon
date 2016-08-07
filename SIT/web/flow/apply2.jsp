@@ -79,9 +79,8 @@
                                 </div>
                             </div>
                         </div>
-                </span>
-<div class="error-msg" id="tip0" style="display:none">請選擇是否擔任連帶保證人</div> 
-
+                   </span>
+<div class="error-msg" id="tip0" style="display:none">請勾選是否擔任連帶保證人</div> 
                 </h3>
                 <div class="famy">
                     <div class="famyInner">
@@ -246,7 +245,7 @@
                         </div>
                    </div>
                     </span>
-                    <div class="error-msg" id="tip1" style="display:none">請選擇是否擔任連帶保證人</div> 
+                    <div class="error-msg" id="tip1" style="display:none">請勾選是否擔任連帶保證人</div> 
 
             </h3>
                 <div class="famy">
@@ -410,7 +409,7 @@
                         </div>
                     </span>
                     </span>
-                    <div class="error-msg" id="tip2" style="display:none">請選擇是否擔任連帶保證人</div> 
+                    <div class="error-msg" id="tip2" style="display:none">請勾選是否擔任連帶保證人</div> 
 
             </h3>
                 <div class="sodif sodleft">
@@ -601,7 +600,7 @@
                        ) </div>
                      </span>
                     </span>
-                    <div class="error-msg" id="tip3" style="display:none">請選擇是否擔任連帶保證人</div> 
+                    <div class="error-msg" id="tip3" style="display:none">請勾選是否擔任連帶保證人</div> 
 
             </h3>
                 <div class="famy">

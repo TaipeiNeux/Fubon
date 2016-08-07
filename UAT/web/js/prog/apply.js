@@ -1,4 +1,4 @@
-$(document).ready(function() {
+﻿$(document).ready(function() {
 
     //定義每個步驟要對應的javascript function
     var stepEventHandler = {
@@ -5204,6 +5204,7 @@ function apply4_2(content) {
         var dateSelected = $('[name="dateSelected"]');
         var idSelected = $('[name="idSelected"]');
         var timeSelected = $('[name="timeSelected"]');
+        var people = $('[name="people"]');
 
         var citySelectpicked = $('#citySelectpicker button').attr('title');
         var zipSelectpicked = $('#zipSelectpicker button').attr('title');
@@ -5281,8 +5282,8 @@ function apply4_2(content) {
                     var siblings = thisBtn.siblings();
 
                     branchId = thisText.find('.branchId').attr('name'); //分行代碼
-console.debug('branchId:'+branchId);
-$('[name="idSelected"]').val(branchId);
+		    console.debug('branchId:'+branchId);
+		    $('[name="idSelected"]').val(branchId);
                     //改分行資訊的底色
                     $('.regionText').removeClass('active');
                     thisText.addClass('active');
@@ -5347,8 +5348,8 @@ $('[name="idSelected"]').val(branchId);
                     var calFull;
 
                     //抓這個分行的每時段最多預約人數
-branchId = idSelected.val();
-console.debug('branchId:'+branchId);
+		     branchId = idSelected.val();
+		     console.debug('branchId:'+branchId);
 
                     jsonBranch = modal.getFullString(month, branchId);
                     //jsonBranch = modal.getFullString(dateAppo, branchId); //傳日期及分行資訊去撈上可預約人物
@@ -5357,7 +5358,7 @@ console.debug('branchId:'+branchId);
                     var noBusiness = jsonBranch.noBusiness;
                     var maxPeople = jsonBranch.maxPeople; //每個時段最多的人數
                     var booking = jsonBranch.booking; //已被預約
-
+		    people.val(maxPeople);
                     hasBookingObj = [];
                     $.each(booking, function(index, bookingObj) {
                         var date = bookingObj.date; //已被預約日期
@@ -5568,13 +5569,10 @@ console.debug('branchId:'+branchId);
 
                                 //長底下的時段
                                 $.each(valueTimeArray, function(i, value) {
-console.debug(valueTimeArray);
-console.debug(branchId);
-console.debug(maxPeople);
-console.debug(data_date);
-                                    var timeMaxPeople = maxPeople; //先預設帶入這間分行每個時段的預設人數
-                                    var timeCount = maxPeople; //該時段尚可預約人數
-                                    var timeTotal = maxPeople; //該時段可預約總人數
+				
+                                    var timeMaxPeople = $('[name="people"]').val(); //先預設帶入這間分行每個時段的預設人數
+                                    var timeCount = $('[name="people"]').val(); //該時段尚可預約人數
+                                    var timeTotal = $('[name="people"]').val(); //該時段可預約總人數
                                     var timeIsFull = 'N';
                                     var appoRadio = $('#time' + (i + 1));
                                     var appoLabel = $('#timeLabel' + (i + 1));
@@ -5589,11 +5587,13 @@ console.debug(data_date);
 
                                     //如果當日當時段已有預約資料，就覆蓋預設值
                                     if (bookingObj != undefined) {
+			                console.debug(bookingObj);
                                         var times = bookingObj.times; //預約時段
+				        console.debug(times);
                                         $.each(times, function(timeIndex, timeObj) {
-console.debug(times);
                                             timeTotal = timeObj.total; //該時段可預約總人數
                                             var timeCount2 = timeObj.count; //已被預約人數
+				            console.debug(timeObj);
                                             var timeStr = timeObj.time; //時段
                                             var timeIsFull2 = timeObj.isFull; //該時段是否已滿
 
@@ -5601,13 +5601,21 @@ console.debug(times);
                                                 timeCount = timeTotal - timeCount2;
                                                 timeIsFull = timeIsFull2;
                                             }
+					    //放入該時段目前還可預約人數
+                                    	    $('#number' + (i + 1)).text(timeCount);
+
                                         });
                                     }
+				    else{
+					//放入該時段目前還可預約人數
+					var max = people.val();
+                                    	$('#number' + (i + 1)).text(max);
+					console.debug('max:'+max);
 
-                                    //放入該時段目前還可預約人數
-                                    $('#number' + (i + 1)).text(timeCount);
-console.debug(timeCount);
-console.debug(branchId);
+				    }
+
+                                    
+
 
                                     //if over time set full
                                     if(isToday) {
