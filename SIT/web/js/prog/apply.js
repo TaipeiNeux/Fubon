@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     //定義每個步驟要對應的javascript function
     var stepEventHandler = {
         "apply1_1": apply1_1,
