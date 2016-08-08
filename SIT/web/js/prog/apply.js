@@ -4640,11 +4640,16 @@ function apply3_2(content) {
 
     $('#loansSum, #accordingToBillPlusOthers .input_f, #accordingToBill_publicExpense').on('blur', function() {
         var $thisValue = $(this);
-        var isInt = isInteger($thisValue.val());
+        var thisValue = $thisValue.val();
+		thisValue = thisValue.trim();	
+        var isInt = isInteger(thisValue);
 
         if (isNaN(parseInt($thisValue.val())) || (!isInt)) {
             $thisValue.val('');
         }
+		else{
+			$thisValue.val(thisValue);
+		}
 
         var firstLoans = [{
             'money': loans.val()
@@ -4672,11 +4677,16 @@ function apply3_2(content) {
 
     $('#freedomPlusOthers .input_f, #freedom_publicExpense').on('blur', function() {
         var $thisValue = $(this);
-        var isInt = isInteger($thisValue.val());
+        var thisValue = $thisValue.val();
+		thisValue = thisValue.trim();	
+        var isInt = isInteger(thisValue);
 
         if (isNaN(parseInt($thisValue.val())) || (!isInt)) {
             $thisValue.val('');
         }
+		else{
+			$thisValue.val(thisValue);
+		}
 
         var secondLoans = [{
             'money': freedom_credit.val()
