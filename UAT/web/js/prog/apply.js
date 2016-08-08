@@ -5576,7 +5576,7 @@ function apply4_2(content) {
 
                                 //idSelected.val(branchId);
 
-                                showPeople(valueTimeArray, bookingObj, isToday);
+                                showPeople(valueTimeArray, bookingObj, isToday, myDate);
 
 
                                 var dateAppoY = dateAppo.substr(0, 4);
@@ -5653,7 +5653,9 @@ console.debug(reservateBranch);
                             dDateTemp.text(pickYY + '/' + pickMM + '/' + pickDD);
 							
                             $('td [data-date="' + datePick + '"]').addClass('active');
-                            showPeople(valueTimeArray, bookingObject, isTodayTrueOrFalse);
+                            
+							var myDay = new Date();
+                            showPeople(valueTimeArray, bookingObject, isTodayTrueOrFalse, myDay);
                             appointment.show();
                         }
 
@@ -5792,7 +5794,7 @@ console.debug(reservateBranch);
 
 }
 
-function showPeople(valueTimeArray, bookingObj, isToday) {
+function showPeople(valueTimeArray, bookingObj, isToday, myDate) {
     //長底下的時段
     console.debug(valueTimeArray);
     console.debug(bookingObj);
