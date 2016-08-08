@@ -1,6 +1,11 @@
 package com.fubon.flow.impl;
 
 import com.fubon.flow.ILogic;
+import com.fubon.utils.ProjUtils;
+import com.neux.garden.authorization.LoginUserBean;
+import com.neux.garden.dbmgr.DaoFactory;
+import com.neux.utility.orm.bean.DataObject;
+import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -19,6 +24,8 @@ public class ApplyOnline4 implements ILogic{
 
         String cityId = "",zipCode = "",btnId = "",date = "",time = "";
 
+        String idSelected = "";//選擇的分行代碼
+
         if(draftData != null) {
             Element root = draftData.getRootElement();
             if(root.element("cityId") != null) cityId = root.element("cityId").getText();
@@ -26,6 +33,25 @@ public class ApplyOnline4 implements ILogic{
             if(root.element("btnId") != null) btnId = root.element("btnId").getText();
             if(root.element("dateSelected") != null) date = root.element("dateSelected").getText();
             if(root.element("timeSelected") != null) time = root.element("timeSelected").getText();
+
+            if(root.element("idSelected") != null) idSelected = root.element("idSelected").getText();
+        }
+
+        LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
+        String userId = loginUserBean.getUserId();
+
+        IDao dao = DaoFactory.getDefaultDao();
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
+
+        String historyIsOnlineDocument = "N";
+        if("Y".equalsIgnoreCase(isRecord)) {
+
+            //帶入上次撥款紀錄
+            DataObject aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId, dao);
+
+            //判斷上次如果是線上續貸案件，但現在進到對保分行，要popup出壓黑
+            historyIsOnlineDocument = "1".equalsIgnoreCase(aplyMemberData.getValue("AplyCaseType")) ? "Y" : "N";
+
         }
 
         JSONObject area = new JSONObject();
@@ -37,8 +63,11 @@ public class ApplyOnline4 implements ILogic{
         content.put("date",date);
         content.put("time",time);
 
+        //加入上次的案件是否為線上續貸
+        content.put("historyIsOnlineDocument",historyIsOnlineDocument);
 
-
+        //加入草稿選擇的分行代碼
+        content.put("idSelected",idSelected);
     }
 
     @Override

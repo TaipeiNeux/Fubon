@@ -13,6 +13,7 @@ import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -165,6 +166,8 @@ public class PersonalInfo1 implements ILogic {
         //轉成中文
         domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
         domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
+
+        name = StringEscapeUtils.unescapeHtml4(name);
 
         //隱碼
         MarkBean markBean = new MarkBean();
