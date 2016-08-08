@@ -517,3 +517,11 @@ function buildMainFlow(flow) {
     /** --end  忠毅 tab_arrow   **/
 
 }
+
+//Backspace轉到特定位置
+$(document).keydown(function(ev) {   //抓按鍵事件的keycode
+    if (ev.which == 8){     //keycode代表backspace 
+        ev.preventDefault();
+        window.location = 'index.jsp';
+    }
+});
