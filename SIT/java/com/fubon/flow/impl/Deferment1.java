@@ -5,6 +5,7 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.ProjUtils;
 import com.neux.garden.log.GardenLog;
+import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.QueryConfig;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
@@ -36,6 +37,8 @@ public class Deferment1 implements ILogic {
         String eligibilityText0 = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute("eligibilityText0"));
         String selectYear = "",selectMonth = "",selectDay = "";
 
+        String lastGraduationDate = "";//會員歷史資料最近一次貸款紀錄之應畢業日期
+
         //如果有強制回來，清除文件跟資料
         if("deferment1".equalsIgnoreCase(queryStringInfo.getParam("step"))) {
             //清除文件
@@ -62,6 +65,22 @@ public class Deferment1 implements ILogic {
         }
 
 
+        if("Y".equalsIgnoreCase(isRecord)) {
+            //帶入上次的預計畢業日期
+            DataObject aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+
+            if(aplyMemberData != null) {
+                lastGraduationDate = aplyMemberData.getValue("FinishDT");
+                if(StringUtils.isNotEmpty(lastGraduationDate) && lastGraduationDate.length() == 6) {
+                    String year = lastGraduationDate.substring(0,4);
+                    String month = lastGraduationDate.substring(4,6);
+
+                    lastGraduationDate = (Integer.parseInt(year) - 1911) + "" + month;
+                }
+            }
+
+        }
+
         content.put("isRecord",isRecord);
         content.put("eligibilityText",eligibilityText);
         content.put("eligibilityIndex",eligibilityIndex);
@@ -69,6 +88,7 @@ public class Deferment1 implements ILogic {
         content.put("selectYear",selectYear);
         content.put("selectMonth",selectMonth);
         content.put("selectDay",selectDay);
+        content.put("lastGraduationDate",lastGraduationDate);
     }
 
     @Override

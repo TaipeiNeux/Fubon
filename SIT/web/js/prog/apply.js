@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     //定義每個步驟要對應的javascript function
     var stepEventHandler = {
         "apply1_1": apply1_1,
@@ -15,8 +14,6 @@ $(document).ready(function() {
         "apply_document_6": apply6_1,
         "apply_online_6": apply6_2
     };
-	
-	alert('test');
 
     var nextEventHanlder = {
         "apply1_1": apply1_1_valid,
@@ -5064,7 +5061,6 @@ function apply4_2(content) {
     var datePicked = content.date;
     var timePicked = content.time;
 
-	
     var getDefaultAddress = modal.getDefaultAddress();
     console.debug(getDefaultAddress);
     addressMap(mapId, [getDefaultAddress.branchName], [getDefaultAddress.addr], [getDefaultAddress.tel]);
@@ -5178,7 +5174,7 @@ function apply4_2(content) {
                     var thisName = thisText.find('.branchName').text(); //分行名稱
                     var thisAddr = thisText.find('.branchAddr').text(); //分行地址
                     var thisTel = thisText.find('.branchTel').text(); //分行電話
-                    var thisBranch = thisText.find('.branchId').attr('name'); //分行電話
+                    var thisBranch = thisText.find('.branchId').attr('name'); //分行ID
                     var pin = $('.branchName');
                     var thisPin = thisBtn.parent().find('.branchName');
                     var btnId = $('[name="btnId"]');
@@ -5515,7 +5511,7 @@ function apply4_2(content) {
 
 
 
-                    var reservateBranch = (content.lastBranchId == undefined) ? '400' : content.lastBranchId;
+                    var reservateBranch = content.idSelected;
                     if (reservateBranch == thisBranch) {
                         //日期
                         if (datePicked != '') {

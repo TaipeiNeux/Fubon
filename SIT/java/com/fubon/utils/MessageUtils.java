@@ -45,6 +45,7 @@ public class MessageUtils {
     public final static String resetPwdTitle = "台北富邦銀行就學貸款服務專區變更代碼/密碼交易「{result}」通知";
     public final static String defermentTitle = "台北富邦銀行就學貸款服務專區延後/提前還款交易「{result}」通知";
     public final static String loginFailTitle = "台北富邦銀行就學貸款服務專區立即登入交易「失敗｣通知";
+    public final static String bookingRemindTitle = "台北富邦銀行就學貸款服務專區申請就學貸款分行對保提醒通知";
 
 
     //內文

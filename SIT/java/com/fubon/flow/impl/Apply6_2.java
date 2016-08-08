@@ -73,11 +73,13 @@ public class Apply6_2 implements ILogic {
 //        Element apply52Root = apply52Doc.getRootElement();
 
         //寄發email需要使用到的
+        String aplyNo = "";
         String email = "";
         String branchName = "",branchAddr = "",branchTel="";
-        String bookingTime = "";
+        String bookingDate = "",bookingTime = "";
         String objListHidden = "";
         String signBill = "";
+        boolean isApply = false;
 
         //申請完了，要直接寫入AplyMemberTuitionLoanDtl
         String result = "申請成功-對保分行";
@@ -88,7 +90,7 @@ public class Apply6_2 implements ILogic {
             DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo , dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,apply4Root,"2");
 
             boolean isAdult = ProjUtils.isAdult(aplyMemberDataObject.getValue("AplyBirthday"));
-            String aplyNo = aplyMemberDataObject.getValue("AplyNo");
+            aplyNo = aplyMemberDataObject.getValue("AplyNo");
 
             signBill = "Y".equals(aplyMemberDataObject.getValue("signBill")) ? "Y" : "N";
 
@@ -172,7 +174,8 @@ public class Apply6_2 implements ILogic {
                 timeArea = "PM";
             }
 
-            bookingTime = DateUtil.convert14ToDate("yyyy/MM/dd",DateUtil.convertDateTo14(dateSelected)) + " " + timeArea + timeSelected.substring(0,2) + ":" + timeSelected.substring(2) + "-" + StringUtils.leftPad(Integer.parseInt(timeSelected.substring(0,2)) + 1 + "",2,"0") + ":00";
+            bookingDate = DateUtil.convert14ToDate("yyyy/MM/dd",DateUtil.convertDateTo14(dateSelected));
+            bookingTime = timeArea + timeSelected.substring(0,2) + ":" + timeSelected.substring(2) + "-" + StringUtils.leftPad(Integer.parseInt(timeSelected.substring(0,2)) + 1 + "",2,"0") + ":00";
 
             content.put("branchName",branch.getValue("BranchName")); // 分行名稱
             content.put("addr",branchAddr);          // 分行地址
@@ -206,6 +209,8 @@ public class Apply6_2 implements ILogic {
 
             content.put("errorCode",errorCode);
             content.put("errorMsg",errorMsg);
+
+            isApply = true;
 
             //清除我要申請的草稿資料
 //            FlowUtils.resetDraftData(userId,"apply",dao);
@@ -257,11 +262,37 @@ public class Apply6_2 implements ILogic {
 
         objListHidden = doc.select("ul").html();
 
+        String date = DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString());
+
+        if(isApply){
+            try{
+                //儲存預約清單
+                DataObject AplyMemberTuitionLoanDtl_Booking = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Booking");
+                if(AplyMemberTuitionLoanDtl_Booking != null) {
+                    AplyMemberTuitionLoanDtl_Booking.setValue("AplyNo", aplyNo);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_Date", date);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_Bank", branchName + "("+branchAddr+")" + branchTel);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_BKGDate", bookingDate);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_BKGTime", bookingTime);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_Document", objListHidden);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_SignBill", "Y".equals(signBill) ? "並連同保證人" : "");
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailReceiver", email);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailSendFlag","N");
+                    dao.insert(AplyMemberTuitionLoanDtl_Booking);
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+                GardenLog.log(GardenLog.DEBUG, "Apply6_2 Exception=>" + e.getMessage());
+            }
+        }
+
         MailBean mailBean = new MailBean("bank");
         mailBean.setReceiver(email);
         mailBean.setTitle(mailTitle);
+        mailBean.addResultParam("date", date);
         mailBean.addResultParam("bank", branchName + "("+branchAddr+")" + branchTel);
-        mailBean.addResultParam("time",bookingTime);
+        mailBean.addResultParam("time", bookingDate + " " + bookingTime);
         mailBean.addResultParam("result",(StringUtils.isEmpty(errorCode) ? "<img src=\"{host}/img/na-14.png\">您已成功送出申請資料" : "<img src=\"{host}/img/na-16.png\">送出申請資料失敗("+errorCode+")"+errorMsg));
         mailBean.addResultParam("document",objListHidden);
         mailBean.addResultParam("signBill","Y".equals(signBill) ? "並連同保證人" : "");

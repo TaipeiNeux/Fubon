@@ -104,6 +104,34 @@ public class ProjUtils {
         return null;
     }
 
+    public static String get032154Col(Document doc,String cod) throws Exception {
+        Element root = doc.getRootElement();
+        List<Element> TxRepeatList = root.elements("TxRepeat");
+        if(TxRepeatList != null) {
+            for(Element repeat : TxRepeatList) {
+                if(cod.equalsIgnoreCase(repeat.element("COD").getText())) {
+                    return repeat.element("TEL_NO").getText().trim();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static String get032154Col8001Tel(Document doc) throws Exception {
+        Element root = doc.getRootElement();
+        List<Element> TxRepeatList = root.elements("TxRepeat");
+        if(TxRepeatList != null) {
+            for(Element repeat : TxRepeatList) {
+                if("8001".equalsIgnoreCase(repeat.element("COD").getText())) {
+                    return repeat.element("TEL_NO").getText().trim();
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static String get032154Col3802Tel(Document doc) throws Exception {
         Element root = doc.getRootElement();
         List<Element> TxRepeatList = root.elements("TxRepeat");
@@ -860,6 +888,30 @@ public class ProjUtils {
             monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
             dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
 
+            //2016-08-04 added by titan 因為行動電話要改成一律問390，不然舊戶的電話改了後就收不到後續的OTP
+            String mobile = "";
+            String isRecord = ProjUtils.isPayHistory(id,dao) ? "Y" : "N";
+
+            //2016-08-04 added by titan 舊戶要抓390手機
+            String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+            if(!"sit".equalsIgnoreCase(env) && "Y".equalsIgnoreCase(isRecord)) {
+                RQBean rqBean54 = new RQBean();
+                rqBean54.setTxId("EB032154");
+                rqBean54.addRqParam("CUST_NO",id);
+
+                RSBean rsBean54 = WebServiceAgent.callWebService(rqBean54);
+
+                if(rsBean54.isSuccess()) {
+                    Document doc = DocumentHelper.parseText(rsBean54.getTxnString());
+
+                    mobile = ProjUtils.get032154Col(doc,"8001");
+
+                }
+            }
+            else {
+                mobile = apply1_1Root.element("cellPhone").getText();
+            }
+
             aplyMemberDataObject.setValue("AplyWay", "IB"); // 申請途徑
             aplyMemberDataObject.setValue("AplyDate",  applyDate); // 申請日期
             aplyMemberDataObject.setValue("AplyTime",  applyTime); // 申請時間
@@ -874,7 +926,7 @@ public class ProjUtils {
             aplyMemberDataObject.setValue("AplyTelNo2_1", apply1_1Root.element("areaTelephone").getText());                           // 申請人通訊電話區碼
             aplyMemberDataObject.setValue("AplyTelNo2_2", apply1_1Root.element("telephone").getText());                           // 申請人通訊電話
             aplyMemberDataObject.setValue("AplyTelNo2_3", "");                           // 申請人通訊電話分機號碼
-            aplyMemberDataObject.setValue("AplyCellPhoneNo", apply1_1Root.element("cellPhone").getText());                     // 申請人手機號碼
+            aplyMemberDataObject.setValue("AplyCellPhoneNo", mobile);                     // 申請人手機號碼
             aplyMemberDataObject.setValue("AplyEmail", apply1_1Root.element("email").getText());                                 // 申請人 E-Mail
             aplyMemberDataObject.setValue("AplyZip1", aplyZip1);  // 申請人戶籍地址郵遞區號
             aplyMemberDataObject.setValue("Aply1Village", aply1Village);  // 申請人戶籍地址-村里
@@ -2352,6 +2404,35 @@ public class ProjUtils {
             // will not happend
         }
         return invalidChar.toString();
+    }
+
+    public static String queryApplyWhiteRecord(String userId,IDao dao) throws Exception {
+
+        //查白名單,1:對保分行，2:線上續貸
+        DataObject applyWhiteRecord = DaoFactory.getDefaultDataObject("apply_white_record");
+        if(applyWhiteRecord != null) {
+            applyWhiteRecord.setValue("AplyIdNo",userId);
+            if(dao.querySingle(applyWhiteRecord,null)) {
+
+                //判斷今日是否落在起迄日
+                String today = DateUtil.getTodayString();
+                String startDate = applyWhiteRecord.getValue("StartDate");
+                String endDate = applyWhiteRecord.getValue("EndDate");
+
+                startDate = DateUtil.convertDateTo14(startDate);
+                endDate = DateUtil.convertDateTo14(endDate);
+
+                if(Long.parseLong(startDate) <= Long.parseLong(today) && Long.parseLong(endDate) >= Long.parseLong(today)) {
+                    String type = applyWhiteRecord.getValue("Type");
+                    if("1".equalsIgnoreCase(type)) return "online_branch";
+                    else if("2".equalsIgnoreCase(type)) return "document_branch";
+                }
+
+
+            }
+        }
+
+        return null;
     }
 
     public static String getAddr() {
