@@ -10,7 +10,6 @@
 
     <div class="headerArea">
         <%@ include file="include/headerArea.jsp" %>
-		
     </div>
 <form id="mainForm">					
  <input type="hidden" class="loginMsg" name="loginMsg" value="" />
@@ -77,6 +76,7 @@
                                     註 : 1.政府補貼利息請參考「利息補貼｣說明
                                     <br> 2.加碼後之利率由教育部公告之；加碼數由教育部適時檢討調整
 									<br> 3.為嘉惠就學貸款學生，本行自99年9月1日起主動吸收開始還款後由學生負擔之就學貸款利率年息0.06%
+                                    <br> 4.為減輕學生負擔，本行自105年8月1日起進一步調降就學貸款利率0.2%至0.4%。未屆還款期的申貸學生，降息0.2%至0.4%；已屆還款的學生，降息0.4%。
                                 </div>
                             </div>
                         </div>
