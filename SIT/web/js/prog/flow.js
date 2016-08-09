@@ -242,18 +242,51 @@ function buildFlow(Content, stepEventHandler, nextEventHanlder, nextEventErrorHa
                             window.location = 'apply.jsp?step=apply_document_5_1';        
                         }
                         else{
-                            isBack = confirm('是否確認「取消」本交易? 提醒您，當您確認「取消」本交易後，本行將不保留您本次所填寫的資料；若您僅是要修改部分資料，請點選頁面上的「修改」按鈕，即可更新資料。');
+                            //isBack = confirm('是否確認「取消」本交易? 提醒您，當您確認「取消」本交易後，本行將不保留您本次所填寫的資料；若您僅是要修改部分資料，請點選頁面上的「修改」按鈕，即可更新資料。');
                             
-                            /*isBack = false;
                             GardenUtils.display.popup({
                                 title: '',
                                 content: '<p>是否確認「取消」本交易?</p><br><p>提醒您，當您確認「取消」本交易後，本行將不保留您本次所填寫的資料；若您僅是要修改部分資料，請點選頁面上的「修改」按鈕，即可更新資料。</p>',
                                 closeCallBackFn: function() {},
-                                isShowSubmit: false
-                            });*/
+                                isShowSubmit: true,
+								isShowClose : true,
+								closeText : true,
+								submitText : true
+                            });
+							
+							$('button.btn-default').off('click').on('click', function(){
+								isBack = true;
+								if (isBack) {
+			                        if (Content.flow.viewURL == "flow/apply5_1_1.jsp" || Content.flow.viewURL == "flow/apply5_2.jsp") {
+			                            modal.resetApply();
+			                            window.location = 'apply.jsp?step=apply1_1';
+			                        }
+
+									//clear UI
+									$('div.processBox').hide();
+									
+			                        //move top
+			                        $('body').scrollTop(0);
+
+			                        g_ajax({
+			                            url: 'flow?action=prev&flowId=' + Content.flow.flowId + '&step=' + stepId,
+			                            data: {},
+			                            callback: function(content) {
+
+			                                //開始長流程畫面
+			                                buildFlow(content, stepEventHandler, nextEventHanlder, nextEventErrorHanlder, getInputEventHandler);
+			                            }
+			                        });
+			                    }
+							});
+							
+							$('button.btn-primary').off('click').on('click', function(){
+								$('button.close').trigger('click');
+							});
                         }
                         
-                    } else {
+                    } 
+					else {
                         isBack = true;
                     }
 
