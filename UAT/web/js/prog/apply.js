@@ -5626,9 +5626,8 @@ function apply4_2(content) {
 
 
 
-                    var reservateBranch = (content.idSelected == undefined)?'':content.idSelected;
-console.debug('==============================');
-console.debug(reservateBranch);
+                    var reservateBranch = content.idSelected;
+
                     if (reservateBranch == thisBranch) {
                         //日期
                         if (datePicked != '') {
