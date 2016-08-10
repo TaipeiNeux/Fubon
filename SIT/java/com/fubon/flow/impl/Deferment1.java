@@ -39,30 +39,30 @@ public class Deferment1 implements ILogic {
 
         String lastGraduationDate = "";//會員歷史資料最近一次貸款紀錄之應畢業日期
 
-        //如果有強制回來，清除文件跟資料
-        if("deferment1".equalsIgnoreCase(queryStringInfo.getParam("step"))) {
-            //清除文件
-            SQLCommand update = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
-            update.addParamValue(userId);
-            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+//        //如果有強制回來，清除文件跟資料
+//        if("deferment1".equalsIgnoreCase(queryStringInfo.getParam("step"))) {
+//            //清除文件
+//            SQLCommand update = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
+//            update.addParamValue(userId);
+//            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+//
+//            eligibilityText = "";
+//            eligibilityIndex = "";
+//            eligibilityText0 = "";
+//        }
+//        else {
+        //當有草稿但沒有強制退到第一步，才要撈輸入的資料
+        if(draftData != null) {
+            Element root = draftData.getRootElement();
+            if(root.element("selectYear") != null) selectYear = root.element("selectYear").getText();
+            if(root.element("selectMonth") != null) selectMonth = root.element("selectMonth").getText();
+            if(root.element("selectDay") != null) selectDay = root.element("selectDay").getText();
 
-            eligibilityText = "";
-            eligibilityIndex = "";
-            eligibilityText0 = "";
+            if(root.element("eliIndex") != null) eligibilityIndex = root.element("eliIndex").getText();
+            if(root.element("eligibilityText") != null) eligibilityText = root.element("eligibilityText").getText();
+
         }
-        else {
-            //當有草稿但沒有強制退到第一步，才要撈輸入的資料
-            if(draftData != null) {
-                Element root = draftData.getRootElement();
-                if(root.element("selectYear") != null) selectYear = root.element("selectYear").getText();
-                if(root.element("selectMonth") != null) selectMonth = root.element("selectMonth").getText();
-                if(root.element("selectDay") != null) selectDay = root.element("selectDay").getText();
-
-                if(root.element("eliIndex") != null) eligibilityIndex = root.element("eliIndex").getText();
-                if(root.element("eligibilityText") != null) eligibilityText = root.element("eligibilityText").getText();
-
-            }
-        }
+//        }
 
 
         if("Y".equalsIgnoreCase(isRecord)) {

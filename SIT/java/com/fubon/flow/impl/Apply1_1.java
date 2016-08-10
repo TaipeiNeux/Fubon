@@ -23,6 +23,7 @@ import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -57,16 +58,18 @@ public class Apply1_1 extends MarkFlow {
         String yearBirthday = "",monthBirthday = "",dayBirthday = "";
         String birthday = "";//確認頁會用到
 
-//        //如果有強制回來，清除文件跟資料
-//        if("apply1_1".equalsIgnoreCase(queryStringInfo.getParam("step"))) {
-//            //清除文件
-//            SQLCommand update = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
-//            update.addParamValue(userId);
-//            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
-//        }
-
         //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
         DataObject aplyMemberData = null;
+
+        //有撥款紀錄要額外帶入：身分證字號、姓名、生日、行動電話、Email、婚姻狀況、戶籍電話、通訊電話、戶籍地址、通訊地址
+        if("Y".equalsIgnoreCase(isRecord)) {
+            //帶入撥款紀錄
+            aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        }
+        else {
+            //先取得「本學期」申請資料
+//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        }
 
         //若有草稿就裝到content，沒有才走邏輯判斷
         if(draftData != null) {
@@ -142,15 +145,7 @@ public class Apply1_1 extends MarkFlow {
             teleAddressZipCode = zipCode2;
             teleAddressAddress = loginUserBean.getCustomizeValue("AplyAddr2");
 
-            //有撥款紀錄要額外帶入：身分證字號、姓名、生日、行動電話、Email、婚姻狀況、戶籍電話、通訊電話、戶籍地址、通訊地址
-            if("Y".equalsIgnoreCase(isRecord)) {
-                //帶入撥款紀錄
-                aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-            }
-            else {
-                //先取得「本學期」申請資料
-//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-            }
+
 
             if(aplyMemberData != null) {
                 id = aplyMemberData.getValue("AplyIdNo");
@@ -200,8 +195,6 @@ public class Apply1_1 extends MarkFlow {
             yearBirthday = birthday.substring(0,3);
             monthBirthday = birthday.substring(3,5);
             dayBirthday = birthday.substring(5,7);
-
-
         }
 
         //2016-08-04 added by titan 因為行動電話要改成一律問390，不然舊戶的電話改了後就收不到後續的OTP
@@ -227,6 +220,8 @@ public class Apply1_1 extends MarkFlow {
                 }
             }
         }
+
+        name = StringEscapeUtils.unescapeHtml4(name);
 
         //轉成中文
         domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);

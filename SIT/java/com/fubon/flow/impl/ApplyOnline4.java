@@ -24,6 +24,8 @@ public class ApplyOnline4 implements ILogic{
 
         String cityId = "",zipCode = "",btnId = "",date = "",time = "";
 
+        String idSelected = "";//選擇的分行代碼
+
         if(draftData != null) {
             Element root = draftData.getRootElement();
             if(root.element("cityId") != null) cityId = root.element("cityId").getText();
@@ -31,6 +33,8 @@ public class ApplyOnline4 implements ILogic{
             if(root.element("btnId") != null) btnId = root.element("btnId").getText();
             if(root.element("dateSelected") != null) date = root.element("dateSelected").getText();
             if(root.element("timeSelected") != null) time = root.element("timeSelected").getText();
+
+            if(root.element("idSelected") != null) idSelected = root.element("idSelected").getText();
         }
 
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
@@ -62,6 +66,8 @@ public class ApplyOnline4 implements ILogic{
         //加入上次的案件是否為線上續貸
         content.put("historyIsOnlineDocument",historyIsOnlineDocument);
 
+        //加入草稿選擇的分行代碼
+        content.put("idSelected",idSelected);
     }
 
     @Override

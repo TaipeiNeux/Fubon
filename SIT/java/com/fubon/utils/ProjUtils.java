@@ -2453,9 +2453,12 @@ public class ProjUtils {
 
         docId = new String(Base64.encodeBase64(docId.getBytes("utf-8")),"utf-8");
         return docId;
+
     }
 
     public static String decodingNumber(String docId) throws Exception {
+
+
         docId = new String(Base64.decodeBase64(docId.getBytes("utf-8")),"utf-8");
 
         docId = docId.substring(5,docId.length()-5);
@@ -2463,6 +2466,39 @@ public class ProjUtils {
         docId = Integer.parseInt(docId) + "";
 
         return docId;
+    }
+
+    public static String encodingNumber(String docId,HttpSession session) throws Exception {
+
+        //改成用uuid來取代原本的docId
+        String uuid = UUID.randomUUID().toString();
+        uuid = StringUtils.replace(uuid,"-","");
+
+        session.setAttribute(uuid,docId);
+
+//        docId = StringUtils.leftPad(docId,10,"0");
+//        docId = "!@#$%" + docId + "!@#$%";
+//
+//        docId = new String(Base64.encodeBase64(docId.getBytes("utf-8")),"utf-8");
+//        return docId;
+
+        return uuid;
+    }
+
+    public static String decodingNumber(String uuid,HttpSession session) throws Exception {
+
+
+        String docId = String.valueOf(session.getAttribute(uuid));
+        session.removeAttribute(uuid);
+        return docId;
+
+//        docId = new String(Base64.decodeBase64(docId.getBytes("utf-8")),"utf-8");
+//
+//        docId = docId.substring(5,docId.length()-5);
+//
+//        docId = Integer.parseInt(docId) + "";
+//
+//        return docId;
     }
 }
 

@@ -22,6 +22,7 @@ import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import com.neux.utility.utils.jsp.info.JSPUploadConf;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -333,6 +334,8 @@ public class DataServlet extends HttpServlet {
                     }
 
                 }
+
+                name = StringEscapeUtils.unescapeHtml4(name);
 
                 //裝值到content
                 content.put("notice_text","<h3> 注意事項</h3><ol> <li>不開放線上修改之個人資料，您可透過以下兩種方式辦理：<br> (1)透過客服:可撥打客戶服務專線02-8751-6665按5由專人為您服務<br> (2)透過臨櫃:請您本人攜帶身分證正本及原留印鑑，至本行各<a href='123.html'><u>服務據點</u></a>辦理個人基本資料變更。<br></li> <li> 為符合「金融監督管理委員會指定非公務機關個人資料檔案安全維護辦法」之規定，本行就學貸款服務專區內，涉及<br>個人資料之交易，部分資料將以遮蔽之方式進行保護，若導致您無法確認資料之正確性，請您至本行櫃檯辦理或洽<br>24HR客服中心02-8751-6665按5將有專人竭誠為您服務。 </li></ol>");
@@ -1042,7 +1045,7 @@ public class DataServlet extends HttpServlet {
                     String isFull = "Y";
                     for(String time : timeMap.keySet()) {
                         Integer count = timeMap.get(time);
-                        String timeFull = (total == count.intValue() ? "Y" : "N");
+                        String timeFull = (total <= count.intValue() ? "Y" : "N");
 
                         if("N".equalsIgnoreCase(timeFull)) isFull = "N";
 
