@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <% request.setCharacterEncoding("utf-8"); %>
-
+<form id="mainForm">
 <div class=" antcoco">
   <div class="joy nina">
     <div class="left">
@@ -49,3 +49,4 @@
     </div>
   </div>
 </div>
+</form>

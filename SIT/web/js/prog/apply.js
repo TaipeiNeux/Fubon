@@ -490,6 +490,11 @@ function apply2_valid() {
     var thirdPartyTitle = $('#thirdPartyTitle');
     console.debug(show);
     console.debug(isGuarantor);
+	
+	//若為小網, 則會展開關係人下方的表格, 以免因為沒有展開表格, 使用者會不知道有錯誤訊息
+	if ($(window).width() < 769) {
+		$('.openBtn').trigger('click');
+	}
 
     var family_arr = [],
         validArr = {
@@ -3266,10 +3271,15 @@ function apply2(content) {
             father_form2.hide();
         });
         father_open.on('click', function() {
-            father_close.show();
-            father_open.hide();
-            father_form1.show();
-            father_form2.show();
+			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
+			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
+			var val = $('#dadF:checked').val();
+			if(val == null) {
+				father_close.show();
+				father_open.hide();
+				father_form1.show();
+				father_form2.show();
+			}
         });
         mother_close.on('click', function() {
             mother_close.hide();
@@ -3278,10 +3288,15 @@ function apply2(content) {
             mother_form2.hide();
         });
         mother_open.on('click', function() {
-            mother_close.show();
-            mother_open.hide();
-            mother_form1.show();
-            mother_form2.show();
+			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
+			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
+			var val = $('#momF:checked').val();
+			if(val == null) {
+				mother_close.show();
+				mother_open.hide();
+				mother_form1.show();
+				mother_form2.show();
+			}
         });
         thirdParty_close.on('click', function() {
             thirdParty_close.hide();
@@ -3290,10 +3305,15 @@ function apply2(content) {
             thirdParty_form2.hide();
         });
         thirdParty_open.on('click', function() {
-            thirdParty_close.show();
-            thirdParty_open.hide();
-            thirdParty_form1.show();
-            thirdParty_form2.show();
+			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
+			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
+			var val = $('#otherF:checked').val();
+			if(val == null) {
+				thirdParty_close.show();
+				thirdParty_open.hide();
+				thirdParty_form1.show();
+				thirdParty_form2.show();
+			}
         });
         spouse_close.on('click', function() {
             spouse_close.hide();
@@ -3302,10 +3322,15 @@ function apply2(content) {
             spouse_form2.hide();
         });
         spouse_open.on('click', function() {
-            spouse_close.show();
-            spouse_open.hide();
-            spouse_form1.show();
-            spouse_form2.show();
+			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
+			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
+			var val = $('#spoF:checked').val();
+			if(val == null) {
+				spouse_close.show();
+				spouse_open.hide();
+				spouse_form1.show();
+				spouse_form2.show();
+			}
         });
     } else {
         //$('.sodif').show();
@@ -4846,6 +4871,7 @@ function uploadEvent(input) {
         var tr = inputFile.parents('tr:first');
         var selected_file_name = $(this).val();
         var fileSize = inputFile.context.files[0].size;
+		var inputText = inputFile.parent().text();
 
         var buttonId = inputFile.parent().attr('id');
         var currentIndex = buttonId.substr(-1, 1);
@@ -4859,102 +4885,112 @@ function uploadEvent(input) {
         var thisFileName = selectedFileArr.pop();
 
         var fileType = selected_file_name.substr(-3, 3);
-
-        fileType = fileType.toLowerCase();
-        console.debug(fileType);
-
-        if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
-            $('#documentType').show();
-            $('#documentLength').hide();
-            $('.ajax-loader').hide();
+		
+		//擋10個檔案
+		var fileBtn = $('.file-modify');
+        if (fileBtn.length == 10 && inputText != '修改檔案') {
+            $('#documentNumber').show();
         } else {
-            $('#documentType').hide();
-            $('.ajax-loader').hide();
-            if (thisFileName.length > 24) {
-                $('#documentLength').show();
-                $('#documentType').hide();
-                $('.ajax-loader').hide();
-            }
-            // not click cancel
-            else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
-                $('#documentType').hide();
-                $('#documentLength').hide();
-                //產生一個form物件放在body底下
-                if ($('#uploadForm').length != 0) $('#uploadForm').remove();
+            $('#documentNumber').hide();
 
-                var form = $('<form id="uploadForm" method="post" action="data?action=uploadApplyDocument&docId=' + docId + '" enctype="Multipart/Form-Data" style="display:none;"></form>').prependTo('body');
+			//先檢查上傳文件格式
+			fileType = fileType.toLowerCase();
+			console.debug(fileType);
 
-                //inputFile.clone().appendTo(form);
-                inputFile.appendTo(form);
+			if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
+				$('#documentType').show();
+				$('#documentLength').hide();
+				$('.ajax-loader').hide();
+			} else {
+				$('#documentType').hide();
+				$('.ajax-loader').hide();
+				if (thisFileName.length > 24) {
+					$('#documentLength').show();
+					$('#documentType').hide();
+					$('.ajax-loader').hide();
+				}
+				// not click cancel
+				else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
+					$('#documentType').hide();
+					$('#documentLength').hide();
+					//產生一個form物件放在body底下
+					if ($('#uploadForm').length != 0) $('#uploadForm').remove();
 
+					var form = $('<form id="uploadForm" method="post" action="data?action=uploadApplyDocument&docId=' + docId + '" enctype="Multipart/Form-Data" style="display:none;"></form>').prependTo('body');
 
-                if ($('.ajax-loader').length == 0) {
-                    $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
-                }
-                $('.ajax-loader').show();
-                setTimeout(function() {
-                    GardenUtils.ajax.uploadFile(form, 'data?action=uploadApplyDocument&docId=' + docId, function(response) {
-
-                        console.debug(response);
-                        var sizeArray = '<input type="hidden" class="fileSize_' + inputTitle + '" name="' + inputTitle + '_hidden' + currentIndex + '" value="">';
-                        var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="' + inputTitle + 'Name_hidden' + currentIndex + '" value="">';
-
-                        if (response.isSuccess == 'Y') {
-                            var newFile = response.docId;
-
-                            if (tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多') {
-                                var nextIndex = parseInt(currentIndex) + 1;
-                                if (inputTitle == 'lowIncome' || inputTitle == 'register') {
-
-                                    addNewFile(tr, inputTitle, nextIndex, '上傳更多');
-                                }
-                                $('.processInner').prepend(sizeArray);
-                                $('.processInner').prepend(FilenameExtension);
-                            }
-
-                            inputHidden.val(fileSize);
-                            tr.find('td.file-upload a').text('修改檔案');
-                            tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
-                            tr.find('td.file-en').text(response.src).removeClass('new');
-                            tr.find('td.file-view a').addClass('active');
-                            form.find('input[type="file"]').appendTo(tr.find('td.file-modify a'));
-                            tr.find('td.file-modify').attr('docid', newFile);
-
-                            //塞副檔名到hidden中
-                            var sizeHidden = $('[name="' + inputTitle + '_hidden' + currentIndex + '"]');
-                            var nameHidden = $('[name="' + inputTitle + 'Name_hidden' + currentIndex + '"]');
-                            sizeHidden.val(fileSize);
-                            nameHidden.val(fileType);
-
-                            //                            var idName = tr.find('.file-view a').attr('id');
-                            //                            var nameHidden = $('[name="' + idName + 'Name_hidden"]');
-                            //                            nameHidden.val(fileType);
-
-                            //更新預覽的圖及小網顯示的圖
-
-                            var previewURL = 'data?action=downloadApplyDocument&isPreview=Y&docId=';
-                            var newURL = previewURL + newFile;
-
-                            tr.next('tr').find('iframe').attr("src", newURL);
-                            tr.find('td.file-photo img').attr("src", newURL);
-
-                            $('.ajax-loader').hide();
-
-                        } else {
-                            if (selected_file_name != '') alert('Upload Fail!!');
-                            form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
-
-                            $('.ajax-loader').hide();
-                        }
-
-                        $('.ajax-loader').hide();
-                    });
-                }, 200);
+					//inputFile.clone().appendTo(form);
+					inputFile.appendTo(form);
 
 
+					if ($('.ajax-loader').length == 0) {
+						$('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+					}
+					$('.ajax-loader').show();
+					setTimeout(function() {
+						GardenUtils.ajax.uploadFile(form, 'data?action=uploadApplyDocument&docId=' + docId, function(response) {
 
-            }
-        }
+							console.debug(response);
+							var sizeArray = '<input type="hidden" class="fileSize_' + inputTitle + '" name="' + inputTitle + '_hidden' + currentIndex + '" value="">';
+							var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="' + inputTitle + 'Name_hidden' + currentIndex + '" value="">';
+
+							if (response.isSuccess == 'Y') {
+								var newFile = response.docId;
+
+								if (tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多') {
+									var nextIndex = parseInt(currentIndex) + 1;
+									if (inputTitle == 'lowIncome' || inputTitle == 'register') {
+
+										addNewFile(tr, inputTitle, nextIndex, '上傳更多');
+									}
+									$('.processInner').prepend(sizeArray);
+									$('.processInner').prepend(FilenameExtension);
+								}
+
+								inputHidden.val(fileSize);
+								tr.find('td.file-upload a').text('修改檔案');
+								tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
+								tr.find('td.file-en').text(response.src).removeClass('new');
+								tr.find('td.file-view a').addClass('active');
+								form.find('input[type="file"]').appendTo(tr.find('td.file-modify a'));
+								tr.find('td.file-modify').attr('docid', newFile);
+
+								//塞副檔名到hidden中
+								var sizeHidden = $('[name="' + inputTitle + '_hidden' + currentIndex + '"]');
+								var nameHidden = $('[name="' + inputTitle + 'Name_hidden' + currentIndex + '"]');
+								sizeHidden.val(fileSize);
+								nameHidden.val(fileType);
+
+								//                            var idName = tr.find('.file-view a').attr('id');
+								//                            var nameHidden = $('[name="' + idName + 'Name_hidden"]');
+								//                            nameHidden.val(fileType);
+
+								//更新預覽的圖及小網顯示的圖
+
+								var previewURL = 'data?action=downloadApplyDocument&isPreview=Y&docId=';
+								var newURL = previewURL + newFile;
+
+								tr.next('tr').find('iframe').attr("src", newURL);
+								tr.find('td.file-photo img').attr("src", newURL);
+
+								$('.ajax-loader').hide();
+
+							} else {
+								if (selected_file_name != '') alert('Upload Fail!!');
+								form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
+
+								$('.ajax-loader').hide();
+							}
+
+							$('.ajax-loader').hide();
+						});
+					}, 200);
+
+
+
+				}
+			}
+		
+		}
     });
 }
 
@@ -5421,12 +5457,37 @@ function apply4_2(content) {
 
                             //切換月份時，要把下面時段資訊先拿掉，還有對保時間也拿掉
                             appointment.hide();
-                            $('#bDate').text('');
-                            $('#bTime').text('');
+                            //$('#bDate').text('');
+                            //$('#bTime').text('');
+							
+							if($('[name="dateTemp"]').val() !== ''){					
+								$('td [data-date="' + $('[name="dateTemp"]').val() + '"]').addClass('active'); 
+
+								var aDate = new Date();
+								var nowYear = aDate.getFullYear();
+								var nowMonth = aDate.getMonth();
+								var nowDay = aDate.getDate();
+								
+								var formatDate = $('[name="dateTemp"]').val();
+								var formatDay = new Date(formatDate);
+								var pickedYear = formatDay.getFullYear();
+								var pickedMonth = formatDay.getMonth();
+								var pickedDay = formatDay.getDate();
+								
+								var todayValue = false;
+								if(nowYear == pickedYear && nowMonth == pickedMonth && nowDay == pickedDay){
+									todayValue = true;
+								}
+								
+								var bookingObj = hasBookingObj[formatDate];
+								//var todayEle = $('td[data-date="'+ $('[name="dateTemp"]').val() +'"]');
+								//var todayValue = todayEle.hasClass('fc-holiday');
+								showPeople(valueTimeArray, bookingObj, todayValue, aDate);
+								appointment.show();								
+							}
                         },
                         //這是當點了不是標題的事件
                         dayClick: function(date, jsEvent, view) {
-
                             var myDate = new Date();
 
                             //判斷是否星期六或日
@@ -5456,6 +5517,7 @@ function apply4_2(content) {
                                 activeDate = data_date;
 
                                 //TRUE Clicked date smaller than today
+							
                                 dateAppo = date.format();
 
                                 //取得當日預約物件
@@ -5692,6 +5754,7 @@ function showPeople(valueTimeArray, bookingObj, isToday, myDate) {
     console.debug(valueTimeArray);
     console.debug(bookingObj);
     console.debug(isToday);
+    console.debug(myDate);
     $.each(valueTimeArray, function(i, value) {
 
         var timeMaxPeople = $('[name="people"]').val(); //先預設帶入這間分行每個時段的預設人數
@@ -5737,6 +5800,8 @@ function showPeople(valueTimeArray, bookingObj, isToday, myDate) {
 
         }
 
+		
+		
         //if over time set full
         if (isToday) {
             var nowHour = myDate.getHours();
@@ -5752,6 +5817,8 @@ function showPeople(valueTimeArray, bookingObj, isToday, myDate) {
                 timeIsFull = 'Y';
             }
         }
+		
+		
 
         if (timeIsFull == 'Y') {
 
@@ -6224,7 +6291,8 @@ function showUploadFiles(content, step) {
     var previewURL = 'data?action=downloadApplyDocument&isPreview=Y&docId=';
 
     $.each(fileItem, function(item, docContent) { //跑文件項目
-        console.debug(item);
+        console.debug('--===~~~~////////~~~~===--');
+		console.debug(item);
         console.debug(docContent);
         var itemName = item;
 
@@ -6237,8 +6305,7 @@ function showUploadFiles(content, step) {
         } else if (itemName == 'registration') {
             itemName = 'register';
         }
-
-
+		
         var docLen = docContent.length;
         //alert(itemName);
         //alert(docContent.length);
@@ -6548,11 +6615,11 @@ function apply5_1_2(content) {
 
 }
 
-function resetApply() {
+/*function resetApply() {
     alert('您已超過一次性密碼有效時間，請重新操作。');
 
     //到前一步!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-}
+}*/
 
 function apply5_2(content) {
     console.debug(content);

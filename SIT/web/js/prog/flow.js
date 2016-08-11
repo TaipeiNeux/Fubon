@@ -191,48 +191,12 @@ function buildFlow(Content, stepEventHandler, nextEventHanlder, nextEventErrorHa
             });
 
             var prev = nextBtn.find('.prev');
-            if (!prev.hasClass('noBindingPreEvent')) {
+            if (!prev.hasClass('noBindingPreEvent')) {   //取消
                 prev.off('click').on('click', function(ev) {
                     ev.preventDefault();
 
                     var $this = $(this);
                     var isBack = false;
-
-                    //如果是簡訊驗證步驟, 要clearTimeout倒數的function(countdownid()) by Foi 2016/07/12
-                    var currentObj = [{
-                        jsp: 'personalInfo',
-                        step: '_2_2.jsp',
-                        jump: '1'
-                    }, {
-                        jsp: 'changePwd',
-                        step: '2_2.jsp',
-                        jump: '1'
-                    }, {
-                        jsp: 'forgetPassword',
-                        step: '3_2.jsp',
-                        jump: '1'
-                    }];
-                    var currentViewURL = '';
-                    var jumpViewURL = '';
-
-                    $.each(currentObj, function(index, value) {
-                        currentViewURL = 'flow/' + value.jsp + value.step;
-                        jumpViewURL = value.jsp + '.jsp?step=' + value.jsp + value.jump;
-                        if (Content.flow.viewURL == currentViewURL) {
-                            clearTimeout(countdownid);
-                            if (currentViewURL == 'flow/personalInfo_2_2.jsp') {
-                                jumpViewURL = value.jsp + '_flow.jsp?step=' + value.jsp + value.jump;
-                            }
-                            window.location = jumpViewURL;
-                        }
-                    });
-					
-					var preStepOfDaferment2 = "flow/deferment_2.jsp";
-					if(Content.flow.viewURL == preStepOfDaferment2){
-						modal.resetDefermentSize();
-						window.location = 'deferment.jsp?step=deferment1';
-					}
-
 
                     //只有我要申請才要跳confirm
                     if ($this.hasClass('confirm') && Content.flow.flowId == 'apply') {
@@ -295,6 +259,15 @@ function buildFlow(Content, stepEventHandler, nextEventHanlder, nextEventErrorHa
                             modal.resetApply();
                             window.location = 'apply.jsp?step=apply1_1';
                         }
+                        else if(Content.flow.flowId == "personalInfo" || Content.flow.flowId == "changePwd" || Content.flow.flowId == "deferment" || Content.flow.flowId == "forgetPassword"){
+                            if(Content.flow.flowId == "personalInfo"){
+                                window.location = Content.flow.flowId+'_flow.jsp';
+                            }
+                            else{
+                                window.location = Content.flow.flowId+'.jsp';
+                            }
+                            
+                        }
 
 						//clear UI
 						$('div.processBox').hide();
@@ -315,7 +288,6 @@ function buildFlow(Content, stepEventHandler, nextEventHanlder, nextEventErrorHa
 
                 });
             }
-
 
             nextBtn.find('.next').off('click').on('click', function(ev) {
                 ev.preventDefault();
@@ -551,10 +523,16 @@ function buildMainFlow(flow) {
 
 }
 
+
 //Backspace轉到特定位置
-$(document).keydown(function(ev) {   //抓按鍵事件的keycode
-    if (ev.which == 8){     //keycode代表backspace 
-        ev.preventDefault();
-        window.location = 'index.jsp';
-    }
-});
+document.onkeydown = function(e){ 
+	console.debug(e);
+	if (e.keyCode == 8) { 
+		if(e.target.nodeName == "INPUT"){ 
+			
+		} 
+		else{
+			window.location = 'index.jsp';
+		}
+	}    
+}

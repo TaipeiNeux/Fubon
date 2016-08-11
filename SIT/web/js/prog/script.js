@@ -3,20 +3,8 @@ document.oncontextmenu=function(){
 	return false;
 }
 
-//Backspace轉到特定位置
-/*$(document).keydown(function(ev) {   //抓按鍵事件的keycode
-    if (ev.which == 8){     //keycode代表backspace 
-        ev.preventDefault();
-        alert('backspace');
-    }
-});*/
-
-
 $(document).ready(function() {
     
-    // $(window).width(parent.document.getElementById("frame1").width);
-
-
     console.log($(window).width());
 
     if (inIframe()) {
@@ -837,72 +825,87 @@ function memberLogin() {
     var studentCode = $('[name="studentCode"]').val();
     var studentPassword = $('[name="studentPassword"]').val();
 
-    /*var res = GardenUtils.valid.validForm({
-        type: "alert",
+	//alert($('#mainForm').length);
+	
+    var res = GardenUtils.valid.validForm({
+        type: "show",
+        showAllErr: false,
         formId: ["mainForm"],
         validEmpty: [{
-            name: 'studentId',
-            msg: '身分證字號'
-        }, {
-            name: 'studentCode',
-            msg: '使用者代碼'
-        }, {
-            name: 'studentPassword',
-            msg: '使用者密碼'
-        }],
+		        name: 'studentId',
+		        msg: '身分證字號'
+		    },{
+		        name: 'studentCode',
+		        msg: '使用者代碼'
+		    },{
+		        name: 'studentPassword',
+		        msg: '使用者密碼'
+		    }],
+		validIdentity: [{
+			name: 'studentId',
+			msg: '身分證字號',
+			allowEmpty: false
+		}],
         validNumber: [],
         validDecimal: [],
         validEmail: [],
         validDate: [],
+        validMobile: [],
         errorDel: [],
-        customizeFun: function() {
-        }
-    });*/
-    /* Edit by JiaRu 160604
-    //身分證字號
-    if( studentId == '' || studentId == undefined ){
-        errStr = errStr + '請輸入身分證字號\n';
-    }
-    else{
-        if( checkVal( studentId ) == false ){
-            errStr = errStr + '身分證字號限輸入英數字\n';
-        }
-        else if(studentId.length != 10){
-            errStr = errStr + '身分證字號輸入長度不符\n';
-        }
-    }
-    console.debug(studentCode.length);
+        customizeFun: function(customizeValidResult) {
+			if (checkVal(studentId) == false) {
+				customizeValidResult.push({
+                    obj: $('[name="studentId"]'),
+                    msg: '身分證字號限輸入英數字'
+                });
+			} 
+			else if (studentId.length != 10) {
+				customizeValidResult.push({
+                    obj: $('[name="studentId"]'),
+                    msg: '身分證字號輸入長度不符'
+                });
+			} 
+			else {
+				$('[name="studentId"]').parent().find('.error').text('');
+			}			
+					
+			if (checkVal(studentCode) == false) {
+				customizeValidResult.push({
+                    obj: $('[name="studentCode"]'),
+                    msg: '使用者代碼限輸入英數字'
+                });
+			} else if (studentCode.length < 6) {
+				customizeValidResult.push({
+                    obj: $('[name="studentCode"]'),
+                    msg: '使用者代碼輸入長度不符'
+                });
+			} else {
+				$('[name="studentCode"]').parent().find('.error').text('');
+			}
+			
+			if (checkVal(studentPassword) == false) {
+				customizeValidResult.push({
+                    obj: $('[name="studentPassword"]'),
+                    msg: '使用者密碼限輸入英數字'
+                });
+			} else if (studentPassword.length < 6) {
+				customizeValidResult.push({
+                    obj: $('[name="studentPassword"]'),
+                    msg: '使用者密碼輸入長度不符'
+                });
+			} else {
+				$('[name="studentPassword"]').parent().find('.error').text('');
+			}
+		}
+    });
+
+	
+	//alert(res);
     
-    //使用者代碼
-    if( studentCode == '' || studentCode == undefined ){
-        errStr = errStr + '請輸入使用者代碼\n';
-    }
-    else{
-        if( checkVal( studentCode ) == false ){
-            errStr = errStr + '使用者代碼限輸入英數字\n';
-        }
-        else if(studentCode.length < 6){
-            errStr = errStr + '使用者代碼輸入長度不符\n';
-        }
-    }
-    
-    //使用者密碼
-    if( studentPassword == '' || studentPassword == undefined ){
-        errStr = errStr + '請輸入使用者密碼';
-    }
-    else{
-        if( checkVal( studentPassword ) == false ){
-            errStr = errStr + '使用者密碼限輸入英數字';
-        }
-        else if(studentPassword.length < 6){
-            errStr = errStr + '使用者密碼輸入長度不符';
-        }
-    }
-    */
     // Edit by JiaRu 160604
     //身分證字號
-    if (studentId == '' || studentId == undefined) {
-        errStr = errStr + '請輸入身分證字號\n';
+    /*if (studentId == '' || studentId == undefined) {
+        errStr = errStr + '請輸入身分證字號!!!\n';
         $('[name="studentId"]').parent().find('.error').text('請輸入身分證字號');
     } else {
         if (checkVal(studentId) == false) {
@@ -951,12 +954,14 @@ function memberLogin() {
             errStr = '';
             $('[name="studentPassword"]').parent().find('.error').text('');
         }
-    }
+    }*/
 
-    if (errStr != '') {
+    /*if (errStr != '') {
         //alert(errStr);
         errStr = '';
-    } else {
+    }*/
+
+	if(res) {
         //登入
 
         if ($('.ajax-loader').length == 0) {
@@ -1025,18 +1030,6 @@ function memberLogin() {
         }, 100);
 
     }
-
-
-    /*if (res) {
-
-        var result = modal.login(studentId, studentCode, studentPassword);
-
-        if (result.errorCode == '0') {
-            location.reload();
-        } else {
-            alert(result.errorCode + '\n' + result.errorMsg);
-        }
-    }*/
 }
 
 //檢查是否為英文或數字
@@ -1279,13 +1272,13 @@ function g_countdown(conf) {
         $('.death').html(tmp_time);
 
         if (countdownnumber == 0 && countdownnumber_min == 0) {
+
             $("#" + conf.modal_id).modal('show');
 
-            $('#' + conf.modal_id + ' a.submitBtn').on('click', function() {
+            /*$('#' + conf.modal_id + ' a.submitBtn').on('click', function() {
                 $("#" + conf.modal_id).modal('hide');
-                // alert('haha');
                 location.reload();
-            });
+            });*/
 
             clearTimeout(countdownid);
         } else if (countdownnumber == -1) {

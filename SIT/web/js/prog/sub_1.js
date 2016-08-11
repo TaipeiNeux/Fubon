@@ -82,7 +82,7 @@ $(document).ready(function() {
                 contentArray.push('<li class="application"><a href="#"><span class="maicon">Q' + (j + 1) + '</span><p>' + d.Question + '</p></a><div class="AnserContent"><span class="qaa"></span><span class="ber">A:</span><div class="Anser">' + d.Answer + '</div></div></li>');
             });
 
-            QAListTabArray.push('<li id="qa_1"><a href="#" target="topic_' + i + '">' + qa.TopicDesc + '</a><div class="QAArea_s topic_' + i + '"><div class="QAList qaList-1" style="display: block;"><ul>' + contentArray.join('') + '</ul></div></div></li>');
+            QAListTabArray.push('<li id="TopicNo000000000' + i + '"><a href="#" target="topic_' + i + '">' + qa.TopicDesc + '</a><div class="QAArea_s topic_' + i + '"><div class="QAList qaList-1" style="display: block;"><ul>' + contentArray.join('') + '</ul></div></div></li>');
             QAAreaArray.push('<div class="QAList topic_' + i + '"><ul>' + contentArray.join('') + '</ul></div>');
         });
 
@@ -177,11 +177,14 @@ $(document).ready(function() {
         var search = location.search;
         if (search != undefined && search != '' && search.indexOf('?') != -1) {
             search = search.substr(1);
+			console.debug(search);
         }
 
         var target;
+		var qaID = '';
         $.each(search.split('&'), function(i, param) {
-
+console.debug(i);
+console.debug(param);
             if (param.indexOf('=') != -1) {
                 var paramName = param.split('=')[0];
                 var paramValue = param.split('=')[1];
@@ -190,8 +193,14 @@ $(document).ready(function() {
                     target = parseInt(paramValue);
                 }
             }
+			else if(param.indexOf('TopicNo') != -1){
+				qaID = param;
+			}
 
         });
+		
+		console.debug(target);
+		console.debug(qaID);
 
         var isInt = !isNaN(target);
         var index = 0;
@@ -233,6 +242,10 @@ $(document).ready(function() {
             }
         }
 
+		if(qaID !== '' || qaID !== undefined){
+			//alert($('#'+qaID).length);
+			$('#'+qaID).find('a:first').trigger('click');
+		}
     }
 
     //

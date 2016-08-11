@@ -356,6 +356,7 @@ var GardenUtils = {
                     // verify empty
                     var empty_groupArr = [];
                     $(config.validEmpty).each(function(j, number) {
+						
                         var errName = number.hasOwnProperty('group')? number.group : number.name;
                         if( config.showAllErr || hasErrName.indexOf(errName) == -1 ){
                             var $this = $('#' + n).find('[name="' + number.name + '"]');
@@ -378,6 +379,7 @@ var GardenUtils = {
                                             obj : $this,
                                             val : val
                                         });
+		
                                     } else if(empty_groupArr.indexOf(number.group) == -1) {
                                         hasErrName.push(errName);
                                         empty_groupArr.push(number.group);
@@ -1008,6 +1010,10 @@ var GardenUtils = {
                         
 
                         var validObjParent = validObj.parents('div.right:first');
+					
+						if(validObjParent.length == 0){
+							validObjParent = validObj.parent();
+						}
 
                         var oriMsg = validObjParent.find('.error-msg').text();
                         if(oriMsg != '') msg = ',' + msg;
@@ -1658,8 +1664,8 @@ var GardenUtils = {
                 showCallBackFn : function(){popupView},
                 isShowSubmit : true,
                 isShowClose : true,
-         closeText : true,
-         submitText: true
+				 closeText : true,
+				 submitText: true
                 styleCSS:''
             };
              **/

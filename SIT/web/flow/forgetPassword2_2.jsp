@@ -40,7 +40,7 @@
 	    <div class="modal-body">
 	      <h3>本次交易可輸入交易驗證碼的時間已逾時，請重新操作</h3>
 			
-	        <a href="#" class="pobtn-srb submitBtn">確定</a>
+	        <a href="forgetPassword.jsp?step=forgetPassword3_1" class="pobtn-srb submitBtn">確定</a>
 	    </div>
 	  </div>
 	</div>

@@ -22,7 +22,7 @@
     </div>
 
     <div class="contentArea">
-
+<form id="mainForm">
         <div class="memberArea">
             <section class="bannerArea">
 
@@ -115,7 +115,7 @@
                 </div>
             </div>
         </div>
-
+</form>
     </div>
 
 

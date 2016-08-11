@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
     <% request.setCharacterEncoding( "utf-8"); %>
 	
-	
 	<div class="wrap">
         <h3 class="snopy pen">申請人基本資料</h3>
         <div class="dan" id="applicant">
@@ -652,10 +651,10 @@
             <div class="error-msg" id="documentType" style="display:none">上傳檔案格式限PNG、JPG、PDF、TIF、GIF</div>
             <div class="error-msg" id="documentLength" style="display:none">上傳檔案名稱限20個字</div>
 			<div class="error-msg" id="documentSize" style="display:none">上傳檔案大小合計限10MB</div>
+			<div class="error-msg" id="documentNumber" style="display:none">上傳檔案個數限10個</div>   
         <table class="mqua">
             <thead>
                 <tr>
-                    <th></th>
                     <th>檔案名稱</th>
                     <th>上傳/修改</th>
                     <th>預覽</th>

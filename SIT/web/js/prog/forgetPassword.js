@@ -125,8 +125,8 @@ function forgetPassword3_1(content){
 
 function forgetPassword3_2(content){    
     g_countdown({
-        minute: 4,
-        second: 59,
+        minute: 0,
+        second: 3,
         modal_id: 'modal_forgetPassword_2_2',
         deadline_class: 'deadline' 
     });

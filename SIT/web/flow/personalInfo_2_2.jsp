@@ -57,13 +57,13 @@
           <p class="blue">填寫完畢，請將紙本郵寄至104 台北市中山區中山北路二段50號3樓 就學貸款組收
             <br>本行設定完畢後，將以Email通知您，即可進行線上續貸</p> -->
 			
-            <a href="" class="pobtn-srb">確定</a>
+            <a href="personalInfo_flow.jsp?step=personalInfo_2_1" class="pobtn-srb">確定</a>
         </div>
       </div>
     </div>
   </div>
   
-<div class="modal fade pomodal personalInfo" id="modal_personalInfo_2_1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!--<div class="modal fade pomodal personalInfo" id="modal_personalInfo_2_1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
 	    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -76,4 +76,4 @@
 	    </div>
 	  </div>
 	</div>
-</div>
+</div>-->
