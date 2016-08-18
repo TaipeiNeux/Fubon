@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashSet;
@@ -57,6 +58,10 @@ public class Apply2 implements ILogic {
         String lastIsGuarantor = "";//上次撥款紀錄中的保人(4碼)
         String lastIncomeTax = "";//上次撥款紀錄的合計所得對象
 
+        //2016-08-14 Steven 檢查本學期有無申請案件
+        DataObject aplyMemberYearData = null;
+        aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
             Element root = draftData.getRootElement();
@@ -86,60 +91,174 @@ public class Apply2 implements ILogic {
 
             if(root.element("relationshipTitle") != null) relationshipTitle = root.element("relationshipTitle").getText();
         }
+        //本學期有申請過案件
+        else if (aplyMemberYearData != null){
+            String isFaGuarantor = aplyMemberYearData.getValue("Fa_Guarantor");//父親是否為連帶保證人
+            String isMaGuarantor = aplyMemberYearData.getValue("Ma_Guarantor");//母親是否為連帶保證人
+            String isGd1Guarantor = aplyMemberYearData.getValue("Gd1_Guarantor");//監護人是否為連帶保證人
+            String isPaGuarantor = aplyMemberYearData.getValue("Pa_Guarantor");//是否為連帶保證人
+            String isWarGuarantor = aplyMemberYearData.getValue("War_Guarantor");//是否為連帶保證人
+            boolean isAdult = ProjUtils.isAdult(aplyMemberYearData.getValue("AplyBirthday"));
+
+            //是否為連帶保證人
+            isGuarantor = "";
+            if("Y".equalsIgnoreCase(isFaGuarantor)) isGuarantor += "1";
+            else isGuarantor += "0";
+
+            if("Y".equalsIgnoreCase(isMaGuarantor)) isGuarantor += "1";
+            else isGuarantor += "0";
+
+            if(isAdult && "Y".equalsIgnoreCase(isWarGuarantor)) isGuarantor += "1";
+            else if(!isAdult && "Y".equalsIgnoreCase(isGd1Guarantor)) isGuarantor += "1";
+            else isGuarantor += "0";
+
+            if("Y".equalsIgnoreCase(isPaGuarantor)) isGuarantor += "1";
+            else isGuarantor += "0";
+
+            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
+            familyStatus = aplyMemberYearData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+                String[] statusArray = familyStatus.split("_");
+                familyStatusLevel1 = statusArray[0];
+                familyStatusLevel2 = statusArray[1];
+            }
+
+            JSONObject clickLevel = new JSONObject();
+            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatus, isAdult);
+
+            familyStatus = clickLevel.getString("familyStatus");
+            guarantorStatus = clickLevel.getString("guarantorStatus");
+            incomeTax = clickLevel.getString("incomeTax");
+            showInfo = familyStatus;
+
+            thirdParty_relationship = aplyMemberYearData.getValue("War_Rel");
+            thirdPartyTitle = aplyMemberYearData.getValue("War_Name");
+
+            father_sameAddrHidden = "";
+            mother_sameAddrHidden = "";
+            thirdParty_sameAddrHidden = "";
+            pouse_sameAddrHidden = "";
+
+            father_String = setFamilyString(guarantorStatus, incomeTax, "father");
+            mother_String = setFamilyString(guarantorStatus, incomeTax, "mother");
+            thirdParty_String = setFamilyString(guarantorStatus, incomeTax, "thirdParty");
+            spouse_String = setFamilyString(guarantorStatus, incomeTax, "spouse");
+
+            father_RadioBtn = "";
+            mother_RadioBtn = "";
+            thirdParty_RadioBtn = "";
+            spouse_RadioBtn = "";
+            father_checkbox = "";
+            mother_checkbox = "";
+
+            relationshipTitle = "";
+        }
 
         //取得第1-1、1-2步的草稿資料
 
         String draftXML1 = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
         String draftXML2 = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);
 
-        Document step1Doc = DocumentHelper.parseText(draftXML1);
-        Document step2Doc = DocumentHelper.parseText(draftXML2);
-        Element step1Root = step1Doc.getRootElement();
-        Element step2Root = step2Doc.getRootElement();
+        if(StringUtils.isNotEmpty(draftXML1)) {
+            Document step1Doc = DocumentHelper.parseText(draftXML1);
+            Element step1Root = step1Doc.getRootElement();
 
-        String yearBirthday = step1Root.element("birthday0").getText();
-        String monthBirthday = step1Root.element("birthday2").getText();
-        String dayBirthday = step1Root.element("birthday4").getText();
-        birthday = yearBirthday + monthBirthday + dayBirthday;
+            String yearBirthday = step1Root.element("birthday0").getText();
+            String monthBirthday = step1Root.element("birthday2").getText();
+            String dayBirthday = step1Root.element("birthday4").getText();
+            birthday = yearBirthday + monthBirthday + dayBirthday;
 
 
 //        if(step1Root.element("birthday") != null) birthday = step1Root.element("birthday").getText();
-        if(step1Root.element("domicileCityId") != null) domicileAddressCityId = step1Root.element("domicileCityId").getText();
-        if(step1Root.element("domicileZipCode") != null) domicileAddressZipCode = step1Root.element("domicileZipCode").getText();
-        if(step1Root.element("domicileLinerName") != null) domicileLinerName = step1Root.element("domicileLinerName").getText();
-        if(step1Root.element("domicileLiner") != null) domicileAddressLiner = step1Root.element("domicileLiner").getText();
-        if(step1Root.element("DomicileNeighborhood") != null) domicileAddressNeighborhood = step1Root.element("DomicileNeighborhood").getText();
-        if(step1Root.element("DomicileAddress") != null) domicileAddressAddress = step1Root.element("DomicileAddress").getText();
+            if(step1Root.element("domicileCityId") != null) domicileAddressCityId = step1Root.element("domicileCityId").getText();
+            if(step1Root.element("domicileZipCode") != null) domicileAddressZipCode = step1Root.element("domicileZipCode").getText();
+            if(step1Root.element("domicileLinerName") != null) domicileLinerName = step1Root.element("domicileLinerName").getText();
+            if(step1Root.element("domicileLiner") != null) domicileAddressLiner = step1Root.element("domicileLiner").getText();
+            if(step1Root.element("DomicileNeighborhood") != null) domicileAddressNeighborhood = step1Root.element("DomicileNeighborhood").getText();
+            if(step1Root.element("DomicileAddress") != null) domicileAddressAddress = step1Root.element("DomicileAddress").getText();
 
-        if(step1Root.element("cityId") != null) teleAddressCityId = step1Root.element("cityId").getText();
-        if(step1Root.element("zipCode") != null) teleAddressZipCode = step1Root.element("zipCode").getText();
+            if(step1Root.element("cityId") != null) teleAddressCityId = step1Root.element("cityId").getText();
+            if(step1Root.element("zipCode") != null) teleAddressZipCode = step1Root.element("zipCode").getText();
 
-        if(step1Root.element("address") != null) teleAddressAddress = step1Root.element("address").getText();
+            if(step1Root.element("address") != null) teleAddressAddress = step1Root.element("address").getText();
 
-        if(step1Root.element("marryStatus") != null) marryStatus = step1Root.element("marryStatus").getText();
-        if(step1Root.element("sameAddrHidden") != null) sameAddrHidden = step1Root.element("sameAddrHidden").getText();
+            if(step1Root.element("marryStatus") != null) marryStatus = step1Root.element("marryStatus").getText();
+            if(step1Root.element("sameAddrHidden") != null) sameAddrHidden = step1Root.element("sameAddrHidden").getText();
 
-        if(step2Root.element("familyStatus") != null) familyStatus = step2Root.element("familyStatus").getText();
-        if(step2Root.element("guarantorStatus") != null) guarantorStatus = step2Root.element("guarantorStatus").getText();
+        }
+        else if (aplyMemberYearData != null){
+            birthday = aplyMemberYearData.getValue("AplyBirthday");
+            String yearBirthday = birthday.substring(0,3);
+            String monthBirthday = birthday.substring(3,5);
+            String dayBirthday = birthday.substring(5,7);
+            birthday = yearBirthday + monthBirthday + dayBirthday;
 
-        if(step2Root.element("incomeTaxArr") != null) incomeTax = step2Root.element("incomeTaxArr").getText();
-        if(step2Root.element("applicantAdult") != null) applicantAdult = step2Root.element("applicantAdult").getText();
+            String zipCode1 = aplyMemberYearData.getValue("AplyZip1");
+            domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
+//            domicileLinerName = "";
+            domicileAddressZipCode = zipCode1; //戶藉行政區
+            domicileAddressLiner = aplyMemberYearData.getValue("Aply1Village");//戶藉村/里名稱(中文)
+            domicileAddressNeighborhood = aplyMemberYearData.getValue("AplyAddr1_3");
+            domicileAddressAddress = aplyMemberYearData.getValue("AplyAddr1");
 
-        if(step2Root.element("guarantorText") != null) guarantorText = step2Root.element("guarantorText").getText();
-        if(step2Root.element("isSpouseForeignerHidden") != null) isSpouseForeignerHidden = step2Root.element("isSpouseForeignerHidden").getText();
+            String zipCode2 = aplyMemberYearData.getValue("AplyZip2");
+            teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
+            teleAddressZipCode = zipCode2;
+            teleAddressAddress = aplyMemberYearData.getValue("AplyAddr2");
 
-        if(step2Root.element("familyStatusLevel1") != null) familyStatusLevel1 = step2Root.element("familyStatusLevel1").getText();
-        if(step2Root.element("familyStatusLevel2") != null) familyStatusLevel2 = step2Root.element("familyStatusLevel2").getText();
+            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
+//            sameAddrHidden = "";
+        }
+
+        if(StringUtils.isNotEmpty(draftXML2)) {
+            Document step2Doc = DocumentHelper.parseText(draftXML2);
+
+            Element step2Root = step2Doc.getRootElement();
+
+
+            if(step2Root.element("familyStatus") != null) familyStatus = step2Root.element("familyStatus").getText();
+            if(step2Root.element("guarantorStatus") != null) guarantorStatus = step2Root.element("guarantorStatus").getText();
+
+            if(step2Root.element("incomeTaxArr") != null) incomeTax = step2Root.element("incomeTaxArr").getText();
+            if(step2Root.element("applicantAdult") != null) applicantAdult = step2Root.element("applicantAdult").getText();
+
+            if(step2Root.element("guarantorText") != null) guarantorText = step2Root.element("guarantorText").getText();
+            if(step2Root.element("isSpouseForeignerHidden") != null) isSpouseForeignerHidden = step2Root.element("isSpouseForeignerHidden").getText();
+
+            if(step2Root.element("familyStatusLevel1") != null) familyStatusLevel1 = step2Root.element("familyStatusLevel1").getText();
+            if(step2Root.element("familyStatusLevel2") != null) familyStatusLevel2 = step2Root.element("familyStatusLevel2").getText();
+
+        }
+        else if (aplyMemberYearData != null){
+            boolean isAdult = ProjUtils.isAdult(aplyMemberYearData.getValue("AplyBirthday"));
+            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
+            familyStatus = aplyMemberYearData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+                String[] statusArray = familyStatus.split("_");
+                familyStatusLevel1 = statusArray[0];
+                familyStatusLevel2 = statusArray[1];
+            }
+            JSONObject clickLevel = new JSONObject();
+            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatus, isAdult);
+
+            familyStatus = clickLevel.getString("familyStatus");
+            guarantorStatus = clickLevel.getString("guarantorStatus");
+
+            incomeTax = clickLevel.getString("incomeTax");
+            applicantAdult = isAdult ? "Y" : "N";
+
+            guarantorText = "";
+            isSpouseForeignerHidden = "";
+        };
 
         //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
         DataObject aplyMemberData = null;
-        if("Y".equalsIgnoreCase(isRecord)) {
+        if (aplyMemberYearData != null) {
+            aplyMemberData = aplyMemberYearData;
+        }
+        else if("Y".equalsIgnoreCase(isRecord)) {
             //帶入撥款紀錄
             aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-        }
-        else {
-            //先取得「本學期」申請資料
-//            aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
         }
 
 
@@ -173,13 +292,6 @@ public class Apply2 implements ILogic {
 
             lastIsGuarantor += set.contains("1A") ? "1" : "0";
 
-            //2016-08-04 added by titan帶出上次撥款的合計所得對象
-
-            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Fa_IncomeAddOn")) ? "1" : "0";
-            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Ma_IncomeAddOn")) ? "1" : "0";
-            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Gd1_IncomeAddOn")) ? "1" : "0";
-            lastIncomeTax += "Y".equals(aplyMemberData.getValue("Pa_IncomeAddOn")) ? "1" : "0";
-
             String familyStatusVal = aplyMemberData.getValue("FamilyStatus");
             if(StringUtils.isNotEmpty(familyStatusVal) && familyStatusVal.length() >= 3) {
                 String[] statusArray = familyStatusVal.split("_");
@@ -187,9 +299,9 @@ public class Apply2 implements ILogic {
                 String historyFamilyStatus1 = statusArray[0];
                 String historyFamilyStatus2 = statusArray[1];
 
-                if(step2Root.element("familyStatusLevel1") != null && step2Root.element("familyStatusLevel2") != null) {
-                    String currentFamilyStatusVal1 = step2Root.element("familyStatusLevel1").getText();
-                    String currentFamilyStatusVal2 = step2Root.element("familyStatusLevel2").getText();
+                if(familyStatusLevel1 != null && familyStatusLevel2 != null) {
+                    String currentFamilyStatusVal1 = familyStatusLevel1;
+                    String currentFamilyStatusVal2 = familyStatusLevel2;
 
                     //判斷這次選的家庭狀況跟歷史是否一樣
                     if(historyFamilyStatus1.equalsIgnoreCase(currentFamilyStatusVal1) &&
@@ -199,6 +311,7 @@ public class Apply2 implements ILogic {
                 }
             }
         }
+
 
         //2016-07-15 added by titan，當勾選同戶藉時，要把通訊地址改成吃戶藉地址
         GardenLog.log(GardenLog.DEBUG, "sameAddrHidden = " + sameAddrHidden);
@@ -283,5 +396,277 @@ public class Apply2 implements ILogic {
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void clickLevel2Option (JSONObject clickLevel, String familyStatusLevel1, String familyStatusLevel2, String marryStatus, boolean isAdult) throws JSONException {
+        String familyStatus = "", guarantorStatus = "", incomeTax = "";
+        int level1 = Integer.valueOf(familyStatusLevel1);
+        int level2 = Integer.valueOf(familyStatusLevel2);
+
+        if (marryStatus == "N") { //未婚
+            if (isAdult == false) { //未成年
+                if (level1 == 1) {
+                    switch (level2) {
+                        case 1:
+                            familyStatus = "1100";
+                            guarantorStatus = "1100";
+                            incomeTax = "1100";
+                            break;
+                        case 2:
+                            familyStatus = "1100";
+                            guarantorStatus = "2100";
+                            incomeTax = "1100";
+                            break;
+                        case 3:
+                            familyStatus = "1100";
+                            guarantorStatus = "1200";
+                            incomeTax = "1100";
+                            break;
+                        case 4:
+                            familyStatus = "0010";
+                            guarantorStatus = "0010";
+                            incomeTax = "0010";
+                            break;
+                    }
+                } else if (level1 == 2) {
+                    switch (level2) {
+                        case 1:
+                            familyStatus = "1100";
+                            guarantorStatus = "1100";
+                            incomeTax = "1100";
+                            break;
+                        case 2:
+                            familyStatus = "1200";
+                            guarantorStatus = "1300";
+                            incomeTax = "1000";
+                            break;
+                        case 3:
+                            familyStatus = "2100";
+                            guarantorStatus = "3100";
+                            incomeTax = "0100";
+                            break;
+                        case 4:
+                            familyStatus = "2210";
+                            guarantorStatus = "3310";
+                            incomeTax = "0010";
+                            break;
+                    }
+                } else if (level1 == 3) {
+                    switch (level2) {
+                        case 1:
+                            familyStatus = "1000";
+                            guarantorStatus = "1000";
+                            incomeTax = "1000";
+                            break;
+                        case 2:
+                            familyStatus = "0100";
+                            guarantorStatus = "0100";
+                            incomeTax = "0100";
+                            break;
+                        case 3:
+                            familyStatus = "0010";
+                            guarantorStatus = "0010";
+                            incomeTax = "0010";
+                            break;
+                    }
+                } else if (level1 == 4) {
+                    familyStatus = "0010";
+                    guarantorStatus = "0010";
+                    incomeTax = "0010";
+                }
+            } else if (isAdult == true) { //成年
+                if (level1 == 1) {
+                    switch (level2) {
+                        case 1:
+                            familyStatus = "1100"; //checkbox & form 同時出現
+                            guarantorStatus = "1100";
+                            incomeTax = "1100";
+                            break;
+                        case 2:
+                            familyStatus = "1100";
+                            guarantorStatus = "1200";
+                            incomeTax = "1100";
+                            break;
+                        case 3:
+                            familyStatus = "1100";
+                            guarantorStatus = "2100";
+                            incomeTax = "1100";
+                            break;
+                        case 4:
+                            familyStatus = "1110";
+                            guarantorStatus = "2210";
+                            incomeTax = "1100";
+                            break;
+                    }
+                } else if (level1 == 2) {
+                    switch (level2) {
+                        case 1:
+                            familyStatus = "3300";
+                            guarantorStatus = "1100";
+                            incomeTax = "0000";
+                            break;
+                        case 2:
+                            familyStatus = "1200";
+                            guarantorStatus = "1000";
+                            incomeTax = "0000";
+                            break;
+                        case 3:
+                            familyStatus = "2100";
+                            guarantorStatus = "0100";
+                            incomeTax = "0000";
+                            break;
+                        case 4:
+                            familyStatus = "2210";
+                            guarantorStatus = "0010";
+                            incomeTax = "0000";
+                            break;
+                    }
+                } else if (level1 == 3) {
+                    switch (level2) {
+                        case 1:
+                            familyStatus = "1000";
+                            guarantorStatus = "1000";
+                            incomeTax = "1000";
+                            break;
+                        case 2:
+                            familyStatus = "0100";
+                            guarantorStatus = "0100";
+                            incomeTax = "0100";
+                            break;
+                        case 3:
+                            familyStatus = "1010";
+                            guarantorStatus = "2010";
+                            incomeTax = "1000";
+                            break;
+                        case 4:
+                            familyStatus = "0110";
+                            guarantorStatus = "0210";
+                            incomeTax = "0100";
+                            break;
+                    }
+                } else if (level1 == 4) {
+                    familyStatus = "0010";
+                    guarantorStatus = "0010";
+                    incomeTax = "0000";
+                }
+            }
+        } else if (marryStatus == "Y") { //已婚
+            if (level1 == 1) {
+                switch (level2) {
+                    case 1:
+                        familyStatus = "0001";
+                        guarantorStatus = "0001";
+                        incomeTax = "0001";
+                        break;
+                    case 2:
+                        familyStatus = "1001";
+                        guarantorStatus = "1000";
+                        incomeTax = "0001";
+                        break;
+                    case 3:
+                        familyStatus = "0101";
+                        guarantorStatus = "0100";
+                        incomeTax = "0001";
+                        break;
+                    case 4:
+                        familyStatus = "0011";
+                        guarantorStatus = "0010";
+                        incomeTax = "0001";
+                        break;
+                }
+            } else if (level1 == 2) {
+                switch (level2) {
+                    case 1:
+                        familyStatus = "1001";
+                        guarantorStatus = "1000";
+                        incomeTax = "0001";
+                        break;
+                    case 2:
+                        familyStatus = "0101";
+                        guarantorStatus = "0100";
+                        incomeTax = "0001";
+                        break;
+                    case 3:
+                        familyStatus = "0011";
+                        guarantorStatus = "0010";
+                        incomeTax = "0001";
+                        break;
+                }
+            } else if (level1 == 3) {
+                switch (level2) {
+                    case 1:
+                        familyStatus = "1000";
+                        guarantorStatus = "1000";
+                        incomeTax = "0000";
+                        break;
+                    case 2:
+                        familyStatus = "0100";
+                        guarantorStatus = "0100";
+                        incomeTax = "0000";
+                        break;
+                    case 3:
+                        familyStatus = "0010";
+                        guarantorStatus = "0010";
+                        incomeTax = "0000";
+                        break;
+                }
+            } else if (level1 == 4) {
+                switch (level2) {
+                    case 1:
+                        familyStatus = "1000";
+                        guarantorStatus = "1000";
+                        incomeTax = "0000";
+                        break;
+                    case 2:
+                        familyStatus = "0100";
+                        guarantorStatus = "0100";
+                        incomeTax = "0000";
+                        break;
+                    case 3:
+                        familyStatus = "0010";
+                        guarantorStatus = "0010";
+                        incomeTax = "0000";
+                        break;
+                }
+            }
+        }
+
+        clickLevel.put("familyStatus", familyStatus);
+        clickLevel.put("guarantorStatus", guarantorStatus);
+        clickLevel.put("incomeTax", incomeTax);
+    }
+
+    public String setFamilyString(String guarantorTag, String incomeTaxTag, String value){
+        String[] familyArr = new String[]{"father", "mother", "thirdParty", "spouse"};
+        String familyString = "";
+        int DivIndex = -1;
+
+        for (int i = 0; i < familyArr.length; i++) {
+            if (value.equals(familyArr[i])) {
+                DivIndex = i;
+                break;
+            }
+        }
+
+        if(DivIndex>=0){
+            int guaCurrentIndex = Integer.valueOf(guarantorTag.substring(DivIndex, DivIndex+1));
+            int incomeTaxCurrentIndex = Integer.valueOf(incomeTaxTag.substring(DivIndex, DivIndex+1));
+
+            if (guaCurrentIndex == 0 || guaCurrentIndex == 2) {
+                if (incomeTaxCurrentIndex == 1) {
+                    familyString = "(為合計所得對象)";
+                }
+            } else if (guaCurrentIndex == 1) {
+                if (incomeTaxCurrentIndex == 0) {
+                    familyString = "(為連帶保證人)";
+                } else if (incomeTaxCurrentIndex == 1) {
+                    familyString = "(為連帶保證人/合計所得對象)";
+                }
+            } else if (guaCurrentIndex == 3) {
+                familyString = "擔任連帶保證人";
+            }
+        }
+
+        return familyString;
     }
 }

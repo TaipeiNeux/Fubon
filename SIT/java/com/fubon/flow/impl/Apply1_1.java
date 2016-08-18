@@ -60,6 +60,7 @@ public class Apply1_1 extends MarkFlow {
 
         //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
         DataObject aplyMemberData = null;
+        DataObject aplyMemberYearData = null;
 
         //有撥款紀錄要額外帶入：身分證字號、姓名、生日、行動電話、Email、婚姻狀況、戶籍電話、通訊電話、戶籍地址、通訊地址
         if("Y".equalsIgnoreCase(isRecord)) {
@@ -68,7 +69,7 @@ public class Apply1_1 extends MarkFlow {
         }
         else {
             //先取得「本學期」申請資料
-//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+            aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
         }
 
         //若有草稿就裝到content，沒有才走邏輯判斷
@@ -76,7 +77,6 @@ public class Apply1_1 extends MarkFlow {
             Element root = draftData.getRootElement();
             if(root.element("id") != null) id = root.element("id").getText();
             if(root.element("name") != null) name = root.element("name").getText();
-//            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
 
             if(root.element("birthday0") != null) yearBirthday = root.element("birthday0").getText();
             if(root.element("birthday2") != null) monthBirthday = root.element("birthday2").getText();
@@ -106,10 +106,52 @@ public class Apply1_1 extends MarkFlow {
 
             if(root.element("sameAddrHidden") != null) sameAddrHidden = root.element("sameAddrHidden").getText();
 
-//            if(StringUtils.isNotEmpty(birthday)) {
-//                birthday = StringUtils.replace(birthday,"/","");
-//            }
+        }
+        else if(aplyMemberYearData != null) {
+            //本學期有申請過案件
+            id = aplyMemberYearData.getValue("AplyIdNo");
+            name = aplyMemberYearData.getValue("Applicant");
+            birthday = aplyMemberYearData.getValue("AplyBirthday");
+            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
 
+            domicilePhoneRegionCode = aplyMemberYearData.getValue("AplyTelNo1_1");
+            domicilePhonePhone = aplyMemberYearData.getValue("AplyTelNo1_2");
+
+            telePhoneRegionCode = aplyMemberYearData.getValue("AplyTelNo2_1");
+            telePhonePhone = aplyMemberYearData.getValue("AplyTelNo2_2");
+
+            cellPhone = aplyMemberYearData.getValue("AplyCellPhoneNo");
+            email = aplyMemberYearData.getValue("AplyEmail");
+
+
+            String zipCode1 = aplyMemberYearData.getValue("AplyZip1");
+
+            //用zipcode反查city
+            domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
+            domicileAddressZipCode = zipCode1; //戶藉行政區
+            domicileAddressLiner = aplyMemberYearData.getValue("Aply1Village");//戶藉村/里名稱(中文)
+            //domicileLinerName = aplyMemberHistoryData.getValue("AplyAddr1_4");
+            domicileAddressNeighborhood = aplyMemberYearData.getValue("AplyAddr1_3");
+            domicileAddressAddress = aplyMemberYearData.getValue("AplyAddr1");
+            //domicileAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","1");
+
+
+            String zipCode2 = aplyMemberYearData.getValue("AplyZip2");
+
+            //用zipcode反查city
+            teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
+
+            teleAddressZipCode = zipCode2;
+            //teleAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","2");
+            teleAddressAddress = aplyMemberYearData.getValue("AplyAddr2");
+
+            //DB是西元轉民國
+            birthday = ProjUtils.toBirthday(birthday);
+
+            //再拆成三個欄位
+            yearBirthday = birthday.substring(0,3);
+            monthBirthday = birthday.substring(3,5);
+            dayBirthday = birthday.substring(5,7);
         }
         else {
 

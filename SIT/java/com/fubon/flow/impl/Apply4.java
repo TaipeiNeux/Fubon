@@ -52,18 +52,32 @@ public class Apply4 implements ILogic {
         IDao dao = DaoFactory.getDefaultDao();
 
         String draftXML3_2 = FlowUtils.getDraftData(userId,"apply","apply3_2",dao);
+        if (draftXML3_2 != null) {
+            Document draftDoc3_2 = DocumentHelper.parseText(draftXML3_2);
+            Element draftRoot3_2 = draftDoc3_2.getRootElement();
 
-        Document draftDoc3_2 = DocumentHelper.parseText(draftXML3_2);
+            if(draftRoot3_2.element("loanPrice") != null) loanPrice = draftRoot3_2.element("loanPrice").getText();
+            if(draftRoot3_2.element("loansSum") != null) loans = draftRoot3_2.element("loansSum").getText();
+            if(draftRoot3_2.element("freedom_life") != null) freedomLife = draftRoot3_2.element("freedom_life").getText();
+            if(draftRoot3_2.element("accordingToBill_life") != null) accordingToBillLife = draftRoot3_2.element("accordingToBill_life").getText();
+        }else{
+            DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+            if(aplyMemberData != null) {
+                loanPrice = aplyMemberData.getValue("loanType");
 
-        Element draftRoot3_2 = draftDoc3_2.getRootElement();
-
-        if(draftRoot3_2.element("loanPrice") != null) loanPrice = draftRoot3_2.element("loanPrice").getText();
-        if(draftRoot3_2.element("loansSum") != null) loans = draftRoot3_2.element("loansSum").getText();
-        if(draftRoot3_2.element("freedom_life") != null) freedomLife = draftRoot3_2.element("freedom_life").getText();
-        if(draftRoot3_2.element("accordingToBill_life") != null) accordingToBillLife = draftRoot3_2.element("accordingToBill_life").getText();
+                loans = (Integer.parseInt(aplyMemberData.getValue("renderAmtSchool")) + Integer.parseInt(aplyMemberData.getValue("renderAmtEducation")) +
+                        Integer.parseInt(aplyMemberData.getValue("renderAmtInsurance")) + Integer.parseInt(aplyMemberData.getValue("renderAmtPractice")) +
+                        Integer.parseInt(aplyMemberData.getValue("renderAmtMusic")) +
+                        Integer.parseInt(aplyMemberData.getValue("renderAmtOther")) + Integer.parseInt(aplyMemberData.getValue("renderAmtBook")) +
+                        Integer.parseInt(aplyMemberData.getValue("renderAmtLodging")) + Integer.parseInt(aplyMemberData.getValue("renderAmtStudy")) +
+                        Integer.parseInt(aplyMemberData.getValue("renderAmtLiving"))) + "";
+                freedomLife = aplyMemberData.getValue("renderAmt_living");
+                accordingToBillLife = aplyMemberData.getValue("renderAmt_living");
+            }
+        }
 
         //抓上傳文件
-        SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+        SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name,Size from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
         query.addParamValue(userId);
         Vector<DataObject> docResult = new Vector<DataObject>();
         dao.queryByCommand(docResult,query,null,null);
@@ -78,10 +92,13 @@ public class Apply4 implements ILogic {
                 String docId = d.getValue("DocId");
                 String docType = d.getValue("DocType");
                 String originalFileName = d.getValue("original_file_name");
+                int size = Integer.valueOf(d.getValue("Size"));
 
                 JSONObject tmp = new JSONObject();
                 tmp.put("fileName",originalFileName);
                 tmp.put("docId",ProjUtils.encodingNumber(docId));
+                tmp.put("size",size);
+                tmp.put("fileNameExtension",originalFileName.substring(originalFileName.lastIndexOf(".") + 1));
 
                 if("1".equalsIgnoreCase(docType)) {
                     idCardPosition.put(tmp);

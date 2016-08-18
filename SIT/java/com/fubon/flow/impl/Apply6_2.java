@@ -87,7 +87,7 @@ public class Apply6_2 implements ILogic {
 
             email = apply1_1Root.element("email").getText();
 
-            DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo , dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,apply4Root,"2");
+            DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo,content,dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,apply4Root,"2");
 
             boolean isAdult = ProjUtils.isAdult(aplyMemberDataObject.getValue("AplyBirthday"));
             aplyNo = aplyMemberDataObject.getValue("AplyNo");
@@ -213,7 +213,7 @@ public class Apply6_2 implements ILogic {
             isApply = true;
 
             //清除我要申請的草稿資料
-//            FlowUtils.resetDraftData(userId,"apply",dao);
+            FlowUtils.resetDraftData(userId,"apply",dao);
         }catch(Exception e) {
             GardenLog.log(GardenLog.DEBUG, "Apply6_2 Exception=>" + e.getMessage());
             StackTraceElement[] stackTraceElements = e.getStackTrace();
