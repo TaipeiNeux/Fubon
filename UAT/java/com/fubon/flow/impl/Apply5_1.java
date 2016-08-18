@@ -45,19 +45,19 @@ public class Apply5_1 implements ILogic {
 
         //撈第四步要顯示的欄位
 
+        //撈第四步要顯示的欄位
         String apply4DraftXML = FlowUtils.getDraftData(userId,"apply","apply_document_4",dao);
-        if(StringUtils.isNotEmpty(apply4DraftXML)) {
+        if(apply4DraftXML != null && StringUtils.isNotEmpty(apply4DraftXML)) {
             Document apply4Doc = DocumentHelper.parseText(apply4DraftXML);
             Element root = apply4Doc.getRootElement();
             if(root.element("isPositive_hidden") != null) isPositive_hidden = root.element("isPositive_hidden").getText();
             if(root.element("isNegative_hidden") != null) isNegative_hidden = root.element("isNegative_hidden").getText();
             if(root.element("register_hidden") != null) register_hidden = root.element("register_hidden").getText();
+            if(root.element("lowIncome_hidden") != null) lowIncome_hidden = root.element("lowIncome_hidden").getText();
             if(root.element("idPositiveViewName_hidden") != null) idPositiveViewName_hidden = root.element("idPositiveViewName_hidden").getText();
             if(root.element("idNegativeViewName_hidden") != null) idNegativeViewName_hidden = root.element("idNegativeViewName_hidden").getText();
             if(root.element("registerViewName_hidden") != null) registerViewName_hidden = root.element("registerViewName_hidden").getText();
-            if(root.element("lowIncome_hidden") != null) lowIncome_hidden = root.element("lowIncome_hidden").getText();
             if(root.element("lowIncomeViewName_hidden") != null) lowIncomeViewName_hidden = root.element("lowIncomeViewName_hidden").getText();
-
         }
 
         //上傳文件撈Table

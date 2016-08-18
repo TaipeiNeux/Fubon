@@ -142,10 +142,24 @@ public class FlowServlet extends HttpServlet {
 
         FlowUtils.resetDraftData(userId,flowId,dao);
 
+        if("deferment".equalsIgnoreCase(flowId)) {
+            //清除文件
+            SQLCommand update = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
+            update.addParamValue(userId);
+            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
 
-        SQLCommand update = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
-        update.addParamValue(userId);
-        DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+            queryStringInfo.getRequest().getSession().setAttribute("eligibilityText","");
+            queryStringInfo.getRequest().getSession().setAttribute("eligibilityIndex","");
+            queryStringInfo.getRequest().getSession().setAttribute("eligibilityText0","");
+        }
+        else if("apply".equalsIgnoreCase(flowId)) {
+            //清除文件
+            SQLCommand update = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+            update.addParamValue(userId);
+            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+
+        }
+
 
     }
 

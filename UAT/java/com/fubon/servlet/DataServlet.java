@@ -792,13 +792,15 @@ public class DataServlet extends HttpServlet {
 
                     //再更新文件內容，轉成binary後透過原生JDBC物件來更新資料
                     Connection conn = null;
+                    PreparedStatement ps = null;
+                    FileInputStream is = null;
 
                     try{
                         conn = ((SQLConnection)ORMAPI.getConnection("db")).getConnection();
 
-                        PreparedStatement ps = conn.prepareStatement("update Deferment_Doc set DocFile = ? where DocId = ?");
+                        ps = conn.prepareStatement("update Deferment_Doc set DocFile = ? where DocId = ?");
 
-                        FileInputStream is = new FileInputStream(file);
+                        is = new FileInputStream(file);
 
                         GardenLog.log(GardenLog.DEBUG,"file size = " + (int) file.length());
                         ps.setBinaryStream(1, is, (int) file.length());
@@ -808,6 +810,14 @@ public class DataServlet extends HttpServlet {
                     }catch(Exception e) {
                         e.printStackTrace();
                     }finally{
+                        if(is != null) {
+                            is.close();
+                        }
+
+                        if(ps != null) {
+                            ps.close();
+                        }
+
                         if(conn != null) {
                             conn.close();
                         }
@@ -874,7 +884,7 @@ public class DataServlet extends HttpServlet {
 //                        SQLCommand delete = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where DocId = ? and DocType = ?");
 //                        delete.addParamValue(userId);
 //                        delete.addParamValue(docType);
-//                        dao.queryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
+//                        dao.qAplyMemberTuitionLoanDtl_DocueryByCommand(null,delete,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
                     }
 
                     //再新增
@@ -891,13 +901,15 @@ public class DataServlet extends HttpServlet {
 
                     //再更新文件內容，轉成binary後透過原生JDBC物件來更新資料
                     Connection conn = null;
+                    PreparedStatement ps = null;
+                    FileInputStream is = null;
 
                     try{
                         conn = ((SQLConnection)ORMAPI.getConnection("db")).getConnection();
 
-                        PreparedStatement ps = conn.prepareStatement("update AplyMemberTuitionLoanDtl_Doc set DocFile = ? where DocId = ?");
+                        ps = conn.prepareStatement("update AplyMemberTuitionLoanDtl_Doc set DocFile = ? where DocId = ?");
 
-                        FileInputStream is = new FileInputStream(file);
+                        is = new FileInputStream(file);
 
                         GardenLog.log(GardenLog.DEBUG,"file size = " + (int) file.length());
                         ps.setBinaryStream(1, is, (int) file.length());
@@ -907,6 +919,14 @@ public class DataServlet extends HttpServlet {
                     }catch(Exception e) {
                         e.printStackTrace();
                     }finally{
+                        if(is != null) {
+                            is.close();
+                        }
+
+                        if(ps != null) {
+                            ps.close();
+                        }
+
                         if(conn != null) {
                             conn.close();
                         }
@@ -1109,21 +1129,38 @@ public class DataServlet extends HttpServlet {
 
                 //取得第1-1跟第二步的草稿
                 String draftXML1 = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
-                Document doc1 = DocumentHelper.parseText(draftXML1);
-                Element root1 = doc1.getRootElement();
+                if(draftXML1 != null){
+                    Document doc1 = DocumentHelper.parseText(draftXML1);
+                    Element root1 = doc1.getRootElement();
 
-                if(StringUtils.isNotEmpty(draftXML1)) {
-                    //抓申請人生日
-                    String yearBirthday = root1.element("birthday0").getText();
-                    String monthBirthday = root1.element("birthday2").getText();
-                    String dayBirthday = root1.element("birthday4").getText();
+                    if(StringUtils.isNotEmpty(draftXML1)) {
+                        //抓申請人生日
+                        String yearBirthday = root1.element("birthday0").getText();
+                        String monthBirthday = root1.element("birthday2").getText();
+                        String dayBirthday = root1.element("birthday4").getText();
 
-//                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+                        //                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+                        applyBirthday = yearBirthday + monthBirthday + dayBirthday;
+
+                        applyBirthday = ProjUtils.toYYYYBirthday(applyBirthday);
+                    }
+                }else{
+                    //2016-08-14 Steven 檢查本學期有無申請案件
+                    DataObject aplyMemberYearData = null;
+                    aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+
+                    applyBirthday = aplyMemberYearData.getValue("AplyBirthday");
+                    applyBirthday = ProjUtils.toBirthday(applyBirthday);
+                    String yearBirthday = applyBirthday.substring(0,3);
+                    String monthBirthday = applyBirthday.substring(3,5);
+                    String dayBirthday = applyBirthday.substring(5,7);
                     applyBirthday = yearBirthday + monthBirthday + dayBirthday;
-
                     applyBirthday = ProjUtils.toYYYYBirthday(applyBirthday);
                 }
 
+                //2016-08-14 Steven 檢查本學期有無申請案件
+                DataObject aplyMemberYearData = null;
+                aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
 
                 //如果有第二步草稿，就拿草稿的
                 String draftXML = FlowUtils.getDraftData(userId, "apply", "apply2", dao);
@@ -1149,7 +1186,44 @@ public class DataServlet extends HttpServlet {
                     }
 
                 }
-                //沒草稿才拿申請人的撥款紀錄
+                //本學期有申請過案件
+                else if (aplyMemberYearData != null){
+                    //type：父親資料father / 母親資料mother / 第三人資料thirdParty / 配偶資料spouse
+                    String dbColumnPrefix = familyTypeMap.get(type);
+
+                    if(aplyMemberYearData != null) {
+
+                        //判斷是否申請人已成年(用來判斷寫入欄位是到監護人還是連帶保證人
+                        boolean isAdult = ProjUtils.isAdult(applyBirthday);
+
+                        //如果成年的話，改成保證人War欄位
+                        if(isAdult && "Gd1".equalsIgnoreCase(dbColumnPrefix)) {
+                            dbColumnPrefix = "War";
+                        }
+
+                        String zipCode = aplyMemberYearData.getValue(dbColumnPrefix + "_Zip");
+
+                        String cityId = ProjUtils.toCityId(zipCode,dao);
+
+                        id = aplyMemberYearData.getValue(dbColumnPrefix + "_IdNo");
+                        name = aplyMemberYearData.getValue(dbColumnPrefix + "_Name");
+                        birthday = aplyMemberYearData.getValue(dbColumnPrefix + "_Birthday");
+                        birthday = ProjUtils.toBirthday(birthday);
+
+                        telePhoneRegionCode = aplyMemberYearData.getValue(dbColumnPrefix + "_TelNo1");
+                        telePhonePhone = aplyMemberYearData.getValue(dbColumnPrefix + "_TelNo2");
+                        mobile = aplyMemberYearData.getValue(dbColumnPrefix + "_CellPhoneNo");
+
+                        domicileAddressCityId = cityId;
+                        domicileAddressZipCode = aplyMemberYearData.getValue(dbColumnPrefix + "_Zip");
+                        domicileLinerName = aplyMemberYearData.getValue(dbColumnPrefix + "Village");
+                        domicileAddressNeighborhood = aplyMemberYearData.getValue(dbColumnPrefix + "_Addr_3");
+                        domicileAddressAddress = aplyMemberYearData.getValue(dbColumnPrefix+"Addr");
+//                        domicileAddressAddress = dataObject.getValue(ProjUtils.toAddress(dataObject,dbColumnPrefix + "_"));
+
+                    }
+                }
+                //本學期沒有申請過案件才拿申請人的撥款紀錄
                 else {
                     //type：父親資料father / 母親資料mother / 第三人資料thirdParty / 配偶資料spouse
                     String dbColumnPrefix = familyTypeMap.get(type);

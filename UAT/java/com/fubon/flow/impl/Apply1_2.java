@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -36,6 +37,12 @@ public class Apply1_2 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
+        //2016-08-14 Steven 檢查本學期有無申請案件
+        DataObject aplyMemberYearData = null, aplyMemberData = null;
+        aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        JSONObject LevelText = new JSONObject();
+
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
             Element root = draftData.getRootElement();
@@ -45,50 +52,60 @@ public class Apply1_2 implements ILogic {
             if(root.element("familyStatusLevel1Text") != null) familyStatusLevel1Text = root.element("familyStatusLevel1Text").getText();
             if(root.element("familyStatusLevel2Text") != null) familyStatusLevel2Text = root.element("familyStatusLevel2Text").getText();
         }
+        //本學期有申請過案件
+        else if (aplyMemberYearData != null){
+            String familyStatus = aplyMemberYearData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+                String[] statusArray = familyStatus.split("_");
+                familyStatusLevel1 = statusArray[0];
+                familyStatusLevel2 = statusArray[1];
+            }
+        }
         //如果是已撥款戶，要抓之前的家庭狀況(有可能是空值，因為舊平台轉置時是空的，新平台上線後才有值)
-        else {
-            String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N";
-
-            //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
-            DataObject aplyMemberData = null;
-
-            if("Y".equalsIgnoreCase(isRecord)) {
-                //帶入撥款紀錄
-                aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-            }
-            else {
-                //先取得「本學期」申請資料
-//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-            }
-
-            if(aplyMemberData != null) {
-                String familyStatus = aplyMemberData.getValue("FamilyStatus");
-                if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
-                    String[] statusArray = familyStatus.split("_");
-
-                    familyStatusLevel1 = statusArray[0];
-                    familyStatusLevel2 = statusArray[1];
-                }
+        else if (aplyMemberData != null && ProjUtils.isPayHistory(userId,dao)){
+            String familyStatus = aplyMemberData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+                String[] statusArray = familyStatus.split("_");
+                familyStatusLevel1 = statusArray[0];
+                familyStatusLevel2 = statusArray[1];
             }
         }
 
+
         //取得第一步的草稿資料
         String draftXML = FlowUtils.getDraftData(userId,"apply","apply1_1",dao);
-        Document step1Doc = DocumentHelper.parseText(draftXML);
-        Element step1Root = step1Doc.getRootElement();
+        if (draftXML != null) {
+            Document step1Doc = DocumentHelper.parseText(draftXML);
+            Element step1Root = step1Doc.getRootElement();
 
-        String yearBirthday = step1Root.element("birthday0").getText();
-        String monthBirthday = step1Root.element("birthday2").getText();
-        String dayBirthday = step1Root.element("birthday4").getText();
+            String yearBirthday = step1Root.element("birthday0").getText();
+            String monthBirthday = step1Root.element("birthday2").getText();
+            String dayBirthday = step1Root.element("birthday4").getText();
+            monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
+            dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
+            birthday = yearBirthday + monthBirthday + dayBirthday;
+            marryStatus = step1Root.element("marryStatus").getText();
+        }
+        else if (aplyMemberYearData != null){
+            birthday = aplyMemberYearData.getValue("AplyBirthday");
+            String yearBirthday = birthday.substring(0,3);
+            String monthBirthday = birthday.substring(3,5);
+            String dayBirthday = birthday.substring(5,7);
+            birthday = yearBirthday + monthBirthday + dayBirthday;
+            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
+        }
+        else if (aplyMemberData != null) {
+            birthday = aplyMemberData.getValue("AplyBirthday");
+            String yearBirthday = birthday.substring(0,3);
+            String monthBirthday = birthday.substring(3,5);
+            String dayBirthday = birthday.substring(5,7);
+            birthday = yearBirthday + monthBirthday + dayBirthday;
+            marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
+        }
 
-        monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
-        dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
-
-        birthday = yearBirthday + monthBirthday + dayBirthday;
-//        birthday = ProjUtils.toYYYYBirthday(birthday);
-
-//        birthday = step1Root.element("birthday").getText();
-        marryStatus = step1Root.element("marryStatus").getText();
+        setLevelText(LevelText, marryStatus, familyStatusLevel1, familyStatusLevel2);
+        familyStatusLevel1Text = LevelText.getString("familyStatusLevel1Text");
+        familyStatusLevel2Text = LevelText.getString("familyStatusLevel2Text");
 
         content.put("birthday",birthday);
         content.put("marryStatus",marryStatus);
@@ -101,5 +118,133 @@ public class Apply1_2 implements ILogic {
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
 
+    }
+
+    public void setLevelText(JSONObject LevelText, String marryStatus, String familyStatusLevel1, String familyStatusLevel2) throws JSONException {
+        String familyStatusLevel1Text = "", familyStatusLevel2Text = "";
+
+        if(StringUtils.isNotEmpty(familyStatusLevel1) && StringUtils.isNotEmpty(familyStatusLevel2)) {
+            if(marryStatus.equalsIgnoreCase("Y")){
+                switch (Integer.valueOf(familyStatusLevel1)) {
+                    case 1:
+                        familyStatusLevel1Text = "配偶為本國人";
+                        switch (Integer.valueOf(familyStatusLevel2)) {
+                            case 1:
+                                familyStatusLevel2Text = "配偶擔任連帶保證人";
+                                break;
+                            case 2:
+                                familyStatusLevel2Text = "父親擔任連帶保證人";
+                                break;
+                            case 3:
+                                familyStatusLevel2Text = "母親擔任連帶保證人";
+                                break;
+                            case 4:
+                                familyStatusLevel2Text = "第三人擔任連帶保證人";
+                                break;
+                        }
+                        break;
+                    case 2:
+                        familyStatusLevel1Text = "配偶非為本國人";
+                        switch (Integer.valueOf(familyStatusLevel2)) {
+                            case 1:
+                                familyStatusLevel2Text = "配偶擔任連帶保證人";
+                                break;
+                            case 2:
+                                familyStatusLevel2Text = "母親擔任連帶保證人";
+                                break;
+                            case 3:
+                                familyStatusLevel2Text = "第三人擔任連帶保證人";
+                                break;
+                        }
+                        break;
+                    case 3:
+                        familyStatusLevel1Text = "離婚";
+                        switch (Integer.valueOf(familyStatusLevel2)) {
+                            case 1:
+                                familyStatusLevel2Text = "配偶擔任連帶保證人";
+                                break;
+                            case 2:
+                                familyStatusLevel2Text = "母親擔任連帶保證人";
+                                break;
+                            case 3:
+                                familyStatusLevel2Text = "第三人擔任連帶保證人";
+                                break;
+                        }
+                        break;
+                    case 4:
+                        familyStatusLevel1Text = "配偶過世";
+                        switch (Integer.valueOf(familyStatusLevel2)) {
+                            case 1:
+                                familyStatusLevel2Text = "配偶擔任連帶保證人";
+                                break;
+                            case 2:
+                                familyStatusLevel2Text = "母親擔任連帶保證人";
+                                break;
+                            case 3:
+                                familyStatusLevel2Text = "第三人擔任連帶保證人";
+                                break;
+                        }
+                        break;
+                }
+            } else {
+                switch (Integer.valueOf(familyStatusLevel1)) {
+                    case 1:
+                        familyStatusLevel1Text = "父母雙方健在且婚姻關係持續中";
+                        switch (Integer.valueOf(familyStatusLevel2)) {
+                            case 1:
+                                familyStatusLevel2Text = "父母雙方皆擔任連帶保證人";
+                                break;
+                            case 2:
+                                familyStatusLevel2Text = "父親因特殊情形，無法擔任連帶保證人";
+                                break;
+                            case 3:
+                                familyStatusLevel2Text = "母親因特殊情形，無法擔任連帶保證人";
+                                break;
+                            case 4:
+                                familyStatusLevel2Text = "非父母之第三人監護";
+                                break;
+                        }
+                        break;
+                    case 2:
+                        familyStatusLevel1Text = "父母離婚";
+                        switch (Integer.valueOf(familyStatusLevel2)) {
+                            case 1:
+                                familyStatusLevel2Text = "父母共同監護";
+                                break;
+                            case 2:
+                                familyStatusLevel2Text = "父親監護";
+                                break;
+                            case 3:
+                                familyStatusLevel2Text = "母親監護";
+                                break;
+                            case 4:
+                                familyStatusLevel2Text = "非父母之第三人監護";
+                                break;
+                        }
+                        break;
+                    case 3:
+                        familyStatusLevel1Text = "父母一方過世";
+                        switch (Integer.valueOf(familyStatusLevel2)) {
+                            case 1:
+                                familyStatusLevel2Text = "父親擔任連帶保證人";
+                                break;
+                            case 2:
+                                familyStatusLevel2Text = "母親擔任連帶保證人";
+                                break;
+                            case 3:
+                                familyStatusLevel2Text = "非父母之第三人監護";
+                                break;
+                        }
+                        break;
+                    case 4:
+                        familyStatusLevel1Text = "父母雙方過世";
+                        break;
+                }
+            }
+        }
+
+
+        LevelText.put("familyStatusLevel1Text", familyStatusLevel1Text);
+        LevelText.put("familyStatusLevel2Text", familyStatusLevel2Text);
     }
 }

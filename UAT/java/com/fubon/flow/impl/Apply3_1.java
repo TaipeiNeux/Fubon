@@ -47,16 +47,11 @@ public class Apply3_1 implements ILogic {
 
         String loanAmt = "";
 
-        //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
-        DataObject aplyMemberData = null;
-        if("Y".equalsIgnoreCase(isRecord)) {
-            //帶入撥款紀錄
-            aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-        }
-        else {
-            //先取得「本學期」申請資料
-//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-        }
+        //2016-08-14 Steven 檢查本學期有無申請案件
+        DataObject aplyMemberYearData = null, aplyMemberData = null;
+        aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -82,32 +77,56 @@ public class Apply3_1 implements ILogic {
 
             if(root.element("loanAmt") != null) loanAmt = root.element("loanAmt").getText();
         }
-        else {
+        //本學期有申請過案件
+        else if (aplyMemberYearData != null){
+            educationStage = aplyMemberYearData.getValue("schoolType3");
+            schoolIsNational = aplyMemberYearData.getValue("schoolType1");
+            schoolName = aplyMemberYearData.getValue("schoolCode");
+            schoolIsDay = aplyMemberYearData.getValue("schoolType2");
 
-            if(aplyMemberData != null) {
+            department = aplyMemberYearData.getValue("subject");
+            onTheJob = "0".equals(aplyMemberYearData.getValue("schoolWorkFlag")) ? "N" : "Y";
 
-                educationStage = aplyMemberData.getValue("schoolType3");
-                schoolIsNational = aplyMemberData.getValue("schoolType1");
-                schoolName = aplyMemberData.getValue("schoolCode");
-                schoolIsDay = aplyMemberData.getValue("schoolType2");
+            gradeClassGrade = aplyMemberYearData.getValue("class1");
+            gradeClassClass = aplyMemberYearData.getValue("class2");
 
-                department = aplyMemberData.getValue("subject");
-                onTheJob = "0".equals(aplyMemberData.getValue("schoolWorkFlag")) ? "N" : "Y";
+            studentId = aplyMemberYearData.getValue("learnId");
 
-                gradeClassGrade = aplyMemberData.getValue("class1");
-                gradeClassClass = aplyMemberData.getValue("class2");
+            enterDateYear = aplyMemberYearData.getValue("EnterDT").substring(0,4);
+            enterDateMonth = aplyMemberYearData.getValue("EnterDT").substring(4);
+            graduationDateYear = aplyMemberYearData.getValue("FinishDT").substring(0,4);
+            graduationDateMonth = aplyMemberYearData.getValue("FinishDT").substring(4);
 
-                studentId = aplyMemberData.getValue("learnId");
-
-                enterDateYear = aplyMemberData.getValue("EnterDT").substring(0,4);
-                enterDateMonth = aplyMemberData.getValue("EnterDT").substring(4);
-                graduationDateYear = aplyMemberData.getValue("FinishDT").substring(0,4);
-                graduationDateMonth = aplyMemberData.getValue("FinishDT").substring(4);
-
-                //轉為民國年
-                enterDateYear = ProjUtils.toBirthday(enterDateYear);
-            }
+            //轉為民國年
+            enterDateYear = ProjUtils.toBirthday(enterDateYear);
+            graduationDateYear = ProjUtils.toBirthday(graduationDateYear);
         }
+        //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
+        //帶入撥款紀錄
+        else if(aplyMemberData != null && ProjUtils.isPayHistory(userId,dao)) {
+            educationStage = aplyMemberData.getValue("schoolType3");
+            schoolIsNational = aplyMemberData.getValue("schoolType1");
+            schoolName = aplyMemberData.getValue("schoolCode");
+            schoolIsDay = aplyMemberData.getValue("schoolType2");
+
+            department = aplyMemberData.getValue("subject");
+            onTheJob = "0".equals(aplyMemberData.getValue("schoolWorkFlag")) ? "N" : "Y";
+
+            gradeClassGrade = aplyMemberData.getValue("class1");
+            gradeClassClass = aplyMemberData.getValue("class2");
+
+            studentId = aplyMemberData.getValue("learnId");
+
+            enterDateYear = aplyMemberData.getValue("EnterDT").substring(0,4);
+            enterDateMonth = aplyMemberData.getValue("EnterDT").substring(4);
+            graduationDateYear = aplyMemberData.getValue("FinishDT").substring(0,4);
+            graduationDateMonth = aplyMemberData.getValue("FinishDT").substring(4);
+
+            //轉為民國年
+            enterDateYear = ProjUtils.toBirthday(enterDateYear);
+            graduationDateYear = ProjUtils.toBirthday(graduationDateYear);
+        }
+
 
         if(aplyMemberData != null) {
             lastEnterDate = aplyMemberData.getValue("EnterDT");

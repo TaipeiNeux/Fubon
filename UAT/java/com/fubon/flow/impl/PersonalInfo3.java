@@ -211,7 +211,7 @@ public class PersonalInfo3 implements ILogic {
                         rqBean53.addRqParam("COD_01","8001");
                         rqBean53.addRqParam("TYP_01","2");
                         rqBean53.addRqParam("ADDR_011",email);
-                        rqBean53.addRqParam("ADDR_012",email);
+//                        rqBean53.addRqParam("ADDR_012",email);
 
                         rqBean53.setHeaderPageFlg("3");
                         rqBean53.setHeaderDBAppn(hspSck);
@@ -236,7 +236,7 @@ public class PersonalInfo3 implements ILogic {
                         rqBean53.addRqParam("TYP_01","2");
                         rqBean53.addRqParam("ZIP_COD_01",teleAddressZipCode);
                         rqBean53.addRqParam("ADDR_011",teleAddressAddress);
-                        rqBean53.addRqParam("ADDR_012",teleAddressAddress);
+//                        rqBean53.addRqParam("ADDR_012",teleAddressAddress);
 
                         rqBean53.setHeaderPageFlg("3");
                         rqBean53.setHeaderDBAppn(hspSck);
