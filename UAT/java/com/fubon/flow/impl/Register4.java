@@ -49,7 +49,13 @@ public class Register4 implements ILogic {
         IDao dao = DaoFactory.getDefaultDao();
 
         //取得第一步的草稿資料
-        String draftXML1 = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute("register_register1"));
+        Object register1 = queryStringInfo.getRequest().getSession().getAttribute("register_register1");
+        if(register1 == null) {
+            errorCode = "96";
+            errorMsg = "操作逾時，請回到第一步重新填寫";
+        }
+
+        String draftXML1 = String.valueOf(register1);
         String memberTermsNo = "";
         String obligationsNo = "";
 

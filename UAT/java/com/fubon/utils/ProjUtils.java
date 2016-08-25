@@ -54,7 +54,7 @@ public class ProjUtils {
         if(TxRepeatList != null) {
             for(Element repeat : TxRepeatList) {
                 if("8001".equalsIgnoreCase(repeat.element("COD").getText())) {
-                    return repeat.element("CUST_ADDR_1").getText().trim();
+                    return repeat.element("CUST_ADDR_1").getText().trim() + repeat.element("CUST_ADDR_2").getText().trim();
                 }
             }
         }
@@ -82,7 +82,7 @@ public class ProjUtils {
         if(TxRepeatList != null) {
             for(Element repeat : TxRepeatList) {
                 if("3802".equalsIgnoreCase(repeat.element("COD").getText())) {
-                    return repeat.element("CUST_ADDR_1").getText().trim();
+                    return repeat.element("CUST_ADDR_1").getText().trim() + repeat.element("CUST_ADDR_2").getText().trim();
                 }
             }
         }
@@ -780,8 +780,11 @@ public class ProjUtils {
 //            checkAplyStatus.addParamValue("VERIFIED");
 
 
+            //2016-08-25 只留一筆
+            SQLCommand check = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ?");
+
             //2016-08-18 因為有可能案件會被取消對保，所以要加上APLYSTATUS判斷
-            SQLCommand check = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ? and APLYSTATUS not in ('DELETE')");
+//            SQLCommand check = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ? and APLYSTATUS not in ('DELETE')");
             check.addParamValue(id);
 
             Vector<DataObject> checkResult = new Vector<DataObject>();
@@ -1682,7 +1685,7 @@ public class ProjUtils {
     //查詢申請學期的資料
     public static DataObject getAplyMemberTuitionLoanData(String userId,Map<String,String> queryMap,IDao dao) throws Exception {
 
-        SQLCommand query = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ?");
+        SQLCommand query = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ? and APLYSTATUS not in ('DELETE')");
         query.addParamValue(userId);
 
         String where = "";

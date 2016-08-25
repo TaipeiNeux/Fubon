@@ -184,6 +184,30 @@ public class PersonalInfo3 implements ILogic {
                         dao.update(aplyMemberDataObject);
                     }
 
+                    String domicileAddressCityName = "";
+                    String teleAddressCityName = "";
+                    String domicileAddressZipName = "";
+                    String teleAddressZipName = "";
+
+                    if(StringUtils.isNotEmpty(domicileAddressCityId)) {
+                        domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
+                    }
+
+                    if(StringUtils.isNotEmpty(teleAddressCityId)) {
+                        teleAddressCityName = ProjUtils.toCityName(teleAddressCityId,dao);
+                    }
+
+                    if(StringUtils.isNotEmpty(domicileAddressZipCode)) {
+                        domicileAddressZipName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
+                    }
+
+                    if(StringUtils.isNotEmpty(teleAddressZipCode)) {
+                        teleAddressZipName = ProjUtils.toZipCodeName(teleAddressZipCode,dao);
+                    }
+
+                    domicileAddressAddress = domicileAddressCityName + domicileAddressZipName + domicileLinerName + domicileAddressLiner + domicileAddressNeighborhood + domicileAddressAddress;
+                    teleAddressAddress = teleAddressCityName + teleAddressZipName + teleAddressAddress;
+
                     //判斷會員狀態看是否更新電文
                     //有撥款紀錄
                     String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
@@ -199,19 +223,31 @@ public class PersonalInfo3 implements ILogic {
 
                         RSBean rsBean = WebServiceAgent.callWebService(rqBean53);
 
+                        if(!rsBean.isSuccess()) {
+                            errorCode = rsBean.getErrorCode();
+                            throw new Exception(rsBean.getErrorMsg());
+                        }
+
                         //先取得目前序號
                         String hspSck = rsBean.getServiceHeader().getHSPSCK();
                         GardenLog.log(GardenLog.DEBUG,"hspSck = " + hspSck);
 
                         //再開始更新Email
+                        //Email欄位一列只有42個字，所以超過42個字要切
+                        String email1 = email;
+                        String email2 = "";
+                        if(email.length() > 42) {
+                            email1 = email.substring(0,42);
+                            email2 = email.substring(42);
+                        }
                         rqBean53 = new RQBean();
                         rqBean53.setTxId("EB032153");
                         rqBean53.addRqParam("CUST_NO",id);
                         rqBean53.addRqParam("FUNC_01","2");
                         rqBean53.addRqParam("COD_01","8001");
                         rqBean53.addRqParam("TYP_01","2");
-                        rqBean53.addRqParam("ADDR_011",email);
-//                        rqBean53.addRqParam("ADDR_012",email);
+                        rqBean53.addRqParam("ADDR_011",email1);
+                        rqBean53.addRqParam("ADDR_012",email2);
 
                         rqBean53.setHeaderPageFlg("3");
                         rqBean53.setHeaderDBAppn(hspSck);
@@ -228,6 +264,13 @@ public class PersonalInfo3 implements ILogic {
                         hspSck = StringUtils.leftPad(String.valueOf(hspSckInt),2,"0");
 
                         //再更新通訊地址
+                        //通訊地址欄位一列只有20個字，所以超過20個字要切
+                        String telAddress1 = teleAddressAddress;
+                        String telAddress2 = "";
+                        if(teleAddressAddress.length() > 20) {
+                            telAddress1 = teleAddressAddress.substring(0,20);
+                            telAddress2 = teleAddressAddress.substring(20);
+                        }
                         rqBean53 = new RQBean();
                         rqBean53.setTxId("EB032153");
                         rqBean53.addRqParam("CUST_NO",id);
@@ -235,8 +278,8 @@ public class PersonalInfo3 implements ILogic {
                         rqBean53.addRqParam("COD_01","3802");
                         rqBean53.addRqParam("TYP_01","2");
                         rqBean53.addRqParam("ZIP_COD_01",teleAddressZipCode);
-                        rqBean53.addRqParam("ADDR_011",teleAddressAddress);
-//                        rqBean53.addRqParam("ADDR_012",teleAddressAddress);
+                        rqBean53.addRqParam("ADDR_011",telAddress1);
+                        rqBean53.addRqParam("ADDR_012",telAddress2);
 
                         rqBean53.setHeaderPageFlg("3");
                         rqBean53.setHeaderDBAppn(hspSck);
@@ -255,6 +298,11 @@ public class PersonalInfo3 implements ILogic {
                         rqBean54.addRqParam("CUST_NO",id);
 
                         rsBean = WebServiceAgent.callWebService(rqBean54);
+
+                        if(!rsBean.isSuccess()) {
+                            errorCode = rsBean.getErrorCode();
+                            throw new Exception(rsBean.getErrorMsg());
+                        }
 
                         //先取得目前序號
                         String hspSck54 = rsBean.getServiceHeader().getHSPSCK();
@@ -325,24 +373,7 @@ public class PersonalInfo3 implements ILogic {
             e.printStackTrace();
         }
 
-        if(StringUtils.isNotEmpty(domicileAddressCityId)) {
-            domicileAddressCityId = ProjUtils.toCityName(domicileAddressCityId,dao);
-        }
 
-        if(StringUtils.isNotEmpty(teleAddressCityId)) {
-            teleAddressCityId = ProjUtils.toCityName(teleAddressCityId,dao);
-        }
-
-        if(StringUtils.isNotEmpty(domicileAddressZipCode)) {
-            domicileAddressZipCode = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
-        }
-
-        if(StringUtils.isNotEmpty(teleAddressZipCode)) {
-            teleAddressZipCode = ProjUtils.toZipCodeName(teleAddressZipCode,dao);
-        }
-
-        domicileAddressAddress = domicileAddressCityId + domicileAddressZipCode + domicileLinerName + domicileAddressLiner + domicileAddressNeighborhood + domicileAddressAddress;
-        teleAddressAddress = teleAddressCityId + teleAddressZipCode + teleAddressAddress;
 
         //裝值到content
         content.put("isRecord",isRecord);

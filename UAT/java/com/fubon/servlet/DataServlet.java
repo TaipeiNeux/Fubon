@@ -255,7 +255,14 @@ public class DataServlet extends HttpServlet {
 
                             //Email抓8001、通訊地址抓3802
                             email = ProjUtils.get032153Col8001(doc);
+                            String teleAddressZipCode = ProjUtils.get032153Col3802ZipCode(doc);
                             teleAddressAddress = ProjUtils.get032153Col3802Address(doc);
+
+                            //2016-08-23 added by titan 因為電文地址是包含縣市，所以先用zipcode去查中文後，再用中文來切
+                            String zipName = ProjUtils.toZipCodeName(teleAddressZipCode,dao);
+                            if(StringUtils.isNotEmpty(zipName) && teleAddressAddress.contains(zipName)) {
+                                teleAddressAddress = teleAddressAddress.substring(teleAddressAddress.indexOf(zipName) + zipName.length());
+                            }
                         }
 
                         RQBean rqBean54 = new RQBean();
@@ -1278,6 +1285,9 @@ public class DataServlet extends HttpServlet {
                     domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
                     domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
                 }
+
+                //2016-08-23 added by titan 轉隱碼
+                name = StringEscapeUtils.unescapeHtml4(name);
 
                 //隱碼
                 if(!"Y".equalsIgnoreCase(noMark)) {

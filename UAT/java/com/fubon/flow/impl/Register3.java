@@ -26,7 +26,12 @@ public class Register3 implements ILogic {
 
 
         //取得第二步的草稿資料
-        String draftXML = String.valueOf(queryStringInfo.getRequest().getSession().getAttribute("register_register2"));
+        Object register2 = queryStringInfo.getRequest().getSession().getAttribute("register_register2");
+        if(register2 == null) {
+            throw new Exception("操作逾時，請回到第一步重新填寫");
+        }
+
+        String draftXML = String.valueOf(register2);
         Document step2Doc = DocumentHelper.parseText(draftXML);
         Element step2Root = step2Doc.getRootElement();
 
