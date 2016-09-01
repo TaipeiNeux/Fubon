@@ -98,6 +98,12 @@ public class PersonalInfo1 implements ILogic {
                     email = ProjUtils.get032153Col8001(doc);
                     teleAddressZipCode = ProjUtils.get032153Col3802ZipCode(doc);
                     teleAddressAddress = ProjUtils.get032153Col3802Address(doc);
+
+                    //2016-08-23 added by titan 因為電文地址是包含縣市，所以先用zipcode去查中文後，再用中文來切
+                    String zipName = ProjUtils.toZipCodeName(teleAddressZipCode,dao);
+                    if(StringUtils.isNotEmpty(zipName) && teleAddressAddress.contains(zipName)) {
+                        teleAddressAddress = teleAddressAddress.substring(teleAddressAddress.indexOf(zipName) + zipName.length());
+                    }
                 }
 
                 RQBean rqBean54 = new RQBean();

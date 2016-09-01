@@ -47,7 +47,7 @@ public class Apply2 implements ILogic {
         String guarantorText = "";
         String thirdParty_relationship = "" , thirdPartyTitle = "";
 
-        String father_sameAddrHidden = "" , mother_sameAddrHidden = "",thirdParty_sameAddrHidden = "",pouse_sameAddrHidden = "";
+        String father_sameAddrHidden = "" , mother_sameAddrHidden = "", thirdParty_sameAddrHidden = "", spouse_sameAddrHidden = "";
 
         String father_RadioBtn = "" , mother_RadioBtn = "" ,thirdParty_RadioBtn = "" , spouse_RadioBtn = "", father_checkbox = "", mother_checkbox = "";
 
@@ -58,9 +58,12 @@ public class Apply2 implements ILogic {
         String lastIsGuarantor = "";//上次撥款紀錄中的保人(4碼)
         String lastIncomeTax = "";//上次撥款紀錄的合計所得對象
 
-        //2016-08-14 Steven 檢查本學期有無申請案件
-        DataObject aplyMemberYearData = null;
-        aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
+        DataObject aplyMemberData = null;
+        aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) {
+        	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        }
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -75,7 +78,7 @@ public class Apply2 implements ILogic {
             if(root.element("father_sameAddrHidden") != null) father_sameAddrHidden = root.element("father_sameAddrHidden").getText();
             if(root.element("mother_sameAddrHidden") != null) mother_sameAddrHidden = root.element("mother_sameAddrHidden").getText();
             if(root.element("thirdParty_sameAddrHidden") != null) thirdParty_sameAddrHidden = root.element("thirdParty_sameAddrHidden").getText();
-            if(root.element("pouse_sameAddrHidden") != null) pouse_sameAddrHidden = root.element("pouse_sameAddrHidden").getText();
+            if(root.element("spouse_sameAddrHidden") != null) spouse_sameAddrHidden = root.element("spouse_sameAddrHidden").getText();
 
             if(root.element("father_String") != null) father_String = root.element("father_String").getText();
             if(root.element("mother_String") != null) mother_String = root.element("mother_String").getText();
@@ -91,74 +94,90 @@ public class Apply2 implements ILogic {
 
             if(root.element("relationshipTitle") != null) relationshipTitle = root.element("relationshipTitle").getText();
         }
-        //本學期有申請過案件
-        else if (aplyMemberYearData != null){
-            String isFaGuarantor = aplyMemberYearData.getValue("Fa_Guarantor");//父親是否為連帶保證人
-            String isMaGuarantor = aplyMemberYearData.getValue("Ma_Guarantor");//母親是否為連帶保證人
-            String isGd1Guarantor = aplyMemberYearData.getValue("Gd1_Guarantor");//監護人是否為連帶保證人
-            String isPaGuarantor = aplyMemberYearData.getValue("Pa_Guarantor");//是否為連帶保證人
-            String isWarGuarantor = aplyMemberYearData.getValue("War_Guarantor");//是否為連帶保證人
-            boolean isAdult = ProjUtils.isAdult(aplyMemberYearData.getValue("AplyBirthday"));
-
-            //是否為連帶保證人
-            isGuarantor = "";
-            if("Y".equalsIgnoreCase(isFaGuarantor)) isGuarantor += "1";
-            else isGuarantor += "0";
-
-            if("Y".equalsIgnoreCase(isMaGuarantor)) isGuarantor += "1";
-            else isGuarantor += "0";
-
-            if(isAdult && "Y".equalsIgnoreCase(isWarGuarantor)) isGuarantor += "1";
-            else if(!isAdult && "Y".equalsIgnoreCase(isGd1Guarantor)) isGuarantor += "1";
-            else isGuarantor += "0";
-
-            if("Y".equalsIgnoreCase(isPaGuarantor)) isGuarantor += "1";
-            else isGuarantor += "0";
-
-            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
-            familyStatus = aplyMemberYearData.getValue("FamilyStatus");
-            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+        //本學期有申請過案件就撈申請案件；無則撈撥款紀錄
+        else if (aplyMemberData != null){
+        	boolean isAdult = ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
+        	String thirdParty = isAdult ? "War" : "Gd1";
+        	
+        	DataObject aplyMemberGuarantor = null;
+        	aplyMemberGuarantor = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Guarantor");
+        	aplyMemberGuarantor.setValue("AplyNo", aplyMemberData.getValue("AplyNo"));
+        	
+        	//連帶保證人
+        	String isFaGuarantor = "", isMaGuarantor = "", isGd1Guarantor = "", isPaGuarantor = "", isWarGuarantor = "";
+        	if (dao.querySingle(aplyMemberGuarantor,null)) {
+	        	isFaGuarantor = aplyMemberGuarantor.getValue("Fa_Guarantor") != null && aplyMemberGuarantor.getValue("Fa_Guarantor").equalsIgnoreCase("Y") ? "1" : "0";//父親是否為連帶保證人
+	        	isMaGuarantor = aplyMemberGuarantor.getValue("Ma_Guarantor") != null && aplyMemberGuarantor.getValue("Ma_Guarantor").equalsIgnoreCase("Y") ? "1" : "0";//母親是否為連帶保證人
+	        	isGd1Guarantor = aplyMemberGuarantor.getValue(thirdParty + "_Guarantor") != null && aplyMemberGuarantor.getValue(thirdParty + "_Guarantor").equalsIgnoreCase("Y") ? "1" : "0";//監護人是否為連帶保證人
+	        	isPaGuarantor = aplyMemberGuarantor.getValue("Pa_Guarantor") != null && aplyMemberGuarantor.getValue("Pa_Guarantor").equalsIgnoreCase("Y") ? "1" : "0";//是否為連帶保證人
+//	            isWarGuarantor = aplyMemberGuarantor != null && aplyMemberGuarantor.getValue("War_Guarantor") != null && aplyMemberGuarantor.getValue("War_Guarantor").equalsIgnoreCase("Y") ? "1" : "0";//是否為連帶保證人
+	    		isGuarantor = isFaGuarantor + isMaGuarantor + isGd1Guarantor + isPaGuarantor;
+        	} else {
+        		isGuarantor = "0000";
+        	}
+        	
+    		//所得合計對象
+            String isFaIncome = aplyMemberData.getValue("Fa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//父親是否為所得合計對象
+            String isMaIncome = aplyMemberData.getValue("Ma_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//母親是否為所得合計對象
+            String isGd1Income = aplyMemberData.getValue(thirdParty + "_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//監護人一是否為所得合計對象
+            String isPaIncome = aplyMemberData.getValue("Pa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//配偶是否為所得合計對象
+//          String isWarIncome = aplyMemberData.getValue("War_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//監護人一是否為所得合計對象
+            incomeTax = isFaIncome + isMaIncome + isGd1Income + isPaIncome;
+            
+            String marryStatusTmp = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
+            familyStatus = aplyMemberData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 2) {
                 String[] statusArray = familyStatus.split("_");
-                familyStatusLevel1 = statusArray[0];
-                familyStatusLevel2 = statusArray[1];
+                familyStatusLevel1 = statusArray.length > 0 ? statusArray[0] : "0";
+                familyStatusLevel2 = statusArray.length >= 2 ? statusArray[1] : "0";
             }
-
             JSONObject clickLevel = new JSONObject();
-            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatus, isAdult);
+            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatusTmp, isAdult);
 
             familyStatus = clickLevel.getString("familyStatus");
             guarantorStatus = clickLevel.getString("guarantorStatus");
             incomeTax = clickLevel.getString("incomeTax");
-            showInfo = familyStatus;
+            
+            //代入基本連帶保證人
+            String isGuarantorTmp = ""; 
+            for(int i = 0; i<isGuarantor.length(); i++){
+            	isGuarantorTmp += guarantorStatus.substring(i, i + 1).equals("1") || isGuarantor.substring(i, i + 1).equals("1") ? "1" : "0";
+            }
+            isGuarantor = isGuarantorTmp;
+            
+            //代入基本所得合計對象
+            String incomeTaxTmp = ""; 
+            for(int i = 0; i<incomeTax.length(); i++){
+            	incomeTaxTmp += incomeTax.substring(i, i + 1).equals("1") || incomeTax.substring(i, i + 1).equals("1") ? "1" : "0";
+            }
+            incomeTax = incomeTaxTmp;
+            
+            thirdParty_relationship = aplyMemberData.getValue(thirdParty + "_Rel");
+            thirdPartyTitle = aplyMemberData.getValue(thirdParty + "_Name");
 
-            thirdParty_relationship = aplyMemberYearData.getValue("War_Rel");
-            thirdPartyTitle = aplyMemberYearData.getValue("War_Name");
-
-            father_sameAddrHidden = "";
-            mother_sameAddrHidden = "";
-            thirdParty_sameAddrHidden = "";
-            pouse_sameAddrHidden = "";
+            father_sameAddrHidden = setSameAddrHidden("Fa", aplyMemberData);
+            mother_sameAddrHidden = setSameAddrHidden("Ma", aplyMemberData);
+            thirdParty_sameAddrHidden = setSameAddrHidden(thirdParty, aplyMemberData);
+            spouse_sameAddrHidden = setSameAddrHidden("Pa", aplyMemberData);
 
             father_String = setFamilyString(guarantorStatus, incomeTax, "father");
             mother_String = setFamilyString(guarantorStatus, incomeTax, "mother");
             thirdParty_String = setFamilyString(guarantorStatus, incomeTax, "thirdParty");
             spouse_String = setFamilyString(guarantorStatus, incomeTax, "spouse");
 
-            father_RadioBtn = "";
-            mother_RadioBtn = "";
-            thirdParty_RadioBtn = "";
-            spouse_RadioBtn = "";
-            father_checkbox = "";
-            mother_checkbox = "";
-
-            relationshipTitle = "";
+            father_RadioBtn = isFaGuarantor.equals("1")? "1" : "2";
+    		mother_RadioBtn = isMaGuarantor.equals("1")? "1" : "2";
+    		thirdParty_RadioBtn = isGd1Guarantor.equals("1") ? "1" : "2";
+    		spouse_RadioBtn = isPaGuarantor.equals("1")? "1" : "2";
+    		father_checkbox = isFaIncome.equals("1")? "1" : "2";
+    		mother_checkbox = isMaIncome.equals("1")? "1" : "2";
+            
+            relationshipTitle = aplyMemberData.getValue(thirdParty + "_Rel");
         }
 
-        //取得第1-1、1-2步的草稿資料
+        //取得第1-1的草稿資料
 
         String draftXML1 = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
-        String draftXML2 = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);
-
         if(StringUtils.isNotEmpty(draftXML1)) {
             Document step1Doc = DocumentHelper.parseText(draftXML1);
             Element step1Root = step1Doc.getRootElement();
@@ -168,8 +187,6 @@ public class Apply2 implements ILogic {
             String dayBirthday = step1Root.element("birthday4").getText();
             birthday = yearBirthday + monthBirthday + dayBirthday;
 
-
-//        if(step1Root.element("birthday") != null) birthday = step1Root.element("birthday").getText();
             if(step1Root.element("domicileCityId") != null) domicileAddressCityId = step1Root.element("domicileCityId").getText();
             if(step1Root.element("domicileZipCode") != null) domicileAddressZipCode = step1Root.element("domicileZipCode").getText();
             if(step1Root.element("domicileLinerName") != null) domicileLinerName = step1Root.element("domicileLinerName").getText();
@@ -186,35 +203,35 @@ public class Apply2 implements ILogic {
             if(step1Root.element("sameAddrHidden") != null) sameAddrHidden = step1Root.element("sameAddrHidden").getText();
 
         }
-        else if (aplyMemberYearData != null){
-            birthday = aplyMemberYearData.getValue("AplyBirthday");
+        else if (aplyMemberData != null){
+            birthday = aplyMemberData.getValue("AplyBirthday");
             String yearBirthday = birthday.substring(0,3);
             String monthBirthday = birthday.substring(3,5);
             String dayBirthday = birthday.substring(5,7);
             birthday = yearBirthday + monthBirthday + dayBirthday;
 
-            String zipCode1 = aplyMemberYearData.getValue("AplyZip1");
+            String zipCode1 = aplyMemberData.getValue("AplyZip1");
             domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
 //            domicileLinerName = "";
             domicileAddressZipCode = zipCode1; //戶藉行政區
-            domicileAddressLiner = aplyMemberYearData.getValue("Aply1Village");//戶藉村/里名稱(中文)
-            domicileAddressNeighborhood = aplyMemberYearData.getValue("AplyAddr1_3");
-            domicileAddressAddress = aplyMemberYearData.getValue("AplyAddr1");
+            domicileAddressLiner = aplyMemberData.getValue("Aply1Village");//戶藉村/里名稱(中文)
+            domicileAddressNeighborhood = aplyMemberData.getValue("AplyAddr1_3");
+            domicileAddressAddress = aplyMemberData.getValue("AplyAddr1");
 
-            String zipCode2 = aplyMemberYearData.getValue("AplyZip2");
+            String zipCode2 = aplyMemberData.getValue("AplyZip2");
             teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
             teleAddressZipCode = zipCode2;
-            teleAddressAddress = aplyMemberYearData.getValue("AplyAddr2");
+            teleAddressAddress = aplyMemberData.getValue("AplyAddr2");
 
-            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
+            marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
 //            sameAddrHidden = "";
         }
 
+        //取得第1-2步的草稿資料
+        String draftXML2 = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);
         if(StringUtils.isNotEmpty(draftXML2)) {
             Document step2Doc = DocumentHelper.parseText(draftXML2);
-
             Element step2Root = step2Doc.getRootElement();
-
 
             if(step2Root.element("familyStatus") != null) familyStatus = step2Root.element("familyStatus").getText();
             if(step2Root.element("guarantorStatus") != null) guarantorStatus = step2Root.element("guarantorStatus").getText();
@@ -227,89 +244,104 @@ public class Apply2 implements ILogic {
 
             if(step2Root.element("familyStatusLevel1") != null) familyStatusLevel1 = step2Root.element("familyStatusLevel1").getText();
             if(step2Root.element("familyStatusLevel2") != null) familyStatusLevel2 = step2Root.element("familyStatusLevel2").getText();
-
+            
+            String userMarriedHidden = "";
+            if(step2Root.element("userMarriedHidden") != null) userMarriedHidden = step2Root.element("userMarriedHidden").getText();
+            if(userMarriedHidden.equalsIgnoreCase("Y")){
+	            father_RadioBtn = "";
+	    		mother_RadioBtn = "";
+	    		thirdParty_RadioBtn = "";
+	    		spouse_RadioBtn = "";
+	    		father_checkbox = "";
+	    		mother_checkbox = "";
+            }
         }
-        else if (aplyMemberYearData != null){
-            boolean isAdult = ProjUtils.isAdult(aplyMemberYearData.getValue("AplyBirthday"));
-            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
-            familyStatus = aplyMemberYearData.getValue("FamilyStatus");
-            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+        else if (aplyMemberData != null){
+            boolean isAdult = ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
+        	String thirdParty = isAdult ? "War" : "Gd1";
+        	
+            String marryStatusTmp = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
+            familyStatus = aplyMemberData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 2) {
                 String[] statusArray = familyStatus.split("_");
-                familyStatusLevel1 = statusArray[0];
-                familyStatusLevel2 = statusArray[1];
+                familyStatusLevel1 = statusArray.length > 0 ? statusArray[0] : "0";
+                familyStatusLevel2 = statusArray.length >= 2 ? statusArray[1] : "1";
             }
             JSONObject clickLevel = new JSONObject();
-            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatus, isAdult);
+            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatusTmp, isAdult);
 
             familyStatus = clickLevel.getString("familyStatus");
             guarantorStatus = clickLevel.getString("guarantorStatus");
 
-            incomeTax = clickLevel.getString("incomeTax");
+            //所得合計對象
+            String isFaIncome = aplyMemberData.getValue("Fa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//父親是否為所得合計對象
+            String isMaIncome = aplyMemberData.getValue("Ma_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//母親是否為所得合計對象
+            String isGd1Income = aplyMemberData.getValue(thirdParty + "_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//監護人一是否為所得合計對象
+            String isPaIncome = aplyMemberData.getValue("Pa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//配偶是否為所得合計對象
+//            String isWarIncome = aplyMemberData.getValue("War_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//監護人一是否為所得合計對象
+            incomeTax = isFaIncome + isMaIncome + isGd1Income + isPaIncome;
+            
             applicantAdult = isAdult ? "Y" : "N";
 
             guarantorText = "";
             isSpouseForeignerHidden = "";
         };
 
+        
         //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
-        DataObject aplyMemberData = null;
-        if (aplyMemberYearData != null) {
-            aplyMemberData = aplyMemberYearData;
-        }
-        else if("Y".equalsIgnoreCase(isRecord)) {
+        if("Y".equalsIgnoreCase(isRecord)) {
             //帶入撥款紀錄
+        	aplyMemberData = null;
             aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-        }
-
-
-        if(aplyMemberData != null) {
-
-            //抓上次撥款的保人紀錄轉成4碼
-            Set<String> set = new HashSet<String>();
-
-            String res1Rel = aplyMemberData.getValue("Res1_Rel");
-            String res2Rel = aplyMemberData.getValue("Res2_Rel");
-            String res3Rel = aplyMemberData.getValue("Res3_Rel");
-            String warRel = aplyMemberData.getValue("War_Rel");
-
-            set.add(res1Rel);
-            set.add(res2Rel);
-            set.add(res3Rel);
-            set.add(warRel);
-
-            boolean isAdult = ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
-            lastIsGuarantor += set.contains("fa") ? "1" : "0";
-            lastIsGuarantor += set.contains("ma") ? "1" : "0";
-            if(!isAdult && set.contains("gd1")) {
-                lastIsGuarantor += "1";
-            }
-            else if(isAdult && StringUtils.isNotEmpty(warRel) && !"1A".equalsIgnoreCase(warRel)) {
-                lastIsGuarantor += "1";
-            }
-            else {
-                lastIsGuarantor += "0";
-            }
-
-            lastIsGuarantor += set.contains("1A") ? "1" : "0";
-
-            String familyStatusVal = aplyMemberData.getValue("FamilyStatus");
-            if(StringUtils.isNotEmpty(familyStatusVal) && familyStatusVal.length() >= 3) {
-                String[] statusArray = familyStatusVal.split("_");
-
-                String historyFamilyStatus1 = statusArray[0];
-                String historyFamilyStatus2 = statusArray[1];
-
-                if(familyStatusLevel1 != null && familyStatusLevel2 != null) {
-                    String currentFamilyStatusVal1 = familyStatusLevel1;
-                    String currentFamilyStatusVal2 = familyStatusLevel2;
-
-                    //判斷這次選的家庭狀況跟歷史是否一樣
-                    if(historyFamilyStatus1.equalsIgnoreCase(currentFamilyStatusVal1) &&
-                            historyFamilyStatus2.equalsIgnoreCase(currentFamilyStatusVal2) ) {
-                        isChanged = "N";
-                    }
-                }
-            }
+        
+	        if(aplyMemberData != null) {
+	
+	            //抓上次撥款的保人紀錄轉成4碼
+	            Set<String> set = new HashSet<String>();
+	
+	            String res1Rel = aplyMemberData.getValue("Res1_Rel");
+	            String res2Rel = aplyMemberData.getValue("Res2_Rel");
+	            String res3Rel = aplyMemberData.getValue("Res3_Rel");
+	            String warRel = aplyMemberData.getValue("War_Rel");
+	
+	            set.add(res1Rel);
+	            set.add(res2Rel);
+	            set.add(res3Rel);
+	            set.add(warRel);
+	
+	            boolean isAdult = ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
+	            lastIsGuarantor += set.contains("fa") ? "1" : "0";
+	            lastIsGuarantor += set.contains("ma") ? "1" : "0";
+	            if(!isAdult && set.contains("gd1")) {
+	                lastIsGuarantor += "1";
+	            }
+	            else if(isAdult && StringUtils.isNotEmpty(warRel) && !"1A".equalsIgnoreCase(warRel)) {
+	                lastIsGuarantor += "1";
+	            }
+	            else {
+	                lastIsGuarantor += "0";
+	            }
+	
+//	            lastIsGuarantor += set.contains("1A") ? "1" : "0";
+	
+	            String familyStatusVal = aplyMemberData.getValue("FamilyStatus");
+	            if(StringUtils.isNotEmpty(familyStatusVal) && familyStatusVal.length() >= 2) {
+	                String[] statusArray = familyStatusVal.split("_");
+	
+	                String historyFamilyStatus1 = statusArray.length > 0 ? statusArray[0] : "0";
+	                String historyFamilyStatus2 = statusArray.length >= 2 ? statusArray[1] : "1";
+	
+	                if(familyStatusLevel1 != null && familyStatusLevel2 != null) {
+	                    String currentFamilyStatusVal1 = familyStatusLevel1;
+	                    String currentFamilyStatusVal2 = familyStatusLevel2;
+	
+	                    //判斷這次選的家庭狀況跟歷史是否一樣
+	                    if(historyFamilyStatus1.equalsIgnoreCase(currentFamilyStatusVal1) && historyFamilyStatus2.equalsIgnoreCase(currentFamilyStatusVal2) ) {
+	                        isChanged = "N";
+	                    }
+	                }
+	            }
+	        }
         }
 
 
@@ -333,7 +365,8 @@ public class Apply2 implements ILogic {
             GardenLog.log(GardenLog.DEBUG,"teleAddressAddress = " + teleAddressAddress);
         }
 
-
+        showInfo = setShowInfo(familyStatus, father_RadioBtn, mother_RadioBtn, thirdParty_RadioBtn, spouse_RadioBtn, father_checkbox, mother_checkbox);
+        
         content.put("isRecord",isRecord);
         content.put("user_birthday",birthday);
         content.put("familyStatus",familyStatus);
@@ -358,7 +391,7 @@ public class Apply2 implements ILogic {
         content.put("father_sameAddr",father_sameAddrHidden);
         content.put("mother_sameAddr",mother_sameAddrHidden);
         content.put("thirdParty_sameAddr",thirdParty_sameAddrHidden);
-        content.put("spouse_sameAddr",pouse_sameAddrHidden);
+        content.put("spouse_sameAddr",spouse_sameAddrHidden);
 
         content.put("father_String",father_String);
         content.put("mother_String",mother_String);
@@ -390,7 +423,6 @@ public class Apply2 implements ILogic {
 //        teleAddress.put("neighborhood",teleAddressNeighborhood);
         teleAddress.put("address",teleAddressAddress);
         content.put("teleAddress",teleAddress);
-
     }
 
     @Override
@@ -399,7 +431,7 @@ public class Apply2 implements ILogic {
     }
 
     public void clickLevel2Option (JSONObject clickLevel, String familyStatusLevel1, String familyStatusLevel2, String marryStatus, boolean isAdult) throws JSONException {
-        String familyStatus = "", guarantorStatus = "", incomeTax = "";
+        String showInfo = "", familyStatus = "", guarantorStatus = "", incomeTax = "";
         int level1 = Integer.valueOf(familyStatusLevel1);
         int level2 = Integer.valueOf(familyStatusLevel2);
 
@@ -630,7 +662,7 @@ public class Apply2 implements ILogic {
                 }
             }
         }
-
+        
         clickLevel.put("familyStatus", familyStatus);
         clickLevel.put("guarantorStatus", guarantorStatus);
         clickLevel.put("incomeTax", incomeTax);
@@ -668,5 +700,59 @@ public class Apply2 implements ILogic {
         }
 
         return familyString;
+    }
+    
+    public String setSameAddrHidden(String type, DataObject aplyMemberData){
+    	String applyAddr1 = "", otherAddr = "";
+    	applyAddr1 += aplyMemberData.getValue("AplyZip1");
+    	applyAddr1 += aplyMemberData.getValue("Aply1Village");
+    	applyAddr1 += aplyMemberData.getValue("AplyAddr1_3");
+    	applyAddr1 += aplyMemberData.getValue("AplyAddr1");
+    	
+    	otherAddr += aplyMemberData.getValue(type + "_Zip");
+    	otherAddr += aplyMemberData.getValue(type + "Village");
+    	otherAddr += aplyMemberData.getValue(type + "_Addr_3");
+    	otherAddr += aplyMemberData.getValue(type + "Addr");
+    	
+    	return !applyAddr1.equals("") && applyAddr1.equals(otherAddr) ? "Y" : "N";
+    }
+    
+    public String setShowInfo(String familyStatus, String father_RadioBtn, String mother_RadioBtn, String thirdParty_RadioBtn, String spouse_RadioBtn, String father_checkbox, String mother_checkbox){
+    	String showInfo = "";
+    	father_RadioBtn = father_RadioBtn.equals("1")? "1" : "0";
+    	mother_RadioBtn = mother_RadioBtn.equals("1")? "1" : "0";
+    	thirdParty_RadioBtn = thirdParty_RadioBtn.equals("1")? "1" : "0";
+    	spouse_RadioBtn = spouse_RadioBtn.equals("1")? "1" : "0";
+    	father_checkbox = father_checkbox.equals("1")? "1" : "0";
+    	mother_checkbox = mother_checkbox.equals("1")? "1" : "0";
+    	
+    	String isGuarantor = father_RadioBtn + mother_RadioBtn + thirdParty_RadioBtn + spouse_RadioBtn;
+    	String incomeTax = father_checkbox + mother_checkbox + "0" + "0";
+    	
+        for(int i = 0; i<familyStatus.length(); i++){
+        	String familyStatusTmp = familyStatus.length() == 4 ? familyStatus.substring(i, i + 1) : "";
+        	String isGuarantorTmp = isGuarantor.length() == 4 ? isGuarantor.substring(i, i + 1) : "";
+        	String incomeTaxTmp = incomeTax.length() == 4 ? incomeTax.substring(i, i + 1) : "";
+        	
+        	switch (Integer.valueOf(familyStatusTmp)) {
+        		case 0: 
+        			showInfo += "0";
+        			break;
+        		
+        		case 1:
+        			showInfo += "1";
+        			break;
+        			
+        		case 2:
+        			showInfo += isGuarantorTmp.equals("1") || incomeTaxTmp.equals("1") ? "1" : "0";
+        			break;
+        			
+        		case 3:
+        			showInfo += "1";
+        			break;
+        	}
+        }
+        
+        return showInfo;
     }
 }

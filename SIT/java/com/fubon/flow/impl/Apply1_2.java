@@ -37,40 +37,32 @@ public class Apply1_2 implements ILogic {
 
         IDao dao = DaoFactory.getDefaultDao();
 
-        //2016-08-14 Steven 檢查本學期有無申請案件
-        DataObject aplyMemberYearData = null, aplyMemberData = null;
-        aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-        aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
+        DataObject aplyMemberData = null;
+        aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) {
+        	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        }
+        
         JSONObject LevelText = new JSONObject();
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
             Element root = draftData.getRootElement();
-            if(root.element("familyStatusLevel1") != null) familyStatusLevel1 = root.element("familyStatusLevel1").getText();
-            if(root.element("familyStatusLevel2") != null) familyStatusLevel2 = root.element("familyStatusLevel2").getText();
-
+            familyStatusLevel1 = root.element("familyStatusLevel1") != null && !root.element("familyStatusLevel1").getText().equals("") ? root.element("familyStatusLevel1").getText() : "0";
+            familyStatusLevel2 = root.element("familyStatusLevel2") != null && !root.element("familyStatusLevel2").getText().equals("") ? root.element("familyStatusLevel2").getText() : "1";
             if(root.element("familyStatusLevel1Text") != null) familyStatusLevel1Text = root.element("familyStatusLevel1Text").getText();
             if(root.element("familyStatusLevel2Text") != null) familyStatusLevel2Text = root.element("familyStatusLevel2Text").getText();
         }
-        //本學期有申請過案件
-        else if (aplyMemberYearData != null){
-            String familyStatus = aplyMemberYearData.getValue("FamilyStatus");
-            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
-                String[] statusArray = familyStatus.split("_");
-                familyStatusLevel1 = statusArray[0];
-                familyStatusLevel2 = statusArray[1];
-            }
-        }
-        //如果是已撥款戶，要抓之前的家庭狀況(有可能是空值，因為舊平台轉置時是空的，新平台上線後才有值)
-        else if (aplyMemberData != null && ProjUtils.isPayHistory(userId,dao)){
+        //本學期有申請過案件就撈申請案件；無則撈撥款紀錄，要抓之前的家庭狀況(有可能是空值，因為舊平台轉置時是空的，新平台上線後才有值)
+        else if (aplyMemberData != null){
             String familyStatus = aplyMemberData.getValue("FamilyStatus");
-            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 3) {
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 2) {
                 String[] statusArray = familyStatus.split("_");
-                familyStatusLevel1 = statusArray[0];
-                familyStatusLevel2 = statusArray[1];
+                familyStatusLevel1 = statusArray.length > 0 ? statusArray[0] : "0";
+                familyStatusLevel2 = statusArray.length >= 2 ? statusArray[1] : "1";
             }
         }
-
 
         //取得第一步的草稿資料
         String draftXML = FlowUtils.getDraftData(userId,"apply","apply1_1",dao);
@@ -86,22 +78,16 @@ public class Apply1_2 implements ILogic {
             birthday = yearBirthday + monthBirthday + dayBirthday;
             marryStatus = step1Root.element("marryStatus").getText();
         }
-        else if (aplyMemberYearData != null){
-            birthday = aplyMemberYearData.getValue("AplyBirthday");
-            String yearBirthday = birthday.substring(0,3);
-            String monthBirthday = birthday.substring(3,5);
-            String dayBirthday = birthday.substring(5,7);
-            birthday = yearBirthday + monthBirthday + dayBirthday;
-            marryStatus = ProjUtils.toMarryName(aplyMemberYearData.getValue("Marriage"));
-        }
-        else if (aplyMemberData != null) {
-            birthday = aplyMemberData.getValue("AplyBirthday");
+        else if (aplyMemberData != null){
+        	birthday = aplyMemberData.getValue("AplyBirthday");
+        	birthday = ProjUtils.toBirthday(birthday);
             String yearBirthday = birthday.substring(0,3);
             String monthBirthday = birthday.substring(3,5);
             String dayBirthday = birthday.substring(5,7);
             birthday = yearBirthday + monthBirthday + dayBirthday;
             marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
         }
+        
 
         setLevelText(LevelText, marryStatus, familyStatusLevel1, familyStatusLevel2);
         familyStatusLevel1Text = LevelText.getString("familyStatusLevel1Text");
@@ -147,7 +133,7 @@ public class Apply1_2 implements ILogic {
                         familyStatusLevel1Text = "配偶非為本國人";
                         switch (Integer.valueOf(familyStatusLevel2)) {
                             case 1:
-                                familyStatusLevel2Text = "配偶擔任連帶保證人";
+                                familyStatusLevel2Text = "父親擔任連帶保證人";
                                 break;
                             case 2:
                                 familyStatusLevel2Text = "母親擔任連帶保證人";
@@ -161,7 +147,7 @@ public class Apply1_2 implements ILogic {
                         familyStatusLevel1Text = "離婚";
                         switch (Integer.valueOf(familyStatusLevel2)) {
                             case 1:
-                                familyStatusLevel2Text = "配偶擔任連帶保證人";
+                                familyStatusLevel2Text = "父親擔任連帶保證人";
                                 break;
                             case 2:
                                 familyStatusLevel2Text = "母親擔任連帶保證人";
@@ -175,7 +161,7 @@ public class Apply1_2 implements ILogic {
                         familyStatusLevel1Text = "配偶過世";
                         switch (Integer.valueOf(familyStatusLevel2)) {
                             case 1:
-                                familyStatusLevel2Text = "配偶擔任連帶保證人";
+                                familyStatusLevel2Text = "父親擔任連帶保證人";
                                 break;
                             case 2:
                                 familyStatusLevel2Text = "母親擔任連帶保證人";
@@ -242,7 +228,6 @@ public class Apply1_2 implements ILogic {
                 }
             }
         }
-
 
         LevelText.put("familyStatusLevel1Text", familyStatusLevel1Text);
         LevelText.put("familyStatusLevel2Text", familyStatusLevel2Text);

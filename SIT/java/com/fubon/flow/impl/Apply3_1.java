@@ -1,17 +1,16 @@
 package com.fubon.flow.impl;
 
-import com.neux.garden.authorization.LoginUserBean;
-import com.neux.garden.dbmgr.DaoFactory;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.json.JSONObject;
+
 import com.fubon.flow.ILogic;
 import com.fubon.utils.ProjUtils;
+import com.neux.garden.authorization.LoginUserBean;
+import com.neux.garden.dbmgr.DaoFactory;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.json.JSONObject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,11 +46,12 @@ public class Apply3_1 implements ILogic {
 
         String loanAmt = "";
 
-        //2016-08-14 Steven 檢查本學期有無申請案件
-        DataObject aplyMemberYearData = null, aplyMemberData = null;
-        aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-        aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-
+        //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
+        DataObject aplyMemberData = null;
+        aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) {
+        	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        }
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -77,33 +77,8 @@ public class Apply3_1 implements ILogic {
 
             if(root.element("loanAmt") != null) loanAmt = root.element("loanAmt").getText();
         }
-        //本學期有申請過案件
-        else if (aplyMemberYearData != null){
-            educationStage = aplyMemberYearData.getValue("schoolType3");
-            schoolIsNational = aplyMemberYearData.getValue("schoolType1");
-            schoolName = aplyMemberYearData.getValue("schoolCode");
-            schoolIsDay = aplyMemberYearData.getValue("schoolType2");
-
-            department = aplyMemberYearData.getValue("subject");
-            onTheJob = "0".equals(aplyMemberYearData.getValue("schoolWorkFlag")) ? "N" : "Y";
-
-            gradeClassGrade = aplyMemberYearData.getValue("class1");
-            gradeClassClass = aplyMemberYearData.getValue("class2");
-
-            studentId = aplyMemberYearData.getValue("learnId");
-
-            enterDateYear = aplyMemberYearData.getValue("EnterDT").substring(0,4);
-            enterDateMonth = aplyMemberYearData.getValue("EnterDT").substring(4);
-            graduationDateYear = aplyMemberYearData.getValue("FinishDT").substring(0,4);
-            graduationDateMonth = aplyMemberYearData.getValue("FinishDT").substring(4);
-
-            //轉為民國年
-            enterDateYear = ProjUtils.toBirthday(enterDateYear);
-            graduationDateYear = ProjUtils.toBirthday(graduationDateYear);
-        }
-        //如果是已撥款帳戶，要比對上次選的跟這次選的家庭狀況是否一致
-        //帶入撥款紀錄
-        else if(aplyMemberData != null && ProjUtils.isPayHistory(userId,dao)) {
+        //本學期有申請過案件就撈申請案件；無則撈撥款紀錄
+        else if(aplyMemberData != null) {
             educationStage = aplyMemberData.getValue("schoolType3");
             schoolIsNational = aplyMemberData.getValue("schoolType1");
             schoolName = aplyMemberData.getValue("schoolCode");
@@ -127,7 +102,8 @@ public class Apply3_1 implements ILogic {
             graduationDateYear = ProjUtils.toBirthday(graduationDateYear);
         }
 
-
+        aplyMemberData = null;
+        aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
         if(aplyMemberData != null) {
             lastEnterDate = aplyMemberData.getValue("EnterDT");
             lastEnterDate = ProjUtils.toBirthday(lastEnterDate);

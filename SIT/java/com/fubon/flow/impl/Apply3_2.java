@@ -40,7 +40,7 @@ public class Apply3_2 implements ILogic {
         String whiteList = "";//此身份是否在白名單中
 
         IDao dao = DaoFactory.getDefaultDao();
-        DataObject aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
         String applyDraftXML3 = FlowUtils.getDraftData(userId,"apply","apply3_1",dao);
         if (applyDraftXML3 != null) {
             Document draftDoc = DocumentHelper.parseText(applyDraftXML3);
@@ -49,9 +49,9 @@ public class Apply3_2 implements ILogic {
             stageSelectValue = draftRoot.element("stageSelectValue") != null ? draftRoot.element("stageSelectValue").getText() : "";
             OnTheJob = draftRoot.element("onTheJobHidden").getText();
         }
-        else if (aplyMemberYearData != null){
-            stageSelectValue = aplyMemberYearData.getValue("schoolType3");
-            OnTheJob = "0".equals(aplyMemberYearData.getValue("schoolWorkFlag")) ? "N" : "Y";
+        else if (aplyMemberData != null){
+            stageSelectValue = aplyMemberData.getValue("schoolType3");
+            OnTheJob = "0".equals(aplyMemberData.getValue("schoolWorkFlag")) ? "N" : "Y";
         }
 
 
@@ -80,36 +80,36 @@ public class Apply3_2 implements ILogic {
             if(root.element("freedom_sum") != null) freedom_sum = root.element("freedom_sum").getText();
         }
         //先取得「本學期」申請資料
-        else if (aplyMemberYearData != null){
-            loans = aplyMemberYearData.getValue("loanType");
-            accordingToBillLoansSum = aplyMemberYearData.getValue("renderAmt_school");
+        else if (aplyMemberData != null){
+            loans = aplyMemberData.getValue("loanType");
+            accordingToBillLoansSum = aplyMemberData.getValue("renderAmt_school");
 
             if("1".equalsIgnoreCase(loans)) {
-                accordingToBillBook = aplyMemberYearData.getValue("renderAmt_book");
-                accordingToBillLive = aplyMemberYearData.getValue("renderAmt_lodging");
-                accordingToBillAbroad = aplyMemberYearData.getValue("renderAmt_study");
-                accordingToBillLife = aplyMemberYearData.getValue("renderAmt_living");
+                accordingToBillBook = aplyMemberData.getValue("renderAmt_book");
+                accordingToBillLive = aplyMemberData.getValue("renderAmt_lodging");
+                accordingToBillAbroad = aplyMemberData.getValue("renderAmt_study");
+                accordingToBillLife = aplyMemberData.getValue("renderAmt_living");
 
             }
             else {
-                freedomMusic = aplyMemberYearData.getValue("renderAmt_music");
-                freedomBook = aplyMemberYearData.getValue("renderAmt_book");
-                freedomLive = aplyMemberYearData.getValue("renderAmt_lodging");
-                freedomAbroad = aplyMemberYearData.getValue("renderAmt_study");
-                freedomLife = aplyMemberYearData.getValue("renderAmt_living");
+                freedomMusic = aplyMemberData.getValue("renderAmt_music");
+                freedomBook = aplyMemberData.getValue("renderAmt_book");
+                freedomLive = aplyMemberData.getValue("renderAmt_lodging");
+                freedomAbroad = aplyMemberData.getValue("renderAmt_study");
+                freedomLife = aplyMemberData.getValue("renderAmt_living");
             }
 
-            String scholarshipFlag = aplyMemberYearData.getValue("scholarshipFlag");
+            String scholarshipFlag = aplyMemberData.getValue("scholarshipFlag");
 
-            accordingToBillPublicExpense = "N".equals(scholarshipFlag) ? "0" : "1";
-            freedomPublicExpense = "N".equals(scholarshipFlag) ? "0" : "1";
+            accordingToBillPublicExpense = "Y".equals(scholarshipFlag) ? aplyMemberData.getValue("scholarship") : "0";
+            freedomPublicExpense = "Y".equals(scholarshipFlag) ? aplyMemberData.getValue("scholarship") : "0";
 
-            freedomCredit = aplyMemberYearData.getValue("renderAmt_education");
-            freedomFPA = aplyMemberYearData.getValue("renderAmt_insurance");
-            freedomPractice = aplyMemberYearData.getValue("renderAmt_practice");
+            freedomCredit = aplyMemberData.getValue("renderAmt_education");
+            freedomFPA = aplyMemberData.getValue("renderAmt_insurance");
+            freedomPractice = aplyMemberData.getValue("renderAmt_practice");
 
-            accordingToBill_sum = aplyMemberYearData.getValue("renderAmt");
-            freedom_sum = aplyMemberYearData.getValue("renderAmt");
+            accordingToBill_sum = aplyMemberData.getValue("renderAmt");
+            freedom_sum = aplyMemberData.getValue("renderAmt");
         }
 
         //0804 added by titan 加上白名單

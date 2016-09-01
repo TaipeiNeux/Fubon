@@ -255,7 +255,33 @@ public class DataServlet extends HttpServlet {
 
                             //Email抓8001、通訊地址抓3802
                             email = ProjUtils.get032153Col8001(doc);
+                            String teleAddressZipCode = ProjUtils.get032153Col3802ZipCode(doc);
                             teleAddressAddress = ProjUtils.get032153Col3802Address(doc);
+
+                            //2016-08-23 added by titan 因為電文地址是包含縣市，所以先用zipcode去查中文後，再用中文來切
+                            String zipName = ProjUtils.toZipCodeName(teleAddressZipCode,dao);
+
+                            GardenLog.log(GardenLog.DEBUG,"teleAddressZipCode1 = " + teleAddressZipCode);
+                            GardenLog.log(GardenLog.DEBUG,"teleAddressAddress1 = " + teleAddressAddress);
+
+                            if(StringUtils.isNotEmpty(zipName) && teleAddressAddress.contains(zipName)) {
+                                teleAddressAddress = teleAddressAddress.substring(teleAddressAddress.indexOf(zipName) + zipName.length());
+                            }
+
+                            //2016-08-25 added by titan 確認頁要往回推縣市跟行政區
+                            String cityId = ProjUtils.toCityId(teleAddressZipCode,dao);
+
+                            GardenLog.log(GardenLog.DEBUG,"cityId = " + cityId);
+
+                            if(StringUtils.isNotEmpty(cityId)) {
+                                String cityName = ProjUtils.toCityName(cityId,dao);
+                                GardenLog.log(GardenLog.DEBUG,"cityName = " + cityName);
+
+                                teleAddressAddress = cityName + zipName + teleAddressAddress;
+                            }
+
+                            GardenLog.log(GardenLog.DEBUG,"teleAddressAddress2 = " + teleAddressAddress);
+
                         }
 
                         RQBean rqBean54 = new RQBean();
@@ -1096,14 +1122,12 @@ public class DataServlet extends HttpServlet {
     }
 
     public void getFamilyInfo(JSPQueryStringInfo queryStringInfo, HttpServletResponse resp) {
-
         HttpServletRequest req = queryStringInfo.getRequest();
         String type = queryStringInfo.getParam("type");
         String convert = queryStringInfo.getParam("convert");
         String noMark = queryStringInfo.getParam("noMark");
 
         JSONObject jsonObject = new JSONObject();
-
         JSONObject header = new JSONObject();
         JSONObject content = new JSONObject();
 
@@ -1120,55 +1144,47 @@ public class DataServlet extends HttpServlet {
                 header.put("errorMsg", "系統逾時，請重新登入");
             }
             else {
-
                 String userId = loginUserBean.getUserId();
                 String isGuarantor = "",id = "",name = "",birthday = "",telePhoneRegionCode = "",telePhonePhone = "",mobile = "";
                 String domicileAddressCityId = "" , domicileAddressCityName = "", domicileAddressZipCode = "",domicileAddressZipCodeName="",domicileLinerName = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
-
                 String applyBirthday = "";
+
+                //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
+                DataObject aplyMemberData = null;
+                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+                if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) {
+                    aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+                }
 
                 //取得第1-1跟第二步的草稿
                 String draftXML1 = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
                 if(draftXML1 != null){
-                    Document doc1 = DocumentHelper.parseText(draftXML1);
-                    Element root1 = doc1.getRootElement();
+                    Document doc = DocumentHelper.parseText(draftXML1);
+                    Element root = doc.getRootElement();
 
                     if(StringUtils.isNotEmpty(draftXML1)) {
                         //抓申請人生日
-                        String yearBirthday = root1.element("birthday0").getText();
-                        String monthBirthday = root1.element("birthday2").getText();
-                        String dayBirthday = root1.element("birthday4").getText();
+                        String yearBirthday = root.element("birthday0").getText();
+                        String monthBirthday = root.element("birthday2").getText();
+                        String dayBirthday = root.element("birthday4").getText();
 
-                        //                    if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
+                        //if(root1.element("birthday") != null) applyBirthday = root1.element("birthday").getText();
                         applyBirthday = yearBirthday + monthBirthday + dayBirthday;
-
                         applyBirthday = ProjUtils.toYYYYBirthday(applyBirthday);
                     }
-                }else{
-                    //2016-08-14 Steven 檢查本學期有無申請案件
-                    DataObject aplyMemberYearData = null;
-                    aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-
-                    applyBirthday = aplyMemberYearData.getValue("AplyBirthday");
-                    applyBirthday = ProjUtils.toBirthday(applyBirthday);
-                    String yearBirthday = applyBirthday.substring(0,3);
-                    String monthBirthday = applyBirthday.substring(3,5);
-                    String dayBirthday = applyBirthday.substring(5,7);
-                    applyBirthday = yearBirthday + monthBirthday + dayBirthday;
-                    applyBirthday = ProjUtils.toYYYYBirthday(applyBirthday);
+                }
+                else{
+                    applyBirthday = aplyMemberData.getValue("AplyBirthday");
                 }
 
-                //2016-08-14 Steven 檢查本學期有無申請案件
-                DataObject aplyMemberYearData = null;
-                aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
 
                 //如果有第二步草稿，就拿草稿的
                 String draftXML = FlowUtils.getDraftData(userId, "apply", "apply2", dao);
                 if(StringUtils.isNotEmpty(draftXML)) {
                     Document doc = DocumentHelper.parseText(draftXML);
                     Element root = doc.getRootElement();
-                    if(root.element(type + "_id") != null) {
 
+                    if(root.element(type + "_id") != null) {
                         id = root.element(type + "_id").getText();
                         name = root.element(type + "_name").getText();
                         birthday = ProjUtils.toDraftBirthday(root.element(type + "_birthday0").getText(),root.element(type + "_birthday2").getText(),root.element(type + "_birthday4").getText());
@@ -1182,88 +1198,42 @@ public class DataServlet extends HttpServlet {
                         domicileLinerName = root.element(type + "_liner_domi") != null ? root.element(type + "_liner_domi").getText() : "";
                         domicileAddressNeighborhood = root.element(type + "_neighborhood_domi") != null ? root.element(type + "_neighborhood_domi").getText() : "";
                         domicileAddressAddress = root.element(type + "_address_domi") != null ? root.element(type + "_address_domi").getText() : "";
-
                     }
-
                 }
-                //本學期有申請過案件
-                else if (aplyMemberYearData != null){
+                else if (aplyMemberData != null){
+                    //本學期有申請過案件就撈申請案件；無則撈撥款紀錄
+
                     //type：父親資料father / 母親資料mother / 第三人資料thirdParty / 配偶資料spouse
                     String dbColumnPrefix = familyTypeMap.get(type);
 
-                    if(aplyMemberYearData != null) {
+                    //判斷是否申請人已成年(用來判斷寫入欄位是到監護人還是連帶保證人
+                    boolean isAdult = ProjUtils.isAdult(applyBirthday);
 
-                        //判斷是否申請人已成年(用來判斷寫入欄位是到監護人還是連帶保證人
-                        boolean isAdult = ProjUtils.isAdult(applyBirthday);
-
-                        //如果成年的話，改成保證人War欄位
-                        if(isAdult && "Gd1".equalsIgnoreCase(dbColumnPrefix)) {
-                            dbColumnPrefix = "War";
-                        }
-
-                        String zipCode = aplyMemberYearData.getValue(dbColumnPrefix + "_Zip");
-
-                        String cityId = ProjUtils.toCityId(zipCode,dao);
-
-                        id = aplyMemberYearData.getValue(dbColumnPrefix + "_IdNo");
-                        name = aplyMemberYearData.getValue(dbColumnPrefix + "_Name");
-                        birthday = aplyMemberYearData.getValue(dbColumnPrefix + "_Birthday");
-                        birthday = ProjUtils.toBirthday(birthday);
-
-                        telePhoneRegionCode = aplyMemberYearData.getValue(dbColumnPrefix + "_TelNo1");
-                        telePhonePhone = aplyMemberYearData.getValue(dbColumnPrefix + "_TelNo2");
-                        mobile = aplyMemberYearData.getValue(dbColumnPrefix + "_CellPhoneNo");
-
-                        domicileAddressCityId = cityId;
-                        domicileAddressZipCode = aplyMemberYearData.getValue(dbColumnPrefix + "_Zip");
-                        domicileLinerName = aplyMemberYearData.getValue(dbColumnPrefix + "Village");
-                        domicileAddressNeighborhood = aplyMemberYearData.getValue(dbColumnPrefix + "_Addr_3");
-                        domicileAddressAddress = aplyMemberYearData.getValue(dbColumnPrefix+"Addr");
-//                        domicileAddressAddress = dataObject.getValue(ProjUtils.toAddress(dataObject,dbColumnPrefix + "_"));
-
+                    //如果成年的話，改成保證人War欄位
+                    if(isAdult && "Gd1".equalsIgnoreCase(dbColumnPrefix)) {
+                        dbColumnPrefix = "War";
                     }
+
+                    String zipCode = aplyMemberData.getValue(dbColumnPrefix + "_Zip");
+
+                    String cityId = ProjUtils.toCityId(zipCode,dao);
+
+                    id = aplyMemberData.getValue(dbColumnPrefix + "_IdNo");
+                    name = aplyMemberData.getValue(dbColumnPrefix + "_Name");
+                    birthday = aplyMemberData.getValue(dbColumnPrefix + "_Birthday");
+                    birthday = ProjUtils.toBirthday(birthday);
+
+                    telePhoneRegionCode = aplyMemberData.getValue(dbColumnPrefix + "_TelNo1");
+                    telePhonePhone = aplyMemberData.getValue(dbColumnPrefix + "_TelNo2");
+                    mobile = aplyMemberData.getValue(dbColumnPrefix + "_CellPhoneNo");
+
+                    domicileAddressCityId = cityId;
+                    domicileAddressZipCode = aplyMemberData.getValue(dbColumnPrefix + "_Zip");
+                    domicileLinerName = aplyMemberData.getValue(dbColumnPrefix + "Village");
+                    domicileAddressNeighborhood = aplyMemberData.getValue(dbColumnPrefix + "_Addr_3");
+                    domicileAddressAddress = aplyMemberData.getValue(dbColumnPrefix+"Addr");
+//                  domicileAddressAddress = dataObject.getValue(ProjUtils.toAddress(dataObject,dbColumnPrefix + "_"));
                 }
-                //本學期沒有申請過案件才拿申請人的撥款紀錄
-                else {
-                    //type：父親資料father / 母親資料mother / 第三人資料thirdParty / 配偶資料spouse
-                    String dbColumnPrefix = familyTypeMap.get(type);
-
-                    //取得申請人的撥款紀錄
-                    DataObject dataObject = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-
-                    if(dataObject != null) {
-
-                        //判斷是否申請人已成年(用來判斷寫入欄位是到監護人還是連帶保證人
-                        boolean isAdult = ProjUtils.isAdult(applyBirthday);
-
-                        //如果成年的話，改成保證人War欄位
-                        if(isAdult && "Gd1".equalsIgnoreCase(dbColumnPrefix)) {
-                            dbColumnPrefix = "War";
-                        }
-
-                        String zipCode = dataObject.getValue(dbColumnPrefix + "_Zip");
-
-                        String cityId = ProjUtils.toCityId(zipCode,dao);
-
-                        id = dataObject.getValue(dbColumnPrefix + "_IdNo");
-                        name = dataObject.getValue(dbColumnPrefix + "_Name");
-                        birthday = dataObject.getValue(dbColumnPrefix + "_Birthday");
-                        birthday = ProjUtils.toBirthday(birthday);
-
-                        telePhoneRegionCode = dataObject.getValue(dbColumnPrefix + "_TelNo1");
-                        telePhonePhone = dataObject.getValue(dbColumnPrefix + "_TelNo2");
-                        mobile = dataObject.getValue(dbColumnPrefix + "_CellPhoneNo");
-
-                        domicileAddressCityId = cityId;
-                        domicileAddressZipCode = dataObject.getValue(dbColumnPrefix + "_Zip");
-                        domicileLinerName = dataObject.getValue(dbColumnPrefix + "Village");
-                        domicileAddressNeighborhood = dataObject.getValue(dbColumnPrefix + "_Addr_3");
-                        domicileAddressAddress = dataObject.getValue(dbColumnPrefix+"Addr");
-//                        domicileAddressAddress = dataObject.getValue(ProjUtils.toAddress(dataObject,dbColumnPrefix + "_"));
-
-                    }
-                }
-
 
                 //代碼轉成中文顯示(資料確認頁會使用到
                 if("Y".equals(convert)) {
@@ -1278,6 +1248,9 @@ public class DataServlet extends HttpServlet {
                     domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
                     domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
                 }
+
+                //2016-08-23 added by titan 轉隱碼
+                name = StringEscapeUtils.unescapeHtml4(name);
 
                 //隱碼
                 if(!"Y".equalsIgnoreCase(noMark)) {
@@ -1309,7 +1282,6 @@ public class DataServlet extends HttpServlet {
                 }
 
 
-
                 content.put("isGuarantor",isGuarantor);
                 content.put("id",id);
                 content.put("name",name);
@@ -1337,8 +1309,6 @@ public class DataServlet extends HttpServlet {
                 header.put("errorCode","0");
                 header.put("errorMsg","成功");
             }
-
-
         }catch(Exception e) {
             e.printStackTrace();
 
@@ -1346,10 +1316,8 @@ public class DataServlet extends HttpServlet {
                 header.put("errorCode","99");
                 header.put("errorMsg",e.getMessage());
             }catch(Exception ex) {
-                ;
             }
         }
-
         JSPUtils.downLoadByString(resp,getServletContext().getMimeType(".json"),jsonObject.toString(),false);
     }
 
