@@ -1,6 +1,7 @@
 package com.fubon.filter;
 
 import com.fubon.utils.ProjUtils;
+import com.neux.garden.authorization.LoginUserBean;
 import com.neux.garden.dbmgr.DaoFactory;
 import com.neux.garden.log.GardenLog;
 import com.neux.utility.utils.date.DateUtil;
@@ -10,6 +11,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -66,7 +68,30 @@ public class ApplyDateFilter implements Filter {
                 filterChain.doFilter(servletRequest,servletResponse);
             }
             else {
-                response.sendRedirect("apply_00.jsp");
+
+                //結束時間的2個月後
+                String futureTime = DateUtil.addDate(applyEDate + "000000", Calendar.MONTH,2);
+
+                GardenLog.log(GardenLog.DEBUG,"futureTime = " + futureTime);
+
+                //2016-01-07 added by titan，判斷如果有登入且本學期有申請過案件且是線上續貸，如果時間在兩個月內還可以繼續改
+                LoginUserBean loginUserBean = ProjUtils.getLoginBean(request.getSession());
+                GardenLog.log(GardenLog.DEBUG,"loginUserBean != null = " + (loginUserBean != null));
+                GardenLog.log(GardenLog.DEBUG,"isOver futureTime = " + (Long.parseLong(today) <= Long.parseLong(futureTime)));
+
+                if(loginUserBean != null) {
+                    GardenLog.log(GardenLog.DEBUG,"appCases = " + loginUserBean.getCustomizeValue("appCases"));
+                    GardenLog.log(GardenLog.DEBUG,"kindOfCases = " + loginUserBean.getCustomizeValue("kindOfCases"));
+                }
+
+                if(loginUserBean != null && "Y".equalsIgnoreCase(loginUserBean.getCustomizeValue("appCases")) && "1".equalsIgnoreCase(loginUserBean.getCustomizeValue("kindOfCases")) && Long.parseLong(today) <= Long.parseLong(futureTime)) {
+                    filterChain.doFilter(servletRequest,servletResponse);
+                }
+                else {
+                    response.sendRedirect("apply_00.jsp");
+                }
+
+
             }
         }catch(Exception e) {
             e.printStackTrace();

@@ -125,7 +125,7 @@ public class Deferment4 implements ILogic {
         }
 
 
-        MessageUtils.sendEmail(mailBean);
+        MessageUtils.sendEmail(mailBean,userId);
 
         content.put("isRecord",isRecord);
         content.put("id",id);

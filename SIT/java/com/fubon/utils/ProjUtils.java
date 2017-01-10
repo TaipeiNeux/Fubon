@@ -294,12 +294,14 @@ public class ProjUtils {
     }
 
     public static String toTagXML(String tagName,String tagValue,Map<String,String[]> inputMap) {
-
+    	
         if(inputMap != null && inputMap.containsKey(tagName)) {
             String[] data = inputMap.get(tagName);
             String original = data[0];
             String after = data[1];
 
+            //System.out.println("@@@"+original+","+after+","+tagValue);
+            
             //如果值跟隱碼都相同，就轉成原碼
             if(StringUtils.isNotEmpty(tagValue) && StringUtils.isNotEmpty(after) && tagValue.equalsIgnoreCase(after)) {
                 tagValue = original;
@@ -329,6 +331,7 @@ public class ProjUtils {
         tmp.append("<" + tagName + "s>");
 
         for(String tagValue : tagValues) {
+        	//System.out.println("@@@@"+tagName+","+tagValue+","+inputMap);
             tmp.append(toTagXML(tagName,tagValue,inputMap));
         }
 
@@ -751,7 +754,6 @@ public class ProjUtils {
     }
 
     //我要申請最後寫入資料
-    //我要申請最後寫入資料
     public static DataObject saveAplyMemberTuitionLoanDtl(JSPQueryStringInfo queryStringInfo,JSONObject content,IDao dao,Element apply1_1Root,Element apply1_2Root,Element apply2Root,Element apply3_1Root,Element apply3_2Root,Element applyOnline4Root,String aplyCaseType) throws Exception {
 
         DataObject aplyMemberDataObject = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl");
@@ -783,7 +785,7 @@ public class ProjUtils {
 
             //2016-08-25 只留一筆
             SQLCommand check = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ?");
-
+            
             //2016-08-18 因為有可能案件會被取消對保，所以要加上APLYSTATUS判斷
 //            SQLCommand check = new SQLCommand("select * from AplyMemberTuitionLoanDtl where AplyIdNo = ? and APLYSTATUS not in ('DELETE')");
             check.addParamValue(id);
@@ -796,6 +798,7 @@ public class ProjUtils {
             if(checkResult.size() != 0) {
                 aplyMemberDataObject = checkResult.get(0);
                 isExistData = true;
+               // System.out.println(checkResult.get(0));
 
                 //再額外確認一次案件狀態
                 if("VERIFIED".equalsIgnoreCase(aplyMemberDataObject.getValue("AplyStatus"))) {
@@ -813,6 +816,8 @@ public class ProjUtils {
 //                }
             }
 
+            //if(1==1)throw new Exception("terst1234。");
+            
             if(isAplyDone) {
                 throw new Exception("您的案件已審核通過，不可修改資料。");
             }
@@ -832,32 +837,32 @@ public class ProjUtils {
             String incomeTax = apply2Root != null ? apply2Root.element("isIncomeTax").getText() : content.get("incomeTax").toString(); //共四碼，只有0或1，0代表不是，1代表是。例如：0001代表只有配偶是所得對象
             String isGuarantor = apply2Root != null ? apply2Root.element("isGuarantor").getText() : content.get("isGuarantor").toString(); //共四碼，只有0或1，0代表不是，1代表是。例如：0001代表只有配偶是連帶保證人
             String isShowInfo = apply2Root != null ? apply2Root.element("showInfo").getText() : content.get("showInfo").toString(); //共四碼，只有0或1，0代表不是，1代表是。例如：0001代表只有顯示配偶
-
+            
             String showInfo = "";
             for(int i = 0; i<isShowInfo.length(); i++){
-                String isShowInfoTmp = isShowInfo.substring(i, i + 1);
-                String isGuarantorTmp = isGuarantor.substring(i, i + 1);
-                String incomeTaxTmp = incomeTax.substring(i, i + 1);
-
-                switch (Integer.valueOf(isShowInfoTmp)) {
-                    case 0:
-                        showInfo += "0";
-                        break;
-
-                    case 1:
-                        showInfo += "1";
-                        break;
-
-                    case 2:
-                        showInfo += isGuarantorTmp.equals("1") || incomeTaxTmp.equals("1") ? "1" : "0";
-                        break;
-
-                    case 3:
-                        showInfo += "1";
-                        break;
-                }
+            	String isShowInfoTmp = isShowInfo.substring(i, i + 1);
+            	String isGuarantorTmp = isGuarantor.substring(i, i + 1);
+            	String incomeTaxTmp = incomeTax.substring(i, i + 1);
+            	
+            	switch (Integer.valueOf(isShowInfoTmp)) {
+            		case 0: 
+            			showInfo += "0";
+            			break;
+            		
+            		case 1:
+            			showInfo += "1";
+            			break;
+            			
+            		case 2:
+            			showInfo += isGuarantorTmp.equals("1") || incomeTaxTmp.equals("1") ? "1" : "0";
+            			break;
+            			
+            		case 3:
+            			showInfo += "1";
+            			break;
+            	}
             }
-
+            
             boolean isFaIncome = incomeTax.substring(0,1).equals("1");
             boolean isMaIncome = incomeTax.substring(1,2).equals("1");
             boolean isGdIncome = incomeTax.substring(2,3).equals("1");
@@ -872,25 +877,25 @@ public class ProjUtils {
             boolean isMaShowInfo = showInfo.substring(1,2).equals("1");
             boolean isGdShowInfo = showInfo.substring(2,3).equals("1");
             boolean isPaShowInfo = showInfo.substring(3,4).equals("1");
-
+                       
             List<DataColumn> colLists = aplyMemberDataObject.getColumnList();
-            for(DataColumn col : colLists) {
-
-                //保留案件編號及部分欄位
-                if(!"AplyNo".equalsIgnoreCase(col.getName())) {
-                    if((!isFaShowInfo && (col.getName().matches("^Fa\\_.*|FaAddr|FaVillage"))) ||
-                            (!isMaShowInfo && (col.getName().matches("^Ma\\_.*|MaAddr||MaVillage"))) ||
-                            (!isGdShowInfo && (col.getName().matches("^Gd\\d\\_.*|^War\\_.*|Gd\\dAddr|WarAddr|Gd\\dVillage|WarVillage"))) ||
-                            (!isPaShowInfo && (col.getName().matches("^Pa\\_.*|PaAddr|PaVillage"))) ||
-                            (col.getName().matches("^Res\\d\\_Rel|^War\\_Rel|UnResRel|UnResReason|ResType"))){
-                        col.setValue(null);
-                    }
-                }
-            }
-
+	        	for(DataColumn col : colLists) {
+	
+	        	//保留案件編號及部分欄位
+	        	if(!"AplyNo".equalsIgnoreCase(col.getName())) {
+	        		if((!isFaShowInfo && (col.getName().matches("^Fa\\_.*|FaAddr|FaVillage"))) || 
+	        		   (!isMaShowInfo && (col.getName().matches("^Ma\\_.*|MaAddr||MaVillage"))) || 
+	        		   (!isGdShowInfo && (col.getName().matches("^Gd\\d\\_.*|^War\\_.*|Gd\\dAddr|WarAddr|Gd\\dVillage|WarVillage"))) || 
+	        		   (!isPaShowInfo && (col.getName().matches("^Pa\\_.*|PaAddr|PaVillage"))) || 
+	        		   (col.getName().matches("^Res\\d\\_Rel|^War\\_Rel|UnResRel|UnResReason|ResType"))){
+	        			col.setValue(null);
+	        		}
+	        	}
+	        }
+            
             //如果是新增的話才給申請編號
             if(!isExistData) aplyMemberDataObject.setValue("AplyNo",  applyNo);// 申請編號
-
+            
             //判斷申請人的通訊地址是否同戶藉地址(因為有可能一開始通訊地址是空的，但點了同戶藉地址後會帶的是隱碼，所以當有選就是直接在最後寫db時修改)
             String sameAddress = apply1_1Root != null ? apply1_1Root.element("sameAddrHidden").getText() : content.get("sameAddr").toString();
 
@@ -916,6 +921,7 @@ public class ProjUtils {
             String familyStatusLevel2 = apply1_2Root != null ? apply1_2Root.element("familyStatusLevel2").getText() : content.get("familyStatusLevel2").toString();
             String parentStatus = "1";
 
+            //System.out.println("@@@@@@"+isGdGuarantor);
             //如果已婚且是離婚帶離
             if("1".equalsIgnoreCase(marryiage)) {
                 if("3".equalsIgnoreCase(familyStatusLevel1)) {
@@ -935,7 +941,10 @@ public class ProjUtils {
             String yearBirthday = apply1_1Root != null ? apply1_1Root.element("birthday0").getText() : content.get("yearBirthday").toString();
             String monthBirthday = apply1_1Root != null ? apply1_1Root.element("birthday2").getText() : content.get("monthBirthday").toString();
             String dayBirthday = apply1_1Root != null ? apply1_1Root.element("birthday4").getText() : content.get("dayBirthday").toString();
-
+            
+            
+            //System.out.println("!!!!!!!!!!!!!!!!!!"+content.get("dayBirthday").toString());
+           
             monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
             dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
 
@@ -988,9 +997,9 @@ public class ProjUtils {
 
             //判斷是否申請人已成年(用來判斷寫入欄位是到監護人還是連帶保證人
             boolean isAdult = isAdult(aplyMemberDataObject.getValue("AplyBirthday"));
-
-            String thirdParty = isAdult ? "War" : "Gd1";
-
+            
+        	String thirdParty = isAdult ? "War" : "Gd1";
+            
             //用來判斷是否簽立借據
             String faID = "" , maID = "" , thirdPartID = "",spouseId = "";
             faID = apply2Root != null && apply2Root.element("father_id") != null ? apply2Root.element("father_id").getText() : aplyMemberDataObject.getValue("Fa_IdNo");
@@ -1007,7 +1016,7 @@ public class ProjUtils {
             aplyMemberTuitionLoanDtlGuarantor.setValue("Gd1_Guarantor",isGdGuarantor && thirdParty.equals("Gd1") ? "Y" : "N");
             aplyMemberTuitionLoanDtlGuarantor.setValue("Pa_Guarantor",isPaGuarantor ? "Y" : "N");
             aplyMemberTuitionLoanDtlGuarantor.setValue("War_Guarantor",isGdGuarantor && thirdParty.equals("War") ? "Y" : "N");
-
+            
             if(StringUtils.isNotEmpty(faID) && isFaShowInfo) {
                 String faBirthday = apply2Root != null ? ProjUtils.toDraftBirthday(apply2Root.element("father_birthday0").getText(),apply2Root.element("father_birthday2").getText(),apply2Root.element("father_birthday4").getText()) : "";
                 aplyMemberDataObject.setValue("Fa_Income",isFaIncome ? "Y" : "N");
@@ -1047,8 +1056,13 @@ public class ProjUtils {
                 aplyMemberDataObject.setValue("MaAddr", apply2Root != null ? (toChanisesFullChar(apply2Root.element("mother_address_domi") != null ? apply2Root.element("mother_address_domi").getText() : "")) : aplyMemberDataObject.getValue("MaAddr"));                             // 母親戶籍地址-完整
                 aplyMemberDataObject.setValue("Ma_IncomeAddOn",isMaIncome ? "Y" : "N");                // 母親是否為所得合計對象
             }
-
-            String thirdPartyRelationship = apply2Root != null && apply2Root.element("thirdParty_relationship") != null ? apply2Root.element("thirdParty_relationship").getText() : content.get("relationship").toString();
+           
+            String thirdPartyRelationship="";
+            if(isGdGuarantor)
+            {
+            	 thirdPartyRelationship= apply2Root != null && apply2Root.element("thirdParty_relationship") != null ? apply2Root.element("thirdParty_relationship").getText() : content.get("relationship").toString();
+            }
+           
             String gdBirthday = apply2Root != null && apply2Root.element("thirdParty_birthday0") != null && apply2Root.element("thirdParty_birthday2") != null && apply2Root.element("thirdParty_birthday4") != null ? ProjUtils.toDraftBirthday(apply2Root.element("thirdParty_birthday0").getText(),apply2Root.element("thirdParty_birthday2").getText(),apply2Root.element("thirdParty_birthday4").getText()) : "";
             if(StringUtils.isNotEmpty(thirdPartID) && isGdShowInfo) {
                 //未成年寫入監護人
@@ -1086,7 +1100,7 @@ public class ProjUtils {
                     aplyMemberDataObject.setValue("WarVillage", apply2Root != null && apply2Root.element("thirdParty_liner_domi") != null ? apply2Root.element("thirdParty_liner_domi").getText() : aplyMemberDataObject.getValue("WarVillage"));                           // 監護人戶籍地址-村里
                     aplyMemberDataObject.setValue("War_Addr_3", apply2Root != null ? (toChanisesFullChar(apply2Root.element("thirdParty_neighborhood_domi") != null ? apply2Root.element("thirdParty_neighborhood_domi").getText() : "")) : aplyMemberDataObject.getValue("War_Addr_3"));                           // 監護人戶籍地址-鄰名
                     aplyMemberDataObject.setValue("WarAddr", apply2Root != null ? (toChanisesFullChar(apply2Root.element("thirdParty_address_domi") != null ? apply2Root.element("thirdParty_address_domi").getText() : "")) : aplyMemberDataObject.getValue("WarAddr"));                           // 監護人戶籍地址-完整
-                    aplyMemberDataObject.setValue("War_IncomeAddOn",isGdIncome ? "Y" : "N");                // 監護人一是否為所得合計對象
+                    //aplyMemberDataObject.setValue("War_IncomeAddOn",isGdIncome ? "Y" : "N");                // 監護人一是否為所得合計對象
                 }
             }
 
@@ -1106,7 +1120,7 @@ public class ProjUtils {
                 aplyMemberDataObject.setValue("Pa_Addr_3", apply2Root != null ? (toChanisesFullChar(apply2Root.element("spouse_neighborhood_domi").getText())) : aplyMemberDataObject.getValue("Pa_Addr_3"));                           // 配偶戶籍地址-鄰名
                 aplyMemberDataObject.setValue("PaAddr", apply2Root != null ? (toChanisesFullChar(apply2Root.element("spouse_address_domi") != null ? apply2Root.element("spouse_address_domi").getText() : "")) : aplyMemberDataObject.getValue("PaAddr"));                            // 配偶戶籍地址-完整
                 aplyMemberDataObject.setValue("Pa_IncomeAddOn",isPaIncome ? "Y" : "N");                // 配偶是否為所得合計對象
-
+                
                 //如果配偶是保證人，需額外寫到War欄位
                 if(isPaGuarantor) {
                     aplyMemberDataObject.setValue("War_Rel","1A");
@@ -1123,10 +1137,10 @@ public class ProjUtils {
                     aplyMemberDataObject.setValue("WarVillage", apply2Root != null && apply2Root.element("spouse_liner_domi") != null ? apply2Root.element("spouse_liner_domi").getText() : aplyMemberDataObject.getValue("WarVillage"));                           // 配偶戶籍地址-村里
                     aplyMemberDataObject.setValue("War_Addr_3", apply2Root != null ? (toChanisesFullChar(apply2Root.element("spouse_neighborhood_domi").getText())) : aplyMemberDataObject.getValue("War_Addr_3"));                           // 配偶戶籍地址-鄰名
                     aplyMemberDataObject.setValue("WarAddr", apply2Root != null ? (toChanisesFullChar(apply2Root.element("spouse_address_domi") != null ? apply2Root.element("spouse_address_domi").getText() : "")) : aplyMemberDataObject.getValue("WarAddr"));                             // 配偶戶籍地址-完整
-                    aplyMemberDataObject.setValue("War_IncomeAddOn",isGdIncome ? "Y" : "N");                // 監護人一是否為所得合計對象
+                    //aplyMemberDataObject.setValue("War_IncomeAddOn",isGdIncome ? "Y" : "N");                // 監護人一是否為所得合計對象
                 }
             }
-
+            
             //連帶保證人
             int ResCount = 1;
             //1:
@@ -1199,7 +1213,7 @@ public class ProjUtils {
                 eduStageCode = tmp.get(0).getValue("EduStageCode");
             }
 
-
+           
 //            aplyMemberDataObject.setValue("Fa_IncomeAddOn",isFaIncome ? "Y" : "N");                // 父親是否為所得合計對象
 //            aplyMemberDataObject.setValue("Ma_IncomeAddOn",isMaIncome ? "Y" : "N");                // 母親是否為所得合計對象
 //            aplyMemberDataObject.setValue("Gd1_IncomeAddOn",isGdIncome ? "Y" : "N");              // 監護人一是否為所得合計對象
@@ -1235,8 +1249,8 @@ public class ProjUtils {
             String renderAmtLodging =  "1".equalsIgnoreCase(loanType) ? (apply3_2Root != null ? apply3_2Root.element("accordingToBill_live").getText() : content.getJSONObject("accordingToBill").getString("live")) : (apply3_2Root != null ? apply3_2Root.element("freedom_live").getText() : content.getJSONObject("freedom").getString("live"));
             String renderAmtStudy =  "1".equalsIgnoreCase(loanType) ? (apply3_2Root != null ? apply3_2Root.element("accordingToBill_abroad").getText() : content.getJSONObject("accordingToBill").getString("abroad")) : (apply3_2Root != null ? apply3_2Root.element("freedom_abroad").getText() : content.getJSONObject("freedom").getString("abroad"));
             String renderAmtLiving =  "1".equalsIgnoreCase(loanType) ? (apply3_2Root != null ? apply3_2Root.element("accordingToBill_life").getText() : content.getJSONObject("accordingToBill").getString("life")) : (apply3_2Root != null ? apply3_2Root.element("freedom_life").getText() : content.getJSONObject("freedom").getString("life"));
-
-
+            
+            
             //過濾半形逗點
             loanAmt = StringUtils.replace(loanAmt,",","");
 
@@ -1286,7 +1300,34 @@ public class ProjUtils {
                 String dateSelected = applyOnline4Root.element("dateSelected").getText();
                 String timeSelected = applyOnline4Root.element("timeSelected").getText();
 
-                aplyMemberDataObject.setValue("expectDate",  DateUtil.convertDateTo14(dateSelected).substring(0,8));                      // 預約對保日期
+                String date8 = DateUtil.convertDateTo14(dateSelected).substring(0,8);
+
+                GardenLog.log(GardenLog.DEBUG,"對保分行[時間="+date8+"]");
+
+//                //如果不是SIT，儲存時要額外檢查是否預約時間是否為例假日
+//                if (!"sit".equalsIgnoreCase(env)) {
+//                    List<String> noBusinessDays = new ArrayList<String>();
+//                    DBUtils.getNoBusinessDay(date8.substring(0,4), date8.substring(4,6), noBusinessDays);
+//
+//                    for(String day : noBusinessDays) {
+//
+//                        GardenLog.log(GardenLog.DEBUG,"對保分行[假日="+day+"]");
+//
+//                        day = DateUtil.convertDateTo14(day).substring(0,8);
+//
+//                        if(day.equalsIgnoreCase(date8)) {
+//
+//                            GardenLog.log(GardenLog.DEBUG,"對保時間為假日,客戶的：" + date8 + ",Oracle的：" + day);
+//
+//                            throw new Exception("您所申請的對保時間為假日，請重新挑選對保時間。");
+//                        }
+//                    }
+//
+//                }
+
+
+
+                aplyMemberDataObject.setValue("expectDate",  date8);                      // 預約對保日期
                 aplyMemberDataObject.setValue("expectTime",  timeSelected);                      // 預約對保時間
                 aplyMemberDataObject.setValue("expectBranchId", branchId);              // 預計前往分行代碼
             }
@@ -1300,6 +1341,8 @@ public class ProjUtils {
             for(DataColumn col : colList) {
                 if(col.getValue() == null || "null".equalsIgnoreCase(col.getValue())) col.setValue("");
             }
+            
+            
 
             GardenLog.log(GardenLog.DEBUG,aplyMemberDataObject.toXml());
 
@@ -1312,6 +1355,7 @@ public class ProjUtils {
 //            aplyMemberDataObject.setValue("sign_loanAcct",  applyData.get("signLoanAcct"));                 // 總額度檔 - 放款帳號
 //            aplyMemberDataObject.setValue("sign_yearTerm",  applyData.get("signYearTerm"));                 // 總額度檔 - 學年度學期
 
+           // System.out.println("@@@@@@@@@@@@@"+aplyMemberDataObject);
             if(!isExistData) dao.insert(aplyMemberDataObject);
             else dao.update(aplyMemberDataObject);
 
@@ -1325,7 +1369,7 @@ public class ProjUtils {
 
             throw e;
         }
-
+    
         return aplyMemberDataObject;
     }
 
@@ -1697,6 +1741,7 @@ public class ProjUtils {
         Map<String,String> queryMap = new HashMap<String,String>();
         queryMap.put("EduYear",eduYear);
         queryMap.put("Semester",semester);
+        //System.out.println("@@@@@1"+getAplyMemberTuitionLoanData(userId,queryMap, dao));
 
         return getAplyMemberTuitionLoanData(userId,queryMap, dao);
 
@@ -1727,6 +1772,30 @@ public class ProjUtils {
         Vector<DataObject> ret = new Vector<DataObject>();
 
         dao.queryByCommand(ret,query,null,DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl"));
+
+        if(ret.size() != 0) return ret.get(0);
+        else return null;
+
+    }
+    
+    public static DataObject getAplyMemberTuitionLoanData_Guarantor(String userId,Map<String,String> queryMap,IDao dao) throws Exception {
+
+        SQLCommand query = new SQLCommand("select * from AplyMemberTuitionLoanDtl_Guarantor where AplyNo = ? ");
+        query.addParamValue(userId);
+
+        String where = "";
+        if(queryMap != null) {
+            for(String key : queryMap.keySet()) {
+                where += " and " + key + " = ?";
+                query.addParamValue(queryMap.get(key));
+            }
+        }
+
+        query.setSQL(query.getSql() + where);
+
+        Vector<DataObject> ret = new Vector<DataObject>();
+
+        dao.queryByCommand(ret,query,null,DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Guarantor"));
 
         if(ret.size() != 0) return ret.get(0);
         else return null;
@@ -1920,10 +1989,16 @@ public class ProjUtils {
         String appoName = "",fatherName = "",motherName = "",thirdPartyName = "",spouseName = "",thirdPartyTitle = "",
                 loans = "" , loanPrice = "",freedomLife = "",accordingToBillLife = "",applicantAdult = "", marryStatus = "",
                 familyStatusLevel1 = "",familyStatusLevel2 = "";
-
+        
+        
         //2016-08-14 Steven 檢查本學期有無申請案件
         DataObject aplyMemberYearData = null;
+        
+          aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
         aplyMemberYearData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        if(aplyMemberYearData == null && ProjUtils.isPayHistory(userId,dao)) {
+        	aplyMemberYearData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+        }  
 
         //從1-1、1-2、2、3-2取得草稿資料
         String draftXML1_1 = FlowUtils.getDraftData(userId,"apply","apply1_1",dao);
@@ -1940,23 +2015,64 @@ public class ProjUtils {
         Element draftRoot1_2 = draftDoc1_2!=null ? draftDoc1_2.getRootElement() : null;
         Element draftRoot2 = draftDoc2!=null ? draftDoc2.getRootElement() : null;
         Element draftRoot3_2 = draftDoc3_2!=null ? draftDoc3_2.getRootElement() : null;
+        
+        if(draftRoot1_2 != null && draftRoot1_2.element("applicantAdult") != null)
+        {
+        	applicantAdult=draftRoot1_2.element("applicantAdult").getText();
+        }
+        
+        else if (aplyMemberYearData !=null)
+        {
+        	if(isAdult(aplyMemberYearData.getValue("AplyBirthday")))
+        	{
+        		applicantAdult="Y";
+        	}
+        	else
+        	{
+        		applicantAdult="N";
+        	}
+        	
+        }
 
-        appoName = draftRoot1_1 != null && draftRoot1_1.element("name") != null ? draftRoot1_1.element("name").getText() : content.getString("name");
-
+     
         familyStatusLevel1 = draftRoot1_2 != null && draftRoot1_2.element("familyStatusLevel1") != null ? draftRoot1_2.element("familyStatusLevel1").getText() : content.getString("familyStatusLevel1");
         familyStatusLevel2 = draftRoot1_2 != null && draftRoot1_2.element("familyStatusLevel2") != null ? draftRoot1_2.element("familyStatusLevel2").getText() : content.getString("familyStatusLevel2");
-        applicantAdult = draftRoot1_2 != null && draftRoot1_2.element("applicantAdult") != null ? draftRoot1_2.element("applicantAdult").getText() : content.getString("isAdult");
+        //applicantAdult = draftRoot1_2 != null && draftRoot1_2.element("applicantAdult") != null ? draftRoot1_2.element("applicantAdult").getText() : content.getString("isAdult");
         marryStatus = draftRoot1_2 != null && draftRoot1_2.element("userMarriedHidden") != null ? draftRoot1_2.element("userMarriedHidden").getText() : content.getString("marryStatus");
-
+        if(draftRoot1_1 != null&&aplyMemberYearData!=null)
+        {
+        appoName = draftRoot1_1 != null && draftRoot1_1.element("name") != null ? draftRoot1_1.element("name").getText() : aplyMemberYearData.getValue("Applicant");
+        }
+        if(draftRoot2 != null&&aplyMemberYearData!=null)
+        {
         fatherName = draftRoot2 != null && draftRoot2.element("father_name") != null ? draftRoot2.element("father_name").getText() : aplyMemberYearData.getValue("Fa_Name");
         motherName = draftRoot2 != null && draftRoot2.element("mother_name") != null ? draftRoot2.element("mother_name").getText() : aplyMemberYearData.getValue("Ma_Name");
+        }
+        String isGuarantor = draftRoot2 != null ? draftRoot2.element("isGuarantor").getText() : content.get("isGuarantor").toString(); //共四碼，只有0或1，0代表不是，1代表是。例如：0001代表只有配偶是連帶保證人
+        boolean isGdGuarantor = isGuarantor.substring(2,3).equals("1");
+       // System.out.println("!!!!!!!!!!!!!!"+isGdGuarantor);
+        //if(isGdGuarantor)
+        //{
         thirdPartyName = draftRoot2 != null && draftRoot2.element("thirdParty_name") != null ? draftRoot2.element("thirdParty_name").getText() : aplyMemberYearData.getValue("Gd1_Name");
         spouseName = draftRoot2 != null && draftRoot2.element("spouse_name") != null ? draftRoot2.element("spouse_name").getText() : aplyMemberYearData.getValue("Pa_Name");
         thirdPartyTitle = draftRoot2 != null && draftRoot2.element("thirdPartyTitle") != null ? draftRoot2.element("thirdPartyTitle").getText() : aplyMemberYearData.getValue("War_Name");
 
-
-        loans = draftRoot3_2 != null && draftRoot3_2.element("loansSum") != null ? draftRoot3_2.element("loansSum").getText() : content.getJSONObject("accordingToBill").getString("loansSum");
-        loanPrice = draftRoot3_2 != null && draftRoot3_2.element("loanPrice") != null ? draftRoot3_2.element("loanPrice").getText() : content.getString("freedom_sum");
+        //}
+//        else
+//        {
+//        	thirdPartyName="";
+//        	spouseName="";
+//        	thirdPartyTitle="";
+//        }
+     
+       
+       
+        //loans = draftRoot3_2 != null && draftRoot3_2.element("loansSum") != null ? draftRoot3_2.element("loansSum").getText() : content.getJSONObject("accordingToBill").getString("loansSum");
+        if(draftRoot3_2 != null&&aplyMemberYearData!=null){
+        loans = draftRoot3_2 != null && draftRoot3_2.element("loansSum") != null ? draftRoot3_2.element("loansSum").getText() : aplyMemberYearData.getValue("renderamt_school");
+        //loanPrice = draftRoot3_2 != null && draftRoot3_2.element("loanPrice") != null ? draftRoot3_2.element("loanPrice").getText() : content.getString("freedom_sum");
+        loanPrice = draftRoot3_2 != null && draftRoot3_2.element("loanPrice") != null ? draftRoot3_2.element("loanPrice").getText() : aplyMemberYearData.getValue("LoanType");
+        }
         freedomLife = draftRoot3_2 != null && draftRoot3_2.element("freedom_life") != null ? draftRoot3_2.element("freedom_life").getText() : content.getJSONObject("accordingToBill").getString("life");
         accordingToBillLife = draftRoot3_2 != null && draftRoot3_2.element("accordingToBill_life") != null ? draftRoot3_2.element("accordingToBill_life").getText() : content.getJSONObject("accordingToBill").getString("life");
 
@@ -2325,7 +2441,8 @@ public class ProjUtils {
     }
 
     // 取得預計對保時間說明(程式取自舊程式修改撈抓db的地方)
-    public static String getExpectTimeMemo(IDao dao,String branchId, String time) {
+    public static String getExpectTimeMemo(IDao dao,String branchId, String time) 
+    {
         StringBuffer sb = new StringBuffer();
 
         try {
@@ -2378,14 +2495,13 @@ public class ProjUtils {
     }
 
     //判斷是否已成年(yyyyMMdd)
-    public static boolean isAdult(String birthday) {
-
+    public static boolean isAdult(String birthday) 
+    {
         //取得今天14碼
         String now = DateUtil.getTodayString();
-
         //今天減掉20年後再比較數字，看生日是否比較小
         String b = DateUtil.addDate(now,Calendar.YEAR,-20);
-
+        
         GardenLog.log(GardenLog.DEBUG,"now = " + b.substring(0,8) + ",birthday = " + birthday);
 
         return Double.parseDouble(b.substring(0,8)) > Double.parseDouble(birthday);

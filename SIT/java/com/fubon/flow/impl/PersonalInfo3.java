@@ -45,7 +45,7 @@ public class PersonalInfo3 implements ILogic {
         String errorCode = "" , errorMsg = "";
         String registerResult = "fail", registerDate = today.substring(0,10), registerTime = today.substring(11);
 
-        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",marryStatus = "",cellPhone = "", email = "";
+        String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",marryStatus = "",mobile = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
         String telePhoneRegionCode = "", telePhonePhone = "";
         String domicileAddressCityId = "", domicileAddressZipCode = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
@@ -55,6 +55,7 @@ public class PersonalInfo3 implements ILogic {
         String birthday = "";
         String birthYear = "",birthMonth = "",birthDay = "";
 
+
         try{
 
             //拿第一步輸入的值
@@ -62,6 +63,7 @@ public class PersonalInfo3 implements ILogic {
             Document personalInfo1Doc = DocumentHelper.parseText(personalInfo1XML);
 
             Element root = personalInfo1Doc.getRootElement();
+
             if(root.element("id") != null) id = root.element("id").getText();
             if(root.element("name") != null) name = root.element("name").getText();
 
@@ -69,8 +71,8 @@ public class PersonalInfo3 implements ILogic {
             if(root.element("birthday_month") != null) birthMonth = root.element("birthday_month").getText();
             if(root.element("birthday_day") != null) birthDay = root.element("birthday_day").getText();
 
-//            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
-            if(root.element("cellPhone") != null) cellPhone = root.element("cellPhone").getText();
+            //if(root.element("birthday") != null) birthday = root.element("birthday").getText();
+            if(root.element("cellPhone") != null) mobile = root.element("cellPhone").getText();
 
             if(root.element("marryStatus") != null) marryStatus = root.element("marryStatus").getText();
 
@@ -97,6 +99,28 @@ public class PersonalInfo3 implements ILogic {
 //                birthday = StringUtils.replace(birthday,"/","");
 //            }
 
+            String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+            if(!"sit".equalsIgnoreCase(env)) {
+                RQBean rqBean54 = new RQBean();
+                rqBean54.setTxId("EB032154");
+                rqBean54.addRqParam("CUST_NO",id);
+
+                RSBean rsBean54 = WebServiceAgent.callWebService(rqBean54);
+
+                if(rsBean54.isSuccess()) {
+                    Document doc = DocumentHelper.parseText(rsBean54.getTxnString());
+
+                    String cellPhone = ProjUtils.get032154Col(doc,"8001");
+
+                    //行動電話抓8001
+                    if(StringUtils.isNotEmpty(cellPhone)) {
+                        mobile = cellPhone;
+                    }
+
+
+                }
+            }
+
             //半形轉全形
             name = ProjUtils.toChanisesFullChar(name);
             domicileAddressNeighborhood = ProjUtils.toChanisesFullChar(domicileAddressNeighborhood);
@@ -111,7 +135,7 @@ public class PersonalInfo3 implements ILogic {
 
                 studentUserProfileDetail.setValue("Applicant",name);
                 studentUserProfileDetail.setValue("Marriage", "Y".equalsIgnoreCase(marryStatus) ? "1" : "0");// 婚姻狀況
-                studentUserProfileDetail.setValue("AplyCellPhoneNo",cellPhone);
+                studentUserProfileDetail.setValue("AplyCellPhoneNo",mobile);
 
                 birthYear = StringUtils.leftPad(birthYear,3,"0");
                 birthMonth = StringUtils.leftPad(birthMonth,2,"0");
@@ -171,7 +195,7 @@ public class PersonalInfo3 implements ILogic {
                         }
 
                         aplyMemberDataObject.setValue("Applicant", name); // 申請人姓名
-                        aplyMemberDataObject.setValue("AplyCellPhoneNo", cellPhone); //手機
+                        aplyMemberDataObject.setValue("AplyCellPhoneNo", mobile); //手機
                         aplyMemberDataObject.setValue("Marriage", "Y".equalsIgnoreCase(marryStatus) ? "1" : "0");// 婚姻狀況
                         aplyMemberDataObject.setValue("AplyTelNo1_1", domicilePhoneRegionCode);// 申請人戶籍電話區碼
                         aplyMemberDataObject.setValue("AplyTelNo1_2", domicilePhonePhone);
@@ -208,9 +232,10 @@ public class PersonalInfo3 implements ILogic {
                     domicileAddressAddress = domicileAddressCityName + domicileAddressZipName + domicileLinerName + domicileAddressLiner + domicileAddressNeighborhood + domicileAddressAddress;
                     teleAddressAddress = teleAddressCityName + teleAddressZipName + teleAddressAddress;
 
+
                     //判斷會員狀態看是否更新電文
                     //有撥款紀錄
-                    String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+
                     if(!"sit".equalsIgnoreCase(env) && "Y".equalsIgnoreCase(isRecord)) {
 
 
@@ -232,6 +257,7 @@ public class PersonalInfo3 implements ILogic {
                         String hspSck = rsBean.getServiceHeader().getHSPSCK();
                         GardenLog.log(GardenLog.DEBUG,"hspSck = " + hspSck);
 
+
                         //再開始更新Email
                         //Email欄位一列只有42個字，所以超過42個字要切
                         String email1 = email;
@@ -247,7 +273,10 @@ public class PersonalInfo3 implements ILogic {
                         rqBean53.addRqParam("COD_01","8001");
                         rqBean53.addRqParam("TYP_01","2");
                         rqBean53.addRqParam("ADDR_011",email1);
-                        rqBean53.addRqParam("ADDR_012",email2);
+
+                        if(StringUtils.isNotEmpty(email2)) {
+                            rqBean53.addRqParam("ADDR_012",email2);
+                        }
 
                         rqBean53.setHeaderPageFlg("3");
                         rqBean53.setHeaderDBAppn(hspSck);
@@ -279,7 +308,11 @@ public class PersonalInfo3 implements ILogic {
                         rqBean53.addRqParam("TYP_01","2");
                         rqBean53.addRqParam("ZIP_COD_01",teleAddressZipCode);
                         rqBean53.addRqParam("ADDR_011",telAddress1);
-                        rqBean53.addRqParam("ADDR_012",telAddress2);
+
+                        if(StringUtils.isNotEmpty(telAddress2)) {
+                            rqBean53.addRqParam("ADDR_012",telAddress2);
+                        }
+
 
                         rqBean53.setHeaderPageFlg("3");
                         rqBean53.setHeaderDBAppn(hspSck);
@@ -375,6 +408,7 @@ public class PersonalInfo3 implements ILogic {
 
 
 
+
         //裝值到content
         content.put("isRecord",isRecord);
         content.put("id",ProjUtils.toIDMark(id));
@@ -392,7 +426,8 @@ public class PersonalInfo3 implements ILogic {
         telePhone.put("phone",ProjUtils.toTelMark(telePhonePhone));
         content.put("telePhone",telePhone);
 
-        content.put("mobile",ProjUtils.toTelMark(cellPhone));
+        content.put("mobile",ProjUtils.toTelMark(mobile));
+
         content.put("email",ProjUtils.toEMailMark(email));
 
         JSONObject domicileAddress = new JSONObject();
@@ -427,11 +462,11 @@ public class PersonalInfo3 implements ILogic {
         mailBean.addResultParam("domicilePhone","("+domicilePhoneRegionCode+")" + ProjUtils.toTelMark(domicilePhonePhone));
         mailBean.addResultParam("telePhone","("+telePhoneRegionCode+")" + ProjUtils.toTelMark(telePhonePhone));
         mailBean.addResultParam("email",ProjUtils.toEMailMark(email));
-        mailBean.addResultParam("cellPhone",ProjUtils.toTelMark(cellPhone));
+        mailBean.addResultParam("cellPhone",ProjUtils.toTelMark(mobile));
         mailBean.addResultParam("domicileAddressAddress",ProjUtils.toAddressMark(domicileAddressAddress));
         mailBean.addResultParam("teleAddress",ProjUtils.toAddressMark(teleAddressAddress));
 
-        MessageUtils.sendEmail(mailBean);
+        MessageUtils.sendEmail(mailBean,userId);
 
         String logResult = StringUtils.isEmpty(errorMsg) ? "變更個人基本資料成功" : errorMsg;
         ProjUtils.saveLog(dao,queryStringInfo.getRequest(),getClass().getName(),"getDraftData",logResult);

@@ -23,7 +23,8 @@ import org.json.JSONObject;
  * Time: 上午 10:16
  * To change this template use File | Settings | File Templates.
  */
-public class Apply6_1 implements ILogic {
+public class Apply6_1 implements ILogic 
+{
     @Override
     public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception {
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
@@ -100,7 +101,7 @@ public class Apply6_1 implements ILogic {
         mailBean.setReceiver(email);
         mailBean.setTitle(mailTitle);
         mailBean.addResultParam("result",(StringUtils.isEmpty(errorCode) ? "<img src=\"{host}/img/na-14.png\">您已成功送出申請資料!本行將儘速審核您的案件" : "<img src=\"{host}/img/na-16.png\">送出申請資料失敗("+errorCode+")"+errorMsg));
-        MessageUtils.sendEmail(mailBean);
+        MessageUtils.sendEmail(mailBean,userId);
     }
 
     @Override

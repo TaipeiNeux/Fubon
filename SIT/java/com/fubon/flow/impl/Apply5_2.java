@@ -11,13 +11,19 @@ import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
 import com.fubon.utils.bean.OTPBean;
+import com.neux.utility.orm.bean.DataObject;
+import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+
+import java.util.Vector;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -64,6 +70,38 @@ public class Apply5_2 implements ILogic {
 
             }
         }
+        
+        //上傳文件撈Table
+        SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name,Size from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+        query.addParamValue(userId);
+        Vector<DataObject> docResult = new Vector<DataObject>();
+        dao.queryByCommand(docResult,query,null,null);
+
+      
+
+        if(docResult.size() != 0) {
+            for(DataObject d : docResult) {
+                
+                String originalFileName = d.getValue("original_file_name");
+               
+                
+                String File_Name="";
+                String temp[] = originalFileName.split("[.]");
+                if(temp.length>1){ 
+                	File_Name = temp[temp.length-1];
+                }else{
+                	File_Name=""; 
+                }
+                            
+
+                if(!File_Name.toLowerCase().equals("png")&&!File_Name.toLowerCase().equals("peg")&&!File_Name.toLowerCase().equals("jpg")&&!File_Name.toLowerCase().equals("tif")&&!File_Name.toLowerCase().equals("gif")&&!File_Name.toLowerCase().equals("pdf"))
+                	throw new Exception("請確認檔案副檔名");
+            }
+        
+        }
+        
+        
+        
 
 
         //取得OTP驗證碼
@@ -76,7 +114,7 @@ public class Apply5_2 implements ILogic {
 
         MessageUtils.sendSMS(smsBean);
 
-        MessageUtils.saveOTPLog(dao,mobile,null,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),smsBean.getContent());
+        MessageUtils.saveOTPLog(dao,mobile,null,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),smsBean.getContent(),userId);
 
         content.put("mobile",mobile);
         content.put("code_img",otpBean.getCodeImg());

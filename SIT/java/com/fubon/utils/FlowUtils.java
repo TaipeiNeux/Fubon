@@ -135,6 +135,7 @@ public class FlowUtils {
         query.addParamValue(userId);
         query.addParamValue(flowId);
         query.addParamValue(stepId);
+        //System.out.println("@@@@"+flowId+","+stepId);
         Vector<DataObject> ret = new Vector<DataObject>();
         dao.queryByCommand(ret,query,null,null);
 
@@ -299,10 +300,17 @@ public class FlowUtils {
     }
 
     public static String getNextStep(Element root , String stepId,JSPQueryStringInfo queryStringInfo) {
+    	
+    	
+    	System.out.println("stepId22222=>" + stepId);
         Element currentStep = getFlowElementById(root,stepId);
 
+        System.out.println("currentStep=>" + currentStep);
+        
         Element next = currentStep.nextElementSibling();
 
+        System.out.println("next=>" + next);
+        
         //代表最後一層，找爸爸的下一個同層
         if(next == null) {
             Element parent = currentStep.parent();
@@ -324,19 +332,32 @@ public class FlowUtils {
                 String logic = next.attr("logic");
                 BranchsLogic branchsLogic = null;
                 try{
+                	System.out.println("logic=>" + logic);
+                	
                     if(StringUtils.isNotEmpty(logic)) {
 
                         GardenLog.log(GardenLog.DEBUG,"BranchsLogic = " + logic);
 
                         Class c = Class.forName(logic);
                         Object obj = c.newInstance();
+                        
+                        System.out.println("@@@@@@@obj="+obj);
 
                         if(obj instanceof BranchsLogic) {
                             branchsLogic = (BranchsLogic) obj;
+                            
+                            
+                            System.out.println("@@@@@@@branchsLogic="+branchsLogic);
+                         
 
                             String branchId = branchsLogic.getBranchId(queryStringInfo);
+                            
+                            System.out.println("@@@@@@@branchId="+branchId);
+                            
                             Element branchStep = getFlowElementById(root,branchId);
 
+                            GardenLog.log(GardenLog.DEBUG,"branchId = " + branchId);
+                            
                             next = branchStep.children().get(0);
                         }
                     }

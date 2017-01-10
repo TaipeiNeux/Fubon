@@ -60,6 +60,17 @@ public class Apply5_1 implements ILogic {
             if(root.element("lowIncomeViewName_hidden") != null) lowIncomeViewName_hidden = root.element("lowIncomeViewName_hidden").getText();
         }
 
+        //判斷是否有低收入證明
+        //        String draftXML3_2 = FlowUtils.getDraftData(userId,"apply","apply3_2",dao);
+//        if (draftXML3_2 != null) {
+//            Document draftDoc3_2 = DocumentHelper.parseText(draftXML3_2);
+//            Element draftRoot3_2 = draftDoc3_2.getRootElement();
+//            if(draftRoot3_2.element("freedom_life") != null) freedom_life = draftRoot3_2.element("freedom_life").getText();
+//         
+//        }
+        
+        
+        
         //上傳文件撈Table
         SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name,Size from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
         query.addParamValue(userId);
@@ -77,6 +88,19 @@ public class Apply5_1 implements ILogic {
                 String docType = d.getValue("DocType");
                 String originalFileName = d.getValue("original_file_name");
                 String size = d.getValue("Size");
+                
+//                String File_Name="";
+//                String temp[] = originalFileName.split("[.]");
+//                if(temp.length>1){ 
+//                	File_Name = temp[temp.length-1];
+//                }else{
+//                	File_Name=""; 
+//                }
+//               
+//                if(!File_Name.toLowerCase().equals("peg")&&!File_Name.toLowerCase().equals("png")&&!File_Name.toLowerCase().equals("jpg")&&!File_Name.toLowerCase().equals("tif")&&!File_Name.toLowerCase().equals("gif")&&!File_Name.toLowerCase().equals("pdf"))
+//                	throw new Exception("請確認檔案副檔名");
+             
+                	
 
                 JSONObject tmp = new JSONObject();
                 tmp.put("fileName",originalFileName);
@@ -104,6 +128,12 @@ public class Apply5_1 implements ILogic {
         uploadFile.put("idCardNegative",idCardNegative);
         uploadFile.put("registration",registration);
         uploadFile.put("lowIncome",lowIncome);
+        
+//     if(idCardPosition.length()==0||idCardNegative.length()==0||registration.length()==0)
+//     {
+//    	 throw new Exception("請確實上傳檔案");
+//     }
+
 
 //        uploadFile.put("idCardPosition_docId",uploadFileIdCardPosition_docId);
 //        uploadFile.put("idCardNegative_docId",uploadFileIdCardNegative_docId);

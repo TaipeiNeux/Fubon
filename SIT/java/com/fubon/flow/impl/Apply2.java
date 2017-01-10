@@ -16,6 +16,7 @@ import org.dom4j.Element;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ import java.util.Set;
 public class Apply2 implements ILogic {
     @Override
     public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception {
+    	
 
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
         String userId = loginUserBean.getUserId();
@@ -64,10 +66,11 @@ public class Apply2 implements ILogic {
         if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) {
         	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
         }
-
+      
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
             Element root = draftData.getRootElement();
+            //System.out.println("!!!!"+root);
             if(root.element("familyStatus") != null) familyStatus = root.element("familyStatus").getText();
             if(root.element("guarantorStatus") != null) guarantorStatus = root.element("guarantorStatus").getText();
             if(root.element("isGuarantor") != null) isGuarantor = root.element("isGuarantor").getText();
@@ -81,6 +84,7 @@ public class Apply2 implements ILogic {
             if(root.element("spouse_sameAddrHidden") != null) spouse_sameAddrHidden = root.element("spouse_sameAddrHidden").getText();
 
             if(root.element("father_String") != null) father_String = root.element("father_String").getText();
+            //System.out.println("@@@@"+father_String);
             if(root.element("mother_String") != null) mother_String = root.element("mother_String").getText();
             if(root.element("thirdParty_String") != null) thirdParty_String = root.element("thirdParty_String").getText();
             if(root.element("spouse_String") != null) spouse_String = root.element("spouse_String").getText();
@@ -93,9 +97,11 @@ public class Apply2 implements ILogic {
             if(root.element("mother_checkbox") != null) mother_checkbox = root.element("mother_checkbox").getText();
 
             if(root.element("relationshipTitle") != null) relationshipTitle = root.element("relationshipTitle").getText();
+
+            if(root.element("isIncomeTax") != null) incomeTax = root.element("isIncomeTax").getText();
         }
         //本學期有申請過案件就撈申請案件；無則撈撥款紀錄
-        else if (aplyMemberData != null){
+        else if (aplyMemberData != null) {
         	boolean isAdult = ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
         	String thirdParty = isAdult ? "War" : "Gd1";
         	
@@ -118,11 +124,14 @@ public class Apply2 implements ILogic {
         	
     		//所得合計對象
             String isFaIncome = aplyMemberData.getValue("Fa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//父親是否為所得合計對象
-            String isMaIncome = aplyMemberData.getValue("Ma_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//母親是否為所得合計對象
-            String isGd1Income = aplyMemberData.getValue(thirdParty + "_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//監護人一是否為所得合計對象
-            String isPaIncome = aplyMemberData.getValue("Pa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//配偶是否為所得合計對象
-//          String isWarIncome = aplyMemberData.getValue("War_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//監護人一是否為所得合計對象
+            String isMaIncome = aplyMemberData.getValue("Ma_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//母親是否為所得合計對象
+            //System.out.println("@@@@@"+thirdParty);
+            String isGd1Income = aplyMemberData.getValue(thirdParty + "_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//監護人一是否為所得合計對象
+            String isPaIncome = aplyMemberData.getValue("Pa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//配偶是否為所得合計對象
+//          String isWarIncome = aplyMemberData.getValue("War_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//監護人一是否為所得合計對象
             incomeTax = isFaIncome + isMaIncome + isGd1Income + isPaIncome;
+            
+            //System.out.println(isFaIncome+","+isMaIncome);
             
             String marryStatusTmp = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
             familyStatus = aplyMemberData.getValue("FamilyStatus");
@@ -131,26 +140,34 @@ public class Apply2 implements ILogic {
                 familyStatusLevel1 = statusArray.length > 0 ? statusArray[0] : "0";
                 familyStatusLevel2 = statusArray.length >= 2 ? statusArray[1] : "0";
             }
-            JSONObject clickLevel = new JSONObject();
-            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatusTmp, isAdult);
-
-            familyStatus = clickLevel.getString("familyStatus");
-            guarantorStatus = clickLevel.getString("guarantorStatus");
-            incomeTax = clickLevel.getString("incomeTax");
+            
+            String incomeTaxStatus = "";
+            if(StringUtils.isNotEmpty(familyStatusLevel1) && StringUtils.isNotEmpty(familyStatusLevel2)) {
+            	JSONObject clickLevel = new JSONObject();
+            	clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatusTmp, isAdult);
+            	
+            	familyStatus = clickLevel.getString("familyStatus");
+                guarantorStatus = clickLevel.getString("guarantorStatus");
+                incomeTaxStatus = clickLevel.getString("incomeTax");
+            }
             
             //代入基本連帶保證人
-            String isGuarantorTmp = ""; 
-            for(int i = 0; i<isGuarantor.length(); i++){
-            	isGuarantorTmp += guarantorStatus.substring(i, i + 1).equals("1") || isGuarantor.substring(i, i + 1).equals("1") ? "1" : "0";
+            if(StringUtils.isNotEmpty(guarantorStatus)){
+	            String isGuarantorTmp = ""; 
+	            for(int i = 0; i<isGuarantor.length(); i++){
+	            	isGuarantorTmp += guarantorStatus.substring(i, i + 1).equals("1") || isGuarantor.substring(i, i + 1).equals("1") ? "1" : "0";
+	            }
+	            isGuarantor = isGuarantorTmp;
             }
-            isGuarantor = isGuarantorTmp;
             
             //代入基本所得合計對象
-            String incomeTaxTmp = ""; 
-            for(int i = 0; i<incomeTax.length(); i++){
-            	incomeTaxTmp += incomeTax.substring(i, i + 1).equals("1") || incomeTax.substring(i, i + 1).equals("1") ? "1" : "0";
+            if(StringUtils.isNotEmpty(incomeTaxStatus)){
+	            String incomeTaxTmp = ""; 
+	            for(int i = 0; i<incomeTax.length(); i++){
+	            	incomeTaxTmp += incomeTaxStatus.substring(i, i + 1).equals("1") || incomeTax.substring(i, i + 1).equals("1") ? "1" : "0";
+	            }
+	            incomeTax = incomeTaxTmp;
             }
-            incomeTax = incomeTaxTmp;
             
             thirdParty_relationship = aplyMemberData.getValue(thirdParty + "_Rel");
             thirdPartyTitle = aplyMemberData.getValue(thirdParty + "_Name");
@@ -159,11 +176,13 @@ public class Apply2 implements ILogic {
             mother_sameAddrHidden = setSameAddrHidden("Ma", aplyMemberData);
             thirdParty_sameAddrHidden = setSameAddrHidden(thirdParty, aplyMemberData);
             spouse_sameAddrHidden = setSameAddrHidden("Pa", aplyMemberData);
+            
+           //System.out.println
 
-            father_String = setFamilyString(guarantorStatus, incomeTax, "father");
-            mother_String = setFamilyString(guarantorStatus, incomeTax, "mother");
-            thirdParty_String = setFamilyString(guarantorStatus, incomeTax, "thirdParty");
-            spouse_String = setFamilyString(guarantorStatus, incomeTax, "spouse");
+            father_String = setFamilyString(isGuarantor, incomeTax, "father");
+            mother_String = setFamilyString(isGuarantor, incomeTax, "mother");
+            thirdParty_String = setFamilyString(isGuarantor, incomeTax, "thirdParty");
+            spouse_String = setFamilyString(isGuarantor, incomeTax, "spouse");
 
             father_RadioBtn = isFaGuarantor.equals("1")? "1" : "2";
     		mother_RadioBtn = isMaGuarantor.equals("1")? "1" : "2";
@@ -174,6 +193,7 @@ public class Apply2 implements ILogic {
             
             relationshipTitle = aplyMemberData.getValue(thirdParty + "_Rel");
         }
+       // System.out.println(father_checkbox+","+mother_checkbox);
 
         //取得第1-1的草稿資料
 
@@ -236,7 +256,7 @@ public class Apply2 implements ILogic {
             if(step2Root.element("familyStatus") != null) familyStatus = step2Root.element("familyStatus").getText();
             if(step2Root.element("guarantorStatus") != null) guarantorStatus = step2Root.element("guarantorStatus").getText();
 
-            if(step2Root.element("incomeTaxArr") != null) incomeTax = step2Root.element("incomeTaxArr").getText();
+            if(step2Root.element("incomeTaxArr") != null && StringUtils.isEmpty(incomeTax)) incomeTax = step2Root.element("incomeTaxArr").getText();
             if(step2Root.element("applicantAdult") != null) applicantAdult = step2Root.element("applicantAdult").getText();
 
             if(step2Root.element("guarantorText") != null) guarantorText = step2Root.element("guarantorText").getText();
@@ -259,19 +279,6 @@ public class Apply2 implements ILogic {
         else if (aplyMemberData != null){
             boolean isAdult = ProjUtils.isAdult(aplyMemberData.getValue("AplyBirthday"));
         	String thirdParty = isAdult ? "War" : "Gd1";
-        	
-            String marryStatusTmp = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
-            familyStatus = aplyMemberData.getValue("FamilyStatus");
-            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 2) {
-                String[] statusArray = familyStatus.split("_");
-                familyStatusLevel1 = statusArray.length > 0 ? statusArray[0] : "0";
-                familyStatusLevel2 = statusArray.length >= 2 ? statusArray[1] : "1";
-            }
-            JSONObject clickLevel = new JSONObject();
-            clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatusTmp, isAdult);
-
-            familyStatus = clickLevel.getString("familyStatus");
-            guarantorStatus = clickLevel.getString("guarantorStatus");
 
             //所得合計對象
             String isFaIncome = aplyMemberData.getValue("Fa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";//父親是否為所得合計對象
@@ -280,6 +287,33 @@ public class Apply2 implements ILogic {
             String isPaIncome = aplyMemberData.getValue("Pa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//配偶是否為所得合計對象
 //            String isWarIncome = aplyMemberData.getValue("War_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";;//監護人一是否為所得合計對象
             incomeTax = isFaIncome + isMaIncome + isGd1Income + isPaIncome;
+        	
+            String marryStatusTmp = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
+            familyStatus = aplyMemberData.getValue("FamilyStatus");
+            if(StringUtils.isNotEmpty(familyStatus) && familyStatus.length() >= 2) {
+                String[] statusArray = familyStatus.split("_");
+                familyStatusLevel1 = statusArray.length > 0 ? statusArray[0] : "0";
+                familyStatusLevel2 = statusArray.length >= 2 ? statusArray[1] : "1";
+            }
+            
+            String incomeTaxStatus = "";
+            if(StringUtils.isNotEmpty(familyStatusLevel1) && StringUtils.isNotEmpty(familyStatusLevel2)) {
+            	JSONObject clickLevel = new JSONObject();
+            	clickLevel2Option(clickLevel, familyStatusLevel1, familyStatusLevel2, marryStatusTmp, isAdult);
+            	
+            	familyStatus = clickLevel.getString("familyStatus");
+                guarantorStatus = clickLevel.getString("guarantorStatus");
+                incomeTaxStatus = clickLevel.getString("incomeTax");
+            }
+            
+            //代入基本所得合計對象
+            if(StringUtils.isNotEmpty(incomeTaxStatus)){
+	            String incomeTaxTmp = ""; 
+	            for(int i = 0; i<incomeTax.length(); i++){
+	            	incomeTaxTmp += incomeTaxStatus.substring(i, i + 1).equals("1") || incomeTax.substring(i, i + 1).equals("1") ? "1" : "0";
+	            }
+	            incomeTax = incomeTaxTmp;
+            }
             
             applicantAdult = isAdult ? "Y" : "N";
 
@@ -366,7 +400,7 @@ public class Apply2 implements ILogic {
         }
 
         showInfo = setShowInfo(familyStatus, father_RadioBtn, mother_RadioBtn, thirdParty_RadioBtn, spouse_RadioBtn, father_checkbox, mother_checkbox);
-        
+       // System.out.println("@@@"+familyStatus);
         content.put("isRecord",isRecord);
         content.put("user_birthday",birthday);
         content.put("familyStatus",familyStatus);
@@ -423,12 +457,316 @@ public class Apply2 implements ILogic {
 //        teleAddress.put("neighborhood",teleAddressNeighborhood);
         teleAddress.put("address",teleAddressAddress);
         content.put("teleAddress",teleAddress);
+      
     }
 
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+      
+    	LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
+		String userId = loginUserBean.getUserId();
+
+		IDao dao = DaoFactory.getDefaultDao();
+
+    	//String familyStatus = "";		
+		String familyStatusLevel1="",familyStatusLevel2="";
+		String familycheck="";		
+		String marryStatus="";
+		String fathercheck = "";
+		String mothercheck = "";
+		String Fa_birthday = "";
+		String Ma_birthday = "";
+		String Third_birthday = "";
+		String spouse_birthday = "";
+		String birthday = "";
+		String mother_RadioBtn="",father_RadioBtn="";
+		String father_id="",father_name="",father_regionCode="",father_mobile="",father_neighborhood_domi="",father_address_domi="",father_liner_domi="",father_zipCode_domi="",father_phone="";
+		String mother_id="",mother_name="",mother_regionCode="",mother_mobile="",mother_neighborhood_domi="",mother_address_domi="",mother_liner_domi="",mother_zipCode_domi="",mother_phone="";
+		String string_father="";
+		String yearBirthday = "", monthBirthday = "", dayBirthday = "";
+		String Ma_yearBirthday = "", Ma_monthBirthday = "", Ma_dayBirthday = "";
+		String Third_yearBirthday = "", Third_monthBirthday = "", Third_dayBirthday = "";
+		String Fa_yearBirthday = "", Fa_monthBirthday = "", Fa_dayBirthday = "";
+		String spouse_yearBirthday = "", spouse_monthBirthday = "", spouse_dayBirthday = "";
+		
+		DataObject aplyMemberData = null;
+		aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId, dao);
+		if (aplyMemberData == null && ProjUtils.isPayHistory(userId, dao)) {
+			aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId, dao);
+		}
+
+		
+		String apply1_1DraftXML = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
+		String apply1_2DraftXML = FlowUtils.getDraftData(userId, "apply", "apply1_2", dao);
+		String apply2DraftXML = FlowUtils.toDraftDataXML(queryStringInfo,false);
+		
+		Document apply1_2Doc = apply1_2DraftXML != null && StringUtils.isNotEmpty(apply1_2DraftXML)
+				? DocumentHelper.parseText(apply1_2DraftXML) : null;
+		
+	
+		Element apply1_2Root = apply1_2Doc != null ? apply1_2Doc.getRootElement() : null;
+		
+	
+		Document apply1_1Doc = apply1_1DraftXML != null && StringUtils.isNotEmpty(apply1_1DraftXML)
+				? DocumentHelper.parseText(apply1_1DraftXML) : null;
+		
+		
+		//Element apply2Root = apply2Doc != null ? apply2Doc.getRootElement() : null;
+		
+		Element apply1_1Root = apply1_1Doc != null ? apply1_1Doc.getRootElement() : null;
+    	
+    	
+		if (apply1_1Root != null) {
+			if(apply1_1Root.element("marryStatus")!=null)
+			marryStatus=apply1_1Root.element("marryStatus").getText();
+			if(apply1_1Root.element("birthday0")!=null)
+			yearBirthday = apply1_1Root.element("birthday0").getText();
+			if(apply1_1Root.element("birthday2")!=null)
+			monthBirthday = apply1_1Root.element("birthday2").getText();
+			if(apply1_1Root.element("birthday4")!=null)
+			dayBirthday = apply1_1Root.element("birthday4").getText();
+
+            monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
+            dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
+
+			birthday = yearBirthday + monthBirthday + dayBirthday;
+			birthday = ProjUtils.toYYYYBirthday(birthday);
+
+		} else if (aplyMemberData != null) {
+			marryStatus = aplyMemberData.getValue("Marriage");
+			if(marryStatus.equals("0"))
+				marryStatus="N";
+			if(marryStatus.equals("1"))
+				marryStatus="Y";
+			birthday = aplyMemberData.getValue("AplyBirthday");
+		}
+		
+		
+		//System.out.println("!!!!!!!!!!!"+apply2DraftXML);
+		
+		if (apply2DraftXML != null) {
+			 Document step2Doc = DocumentHelper.parseText(apply2DraftXML);
+             Element apply2Root = step2Doc.getRootElement();
+			if (apply2Root.element("father_checkbox") != null)
+			fathercheck = apply2Root.element("father_checkbox").getText().toString().equals("1") ? "1":"0";
+			if (apply2Root.element("mother_checkbox") != null)
+			mothercheck = apply2Root.element("mother_checkbox").getText().toString().equals("1") ? "1":"0";
+			
+			if (apply2Root.element("mother_RadioBtn") != null)
+				mother_RadioBtn = apply2Root.element("mother_RadioBtn").getText().toString();
+			if (apply2Root.element("father_RadioBtn") != null)
+				father_RadioBtn = apply2Root.element("father_RadioBtn").getText().toString();
+			if (apply2Root.element("father_birthday0") != null)
+				Fa_yearBirthday = apply2Root.element("father_birthday0").getText();
+			if (apply2Root.element("father_birthday2") != null)
+				Fa_monthBirthday = apply2Root.element("father_birthday2").getText();
+			if (apply2Root.element("father_birthday4") != null)
+				Fa_dayBirthday = apply2Root.element("father_birthday4").getText();
+			if (apply2Root.element("mother_birthday0") != null)
+				Ma_yearBirthday = apply2Root.element("mother_birthday0").getText();
+			if (apply2Root.element("mother_birthday2") != null)
+				Ma_monthBirthday = apply2Root.element("mother_birthday2").getText();
+			if (apply2Root.element("mother_birthday4") != null)
+				Ma_dayBirthday = apply2Root.element("mother_birthday4").getText();
+			if (apply2Root.element("thirdParty_birthday0") != null)
+				Third_yearBirthday = apply2Root.element("thirdParty_birthday0").getText();
+			if (apply2Root.element("thirdParty_birthday2") != null)
+				Third_monthBirthday = apply2Root.element("thirdParty_birthday2").getText();
+			if (apply2Root.element("thirdParty_birthday4") != null)
+				Third_dayBirthday = apply2Root.element("thirdParty_birthday4").getText();			
+			if (apply2Root.element("spouse_birthday0") != null)
+				spouse_yearBirthday = apply2Root.element("spouse_birthday0").getText();
+			if (apply2Root.element("spouse_birthday2") != null)
+				spouse_monthBirthday = apply2Root.element("spouse_birthday2").getText();
+			if (apply2Root.element("spouse_birthday4") != null)
+				spouse_dayBirthday = apply2Root.element("spouse_birthday4").getText();	
+			
+			if (apply2Root.element("father_id") != null)
+				father_id = apply2Root.element("father_id").getText();
+			if (apply2Root.element("father_name") != null)
+				father_name = apply2Root.element("father_name").getText();
+			if (apply2Root.element("father_regionCode") != null)
+				father_regionCode = apply2Root.element("father_regionCode").getText();
+			if (apply2Root.element("father_phone") != null)
+				father_phone = apply2Root.element("father_phone").getText();
+			
+			if (apply2Root.element("father_mobile") != null)
+				father_mobile = apply2Root.element("father_mobile").getText();
+			if (apply2Root.element("father_neighborhood_domi") != null)
+				father_neighborhood_domi = apply2Root.element("father_neighborhood_domi").getText();
+			if (apply2Root.element("father_address_domi") != null)
+				father_address_domi = apply2Root.element("father_address_domi").getText();
+			if (apply2Root.element("father_liner_domi") != null)
+				father_liner_domi = apply2Root.element("father_liner_domi").getText();
+			if (apply2Root.element("father_zipCode_domi") != null)
+				father_zipCode_domi = apply2Root.element("father_zipCode_domi").getText();			
+			
+			if (apply2Root.element("mother_id") != null)
+				mother_id = apply2Root.element("mother_id").getText();
+			if (apply2Root.element("mother_name") != null)
+				mother_name = apply2Root.element("mother_name").getText();
+			if (apply2Root.element("mother_regionCode") != null)
+				mother_regionCode = apply2Root.element("mother_regionCode").getText();
+			if (apply2Root.element("mother_phone") != null)
+				mother_phone = apply2Root.element("mother_phone").getText();
+			if (apply2Root.element("mother_mobile") != null)
+				mother_mobile = apply2Root.element("mother_mobile").getText();
+			if (apply2Root.element("mother_neighborhood_domi") != null)
+				mother_neighborhood_domi = apply2Root.element("mother_neighborhood_domi").getText();
+			if (apply2Root.element("mother_address_domi") != null)
+				mother_address_domi = apply2Root.element("mother_address_domi").getText();
+			if (apply2Root.element("mother_liner_domi") != null)
+				mother_liner_domi = apply2Root.element("mother_liner_domi").getText();
+			if (apply2Root.element("mother_zipCode_domi") != null)
+				mother_zipCode_domi = apply2Root.element("mother_zipCode_domi").getText();		
+			
+			
+			if(fathercheck.equals("1"))
+			{
+				if(father_id.isEmpty()||father_name.isEmpty()||father_regionCode.isEmpty()||father_phone.isEmpty()||father_mobile.isEmpty()||father_neighborhood_domi.isEmpty()||father_address_domi.isEmpty()||father_liner_domi.isEmpty()||father_zipCode_domi.isEmpty()||Fa_yearBirthday.isEmpty()||Fa_monthBirthday.isEmpty()||Fa_dayBirthday.isEmpty())
+					throw new Exception("請確實填寫父親資料");	
+			}
+			if(mothercheck.equals("1"))
+			{
+				if(mother_id.isEmpty()||mother_name.isEmpty()||mother_regionCode.isEmpty()||mother_phone.isEmpty()||mother_mobile.isEmpty()||mother_neighborhood_domi.isEmpty()||mother_address_domi.isEmpty()||mother_liner_domi.isEmpty()||mother_zipCode_domi.isEmpty()||Ma_yearBirthday.isEmpty()||Ma_monthBirthday.isEmpty()||Ma_dayBirthday.isEmpty())
+					throw new Exception("請確實填寫母親資料");	
+			}
+			
+			Fa_yearBirthday= StringUtils.leftPad(Fa_yearBirthday,3,"0");
+			Ma_yearBirthday= StringUtils.leftPad(Ma_yearBirthday,3,"0");
+			Third_yearBirthday= StringUtils.leftPad(Third_yearBirthday,3,"0");
+			spouse_yearBirthday= StringUtils.leftPad(spouse_yearBirthday,3,"0");
+			
+			Fa_monthBirthday= StringUtils.leftPad(Fa_monthBirthday,2,"0");
+			Ma_monthBirthday= StringUtils.leftPad(Ma_monthBirthday,2,"0");
+			Third_monthBirthday= StringUtils.leftPad(Third_monthBirthday,2,"0");
+			spouse_monthBirthday= StringUtils.leftPad(spouse_monthBirthday,2,"0");
+			
+			Fa_dayBirthday= StringUtils.leftPad(Fa_dayBirthday,2,"0");
+			Ma_dayBirthday= StringUtils.leftPad(Ma_dayBirthday,2,"0");
+			Third_dayBirthday= StringUtils.leftPad(Third_dayBirthday,2,"0");
+			spouse_dayBirthday= StringUtils.leftPad(spouse_dayBirthday,2,"0");		
+
+			
+			Fa_birthday = Fa_yearBirthday + Fa_monthBirthday + Fa_dayBirthday;
+			Ma_birthday = Ma_yearBirthday + Ma_monthBirthday + Ma_dayBirthday;
+			Third_birthday = Third_yearBirthday + Third_monthBirthday + Third_dayBirthday;
+			spouse_birthday = spouse_yearBirthday + spouse_monthBirthday + spouse_dayBirthday;
+			
+			Fa_birthday = ProjUtils.toYYYYBirthday(Fa_birthday);			
+			Ma_birthday = ProjUtils.toYYYYBirthday(Ma_birthday);
+			Third_birthday = ProjUtils.toYYYYBirthday(Third_birthday);
+			spouse_birthday = ProjUtils.toYYYYBirthday(spouse_birthday);
+			
+			//System.out.println("@@@@@"+string_father+","+string_father.isEmpty());
+			
+			
+		} else if (aplyMemberData != null) {
+			fathercheck = aplyMemberData.getValue("Fa_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";// 父親是否為所得合計對象
+			mothercheck = aplyMemberData.getValue("Ma_IncomeAddOn").equalsIgnoreCase("Y") ? "1" : "0";// 母親是否為所得合計對象
+			Fa_birthday = aplyMemberData.getValue("Fa_birthday");
+			// cFa_birthday=Fa_birthday.substring(0,4)+"-"+Fa_birthday.substring(4,6)+"-"+Fa_birthday.substring(6,8);
+			Ma_birthday = aplyMemberData.getValue("Ma_birthday");
+			// cMa_birthday=Ma_birthday.substring(0,4)+"-"+Ma_birthday.substring(4,6)+"-"+Ma_birthday.substring(6,8);
+			Third_birthday = aplyMemberData.getValue("Gd1_birthday");
+			spouse_birthday = aplyMemberData.getValue("Pa_birthday");
+		}	
+		if (apply1_2Root != null) 
+		{			
+			 //if (apply1_2Root.element("familyStatus") != null)
+				 //familyStatus=apply1_2Root.element("familyStatus").getText().toString();			
+			 if (apply1_2Root.element("familyStatusLevel1") != null)
+				 familyStatusLevel1 =apply1_2Root.element("familyStatusLevel1").getText().toString();
+			 if (apply1_2Root.element("familyStatusLevel2") != null)
+				 familyStatusLevel2 =apply1_2Root.element("familyStatusLevel2").getText().toString();
+			 familycheck=familyStatusLevel1+"_"+familyStatusLevel2;
+		} else if (aplyMemberData != null) {
+			familycheck = aplyMemberData.getValue("familyStatus");
+		}
+		//System.out.println("@@@@@"+fathercheck+","+mothercheck);		
+		
+		boolean isAdult = ProjUtils.isAdult(birthday);    	
+    	boolean checkStatus = false;
+		boolean checkFaMoStauts = false;
+
+		if ((familycheck.equals("2_1")&&marryStatus.equals("N")) || (familycheck.equals("2_2")&&marryStatus.equals("N")) || (familycheck.equals("2_3")&&marryStatus.equals("N"))
+				|| (familycheck.equals("2_4")&&marryStatus.equals("N"))) {
+			checkStatus = true;
+		}
+		if (fathercheck.equals("0") && mothercheck.equals("0")) 
+		{
+			checkFaMoStauts = true;
+		}
+		if (checkStatus && checkFaMoStauts && isAdult)
+			throw new Exception("請勾選所得合計對象");
+		//檢查父母生日
+		if((!isAdult&&familycheck.equals("1_1")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("1_2")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("1_3")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("2_1")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("2_2")&&marryStatus.equals("N")&&mother_RadioBtn.equals("1"))||(!isAdult&&familycheck.equals("2_3")&&marryStatus.equals("N")&&father_RadioBtn.equals("1"))||(!isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N")&&father_RadioBtn.equals("1")&&mother_RadioBtn.equals("1"))||(isAdult&&familycheck.equals("1_1")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("1_2")&&marryStatus.equals("N")||(isAdult&&familycheck.equals("1_3")&&marryStatus.equals("N")))||(isAdult&&familycheck.equals("1_4")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("2_1")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("2_2")&&marryStatus.equals("N")&&mothercheck.equals("1"))||(isAdult&&familycheck.equals("2_3")&&marryStatus.equals("N")&&fathercheck.equals("1"))||(isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N")&&fathercheck.equals("1")&&mothercheck.equals("1")))
+		{
+			CheckBir(Fa_birthday);
+			CheckBir(Ma_birthday);
+			CheckFamilyBir(Fa_birthday,birthday);
+			CheckFamilyBir(Ma_birthday,birthday);
+		}
+		//檢查父親生日格式		
+		if((!isAdult&&familycheck.equals("2_2")&&marryStatus.equals("N")&&mother_RadioBtn.equals("2"))||(!isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N")&&father_RadioBtn.equals("1"))||(!isAdult&&familycheck.equals("3_1")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("1_2")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("2_1")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("3_1")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("4_1")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_2")&&marryStatus.equals("N")&&mothercheck.equals("0"))||(isAdult&&familycheck.equals("3_1")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("3_3")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("1_2")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_1")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("3_1")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("4_1")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N")&&fathercheck.equals("1")))
+		{
+			CheckBir(Fa_birthday);
+			CheckFamilyBir(Fa_birthday,birthday);
+		}		
+		//檢查母親生日格式	
+		if((!isAdult&&familycheck.equals("2_3")&&marryStatus.equals("N")&&father_RadioBtn.equals("2"))||(!isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N")&&mother_RadioBtn.equals("1"))||(!isAdult&&familycheck.equals("3_2")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("1_3")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("2_2")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("3_2")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("4_2")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_3")&&marryStatus.equals("N")&&fathercheck.equals("0"))|(isAdult&&familycheck.equals("3_2")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("3_4")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("1_3")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_2")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("3_2")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("4_2")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N")&&mothercheck.equals("1")))
+		{
+			CheckBir(Ma_birthday);
+			CheckFamilyBir(Ma_birthday,birthday);
+		}
+		//檢查第三保證人生日格式	
+		if((!isAdult&&familycheck.equals("1_4")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("3_3")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("4_")&&marryStatus.equals("N"))||(!isAdult&&familycheck.equals("1_4")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("2_3")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("3_3")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("4_3")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("1_4")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("2_4")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("3_3")&&marryStatus.equals("N")||(isAdult&&familycheck.equals("3_4")&&marryStatus.equals("N")))||(isAdult&&familycheck.equals("4_")&&marryStatus.equals("N"))||(isAdult&&familycheck.equals("1_4")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_3")&&marryStatus.equals("Y")||(isAdult&&familycheck.equals("3_3")&&marryStatus.equals("Y")||(isAdult&&familycheck.equals("4_3")&&marryStatus.equals("Y")))))
+		{
+			CheckBir(Third_birthday);
+		}
+		//檢查配偶生日格式	
+		if((!isAdult&&familycheck.equals("1_1")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("1_2")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("1_3")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("1_4")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("2_1")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("2_2")&&marryStatus.equals("Y"))||(!isAdult&&familycheck.equals("2_3")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("1_1")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("1_2")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("1_3")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("1_4")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_1")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_2")&&marryStatus.equals("Y"))||(isAdult&&familycheck.equals("2_3")&&marryStatus.equals("Y")))
+		{
+			CheckBir(spouse_birthday);
+		}
     }
+    public void  CheckFamilyBir(String familybir,String birthday) throws Exception
+	{
+		boolean check = false;
+		if (familybir.length() == 8)
+			check= Double.parseDouble(familybir) >= Double.parseDouble(birthday);			
+		if(check)
+		throw new Exception("父母出生日期需早於申請人");	
+			
+	
+	}
+	public void  CheckBir(String birthday) throws Exception
+	{
+		//System.out.println("生日格式:"+birthday);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		try 
+		{
+			dateFormat.setLenient(false);
+			String cbirthday="";
+			if (birthday.length() == 8)
+			{
+				cbirthday = birthday.substring(0, 4) + "-" + birthday.substring(4, 6) + "-"
+						+ birthday.substring(6, 8);
+				 dateFormat.parse(cbirthday.trim());
+			}
+			else if(birthday.length()>0 &&birthday.length()<8)
+			{
+				throw new Exception("生日格式錯誤");
+			}
+			
+			
+			
+			
+		} catch (Exception e) {
+			throw new Exception("生日格式錯誤");
+		}
+	
+	}
 
     public void clickLevel2Option (JSONObject clickLevel, String familyStatusLevel1, String familyStatusLevel2, String marryStatus, boolean isAdult) throws JSONException {
         String showInfo = "", familyStatus = "", guarantorStatus = "", incomeTax = "";

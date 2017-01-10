@@ -46,6 +46,9 @@ public class MessageUtils {
     public final static String defermentTitle = "台北富邦銀行就學貸款服務專區延後/提前還款交易「{result}」通知";
     public final static String loginFailTitle = "台北富邦銀行就學貸款服務專區立即登入交易「失敗｣通知";
     public final static String bookingRemindTitle = "台北富邦銀行就學貸款服務專區申請就學貸款分行對保提醒通知";
+    
+    public final static String planTitle = "台北富邦銀行電子繳款單扁平檔匯入排程執行結果通知";
+    public final static String LogTable = "台北富邦銀行Housekeeping排程執行結果通知";
 
 
     //內文
@@ -59,7 +62,7 @@ public class MessageUtils {
         return content;
     }
 
-    public static void sendEmail(MailBean mailBean) throws Exception {
+    public static void sendEmail(MailBean mailBean,String Id) throws Exception {
 
         Properties p = PropertiesUtil.loadPropertiesByClassPath("/config.properties");
 
@@ -68,6 +71,7 @@ public class MessageUtils {
         if(StringUtils.isEmpty(mailBean.getMemo())) {
             mailBean.setMemo("");
         }
+        
 
 
         for(String key : mailBean.getResultParamMap().keySet()) {
@@ -86,6 +90,8 @@ public class MessageUtils {
         String emailSendName = p.getProperty("emailSendName");//富邦_學貸
         String emailUserName = p.getProperty("emailUserName");//ebr@fbt.com
         String emailUserPwd = p.getProperty("emailUserPwd");//
+        
+        
 
         JSPMailInfo mailInfo = new JSPMailInfo();
         mailInfo.setEncoding("utf-8");
@@ -119,12 +125,13 @@ public class MessageUtils {
         mailLog.setValue("Title",mailInfo.getTitle());
         mailLog.setValue("Content",mailInfo.getContent());
         mailLog.setValue("CreateTime",DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString()));
+        mailLog.setValue("UserId",Id);
         DaoFactory.getDefaultDao().insert(mailLog);
 
         GardenLog.log(GardenLog.DEBUG,"error = " + error);
     }
 
-    public static void saveOTPLog(IDao dao,String mobile,String email,HttpServletRequest request,String validNum,String otpCode,String smsContent) throws Exception {
+    public static void saveOTPLog(IDao dao,String mobile,String email,HttpServletRequest request,String validNum,String otpCode,String smsContent,String Id) throws Exception {
         //把驗證碼跟手機存到DB的log
         try{
             DataObject otpLog = DaoFactory.getDefaultDataObject("OTP_Log");
@@ -133,6 +140,7 @@ public class MessageUtils {
             otpLog.setValue("IP",JSPUtils.getClientIP(request));
             otpLog.setValue("OTPNumber",validNum);
             otpLog.setValue("OTPCode",otpCode);
+            otpLog.setValue("UserId",Id);
             otpLog.setValue("SmsContent",smsContent);
             otpLog.setValue("CreateTime", DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss", DateUtil.getTodayString()));
             dao.insert(otpLog);

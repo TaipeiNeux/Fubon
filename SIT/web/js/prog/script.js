@@ -1,31 +1,23 @@
-//防右鍵
-document.oncontextmenu=function(){
-	return false;
-}
-
+var parentsWidth = 0;
 $(document).ready(function() {
-    
+
+
+
+    // $(window).width(parent.document.getElementById("frame1").width);
+
     console.log($(window).width());
 
-    if (inIframe()) {
-        console.log("start");
-        // $(window).width(700);
-        // parent.document.getElementById("frame1").width=700;
-        // $('body').css('max-width', '100% !important');
-        // parent.document.body.style.width="100px";
+    // $("body").css("width", $(window).width());
 
-
-    } else {
-
+    try {
+        parentsWidth = window.top.getWidth();
+    } catch (e) {
+        console.debug(e);
     }
 
-    function inIframe() {
-        try {
-            return window.self !== window.top;
-        } catch (e) {
-            return true;
-        }
-    }
+
+
+
 
 
     $('body').attr('id', 'body');
@@ -250,9 +242,17 @@ $(document).ready(function() {
 
         if (isLeftMenuOpen == 0) // 左側選單關閉
         {
-            window.setTimeout(function() { $(".mobileMenu").removeClass('menu-show'); }, 500);
+            window.setTimeout(function() {
+                $(".mobileMenu").removeClass('menu-show');
+                GardenUtils.plugin.screenMoveToDiv({
+                    moveToDivObj: 'body'
+                });
+            }, 500);
             $("wrapper").removeClass("stop-scroll");
             $("body").removeClass("stop-scroll-body");
+            GardenUtils.plugin.screenMoveToDiv({
+                moveToDivObj: 'body'
+            });
         } else //左側選單開啟
         {
             $(".mobileMenu").addClass('menu-show');
@@ -261,12 +261,43 @@ $(document).ready(function() {
         }
         $('.wrapper').animate({
             left: $('.wrapper').css('left') == "275px" ? "0px" : "275px"
-        }, 300);
+        }, 300, function() {
+
+        });
         $('.headerArea').animate({
             left: $('.headerArea').css('left') == "275px" ? "0px" : "275px"
-        }, 300);
+        }, 300, function() {
+
+        });
+
+        // window.setTimeout(function() {}, 1500);
+        // $('html, body').animate({ scrollTop: 0 }, 5000);
+        scrollTopinFrame();
 
     });
+
+    // $("footer.footer").on("click", function() {
+
+
+    //     scrollTopinFrame();
+
+    // });
+
+
+    function scrollTopinFrame() {
+        GardenUtils.plugin.screenMoveToDiv({
+            moveToDivObj: 'body'
+        });
+        $(window).scrollTop(0);
+        $(document).scrollTop(0);
+
+        try {
+            window.top.iframeScrollTop();
+        } catch (e) {
+            console.debug(e);
+        }
+    }
+
 
     // 手機板 右 選單收合
     $(document).on('click', '.right_navIcon a', function() {
@@ -290,11 +321,16 @@ $(document).ready(function() {
         $(".mobileMenu").addClass('menu-show');
         $('.wrapper').animate({
             left: $('.wrapper').css('left') == "-275px" ? "0px" : "-275px"
-        }, 300);
+        }, 300, function() {
+
+        });
 
         $('.headerArea').animate({
             left: $('.headerArea').css('left') == "-275px" ? "0px" : "-275px"
-        }, 300);
+        }, 300, function() {
+
+        });
+        //
     });
 
 
@@ -560,6 +596,23 @@ $(document).ready(function() {
         console.log($(document).scrollLeft());
 
 
+        try {
+            parentsWidth = window.top.getWidth();
+        } catch (e) {
+            console.debug(e);
+        }
+
+
+        if (parentsWidth) {
+            $("body").css("width", parentsWidth);
+            $(".bannerArea").css("min-width", parentsWidth);
+
+        } else {
+            $("body").css("width", $(window).width());
+            $(".bannerArea").css("min-width", $(window).width());
+
+        }
+        //
 
     });
 
@@ -573,8 +626,9 @@ $(document).ready(function() {
         wilbeckset();
         setBannerAreaHeight();
 
-        $("body").css("width", $(window).width());
-        $(".bannerArea").css("min-width", $(window).width());
+
+
+
 
 
 
@@ -625,7 +679,15 @@ $(document).ready(function() {
 
     //$(window).resize();
     //mike
-    $("body").css("width", $(window).width());
+    // $("body").css("width", $(window).width());
+    if (parentsWidth) {
+        $("body").css("width", parentsWidth);
+        // $(".bannerArea").css("min-width", parentsWidth);
+    } else {
+        $("body").css("width", $(window).width());
+        // $(".bannerArea").css("min-width", $(window).width());
+    }
+
     // $("body").css("height", $(window).height());
 }); //(document).ready
 
@@ -683,7 +745,7 @@ $(document).ready(function() {
                 window.location = 'register.jsp';
             });
 
-			/**
+            /**
             $('a.apply').click(function(ev) {
                 ev.preventDefault();
                 window.location = 'memberLogin.jsp';
@@ -825,87 +887,72 @@ function memberLogin() {
     var studentCode = $('[name="studentCode"]').val();
     var studentPassword = $('[name="studentPassword"]').val();
 
-	//alert($('#mainForm').length);
-	
-    var res = GardenUtils.valid.validForm({
-        type: "show",
-        showAllErr: false,
+    /*var res = GardenUtils.valid.validForm({
+        type: "alert",
         formId: ["mainForm"],
         validEmpty: [{
-		        name: 'studentId',
-		        msg: '身分證字號'
-		    },{
-		        name: 'studentCode',
-		        msg: '使用者代碼'
-		    },{
-		        name: 'studentPassword',
-		        msg: '使用者密碼'
-		    }],
-		validIdentity: [{
-			name: 'studentId',
-			msg: '身分證字號',
-			allowEmpty: false
-		}],
+            name: 'studentId',
+            msg: '身分證字號'
+        }, {
+            name: 'studentCode',
+            msg: '使用者代碼'
+        }, {
+            name: 'studentPassword',
+            msg: '使用者密碼'
+        }],
         validNumber: [],
         validDecimal: [],
         validEmail: [],
         validDate: [],
-        validMobile: [],
         errorDel: [],
-        customizeFun: function(customizeValidResult) {
-			if (checkVal(studentId) == false) {
-				customizeValidResult.push({
-                    obj: $('[name="studentId"]'),
-                    msg: '身分證字號限輸入英數字'
-                });
-			} 
-			else if (studentId.length != 10) {
-				customizeValidResult.push({
-                    obj: $('[name="studentId"]'),
-                    msg: '身分證字號輸入長度不符'
-                });
-			} 
-			else {
-				$('[name="studentId"]').parent().find('.error').text('');
-			}			
-					
-			if (checkVal(studentCode) == false) {
-				customizeValidResult.push({
-                    obj: $('[name="studentCode"]'),
-                    msg: '使用者代碼限輸入英數字'
-                });
-			} else if (studentCode.length < 6) {
-				customizeValidResult.push({
-                    obj: $('[name="studentCode"]'),
-                    msg: '使用者代碼輸入長度不符'
-                });
-			} else {
-				$('[name="studentCode"]').parent().find('.error').text('');
-			}
-			
-			if (checkVal(studentPassword) == false) {
-				customizeValidResult.push({
-                    obj: $('[name="studentPassword"]'),
-                    msg: '使用者密碼限輸入英數字'
-                });
-			} else if (studentPassword.length < 6) {
-				customizeValidResult.push({
-                    obj: $('[name="studentPassword"]'),
-                    msg: '使用者密碼輸入長度不符'
-                });
-			} else {
-				$('[name="studentPassword"]').parent().find('.error').text('');
-			}
-		}
-    });
-
-	
-	//alert(res);
+        customizeFun: function() {
+        }
+    });*/
+    /* Edit by JiaRu 160604
+    //身分證字號
+    if( studentId == '' || studentId == undefined ){
+        errStr = errStr + '請輸入身分證字號\n';
+    }
+    else{
+        if( checkVal( studentId ) == false ){
+            errStr = errStr + '身分證字號限輸入英數字\n';
+        }
+        else if(studentId.length != 10){
+            errStr = errStr + '身分證字號輸入長度不符\n';
+        }
+    }
+    console.debug(studentCode.length);
     
+    //使用者代碼
+    if( studentCode == '' || studentCode == undefined ){
+        errStr = errStr + '請輸入使用者代碼\n';
+    }
+    else{
+        if( checkVal( studentCode ) == false ){
+            errStr = errStr + '使用者代碼限輸入英數字\n';
+        }
+        else if(studentCode.length < 6){
+            errStr = errStr + '使用者代碼輸入長度不符\n';
+        }
+    }
+    
+    //使用者密碼
+    if( studentPassword == '' || studentPassword == undefined ){
+        errStr = errStr + '請輸入使用者密碼';
+    }
+    else{
+        if( checkVal( studentPassword ) == false ){
+            errStr = errStr + '使用者密碼限輸入英數字';
+        }
+        else if(studentPassword.length < 6){
+            errStr = errStr + '使用者密碼輸入長度不符';
+        }
+    }
+    */
     // Edit by JiaRu 160604
     //身分證字號
-    /*if (studentId == '' || studentId == undefined) {
-        errStr = errStr + '請輸入身分證字號!!!\n';
+    if (studentId == '' || studentId == undefined) {
+        errStr = errStr + '請輸入身分證字號\n';
         $('[name="studentId"]').parent().find('.error').text('請輸入身分證字號');
     } else {
         if (checkVal(studentId) == false) {
@@ -954,14 +1001,12 @@ function memberLogin() {
             errStr = '';
             $('[name="studentPassword"]').parent().find('.error').text('');
         }
-    }*/
+    }
 
-    /*if (errStr != '') {
+    if (errStr != '') {
         //alert(errStr);
         errStr = '';
-    }*/
-
-	if(res) {
+    } else {
         //登入
 
         if ($('.ajax-loader').length == 0) {
@@ -1030,6 +1075,18 @@ function memberLogin() {
         }, 100);
 
     }
+
+
+    /*if (res) {
+
+        var result = modal.login(studentId, studentCode, studentPassword);
+
+        if (result.errorCode == '0') {
+            location.reload();
+        } else {
+            alert(result.errorCode + '\n' + result.errorMsg);
+        }
+    }*/
 }
 
 //檢查是否為英文或數字
@@ -1219,10 +1276,10 @@ function isMobileWidth() {
 function previewDocument(src, name) {
     var kindOfTag = '';
     //alert(name);
-    if (name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif' || name == 'tif') {
-        kindOfTag = '<div class="docContent"><img src="' + src + '"/></div>';
-    } else if (name == 'pdf') {
-        kindOfTag = '<div class="docContent"><iframe src="' + src + '" style="width: 100%; height: 100%;"><frame/></div>'
+    if (name == 'peg' || name == 'jpg' || name == 'png' || name == 'gif') {
+        kindOfTag = '<img src="' + src + '"/>';
+    } else if (name == 'pdf' || name == 'tif') {
+        kindOfTag = '<iframe src="' + src + '" style="width: 100%; height: 100%;"><frame/>'
     }
 
     GardenUtils.display.popup({
@@ -1272,13 +1329,13 @@ function g_countdown(conf) {
         $('.death').html(tmp_time);
 
         if (countdownnumber == 0 && countdownnumber_min == 0) {
-
             $("#" + conf.modal_id).modal('show');
 
-            /*$('#' + conf.modal_id + ' a.submitBtn').on('click', function() {
+            $('#' + conf.modal_id + ' a.submitBtn').on('click', function() {
                 $("#" + conf.modal_id).modal('hide');
+                // alert('haha');
                 location.reload();
-            });*/
+            });
 
             clearTimeout(countdownid);
         } else if (countdownnumber == -1) {
@@ -1439,7 +1496,7 @@ function getCarryObj(content) {
     var level1Picked = content.familyStatusLevel1;
     var level2Picked = content.familyStatusLevel2;
     var thirdPartyTitle = content.thirdPartyTitleHidden;
-    
+
     var gaurantorTitle = ["父親", "母親", thirdPartyTitle, "配偶"]; //放父親, 母親, 第三人, 配偶 的字串 
     var gaurantorName = ['(' + fatherName + ')', '(' + motherName + ')', '(' + thirdPartyName + ')', '(' + spouseName + ')']; //放父親, 母親, 第三人, 配偶的名字的字串
     var carryObjArr = []; //放1~6
@@ -1632,8 +1689,7 @@ function getCarryObj(content) {
                     gaurantorObjArr.push('c', 'c');
                     break;
             }
-        } 
-		else if (adult == 'Y') { //已成年未婚
+        } else if (adult == 'Y') { //已成年未婚
             switch (level1Picked) {
                 case '1':
                     if (level2Picked == '1') {
@@ -1748,7 +1804,7 @@ function getCarryObj(content) {
 }
 
 function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
-//alert(isGuarantor);
+    //alert(isGuarantor);
     var returnString = '';
     if (isAdult == 'N') {
         $.each(parentsArr, function(index, obj) {
@@ -1757,7 +1813,7 @@ function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
                     var current = isGuarantor.substr(index, 1); //當前的人的值
                     if (current == '1') {
                         returnString = returnString + objIndex;
-						//alert('index:'+index);
+                        //alert('index:'+index);
                     }
                 }
             });
@@ -1774,7 +1830,7 @@ function checkParents(parentsArr, isAdult, isGuarantor, isIncome) {
             });
         });
     }
-	//alert('final:'+returnString);
+    //alert('final:'+returnString);
     return returnString;
 }
 
@@ -1864,17 +1920,17 @@ function pushCarryObjString(appoName, carryObjArray, gaurantorObjArray, gauranto
                 break;
             case 4: //(依判斷塞連帶保證人)之除戶謄本或死亡證明
                 var sameObj = '';
-				
+
                 for (var g = 0; g <= gaurantorObjArray[k].length - 1; g++) {
-                    if (g != gaurantorObjArray[k].length - 1) {				
+                    if (g != gaurantorObjArray[k].length - 1) {
                         sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
-						sameObj = sameObj.split('(')[0] + '、';
+                        sameObj = sameObj.split('(')[0] + '、';
                         gaurantorIndex += 1;
-                    } else {               
-						sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
+                    } else {
+                        sameObj = sameObj + allGaurantorsArr[gaurantorIndex];
                         gaurantorIndex += 1;
                     }
-				
+
                     sameObj = sameObj.split('(')[0];
                     allObjArr[k] = sameObj + '之除戶謄本或死亡證明';
                 }

@@ -55,13 +55,15 @@ public class FlowServlet extends HttpServlet {
         JSONObject jsonObject = new JSONObject();
 
         JSONObject header = new JSONObject();
-        JSONObject content = new JSONObject();
+        JSONObject content = new JSONObject();  
+        
 
 
         IDao dao = DaoFactory.getDefaultDao();
 //        Transcation transcation = dao.beginTranscation();
 
         try{
+        	//content.put("relationship", "relationship");
             jsonObject.put("Header",header);
             jsonObject.put("Content",content);
 
@@ -142,24 +144,10 @@ public class FlowServlet extends HttpServlet {
 
         FlowUtils.resetDraftData(userId,flowId,dao);
 
-        if("deferment".equalsIgnoreCase(flowId)) {
-            //清除文件
-            SQLCommand update = new SQLCommand("delete from Deferment_Doc where AplyIdNo = ? and (FlowLogId is null or FlowLogId = 0)");
-            update.addParamValue(userId);
-            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
 
-            queryStringInfo.getRequest().getSession().setAttribute("eligibilityText","");
-            queryStringInfo.getRequest().getSession().setAttribute("eligibilityIndex","");
-            queryStringInfo.getRequest().getSession().setAttribute("eligibilityText0","");
-        }
-        else if("apply".equalsIgnoreCase(flowId)) {
-            //清除文件
-            SQLCommand update = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
-            update.addParamValue(userId);
-            DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
-
-        }
-
+        SQLCommand update = new SQLCommand("delete from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+        update.addParamValue(userId);
+        DaoFactory.getDefaultDao().queryByCommand(null,update,new QueryConfig().setExecuteType(QueryConfig.EXECUTE),null);
 
     }
 
@@ -175,6 +163,8 @@ public class FlowServlet extends HttpServlet {
 
         //更新草稿到DB
         FlowUtils.updateDraftData(userId,flowId,stepId,draftXML,dao,true);
+        
+        
 
 
     }
@@ -206,12 +196,13 @@ public class FlowServlet extends HttpServlet {
         ILogic nextLogic = FlowUtils.getLogic(preStep);
 
         GardenLog.log(GardenLog.DEBUG,"FlowServlet:continue= iLogic = " + nextLogic.getClass().getName() + ", doc = " + doc);
-
+        //System.out.println("@@@@@@@@3");
         nextLogic.getDraftData(content,doc,queryStringInfo);
 
 //        //更新目前階段
 //        FlowUtils.setStepIsCurrent(userId,flowId,step.getID(),dao);
     }
+    
 
     private void next(String flowId,String stepId,JSONObject content,JSPQueryStringInfo queryStringInfo,IDao dao) throws Exception {
 
@@ -224,12 +215,17 @@ public class FlowServlet extends HttpServlet {
 
         //先取出目前的step，然後呼叫儲存db的邏輯
         Element root = FlowUtils.getFlowRoot(flowId);
+        
+        //System.out.println("@@@@@@@@@@flowId="+flowId);       
+        //System.out.println("@@@@@@@@@@Stepid="+stepId);   
 
         Element currentStep = FlowUtils.getFlowElementById(root, stepId);
 
         GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
         GardenLog.log(GardenLog.DEBUG,"FlowServlet next currentStep = " + currentStep);
 
+     
+        
         //先儲存相關資料
         ILogic iLogic = FlowUtils.getLogic(currentStep);
         iLogic.doAction(queryStringInfo,content);
@@ -238,20 +234,23 @@ public class FlowServlet extends HttpServlet {
 
         //產生草稿XML
         String draftXML = FlowUtils.toDraftDataXML(queryStringInfo);
-
+        
+        
+        //System.out.println("@@@@@@@draftXML="+draftXML);
+        
         //如果未登入，將輸入的草稿放入session
-        if(StringUtils.isEmpty(userId)) {
+        if(StringUtils.isEmpty(userId)) 
+        {
             //命名原則為flow+stepId
             queryStringInfo.getRequest().getSession().setAttribute(flowId + "_" + stepId,draftXML);
         }
         //有登入則存db
-        else {
+        else 
+        {
             //更新草稿
             FlowUtils.updateDraftData(userId,flowId,stepId,draftXML,dao,false);
         }
-
-
-
+        
         //找下一步是哪個step，先看目前Step是否最後一步，若是就找父節點的下一個，若不是就找下一個
         String nextStepId = FlowUtils.getNextStep(root,stepId,queryStringInfo);
 
@@ -260,18 +259,34 @@ public class FlowServlet extends HttpServlet {
 
         //查下一步的草稿內容
         String nextDraftXML = FlowUtils.getDraftData(userId,flowId,nextStepId,dao);
+        
+        //System.out.println("@@@@@@@@@@nextDraftXML="+nextDraftXML);
+        
+        
         Document doc = StringUtils.isNotEmpty(nextDraftXML) ? DocumentHelper.parseText(nextDraftXML) : null;
 
-        //依照flowId取出當下步驟的物件
+        
+        ////System.out.println("@@@@@@@@@@doc="+doc);
+        
+        //System.out.println("@@@@@@@@@@root="+root);
+        
+        //System.out.println("@@@@@@@@@@nextStepId="+nextStepId);
+       
         Element nextStep = FlowUtils.getFlowElementById(root, nextStepId);
+        
+        
 
+        //System.out.println("@@@@@@@@@@nextStep="+nextStep);
+        
         FlowUtils.setFlowJSON(root,nextStep,content);
 
         //開始長內容
         ILogic nextLogic = FlowUtils.getLogic(nextStep);
+        
+        //System.out.println("@@@@@@@@@@nextLogic="+nextLogic);
 
         GardenLog.log(GardenLog.DEBUG,"FlowServlet:continue= iLogic = " + nextLogic.getClass().getName() + ", doc = " + doc);
-
+        
         nextLogic.getDraftData(content,doc,queryStringInfo);
 
         //更新將上一步更新為當下步驟
@@ -345,8 +360,10 @@ public class FlowServlet extends HttpServlet {
         ILogic iLogic = FlowUtils.getLogic(step);
 
         GardenLog.log(GardenLog.DEBUG,"FlowServlet:continue= iLogic = " + iLogic.getClass().getName() + ", doc = " + doc);
-
+       // System.out.println("@@@@@@@@1");
         iLogic.getDraftData(content,doc,queryStringInfo);
+        
+      
 
 
     }

@@ -1,4 +1,5 @@
-$(document).ready(function() {
+ $(document).ready(function() {
+
     //定義每個步驟要對應的javascript function
     var stepEventHandler = {
         "apply1_1": apply1_1,
@@ -174,7 +175,7 @@ function apply1_1_valid() {
         group: 'birthday'
     }, {
         name: 'email',
-        msg: 'Email，如有疑問，請洽客戶服務專線02-8751-6665按5'
+        msg: 'Email'
     }, {
         name: 'DomicileArea',
         msg: '戶籍電話',
@@ -193,7 +194,7 @@ function apply1_1_valid() {
         group: 'tel'
     }, {
         name: 'cellPhone',
-        msg: '行動電話，如有疑問，請洽客戶服務專線02-8751-6665按5'
+        msg: '行動電話'
     }, {
         name: 'address',
         msg: '通訊地址',
@@ -207,6 +208,10 @@ function apply1_1_valid() {
         msg: '通訊地址',
         group: 'addr'
     }, ];
+	
+	var validChineseArray = [
+		
+	];
 
     //Foolproof
     var isRecord = $('[name="isRecord"]').val();
@@ -236,6 +241,13 @@ function apply1_1_valid() {
             name: 'domicileLiner',
             msg: '戶籍地址',
             group: 'domicileAddr'
+        });
+		
+		validChineseArray.push({
+            name: 'name',
+            msg: '姓名',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="name_hidden"]').val()
         });
     }
     //string
@@ -285,7 +297,14 @@ function apply1_1_valid() {
             group: 'tel',
             hasHiddenCode: true,
             hiddenTarget: $('input[name="t_phone"]').val()
-        }],
+        }
+            /*因為現在測試機行動電話都是隱碼，所以傳出去都會被擋, 
+             {
+             name: 'cellPhone',
+             msg: '行動電話',
+             allowEmpty : false
+             }*/
+        ],
         validDecimal: [],
         validEmail: [{
             name: 'email',
@@ -294,7 +313,7 @@ function apply1_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="email_hidden"]').val()
         }],
-        validDate: [{
+        /*validDate: [{
             name: ['birthday0', 'birthday2', 'birthday4'],
             msg: '生日',
             splitEle: '/',
@@ -303,19 +322,14 @@ function apply1_1_valid() {
             group: 'birthday',
             hasHiddenCode: true,
             hiddenTarget: $('input[name="birthTarget_hidden"]').val()
-        }],
+        }],*/
         validMobile: [{
             name: 'cellPhone',
             msg: '行動電話',
             hasHiddenCode: true,
             hiddenTarget: $('input[name="mobile_hidden"]').val()
         }],
-        validChinese: [{
-            name: 'name',
-            msg: '姓名',
-            hasHiddenCode: true,
-            hiddenTarget: $('input[name="name_hidden"]').val()
-        }],
+        validChinese: validChineseArray,
         errorDel: [],
         customizeFun: function(customizeValidResult) {
             //檢查全部的地址字數是否為39個字以內
@@ -343,29 +357,34 @@ function apply1_1_valid() {
                     msg: '通訊地址長度不可大於40位'
                 });
             }
-
-            var year = parseInt($('[name="birthday0"]').val());
-            var month = parseInt($('[name="birthday2"]').val());
-            var day = $('[name="birthday4"]').val();
-            var now = new Date();
-            var now_year = now.getFullYear() - 1911;
-
+			
+			var year = parseInt($('[name="birthday0"]').val());
+			var month = parseInt($('[name="birthday2"]').val());
+			var day = $('[name="birthday4"]').val();
+			if(day.indexOf('*') == -1){
+				 day = parseInt($('[name="birthday4"]').val());
+//				 if (day > 31 || day < 1) {
+//		            customizeValidResult.push({
+//		                obj: $('[name="birthday0"]'),
+//		                msg: '生日格式錯誤'
+//		            });		            
+//				}
+			}
 
             if (year.length < 2) {
                 customizeValidResult.push({
                     obj: $('[name="birthday0"]'),
                     msg: '生日格式錯誤'
                 });
-            } else {
-                var yearInt = parseInt(year);
-                if (now_year < yearInt) {
-                    customizeValidResult.push({
-                        obj: $('[name="birthday0"]'),
-                        msg: '生日格式錯誤'
-                    });
-                }
             }
-
+			
+			if (month > 12 || month < 1) {
+                customizeValidResult.push({
+                    obj: $('[name="birthday0"]'),
+                    msg: '生日格式錯誤'
+                });
+            }
+			
             var userName = $('[name="name"]').val();
             if (userName.length < 2 || userName.length > 20) {
                 customizeValidResult.push({
@@ -382,7 +401,8 @@ function apply1_1_valid() {
                     msg: '戶籍電話格式錯誤',
                     group: 'domicilePhone'
                 });
-            } else {
+            } 
+            /*else {
                 if (domicileAreaVal.length + domicilePhoneVal.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="DomicileArea"]'),
@@ -390,8 +410,8 @@ function apply1_1_valid() {
                         group: 'domicilePhone'
                     });
                 }
-            }
-
+            }*/
+            
             var marryStatus = $('[name="marryStatus"]').val();
             if (marryStatus == "") {
                 customizeValidResult.push({
@@ -407,7 +427,8 @@ function apply1_1_valid() {
                     msg: '通訊電話格式錯誤',
                     group: 'tel'
                 });
-            } else {
+            } 
+            /*else {
                 if (areaTelephone.length + telephone.length > 10) {
                     customizeValidResult.push({
                         obj: $('[name="areaTelephone"]'),
@@ -415,7 +436,7 @@ function apply1_1_valid() {
                         group: 'tel'
                     });
                 }
-            }
+            }*/
 
         }
     });
@@ -490,11 +511,6 @@ function apply2_valid() {
     var thirdPartyTitle = $('#thirdPartyTitle');
     console.debug(show);
     console.debug(isGuarantor);
-	
-	//若為小網, 則會展開關係人下方的表格, 以免因為沒有展開表格, 使用者會不知道有錯誤訊息
-	if ($(window).width() < 769) {
-		$('.openBtn').trigger('click');
-	}
 
     var family_arr = [],
         validArr = {
@@ -506,13 +522,44 @@ function apply2_valid() {
             validChinese_arr: []
         };
 
+    var radioResult = true; //檢查radio或checkbox有沒有點選
+
+
     for (var i = 0; i <= 3; i++) { //依序檢查父親,母親,第三人,配偶的表格是否有展開
         var foolproofFamily = show.substr(i, 1);
+
         var canForeigner = isGuarantorTag.val().substr(i, 1) == '1' ? '0' : '1'; //可以是1，不可以是0
 
         //若值為1,則表示此關係人的表格有展開,即需要有防呆
         switch (i) {
             case 0:
+                if ($('#incomeTaxRadio').is(':visible')) {
+                    var fCheckbox = $('[name="father_checkbox"]');
+                    var mCheckbox = $('[name="mother_checkbox"]');
+                    if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
+                        $('#checkboxGroup').hide();
+                    } else {
+//                       $('#checkboxGroup').text('請勾選合計所得對象');
+//                        $('#checkboxGroup').show();
+//                        radioResult = false;
+                    }
+                }
+                if (foolproofFamily == '2' || foolproofFamily == '3') {
+                    var adultTag = adultHidden.val();
+                    var radio_Btn = $('[name="father_RadioBtn"]');
+
+                    if (adultTag == 'N') { //未成年檢查連帶保證人的radio
+                        if (radio_Btn.val() == '') {
+                            $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                            $('#tip' + i).show();
+                            radioResult = false;
+                        } else {
+                            $('#tip' + i).hide();
+                            radioResult = true;
+                        }
+
+                    }
+                }
                 if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'father_';
                     //familyName = '父親';
@@ -527,6 +574,33 @@ function apply2_valid() {
                 }
                 break;
             case 1:
+                if ($('#incomeTaxRadio').is(':visible')) {
+                    var fCheckbox = $('[name="father_checkbox"]');
+                    var mCheckbox = $('[name="mother_checkbox"]');
+                    if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
+                        $('#checkboxGroup').hide();
+                    } else {
+//                        $('#checkboxGroup').text('請勾選合計所得對象');
+//                        $('#checkboxGroup').show();
+//                         radioResult = false;
+                    }
+                }
+                if (foolproofFamily == '2' || foolproofFamily == '3') {
+                    var adultTag = adultHidden.val();
+                    var radio_Btn = $('[name="mother_RadioBtn"]');
+
+                    if (adultTag == 'N') { //未成年檢查連帶保證人的radio
+                        if (radio_Btn.val() == '') {
+                            $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                            $('#tip' + i).show();
+                            radioResult = false;
+                        } else {
+                            $('#tip' + i).hide();
+                            radioResult = true;
+                        }
+
+                    }
+                }
                 if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'mother_';
                     //familyName = '母親';
@@ -545,7 +619,19 @@ function apply2_valid() {
                 }
                 break;
             case 2:
-                if (foolproofFamily == '1' || foolproofFamily == '3') {
+                if (foolproofFamily == '2') {
+                    var adultTag = adultHidden.val();
+                    var radio_Btn = $('[name="thirdParty_RadioBtn"]');
+                    if (radio_Btn.val() == '') {
+                        $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                        $('#tip' + i).show();
+                        radioResult = false;
+                    } else {
+                        $('#tip' + i).hide();
+                        radioResult = true;
+                    }
+
+                } else if (foolproofFamily == '1' || foolproofFamily == '3') {
                     //console.debug(thirdPartyTitle.text());
                     family = 'thirdParty_';
                     //familyName = thirdPartyTitle.text();
@@ -564,7 +650,19 @@ function apply2_valid() {
                 }
                 break;
             case 3:
-                if (foolproofFamily == '1' || foolproofFamily == '3') {
+                if (foolproofFamily == '2') {
+                    var adultTag = adultHidden.val();
+                    var radio_Btn = $('[name="spouse_RadioBtn"]');
+                    if (radio_Btn.val() == '') {
+                        $('#tip' + i).text('請選擇是否擔任連帶保證人');
+                        $('#tip' + i).show();
+                        radioResult = false;
+                    } else {
+                        $('#tip' + i).hide();
+                        radioResult = true;
+                    }
+
+                } else if (foolproofFamily == '1' || foolproofFamily == '3') {
                     family = 'spouse_';
                     //familyName = '配偶';
                     familyName = '';
@@ -614,21 +712,45 @@ function apply2_valid() {
                     });
                 }
 
-                var telephone = $('[name="' + family.input + 'phone"]').val();
                 var areaTelephone = $('[name="' + family.input + 'regionCode"]').val();
-                if (areaTelephone.length < 2 || telephone.length < 5) {
+                if (areaTelephone.length < 2) {
                     customizeValidResult.push({
                         obj: $('[name="' + family.input + 'regionCode"]'),
                         msg: '通訊電話格式錯誤',
                         group: '' + family.input + 'telephone'
                     });
-                } else if (areaTelephone.length + telephone.length > 10) {
+                }
+
+                var telephone = $('[name="' + family.input + 'phone"]').val();
+                if (telephone.length < 5) {
                     customizeValidResult.push({
                         obj: $('[name="' + family.input + 'phone"]'),
                         msg: '通訊電話格式錯誤',
                         group: '' + family.input + 'telephone'
                     });
                 }
+
+                /*if (areaTelephone.length + telephone.length > 10) {
+                    customizeValidResult.push({
+                        obj: $('[name="' + family.input + 'phone"]'),
+                        msg: '通訊電話格式錯誤',
+                        group: '' + family.input + 'telephone'
+                    });
+                }*/
+
+                var birthdayY = $('[name="' + family.input + 'birthday0"]').val();
+                 var now = new Date();
+                 var yy = now.getFullYear() - 1911;
+                 //alert('yy:'+yy+';type:'+typeof(yy));
+                 //alert('birthdayY:'+birthdayY+';type:'+typeof(birthdayY));
+                 if (birthdayY >= yy) {
+                 customizeValidResult.push({
+                 obj: $('[name="' + family.input + 'birthday0"]'),
+                 msg: '生日格式錯誤',
+                 group: '' + family.input + 'birthday'
+                 });
+                 }
+
                 var user_birthday = $('[name="user_birthday_hidden"]').val();
                 console.log('user_birthday:', user_birthday);
                 var birth = new Date(parseInt($('[name="' + family.input + 'birthday0"]').val()) + 1911, $('[name="' + family.input + 'birthday2"]').val());
@@ -637,13 +759,13 @@ function apply2_valid() {
 
                     var b_birthDiff = birth - user_birth;
 
-                    if (b_birthDiff > 0) {
-                        customizeValidResult.push({
-                            obj: $('[name="' + family.input + 'birthday0"]'),
-                            msg: family.name + '出生需早於申請人',
-                            group: '' + family.input + 'birthday'
-                        });
-                    }
+//                    if (b_birthDiff > 0) {
+//                        customizeValidResult.push({
+//                            obj: $('[name="' + family.input + 'birthday0"]'),
+//                            msg: family.name + '出生需早於申請人',
+//                            group: '' + family.input + 'birthday'
+//                        });
+//                    }
                 }
 
                 var guarantorText = $('input[name="guarantorText"]').val();
@@ -660,6 +782,8 @@ function apply2_valid() {
                         });
                     }
                 }
+                //}
+
                 var userId = $('[name="' + family.input + 'id"]').val();
                 var userId_arr = userId.split("");
                 var isFatherForeigner = isIncomeTaxTag.val().substr(0, 1);
@@ -704,35 +828,19 @@ function apply2_valid() {
                         });
                     }
                 }
+
+                /*var userName = $('[name="' + family.input + 'name"]').val();
+                 if (userName.length > 20 || userName.length < 2) {
+                 customizeValidResult.push({
+                 obj: $('[name="' + family.input + 'name"]'),
+                 msg: '輸入長度不符'
+                 });
+                 }*/
             });
+
         }
+
     });
-
-
-    var radioResult = true; //檢查radio或checkbox有沒有點選
-    //檢查合計所得對象是否有勾選
-    if ($('#incomeTaxRadio').is(':visible')) {
-        var fCheckbox = $('[name="father_checkbox"]');
-        var mCheckbox = $('[name="mother_checkbox"]');
-        if (fCheckbox.val() == '1' || mCheckbox.val() == '1') {
-            $('#checkboxGroup').hide();
-        } else {
-            $('#checkboxGroup').text('請勾選合計所得對象');
-            $('#checkboxGroup').show();
-            radioResult = false;
-        }
-    }
-
-    //如果已經輸入框都無誤, 則把error的文字刪除
-    if (res) {
-        $.each($('.error-msg'), function(i, v) {
-            var div = $(v);
-            if (div.attr('id') != 'checkboxGroup') {
-                div.text('');
-            }
-        });
-    }
-
     //2016-06-10 by added 因為resultFinal不可能是true，因為在上面的for loop就已經被回傳物件了
     //if( resultFinal == true && res == true && radioResult == true ){   
     if (res == true && radioResult == true) {
@@ -874,6 +982,8 @@ function familyFoolproof(family, familyName, validArr, canForeigner, lastIsG, no
         hiddenTarget: $('div#' + guarantorName + ' input[name="phone_hidden"]').val()
     });
 
+    //alert(family+';'+guarantorName+':'+ $('div#' + guarantorName + ' input[name="telePhone_hidden"]').val());
+
     // 需檢查身分證格式之欄位
     var id_numObj = {
         name: '' + family + 'id',
@@ -897,12 +1007,12 @@ function familyFoolproof(family, familyName, validArr, canForeigner, lastIsG, no
     if (family == guarantorName + '_') {
         id_numObj['hasHiddenCode'] = true;
         id_numObj['hiddenTarget'] = $('div#' + guarantorName + ' input[name="id_hidden"]').val()
-            //alert(family+';'+guarantorName+':'+ $('div#' + guarantorName + ' input[name="id_hidden"]').val());
+        //alert(family+';'+guarantorName+':'+ $('div#' + guarantorName + ' input[name="id_hidden"]').val());
     }
     validArr.validIdentity_arr.push(id_numObj);
 
     // 需檢查日期格式之欄位
-    validArr.validDate_arr.push({
+    /*validArr.validDate_arr.push({
         name: [family + 'birthday0', family + 'birthday2', family + 'birthday4'],
         msg: '生日',
         //val: $('[name="' + family + 'birthday0' + '"]').val() + '/' + $('[name="' + family + 'birthday2' + '"]').val() + '/' + $('[name="' + family + 'birthday4' + '"]').val(),
@@ -910,7 +1020,7 @@ function familyFoolproof(family, familyName, validArr, canForeigner, lastIsG, no
         format: 'ch',
         allowEmpty: false,
         group: family + 'birthday'
-    });
+    });*/
 
     // 需檢查手機格式之欄位
     var mobileObj = {
@@ -1024,12 +1134,14 @@ function apply3_1_valid() {
         group: '' + family + 'enter'
     }];
 
-    if (selectValueHidden.val() == '1') {
+    if(selectValueHidden.val() == '1'){
         //alert($('[name="' + family + 'department"]').length);
-        validArr.push({
-            name: '' + family + 'department',
-            msg: '教育階段'
-        });
+        validArr.push(
+            {
+                name: '' + family + 'department',
+                msg: '教育階段'
+            }
+        );
     }
 
     console.debug(validArr);
@@ -1128,6 +1240,16 @@ function apply3_1_valid() {
                     });
                 }
             }
+
+
+            /*
+             if (student_month_enter > 12 || student_month_enter <= 0) {
+             customizeValidResult.push({
+             obj: $('[name="student_month_enter"]'),
+             msg: '入學日期錯誤'
+             });
+             }
+             */
         }
     });
 
@@ -1156,7 +1278,6 @@ function apply3_2_valid() {
     var freeLen = free.length;
     var loanChoiced = $('[name="loanPrice"]').val();
     var sSelectValue = $('[name="stageSelectValue"]').val();
-    var whiteList = $('[name="whiteListHidden"]').val();
 
     if (billLen <= 0 && freeLen <= 0) {
         errorTip.show();
@@ -1165,6 +1286,7 @@ function apply3_2_valid() {
         errorTip.hide();
         errRes = true;
     }
+
 
     var res = GardenUtils.valid.validForm({
         type: "show",
@@ -1184,13 +1306,18 @@ function apply3_2_valid() {
                 var life = $('#accordingToBill_life').val();
 
                 if (register <= 0 || register == null) {
-                    if (whiteList == 'N') {
-                        customizeValidResult.push({
-                            obj: $('#loansSum'),
-                            msg: '請輸入申貸金額'
-                        });
-                    }
+                    customizeValidResult.push({
+                        obj: $('#loansSum'),
+                        msg: '請輸入申貸金額'
+                    });
                 }
+
+                /*if (sum <= 0) {
+                 //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
+                 $('.modalBtn').trigger('click');
+                 } else {
+                 loanHidden.val(sum);
+                 }*/
 
                 if (life > 40000) {
                     //alert("生活費不可大於30,000");
@@ -1215,7 +1342,8 @@ function apply3_2_valid() {
                             msg: '申貸金額不可大於300,000'
                         });
                     }
-                } else { //非高中
+                }
+                else { //非高中
                     if (books > 3000) {
                         //alert("書籍費不可大於3000");
                         customizeValidResult.push({
@@ -1246,6 +1374,13 @@ function apply3_2_valid() {
                 var sum = $('[name="freedom_sum"]').val();
                 var books = $('#freedom_book').val();
                 var life = $('#freedom_life').val();
+
+                /*if (sum <= 0) {
+                 //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
+                 $('.modalBtn').trigger('click');
+                 } else {
+                 loanHidden.val(sum);
+                 }*/
 
                 if (life > 40000) {
                     //alert("生活費不可大於30,000");
@@ -1302,7 +1437,9 @@ function apply3_2_valid() {
     });
     if (loanChoiced == '1') {
         var sum = $('[name="accordingToBill_sum_hidden"]').val();
-        if (sum <= 0 && whiteList == 'N') {
+
+        if (sum <= 0) {
+            //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
             result = false;
             $('.modalBtn').trigger('click');
         } else {
@@ -1312,7 +1449,8 @@ function apply3_2_valid() {
     } else if (loanChoiced == '2') {
         var sum = $('[name="freedom_sum"]').val();
 
-        if (sum <= 0 && whiteList == 'N') {
+        if (sum <= 0) {
+            //alert('請輸入大於0之整數\n如有疑問，請洽本行客服專線02-8771-6665按5\n提醒您!可先點選下方「儲存｣按鈕，儲存本次填寫資料，下次使用本功能將預設帶入已填寫資料。');
             result = false;
             $('.modalBtn').trigger('click');
         } else {
@@ -1320,6 +1458,10 @@ function apply3_2_valid() {
             loanHidden.val(sum);
         }
     }
+
+    /*alert(res);
+     alert(errRes);
+     alert(result);*/
 
     if (res == true && errRes == true && result == true) {
         return true;
@@ -1332,38 +1474,29 @@ function apply4_1_valid() {
     //Foolproof
     //檢查文件是否都有上傳
 
-    var result = true;
-    var lowIncomeTaxResult = true;
-
-    $.each($(".file-en"), function(i, input) {
-        console.debug(input);
+    $.each($(".file-en"),function(i,input){
+		console.debug(input);
         input = $(input);
-        if (input.attr('id') == 'lowIncomeImg_0') { //如果要檢查低收入戶,要先檢查低收入戶的選項是否有展開
-            if (!($('#lowIncomeImg_0').is(':hidden'))) {
-                if (!input.hasClass('new')) {
-                    var thisText = input.text();
-                    if (thisText == '無') {
-                        $('#hasDocument').show();
-                        lowIncomeTaxResult = false;
-                    }
-                }
-            }
-        } else {
-            if (!input.hasClass('new')) {
-                var thisText = input.text();
-                if (thisText == '無') {
-                    $('#hasDocument').show();
-                    result = false;
-                }
-                //else {
-                //$('#hasDocument').hide();
-                //result = true;
-                //}
+        if(!input.hasClass('new')) {
+            var thisText = input.text();
+            if (thisText == '無')
+            {
+                $('#hasDocument').show();
+                result = false;
+				if($('#lowIncomeImg_0').is(':hidden')){
+					$('#hasDocument').hide();
+					result = true;
+				}
+
+            } 
+            else {
+                $('#hasDocument').hide();
+                result = true;
             }
         }
-    });
 
-    //alert(result);
+
+    });
 
     //檢查上傳文件合計大小是否超過10MB
     //var size = $('.fileSize');
@@ -1372,9 +1505,9 @@ function apply4_1_valid() {
     var sizeTag = true;
 
     //2016-07-23 added by titan 直接算所有的檔案大小加總
-    var fileSizeArray = ['fileSize_idPositive', 'fileSize_idNegative', 'fileSize_register', 'fileSize_lowIncome'];
-    $.each(fileSizeArray, function(i, className) {
-        $('.' + className).each(function(j, sizeHidden) {
+    var fileSizeArray = ['fileSize_idPositive','fileSize_idNegative','fileSize_register','fileSize_lowIncome'];
+    $.each(fileSizeArray,function(i,className){
+        $('.' + className).each(function(j,sizeHidden){
             var size = $(sizeHidden).val();
             console.debug('className = ' + className + ',size = ' + size);
             sizeSum += parseInt(size);
@@ -1416,7 +1549,7 @@ function apply4_1_valid() {
     }
      **/
 
-    if (result == true && sizeTag == true && lowIncomeTaxResult == true) {
+    if (result == true && sizeTag == true) {
         return true;
     } else {
         return false;
@@ -1545,9 +1678,9 @@ function apply1_1(content) {
     var isEtabs = content.isEtabs;
     var domiLinerName = content.domicileAddress.linerName;
     var lName = content.teleAddress.linerName;
-    var yearBirthday = content.yearBirthday;
-    var monthBirthday = content.monthBirthday;
-    var dayBirthday = content.dayBirthday;
+	var yearBirthday = content.yearBirthday;
+	var monthBirthday = content.monthBirthday;
+	var dayBirthday = content.dayBirthday;
 
     //畫面上要顯示的user資料之tag id
     var userMarry = $('#married');
@@ -1653,11 +1786,11 @@ function apply1_1(content) {
         dayBirthday = '0' + dayBirthday;
     }
 	*/
+	
 
-
-    //塞要比對是否隱碼的hidden
+	 //塞要比對是否隱碼的hidden
     birthTarget_hidden.val(yearBirthday + '/' + monthBirthday + '/' + dayBirthday);
-
+	
     //塞要丟到db的hidden
     birthday0.val(yearBirthday);
     birthday2.val(monthBirthday);
@@ -1772,36 +1905,42 @@ function apply1_1(content) {
     if (domicileCityId !== '') { //顯示city
         domicileCitySelect.find('option[value="' + domicileCityId + '"]').prop('selected', 'true');
         domiCityIdHidden.val(domicileCityId);
-        if (domicileZipCode !== '') { //顯示zip
-            var jsonZip = modal.getZip(domicileCityId);
-            var zipArr = jsonZip.zipcodes;
-            var zipArray = [];
-            zipArray.push('<option value="">選擇鄉鎮市區</option>');
-            $.each(zipArr, function(i, zipData) {
-                zipArray.push('<option value=' + zipData.zipcode + '>' + zipData.areaName + '</option>');
-            });
+		
+		
+		var jsonZip = modal.getZip(domicileCityId);
+        var zipArr = jsonZip.zipcodes;
+        var zipArray = [];
+        zipArray.push('<option value="">選擇鄉鎮市區</option>');
+        $.each(zipArr, function(i, zipData) {
+            zipArray.push('<option value=' + zipData.zipcode + '>' + zipData.areaName + '</option>');
+        });
 
-            domicileZipSelect.empty();
-            domicileZipSelect.append(zipArray.join(''));
-            domicileZipSelect.selectpicker('refresh');
+        domicileZipSelect.empty();
+        domicileZipSelect.append(zipArray.join(''));
+        domicileZipSelect.selectpicker('refresh');
+		
+        if (domicileZipCode !== '') { //顯示zip
+            
             domicileZipSelect.find('option[value="' + domicileZipCode + '"]').prop('selected', 'true');
             domicileZipSelect.find('option[value="' + domicileZipCode + '"]').trigger('change');
             domiZipCoodeHidden.val(domicileZipCode);
 
-            if (domicileLiner !== '') { //顯示liner
-                var jsonLiner = modal.getLiner(domicileZipCode);
-                console.debug(jsonLiner);
-                var linerArr = jsonLiner.liners;
-                console.debug(linerArr);
-                var linerArray = [];
-                linerArray.push('<option value="">選擇村/里</option>');
-                $.each(linerArr, function(i, linerData) {
-                    linerArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
-                });
+			var jsonLiner = modal.getLiner(domicileZipCode);
+            console.debug(jsonLiner);
+            var linerArr = jsonLiner.liners;
+            console.debug(linerArr);
+            var linerArray = [];
+            linerArray.push('<option value="">選擇村/里</option>');
+            $.each(linerArr, function(i, linerData) {
+                linerArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
+            });
 
-                domicileLinerSelect.empty();
-                domicileLinerSelect.append(linerArray.join(''));
-                domicileLinerSelect.selectpicker('refresh');
+            domicileLinerSelect.empty();
+            domicileLinerSelect.append(linerArray.join(''));
+            domicileLinerSelect.selectpicker('refresh');
+			
+            if (domicileLiner !== '') { //顯示liner
+                
                 domicileLinerSelect.find('option[value="' + domicileLiner + '"]').prop('selected', 'true');
                 domicileLinerSelect.find('option[value="' + domicileLiner + '"]').trigger('change');
                 domiLinerHidden.val(domicileLiner);
@@ -1825,45 +1964,46 @@ function apply1_1(content) {
     if (cityId !== '') { //顯示city
         citySelect.find('option[value="' + cityId + '"]').prop('selected', 'true');
         teleCityIdHidden.val(cityId);
-        if (zipCode !== '') { //顯示zip
-            var jsonZip = modal.getZip(cityId);
-            var zipArr = jsonZip.zipcodes;
-            var zipArray = [];
-            zipArray.push('<option value="">選擇鄉鎮市區</option>');
-            $.each(zipArr, function(i, zipData) {
-                zipArray.push('<option value=' + zipData.zipcode + '>' + zipData.areaName + '</option>');
-            });
+		
+		var jsonZip = modal.getZip(cityId);
+        var zipArr = jsonZip.zipcodes;
+        var zipArray = [];
+        zipArray.push('<option value="">選擇鄉鎮市區</option>');
+        $.each(zipArr, function(i, zipData) {
+            zipArray.push('<option value=' + zipData.zipcode + '>' + zipData.areaName + '</option>');
+        });
 
-            zipSelect.empty();
-            zipSelect.append(zipArray.join(''));
-            zipSelect.selectpicker('refresh');
-            zipSelect.find('option[value="' + zipCode + '"]').prop('selected', 'true');
+        zipSelect.empty();
+        zipSelect.append(zipArray.join(''));
+        zipSelect.selectpicker('refresh');
+		
+		if (zipCode !== '') { //顯示zip
+			zipSelect.find('option[value="' + zipCode + '"]').prop('selected', 'true');
             zipSelect.find('option[value="' + zipCode + '"]').trigger('change');
             teleZipCodeHidden.val(zipCode);
+			
+			var jsonLiner = modal.getLiner(zipCode);
+            console.debug(jsonLiner);
+            var linerArr = jsonLiner.liners;
+            console.debug(linerArr);
+            var linerArray = [];
+            linerArray.push('<option value="">選擇村/里</option>');
+            $.each(linerArr, function(i, linerData) {
+                linerArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
+            });
 
-            //alert(liner);
-
-            if (liner !== '') { //顯示liner
-                var jsonLiner = modal.getLiner(zipCode);
-                console.debug(jsonLiner);
-                var linerArr = jsonLiner.liners;
-                console.debug(linerArr);
-                var linerArray = [];
-                linerArray.push('<option value="">選擇村/里</option>');
-                $.each(linerArr, function(i, linerData) {
-                    linerArray.push('<option value=' + linerData.linerId + '>' + linerData.linerName + '</option>');
-                });
-
-                linerSelect.empty();
-                linerSelect.append(linerArray.join(''));
-                linerSelect.selectpicker('refresh');
-
+            linerSelect.empty();
+            linerSelect.append(linerArray.join(''));
+            linerSelect.selectpicker('refresh');
+			
+			if (liner !== '') { //顯示liner
                 linerSelect.find('option[value="' + liner + '"]').prop('selected', 'true');
                 linerSelect.find('option[value="' + liner + '"]').trigger('change');
                 teleLinerHidden.val(liner);
 
             }
-        }
+		}
+		        
     }
 
     $('.selectpicker').selectpicker();
@@ -1887,6 +2027,7 @@ function apply1_1(content) {
     //inputToLabel(userMobile);
 
     //有撥款紀錄者,不開放修改,將input轉為label
+   
     if (isRecord == 'Y') { //續貸
         inputToLabel(dNeighborhood);
         inputToLabel(dAddress);
@@ -1964,42 +2105,42 @@ function apply1_1(content) {
     });
 
     var changeObj = [{
-            'srcInput': 'domicileCityId',
-            'toInput': 'cityId',
-            'callback': function(select) {
-                console.debug('1:' + select.val());
-                select.selectpicker('refresh');
-                select.trigger('change');
-            }
-        }, {
-            'srcInput': 'domicileZipCode',
-            'toInput': 'zipCode',
-            'callback': function(select) {
-                console.debug('2:' + select.val());
-                select.selectpicker('refresh');
-                select.trigger('change');
-            }
-        }, {
-            'srcInput': 'domicileLiner',
-            'toInput': 'address',
-            'callback': function(select) {
-                /*console.debug('3:' + select.val());
-                 select.selectpicker('refresh');
-                 select.trigger('change');*/
-            }
-        }, {
-            'srcInput': 'DomicileNeighborhood',
-            'toInput': 'address',
-            'callback': function(select) {
-                //select.selectpicker('refresh');
-            }
-        }, {
-            'srcInput': 'DomicileAddress',
-            'toInput': 'address',
-            'callback': function(select) {
-                //select.selectpicker('refresh');
-            }
+        'srcInput': 'domicileCityId',
+        'toInput': 'cityId',
+        'callback': function(select) {
+            console.debug('1:' + select.val());
+            select.selectpicker('refresh');
+            select.trigger('change');
         }
+    }, {
+        'srcInput': 'domicileZipCode',
+        'toInput': 'zipCode',
+        'callback': function(select) {
+            console.debug('2:' + select.val());
+            select.selectpicker('refresh');
+            select.trigger('change');
+        }
+    }, {
+        'srcInput': 'domicileLiner',
+        'toInput': 'address',
+        'callback': function(select) {
+            /*console.debug('3:' + select.val());
+             select.selectpicker('refresh');
+             select.trigger('change');*/
+        }
+    }, {
+        'srcInput': 'DomicileNeighborhood',
+        'toInput': 'address',
+        'callback': function(select) {
+            //select.selectpicker('refresh');
+        }
+    }, {
+        'srcInput': 'DomicileAddress',
+        'toInput': 'address',
+        'callback': function(select) {
+            //select.selectpicker('refresh');
+        }
+    }
         /*, {
          'srcInput': 'domicileLinerName',
          'toInput': 'address',
@@ -2026,10 +2167,12 @@ function apply1_1(content) {
                     if (obj.srcInput == "DomicileNeighborhood") {
                         src = (src == '') ? src : src + '鄰';
                         srcTemp = srcTemp + src;
-                    } else if (obj.srcInput == "DomicileAddress") {
+                    }
+                    else if (obj.srcInput == "DomicileAddress") {
                         srcTemp = srcTemp + src;
                         src = srcTemp;
-                    } else {
+                    }
+                    else{
                         srcTemp = srcTemp + src;
                     }
                 }
@@ -2168,13 +2311,13 @@ function apply1_2(content) {
         //未成年
         isAdult = false;
     } else if (today.getFullYear() - userYear == 20) {
-        if (today.getMonth() + 1 - userMonth > 0) {
+        if (today.getMonth()+1 - userMonth > 0) {
             //成年
             isAdult = true;
-        } else if (today.getMonth() + 1 - userMonth < 0) {
+        } else if (today.getMonth()+1 - userMonth < 0) {
             //未成年
             isAdult = false;
-        } else if (today.getMonth() + 1 - userMonth == 0) {
+        } else if (today.getMonth()+1 - userMonth == 0) {
             if (today.getDate() - userDay >= 0) {
                 //成年
                 isAdult = true;
@@ -2191,22 +2334,26 @@ function apply1_2(content) {
         adultHidden.val('N');
     }
 
+	console.debug('userMarried['+userMarried+']');
+	console.debug('isAdult['+isAdult+']');
+	
     //依據年齡,結婚狀況長選項
     if (userMarried == 'N') {
         //未婚
         $('.married').hide();
         if (isAdult === false) {
+			
             //未成年
             //Level 1 選項被點選時
             status1.text(guarantor1);
-            status2.append(guarantor8.join(''));
-            status3.append(guarantor9.join(''));
-            status4.append(guarantor14.join(''));
+            status2.empty().append(guarantor8.join(''));
+            status3.empty().append(guarantor9.join(''));
+            status4.empty().append(guarantor14.join(''));
             status5.text(guarantor11);
             status6.text(guarantor12);
             status7.text(guarantor13);
-            status8.append(guarantor14.join(''));
-            status11.append(guarantor14.join(''));
+            status8.empty().append(guarantor14.join(''));
+            status11.empty().append(guarantor14.join(''));
 
             $('#passAway_oneSub').find('.sub4').hide();
         } else if (isAdult === true) {
@@ -2221,8 +2368,9 @@ function apply1_2(content) {
             status6.text(guarantor2);
             status7.text(guarantor3);
             status8.text(guarantor4);
-            status11.text(guarantor5);
+            status11.empty().text(guarantor5);
             status12.text(guarantor6);
+
         }
         $('.sub').hide();
         $('#marriage').on('click', function() {
@@ -2242,7 +2390,8 @@ function apply1_2(content) {
         $('#passAway_one').on('click', function() {
             status9.text(guarantor2);
             status10.text(guarantor3);
-
+			//status11.empty().append(guarantor14.join(''));
+			
             $('.sub').hide();
             $('#passAway_oneSub').show();
             $('[name="familyStatusLevel1"]').val('0');
@@ -2373,7 +2522,9 @@ function apply1_2(content) {
                     break;
             }
         }
-    } else if (level2 == '') { //若沒有點選第二層的選項,則不會代預設值
+    } 
+	/**
+	else if (level2 == '') { //若沒有點選第二層的選項,則不會代預設值
         if (userMarried == 'N') {
             //未婚
             $('.married').hide();
@@ -2434,7 +2585,7 @@ function apply1_2(content) {
             $('#spouse_divorceSub').hide();
         }
     }
-
+**/
 
     //Level 2 選項被點選時
     //未婚時的選項
@@ -2555,6 +2706,8 @@ function apply2(content) {
     var mother_sameAddr = content.mother_sameAddr;
     var thirdParty_sameAddr = content.thirdParty_sameAddr;
     var spouse_sameAddr = content.spouse_sameAddr;
+
+
     var level1 = content.familyStatusLevel1;
     var level2 = content.familyStatusLevel2;
 
@@ -2675,7 +2828,7 @@ function apply2(content) {
     /*綁地址的下拉式選單之連動事件(end)*/
 
     /*塞全部關係人的資料(start)*/
-    var lastIsGuarantor = content.lastIsGuarantor;
+    var lastIsGuarantor = (content.lastIsGuarantor == undefined)?'0000':content.lastIsGuarantor;
     $('[name="lastIsGuarantor"]').val(lastIsGuarantor);
     //alert(lastIsGuarantor);
     $.each(familyArray, function(index, value) {
@@ -2686,12 +2839,12 @@ function apply2(content) {
 
             //當已撥款且沒有更改家庭狀況，顯示的資料改為字串不得修改
             if (isRecord == 'Y') {
-                if (lastIsGuarantor != '' && lastIsGuarantor.length == 4) {
+                if(lastIsGuarantor != '' && lastIsGuarantor.length == 4){
                     var current = guarantorStatus.substr(index, 1);
                     var last = lastIsGuarantor.substr(index, 1);
                     console.debug(guarantorStatus);
                     console.debug(lastIsGuarantor);
-                    if (current == '1' && last == '1') { //若之前是連帶保證人,就要轉字串
+                    if(current == '1' && last == '1'){  //若之前是連帶保證人,就要轉字串
                         determineAddReadonly(value, familyInfo);
                     }
                 }
@@ -2746,7 +2899,7 @@ function apply2(content) {
     /*決定要呈現誰的表格&要不要長radio or checkbox (end)*/
 
     /*綁點選"與申請人之關係"的下拉式選單 (start)*/
-    $('[name="thirdParty_relationship"]').on('change', function() {
+    $('[name="thirdParty_relationship"]').on('change', function(){
         var $this = $(this).val();
         $('[name="relationshipTitle"]').val($this);
     });
@@ -2882,7 +3035,7 @@ function apply2(content) {
             //alert($('div#father input[name="id_hidden"]').length);
             if ($('div#father input[name="id_hidden"]').length == 0) {
                 modal.getFamilyInfo('father', 'N', function(fatherInfo) {
-                    setInfoValue(fatherInfo, $('#father'));
+                    setInfoValue(fatherInfo, fatherDiv);
                 });
             }
             father_checkboxHidden.val('1');
@@ -2991,7 +3144,7 @@ function apply2(content) {
             }
             if ($('div#mother input[name="id_hidden"]').length == 0) {
                 modal.getFamilyInfo('mother', 'N', function(motherInfo) {
-                    setInfoValue(motherInfo, $('#mother'));
+                    setInfoValue(motherInfo, motherDiv);
                 });
             }
             mother_checkboxHidden.val('1');
@@ -3173,65 +3326,6 @@ function apply2(content) {
     }
     /*帶radio button or checkbox的預設值 (end)*/
 
-    /*舊戶要帶入radio box 和 checkbox上次的值, 新戶直接帶否 (start) */
-    var radioArr = ['father', 'mother', 'thirdParty', 'spouse'];
-    if (isRecord == 'N') {
-        var radioBtn = $('.parents .radioGuarantor');
-        $.each(radioArr, function(index, value) {
-            console.debug(value);
-            var radioGuarantorDiv = $('#' + value + ' .radioGuarantor');
-            var radioGuarantorInput = $('#' + value + ' .css-checkbox_c').eq(1);
-            console.debug(radioGuarantorInput.attr('id'));
-
-            if (radioGuarantorDiv.is(':visible')) {
-                radioGuarantorInput.trigger('click');
-            }
-        });
-    } else if (isRecord == 'Y') {
-        var lastIsGuarantor = (content.lastIsGuarantor == '') ? '0000' : content.lastIsGuarantor;
-        var lastIncomeTax = (content.lastIncomeTax == '') ? '0000' : content.lastIncomeTax;
-        if (adultTag == 'N') { //未成年檢查連帶保證人
-            $.each(radioArr, function(index, value) {
-                var currentLastGua = lastIsGuarantor.substr(index, 1);
-                var radioGuarantorDiv = $('#' + value + ' .radioGuarantor');
-                var radioGuarantorInputYes = $('#' + value + ' .css-checkbox_c').eq(0);
-                var radioGuarantorInputNo = $('#' + value + ' .css-checkbox_c').eq(1);
-
-                if (radioGuarantorDiv.is(':visible')) {
-                    if (currentLastGua == '0') { //連帶保證人的radio button選否
-                        radioGuarantorInputNo.trigger('click');
-                    } else if (currentLastGua == '1') { //連帶保證人的radio button選是
-                        radioGuarantorInputYes.trigger('click');
-                    }
-                }
-            });
-        } else if (adultTag == 'Y') { //成年檢查合計所得對象
-            var checkboxArr = ['Father', 'Mother'];
-            var incomeTaxCheckBox = $('#incomeTaxRadio');
-            if (incomeTaxCheckBox.is(':visible')) {
-                $.each(checkboxArr, function(index, value) {
-                    var currentLastTax = lastIncomeTax.substr(index, 1);
-                    var checkboxInputFather = $('#incomeTaxFather');
-                    var checkboxInputMother = $('#incomeTaxMother');
-                    console.debug('==========================');
-                    console.debug(value);
-                    console.debug(checkboxInputFather.length);
-                    console.debug(checkboxInputMother.length);
-
-                    if (currentLastTax == '1') {
-                        if (index == 0) {
-                            checkboxInputFather.trigger("click");
-                        } else if (index == 1) {
-                            checkboxInputMother.trigger("click");
-                        }
-
-                    }
-                });
-            }
-        }
-    }
-    /*舊戶要帶入radio box 和 checkbox上次的值, 新戶直接帶否 (end) */
-
 
     /*綁小網的收合按鈕之事件 (start)*/
     var father_close = $('#father .closeBtn');
@@ -3271,15 +3365,10 @@ function apply2(content) {
             father_form2.hide();
         });
         father_open.on('click', function() {
-			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
-			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
-			var val = $('#dadF:checked').val();
-			if(val == null) {
-				father_close.show();
-				father_open.hide();
-				father_form1.show();
-				father_form2.show();
-			}
+            father_close.show();
+            father_open.hide();
+            father_form1.show();
+            father_form2.show();
         });
         mother_close.on('click', function() {
             mother_close.hide();
@@ -3288,15 +3377,10 @@ function apply2(content) {
             mother_form2.hide();
         });
         mother_open.on('click', function() {
-			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
-			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
-			var val = $('#momF:checked').val();
-			if(val == null) {
-				mother_close.show();
-				mother_open.hide();
-				mother_form1.show();
-				mother_form2.show();
-			}
+            mother_close.show();
+            mother_open.hide();
+            mother_form1.show();
+            mother_form2.show();
         });
         thirdParty_close.on('click', function() {
             thirdParty_close.hide();
@@ -3305,15 +3389,10 @@ function apply2(content) {
             thirdParty_form2.hide();
         });
         thirdParty_open.on('click', function() {
-			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
-			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
-			var val = $('#otherF:checked').val();
-			if(val == null) {
-				thirdParty_close.show();
-				thirdParty_open.hide();
-				thirdParty_form1.show();
-				thirdParty_form2.show();
-			}
+            thirdParty_close.show();
+            thirdParty_open.hide();
+            thirdParty_form1.show();
+            thirdParty_form2.show();
         });
         spouse_close.on('click', function() {
             spouse_close.hide();
@@ -3322,15 +3401,10 @@ function apply2(content) {
             spouse_form2.hide();
         });
         spouse_open.on('click', function() {
-			//如果有擔任連帶保證人(radio選"是"), 則點選"展開"的按鈕, 下方表格會展開
-			//如果沒有擔任連帶保證人(radio選"否"), 則點選"展開"的按鈕不會有反應
-			var val = $('#spoF:checked').val();
-			if(val == null) {
-				spouse_close.show();
-				spouse_open.hide();
-				spouse_form1.show();
-				spouse_form2.show();
-			}
+            spouse_close.show();
+            spouse_open.hide();
+            spouse_form1.show();
+            spouse_form2.show();
         });
     } else {
         //$('.sodif').show();
@@ -4248,8 +4322,8 @@ function apply3_1(content) {
     var year = 0; // 學制年級數(計算畢業年月)
     var classYear = 0; // 可選年級數(頁面顯示)
     var departmentInput = $('.departmentInput');
-    var inputArr = ['<input type="text" class="input_m" name="student_department" value="' + departmentVal + '"><div class="error-msg"></div>'];
-    var selectArr = ['<select class="selectpicker input_m nameLength" name="student_department"><option value="">請選擇</option><option value="醫學系" ' + (departmentVal == '醫學系' ? 'selected="true"' : '') + '>醫學系</option><option value="牙醫系" ' + (departmentVal == '牙醫系' ? 'selected="true"' : '') + '>牙醫系</option></select><div class="error-msg"></div>'];
+    var inputArr = ['<input type="text" class="input_m" name="student_department" value="'+departmentVal+'"><div class="error-msg"></div>'];
+    var selectArr = ['<select class="selectpicker input_m nameLength" name="student_department"><option value="">請選擇</option><option value="醫學系" '+(departmentVal == '醫學系' ? 'selected="true"' : '')+'>醫學系</option><option value="牙醫系" '+(departmentVal == '牙醫系' ? 'selected="true"' : '')+'>牙醫系</option></select><div class="error-msg"></div>'];
 
     stageSelect.on('change', function() {
         var gradeArray = [];
@@ -4283,14 +4357,15 @@ function apply3_1(content) {
                 $('.selectpicker').selectpicker();
                 Serving.attr('disabled', false);
 
-                $('[name="student_department"]').on('change', function() {
+                $('[name="student_department"]').on('change', function(){
                     var departmentId = $(this).val();
                     $('[name="department"]').val(departmentId);
 
-                    if (departmentId == '醫學系') {
+                    if(departmentId == '醫學系'){
                         classYear = 7;
                         //alert('1:'+classYear);
-                    } else if (departmentId == '牙醫系') {
+                    }
+                    else if(departmentId == '牙醫系'){
                         classYear = 6;
                         //alert('2:'+classYear);
                     }
@@ -4298,7 +4373,7 @@ function apply3_1(content) {
                     gradeArray = [];
                     gradeArray.push('<option value="">請選擇</option>');
                     console.debug(classYear);
-                    if (classYear != 0) {
+                    if(classYear != 0){
                         for (var y = 1; y <= classYear; y++) {
                             gradeArray.push('<option value=' + y + '>' + y + '</option>');
                         }
@@ -4308,11 +4383,12 @@ function apply3_1(content) {
                     gradeSelect.selectpicker('refresh');
                 });
 
-                if (content.department !== '') {
-                    if (department == '醫學系') {
+                if(content.department !== ''){
+                    if(department == '醫學系'){
                         $('[name="student_department"]').val('醫學系');
                         $('[name="student_department"]').trigger('change');
-                    } else {
+                    }
+                    else{
                         $('[name="student_department"]').val('牙醫系');
                         $('[name="student_department"]').trigger('change');
                     }
@@ -4377,7 +4453,7 @@ function apply3_1(content) {
         }
 
         //長"班級"的下拉式選單
-        if (educationStageId != 3) {
+        if(educationStageId != 3){
             gradeArray = [];
             gradeArray.push('<option value="">請選擇</option>');
             console.debug(classYear);
@@ -4458,7 +4534,7 @@ function apply3_1(content) {
     //入學日期(月)
     student_month_enter.on('blur', function() {
         var month_enter = student_month_enter.val();
-        if (month_enter.length != 2) {
+        if(month_enter.length != 2){
             month_enter = '0' + student_month_enter.val();
             student_month_enter.val(month_enter);
         }
@@ -4469,6 +4545,7 @@ function apply3_1(content) {
     var sday = content.school.isDay;
     var sNational = content.school.isNational;
     var sName = content.school.name;
+    var gGrade = content.gradeClass.grade;
     var enterDateYear = content.enterDate.year;
     var enterDateMonth = content.enterDate.month;
 
@@ -4481,7 +4558,7 @@ function apply3_1(content) {
     isDaySelect.trigger('change');
     isNationalSelect.trigger('change');
 
-    gradeSelect.val(gGrade);
+//    gradeSelect.val(gGrade);
     gradeSelect.trigger('change');
     nameSelect.val(sName);
     nameSelect.trigger('change');
@@ -4535,7 +4612,7 @@ function computeGraduation(student_year_enterString, student_month_enterString, 
         if (student_year_enterString.length == 2 || student_year_enterString.length == 3) {
             if (student_month_enterInt <= 12 && student_month_enterInt >= 1) {
                 if (gradeVal !== '' && gradeVal !== undefined) {
-                    if (year !== '' && year !== undefined) {
+                    if(year !== '' && year !== undefined){
                         //var extraYear = ((year - gradeVal) < 1) ? 1 : (year - gradeVal);
                         /*var extraYear = ((gradeVal > year)) ? (gradeVal - year) : 0;
                          gradeVal = parseInt(gradeVal);
@@ -4548,10 +4625,12 @@ function computeGraduation(student_year_enterString, student_month_enterString, 
 
                         year_graduation_hidden.val(grYear);
                         month_graduation_hidden.val(grMonth);
-                    } else {
+                    }
+                    else{
                         graduationSetZero(grYear, grMonth, year_graduation_hidden, month_graduation_hidden);
                     }
-                } else {
+                }
+                else {
                     graduationSetZero(grYear, grMonth, year_graduation_hidden, month_graduation_hidden);
                 }
             } else {
@@ -4596,12 +4675,8 @@ function apply3_2(content) {
     var freeHidden = $('[name="freedom_sum"]');
     var loanPriceHidden = $('[name="loanPrice"]');
     var stageSelectValueHidden = $('[name="stageSelectValue"]');
-    var whiteListHidden = $('[name="whiteListHidden"]');
     loanHidden = $('[name="loansPrice"]');
     var sSelectValue = content.stageSelectValue;
-    var whiteList = content.whiteList;
-
-    whiteListHidden.val(whiteList);
 
     stageSelectValueHidden.val(sSelectValue);
 
@@ -4665,16 +4740,11 @@ function apply3_2(content) {
 
     $('#loansSum, #accordingToBillPlusOthers .input_f, #accordingToBill_publicExpense').on('blur', function() {
         var $thisValue = $(this);
-        var thisValue = $thisValue.val();
-		thisValue = thisValue.trim();	
-        var isInt = isInteger(thisValue);
+        var isInt = isInteger($thisValue.val());
 
         if (isNaN(parseInt($thisValue.val())) || (!isInt)) {
             $thisValue.val('');
         }
-		else{
-			$thisValue.val(thisValue);
-		}
 
         var firstLoans = [{
             'money': loans.val()
@@ -4702,16 +4772,11 @@ function apply3_2(content) {
 
     $('#freedomPlusOthers .input_f, #freedom_publicExpense').on('blur', function() {
         var $thisValue = $(this);
-        var thisValue = $thisValue.val();
-		thisValue = thisValue.trim();	
-        var isInt = isInteger(thisValue);
+        var isInt = isInteger($thisValue.val());
 
         if (isNaN(parseInt($thisValue.val())) || (!isInt)) {
             $thisValue.val('');
         }
-		else{
-			$thisValue.val(thisValue);
-		}
 
         var secondLoans = [{
             'money': freedom_credit.val()
@@ -4802,53 +4867,41 @@ function computeMoney(loansItem, radioIndex) {
 }
 
 function apply4_1(content) {
-
+    
     var loansIndex = content.loanPrice;
     var lifePriceOfBill = content.accordingToBill.life;
     var lifePriceOfFree = content.freedom.life;
     var lowIncomesArr = [];
     var uploadObj = $('#uploadObj');
-
+  
     if (loansIndex == '1') {
         if (lifePriceOfBill > 0) {
             $('.lowIncome').show();
-            uploadEvent($('#lowIncome').find('input[type="file"]'));
-        } else {
-            $('.lowIncome').hide();
+			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
     } else if (loansIndex == '2') {
         if (lifePriceOfFree > 0) {
             $('.lowIncome').show();
-            uploadEvent($('#lowIncome').find('input[type="file"]'));
-        } else {
-            $('.lowIncome').hide();
+			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
     }
-    //alert($('.file-view a').length);
+//alert($('.file-view a').length);
     uploadEvent();
+
     showUploadFiles(content, '4');
 
     //綁預覽事件
+	
     $('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });
-
-    if (loansIndex == '1') {
-        if (lifePriceOfBill == 0) {
-            $('.lowIncome').hide();
-        }
-    } else if (loansIndex == '2') {
-        if (lifePriceOfFree == 0) {
-            $('.lowIncome').hide();
-        }
-    }
 }
 
 function uploadEvent(input) {
 
     var defaultFileArray = $('input[type="file"]');
 
-    if (input != undefined) {
+    if(input != undefined) {
         defaultFileArray = input;
     }
 
@@ -4857,24 +4910,23 @@ function uploadEvent(input) {
         ev.preventDefault();
 
         var inputFile = $(this);
-
-        var fileModify = inputFile.parents('td.file-modify:first');
-        var docId = fileModify.attr('docid');
-
-        if (docId == undefined) {
-            docId = '';
-        }
-
+		
+		var fileModify = inputFile.parents('td.file-modify:first');
+		var docId = fileModify.attr('docid');
+		
+		if(docId == undefined) {
+			docId = '';
+		}
+		
         var inputFileName = inputFile.attr('name');
         var inputTitle = inputFileName.split('F')[0];
         var inputHidden = $('[name="' + inputTitle + '_hidden"]');
         var tr = inputFile.parents('tr:first');
         var selected_file_name = $(this).val();
         var fileSize = inputFile.context.files[0].size;
-		var inputText = inputFile.parent().text();
 
         var buttonId = inputFile.parent().attr('id');
-        var currentIndex = buttonId.substr(-1, 1);
+        var currentIndex = buttonId.substr(-1,1);
 
         //checkSize(files);
 
@@ -4885,118 +4937,108 @@ function uploadEvent(input) {
         var thisFileName = selectedFileArr.pop();
 
         var fileType = selected_file_name.substr(-3, 3);
-		
-		//擋10個檔案
-		var fileBtn = $('.file-modify');
-        if (fileBtn.length == 10 && inputText != '修改檔案') {
-            $('#documentNumber').show();
-        } else {
-            $('#documentNumber').hide();
 
-			//先檢查上傳文件格式
-			fileType = fileType.toLowerCase();
-			console.debug(fileType);
+        fileType = fileType.toLowerCase();
+        console.debug(fileType);
 
-			if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
-				$('#documentType').show();
-				$('#documentLength').hide();
-				$('.ajax-loader').hide();
-			} else {
-				$('#documentType').hide();
-				$('.ajax-loader').hide();
-				if (thisFileName.length > 24) {
-					$('#documentLength').show();
-					$('#documentType').hide();
-					$('.ajax-loader').hide();
-				}
-				// not click cancel
-				else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
-					$('#documentType').hide();
-					$('#documentLength').hide();
-					//產生一個form物件放在body底下
-					if ($('#uploadForm').length != 0) $('#uploadForm').remove();
+//        if (fileType != 'peg' && fileType != 'jpg' && fileType != 'png' && fileType != 'pdf' && fileType != 'tif' && fileType != 'gif') {
+//            $('#documentType').show();
+//            $('#documentLength').hide();
+//            $('.ajax-loader').hide();
+//        } 
+        //else {
+            $('#documentType').hide();
+            $('.ajax-loader').hide();
+            if (thisFileName.length > 24) {
+                $('#documentLength').show();
+                $('#documentType').hide();
+                $('.ajax-loader').hide();
+            }
+            // not click cancel
+            else if (selected_file_name != '' || selected_file_name != tr.find('td.file-en').text()) {
+                $('#documentType').hide();
+                $('#documentLength').hide();
+                //產生一個form物件放在body底下
+                if ($('#uploadForm').length != 0) $('#uploadForm').remove();
 
-					var form = $('<form id="uploadForm" method="post" action="data?action=uploadApplyDocument&docId=' + docId + '" enctype="Multipart/Form-Data" style="display:none;"></form>').prependTo('body');
+                var form = $('<form id="uploadForm" method="post" action="data?action=uploadApplyDocument&docId='+docId+'" enctype="Multipart/Form-Data" style="display:none;"></form>').prependTo('body');
 
-					//inputFile.clone().appendTo(form);
-					inputFile.appendTo(form);
+                //inputFile.clone().appendTo(form);
+                inputFile.appendTo(form);
 
 
-					if ($('.ajax-loader').length == 0) {
-						$('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
-					}
-					$('.ajax-loader').show();
-					setTimeout(function() {
-						GardenUtils.ajax.uploadFile(form, 'data?action=uploadApplyDocument&docId=' + docId, function(response) {
+                if ($('.ajax-loader').length == 0) {
+                    $('<div class="ajax-loader" style="display: none;"><div class="b-loading"><span class="m-icon-stack"><i class="m-icon m-icon-fubon-blue is-absolute"></i><i class="m-icon m-icon-fubon-green"></i></span></div></div>').prependTo($('body'));
+                }
+                $('.ajax-loader').show();
+                setTimeout(function() {
+                    GardenUtils.ajax.uploadFile(form, 'data?action=uploadApplyDocument&docId=' + docId, function(response) {
 
-							console.debug(response);
-							var sizeArray = '<input type="hidden" class="fileSize_' + inputTitle + '" name="' + inputTitle + '_hidden' + currentIndex + '" value="">';
-							var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="' + inputTitle + 'Name_hidden' + currentIndex + '" value="">';
-
-							if (response.isSuccess == 'Y') {
-								var newFile = response.docId;
-
-								if (tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多') {
-									var nextIndex = parseInt(currentIndex) + 1;
-									if (inputTitle == 'lowIncome' || inputTitle == 'register') {
-
-										addNewFile(tr, inputTitle, nextIndex, '上傳更多');
-									}
-									$('.processInner').prepend(sizeArray);
-									$('.processInner').prepend(FilenameExtension);
+                        console.debug(response);
+						var sizeArray = '<input type="hidden" class="fileSize_'+inputTitle+'" name="'+inputTitle+'_hidden'+currentIndex+'" value="">';
+						var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+inputTitle+'Name_hidden'+currentIndex+'" value="">';
+                            
+                        if (response.isSuccess == 'Y') {
+							var newFile = response.docId;
+						
+                            if(tr.find('td.file-upload a').text() == '上傳檔案' || tr.find('td.file-upload a').text() == '上傳更多'){
+                                var nextIndex = parseInt(currentIndex) +1;
+								if( inputTitle == 'lowIncome' || inputTitle == 'register' ){
+									addNewFile(tr, inputTitle, nextIndex,'上傳更多');
 								}
+								$('.processInner').prepend(sizeArray);
+								$('.processInner').prepend(FilenameExtension);
+                            }
 
-								inputHidden.val(fileSize);
-								tr.find('td.file-upload a').text('修改檔案');
-								tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
-								tr.find('td.file-en').text(response.src).removeClass('new');
-								tr.find('td.file-view a').addClass('active');
-								form.find('input[type="file"]').appendTo(tr.find('td.file-modify a'));
-								tr.find('td.file-modify').attr('docid', newFile);
+                            inputHidden.val(fileSize);
+                            tr.find('td.file-upload a').text('修改檔案');
+                            tr.find('td.file-upload').removeClass('file-upload').addClass('file-modify');
+                            tr.find('td.file-en').text(response.src).removeClass('new');
+                            tr.find('td.file-view a').addClass('active');
+                            form.find('input[type="file"]').appendTo(tr.find('td.file-modify a'));
+							tr.find('td.file-modify').attr('docid',newFile);
 
-								//塞副檔名到hidden中
-								var sizeHidden = $('[name="' + inputTitle + '_hidden' + currentIndex + '"]');
-								var nameHidden = $('[name="' + inputTitle + 'Name_hidden' + currentIndex + '"]');
-								sizeHidden.val(fileSize);
-								nameHidden.val(fileType);
+                            //塞副檔名到hidden中
+                            var sizeHidden = $('[name="'+inputTitle+'_hidden'+currentIndex+'"]');
+                            var nameHidden = $('[name="'+inputTitle+'Name_hidden'+currentIndex+'"]');
+                            sizeHidden.val(fileSize);
+                            nameHidden.val(fileType);
 
-								//                            var idName = tr.find('.file-view a').attr('id');
-								//                            var nameHidden = $('[name="' + idName + 'Name_hidden"]');
-								//                            nameHidden.val(fileType);
+//                            var idName = tr.find('.file-view a').attr('id');
+//                            var nameHidden = $('[name="' + idName + 'Name_hidden"]');
+//                            nameHidden.val(fileType);
 
-								//更新預覽的圖及小網顯示的圖
+                            //更新預覽的圖及小網顯示的圖
+                            
+                            var previewURL = 'data?action=downloadApplyDocument&isPreview=Y&docId=';
+                            var newURL = previewURL + newFile;
 
-								var previewURL = 'data?action=downloadApplyDocument&isPreview=Y&docId=';
-								var newURL = previewURL + newFile;
+                            tr.next('tr').find('iframe').attr("src", newURL);
+                            tr.find('td.file-photo img').attr("src", newURL);
 
-								tr.next('tr').find('iframe').attr("src", newURL);
-								tr.find('td.file-photo img').attr("src", newURL);
+                            $('.ajax-loader').hide();
 
-								$('.ajax-loader').hide();
+                        } else {
+                            if (selected_file_name != '') alert('Upload Fail!!');
+                            form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
 
-							} else {
-								if (selected_file_name != '') alert('Upload Fail!!');
-								form.find('input[type="file"]').appendTo(tr.find('td.file-modify'));
+                            $('.ajax-loader').hide();
+                        }
 
-								$('.ajax-loader').hide();
-							}
-
-							$('.ajax-loader').hide();
-						});
-					}, 200);
+                        $('.ajax-loader').hide();
+                    });
+                }, 200);
 
 
 
-				}
-			}
-		
-		}
+            }
+      //  }
     });
 }
 
 //顯示文件項目的字串
-function showFileString(name) {
-    switch (name) {
+function showFileString(name){
+    switch(name){
         case 'idPositive':
             return '身分證正面影本';
         case 'idNegative':
@@ -5016,57 +5058,60 @@ function previewClickHandler(obj) {
         var itemName = thisID.split('View_')[0];
         var fileIndex = thisID.split('View_')[1];
         var fileName = $('#' + itemName + 'Img_' + fileIndex).text();
-        if (fileName != undefined) {
-            fileName = fileName.substring(fileName.lastIndexOf('.') + 1);
+        if(fileName != undefined) {
+            fileName = fileName.substring(fileName.lastIndexOf('.')+1);
         }
-        fileName = fileName.toLowerCase();
-        //alert(fileName);
+		fileName = fileName.toLowerCase();
+		//alert(fileName);
 
-        previewDocument($('#' + itemName + 'ViewTag_' + fileIndex + ' iframe').attr('src'), fileName);
+        previewDocument($('#'+itemName+'ViewTag_'+fileIndex+' iframe').attr('src'), fileName);
     }
 }
 
 //動態長出同項目的新的上傳檔案
-function addNewFile(tr, compareName, nextIndex, uploadDisplayName) {
+function addNewFile(tr, compareName, nextIndex,uploadDisplayName) {
     var trView;
 
-    if (tr != null) {
+    if(tr != null){
         trView = tr.next();
     }
+
+
 
     console.debug('---------------------------');
     console.debug(compareName);
 
     //動態再長一個"上傳檔案"的li
     var fileName = showFileString(compareName);
-    var newTr = $('<tr id="' + compareName + '_' + nextIndex + '" class="' + compareName + '">' +
+    var newTr = $('<tr id="'+compareName+'_'+nextIndex+'" class="'+compareName+'">' +
         '<td class="file-photo">' +
         '<a>' +
-        '<img id="' + compareName + 'Photo_img_' + nextIndex + '" src="">' +
+        '<img id="'+compareName+'Photo_img_'+nextIndex+'" src="">' +
         '</a>' +
         '</td>' +
-        '<td class="file-zh">' + fileName + '</td>' +
-        '<td class="file-en new" id="' + compareName + 'Img_' + nextIndex + '">無</td>' +
-        '<td class="file-upload">' +
-        '<a class = "upload" id="' + compareName + 'Upload_' + nextIndex + '">' + uploadDisplayName + '<input type="file" name="' + compareName + 'File_' + nextIndex + '" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>' +
+        '<td class="file-zh">'+fileName+'</td>' +
+        '<td class="file-en new" id="'+compareName+'Img_'+nextIndex+'">無</td>' +
+        '<td class="file-upload">'+
+        '<a class = "upload" id="'+compareName+'Upload_'+nextIndex+'">'+uploadDisplayName+'<input type="file" name="'+compareName+'File_'+nextIndex+'" style="position: absolute;top: 0;left:0;opacity: 0;width:100%;height:100%;"></a>' +
         '</td>' +
         '<td class="file-view">' +
-        '<a id="' + compareName + 'View_' + nextIndex + '"></a>' +
+        '<a id="'+compareName+'View_'+nextIndex+'"></a>' +
         '</td>' +
         '</tr>' +
-        '<tr id="' + compareName + '_view_' + nextIndex + '" style="display:none">' +
-        '<td class="clickView" colspan="4" style="display:none" id="' + compareName + 'ViewTag_' + nextIndex + '">' +
+        '<tr id="'+compareName+'_view_'+nextIndex+'" style="display:none">' +
+        '<td class="clickView" colspan="4" style="display:none" id="'+compareName+'ViewTag_'+nextIndex+'">' +
         '<div class="dowitemContent" style="display:block">' +
         '<div class="imgBox">' +
-        '<iframe id="' + compareName + 'ViewImg_' + nextIndex + '" src="" style="width:100%; height: 100%;"></iframe>' +
+        '<iframe id="'+compareName+'ViewImg_'+nextIndex+'" src="" style="width:100%; height: 100%;"></iframe>' +
         '</div>' +
         '</div>' +
         '</td>' +
         '</tr>');
 
-    if (tr != null) {
+    if(tr != null){
         newTr.insertAfter(trView);
-    } else if (tr == null) {
+    }
+    else if(tr == null){
         $('#uploadObj').append(newTr);
     }
 
@@ -5140,16 +5185,12 @@ function apply4_2(content) {
         calendarArea.hide();
     });
 
-    var hasBookingObj = {};
-    //$('#calendar').fullCalendar( 'refetchEvents' );
-
     submitBranch.off().on('click', function() { //按下'確認'鍵後的動作
         var cityId = $('[name="cityId"]').val();
         var zipCodeName = $('[name="zipCode"]').val();
         var dateSelected = $('[name="dateSelected"]');
         var idSelected = $('[name="idSelected"]');
         var timeSelected = $('[name="timeSelected"]');
-        var people = $('[name="people"]');
 
         var citySelectpicked = $('#citySelectpicker button').attr('title');
         var zipSelectpicked = $('#zipSelectpicker button').attr('title');
@@ -5194,7 +5235,6 @@ function apply4_2(content) {
             placeBranch.append(branchArray.join(''));
             branchArray = [];
 
-
             var branchId;
             var reservation = $('.reservation');
             var region = $('.regionText');
@@ -5212,7 +5252,8 @@ function apply4_2(content) {
                 //addressMap(firstAddress);
 
                 //點選「我要預約」
-                //將已被預約的天數存成物件             
+                //將已被預約的天數存成物件
+                var hasBookingObj = {};
                 reservation.on('click', function() {
                     var $this = $(this);
                     var thisBtn = $this.parent();
@@ -5220,15 +5261,13 @@ function apply4_2(content) {
                     var thisName = thisText.find('.branchName').text(); //分行名稱
                     var thisAddr = thisText.find('.branchAddr').text(); //分行地址
                     var thisTel = thisText.find('.branchTel').text(); //分行電話
-                    var thisBranch = thisText.find('.branchId').attr('name'); //分行ID
                     var pin = $('.branchName');
                     var thisPin = thisBtn.parent().find('.branchName');
                     var btnId = $('[name="btnId"]');
                     var siblings = thisBtn.siblings();
 
                     branchId = thisText.find('.branchId').attr('name'); //分行代碼
-                    console.debug('branchId:' + branchId);
-                    $('[name="idSelected"]').val(branchId);
+
                     //改分行資訊的底色
                     $('.regionText').removeClass('active');
                     thisText.addClass('active');
@@ -5268,11 +5307,22 @@ function apply4_2(content) {
 
                     dDate.text('');
                     dTime.text('');
-                    //timeSelected.val('0');
+                    timeSelected.val('0');
                     dateSelected.val('0');
-                    //idSelected.val('0');
+                    idSelected.val('0');
                     name.text(thisName);
                     addr.text(thisAddr);
+                    /*var teleTemp = thisTel.split(')')[1];
+                     var telepre;
+                     var telePost;
+                     if (teleTemp.length == 7) {
+                     telepre = teleTemp.substr(0, 3);
+                     telePost = teleTemp.substr(3, 4);
+                     } else if (teleTemp.length == 8) {
+                     telepre = teleTemp.substr(0, 4);
+                     telePost = teleTemp.substr(4, 4);
+                     }
+                     tel.text(thisTel.substr(4, 4) + telepre + '-' + telePost);*/
                     tel.text(thisTel);
                     branchsInfo.show();
                     branchDate.show();
@@ -5281,10 +5331,7 @@ function apply4_2(content) {
                     var calDate;
                     var calFull;
 
-                    //抓這個分行的id
-                    branchId = idSelected.val();
-                    console.debug('branchId:' + branchId);
-
+                    //抓這個分行的每時段最多預約人數
                     jsonBranch = modal.getFullString(month, branchId);
                     //jsonBranch = modal.getFullString(dateAppo, branchId); //傳日期及分行資訊去撈上可預約人物
                     console.debug(jsonBranch);
@@ -5292,11 +5339,10 @@ function apply4_2(content) {
                     var noBusiness = jsonBranch.noBusiness;
                     var maxPeople = jsonBranch.maxPeople; //每個時段最多的人數
                     var booking = jsonBranch.booking; //已被預約
-                    people.val(maxPeople);
+
                     hasBookingObj = [];
-                    console.debug(booking);
                     $.each(booking, function(index, bookingObj) {
-                        var date = bookingObj.date; //已被預約日期					
+                        var date = bookingObj.date; //已被預約日期
                         //                        var isFull = bookingObj.isFull;//是否已滿
                         //                        var times = bookingObj.times;//預約時段
                         //
@@ -5309,11 +5355,11 @@ function apply4_2(content) {
 
                         //依照日來放物件
                         hasBookingObj[date] = bookingObj;
-
                     });
 
+
                     //2016-07-16 added by titan，修改判斷分行已滿寫法
-                    var valueTimeArray = ['0900', '1000', '1100', '0100', '0200', '0300'];
+                    var valueTimeArray = ['0900', '1000', '1100', '0100','0200','0300'];
                     var totalTimeCount = valueTimeArray.length; //總時段，以後會改成吃json的count					
 
                     $.each(jsonBranch.booking, function(index, obj) {
@@ -5349,26 +5395,14 @@ function apply4_2(content) {
 
                     });
 
-                    var defaultTime;
-                    if (datePicked != '') {
-                        defaultTime = new Date(datePicked);
-                    } else {
-                        defaultTime = new Date();
-                    }
-
                     //紀錄active的date
                     var activeDate;
-
-                    $('#calendar').fullCalendar('removeEvents');
-                    $('#calendar').fullCalendar('addEventSource', calendarArr);
-                    $('#calendar').fullCalendar('rerenderEvents');
-                    console.debug(calendarArr);
 
                     //長日曆					
                     $('#calendar').fullCalendar({
                         header: {},
                         //height: 400,
-                        defaultDate: defaultTime,
+                        defaultDate: new Date(),
                         select: function(startDate, endDate) {
                             if (liveDate > startDate) {
                                 alert('Selected date has been passed');
@@ -5387,7 +5421,6 @@ function apply4_2(content) {
                         eventLimit: true, // allow "more" link when too many events
                         events: calendarArr,
                         dayRender: function(date, cell) {
-
                             console.debug(date);
                             console.debug(cell);
 
@@ -5397,10 +5430,10 @@ function apply4_2(content) {
 
                             //TODO for online open 9/30
                             //var date = new Date('2016-09-30 23:59:59');
-                            var date = new Date(2016, 8, 30, 23, 59, 59);
+                            //var date = new Date(2016,10,30,23,59,59);
 
 
-                            if (compressDate - date > 0) {
+                            if(compressDate - date > 0) {
                                 $('td [data-date="' + data_date + '"]').addClass('fc-holiday');
                             }
 
@@ -5408,6 +5441,9 @@ function apply4_2(content) {
                             if (activeDate != undefined && activeDate == data_date) {
                                 $('td [data-date="' + data_date + '"]').addClass('active');
                             }
+
+
+
                         },
                         //這是點了標題的事件
                         eventClick: function(event, jsEvent, view) {
@@ -5443,13 +5479,14 @@ function apply4_2(content) {
                         },
                         //這是切換月份的事件
                         viewRender: function(view, element) {
+
                             console.debug('switch view');
                             console.debug(view);
                             console.debug(element);
 
-                            $.each(noBusiness, function(i, noBusinessDay) {
+                            $.each(noBusiness,function(i,noBusinessDay){
                                 console.debug('noBusinessDay = ' + noBusinessDay);
-                                var td = element.find('[data-date="' + noBusinessDay + '"]');
+                                var td = element.find('[data-date="'+noBusinessDay+'"]');
                                 console.debug(td.length);
                                 //td.addClass('fc-sat');
                                 td.addClass('fc-holiday');
@@ -5457,37 +5494,12 @@ function apply4_2(content) {
 
                             //切換月份時，要把下面時段資訊先拿掉，還有對保時間也拿掉
                             appointment.hide();
-                            //$('#bDate').text('');
-                            //$('#bTime').text('');
-							
-							if($('[name="dateTemp"]').val() !== ''){					
-								$('td [data-date="' + $('[name="dateTemp"]').val() + '"]').addClass('active'); 
-
-								var aDate = new Date();
-								var nowYear = aDate.getFullYear();
-								var nowMonth = aDate.getMonth();
-								var nowDay = aDate.getDate();
-								
-								var formatDate = $('[name="dateTemp"]').val();
-								var formatDay = new Date(formatDate);
-								var pickedYear = formatDay.getFullYear();
-								var pickedMonth = formatDay.getMonth();
-								var pickedDay = formatDay.getDate();
-								
-								var todayValue = false;
-								if(nowYear == pickedYear && nowMonth == pickedMonth && nowDay == pickedDay){
-									todayValue = true;
-								}
-								
-								var bookingObj = hasBookingObj[formatDate];
-								//var todayEle = $('td[data-date="'+ $('[name="dateTemp"]').val() +'"]');
-								//var todayValue = todayEle.hasClass('fc-holiday');
-								showPeople(valueTimeArray, bookingObj, todayValue, aDate);
-								appointment.show();								
-							}
+                            $('#bDate').text('');
+                            $('#bTime').text('');
                         },
                         //這是當點了不是標題的事件
                         dayClick: function(date, jsEvent, view) {
+
                             var myDate = new Date();
 
                             //判斷是否星期六或日
@@ -5501,8 +5513,11 @@ function apply4_2(content) {
                             var data_date_full = data_date + ' 23:59:59';
 
                             var chooseDate = new Date(data_date_full.replace(' ', 'T'));
+                            //alert(date.format('YYYY-MM-DD'));
+                            //alert(myDate);
 
                             //2016-07-08 added by titan
+
                             console.debug(myDate);
                             console.debug(chooseDate);
                             if (chooseDate >= myDate) {
@@ -5517,11 +5532,11 @@ function apply4_2(content) {
                                 activeDate = data_date;
 
                                 //TRUE Clicked date smaller than today
-							
                                 dateAppo = date.format();
 
                                 //取得當日預約物件
                                 var bookingObj = hasBookingObj[dateAppo];
+
                                 var number1 = $('#number1');
                                 var number2 = $('#number2');
                                 var number3 = $('#number3');
@@ -5531,9 +5546,69 @@ function apply4_2(content) {
                                 var clickMonth = parseInt(dateAppo.substr(5, 2));
                                 console.debug(clickMonth);
 
-                                //idSelected.val(branchId);
+                                idSelected.val(branchId);
 
-                                showPeople(valueTimeArray, bookingObj, isToday, myDate);
+                                //長底下的時段
+                                $.each(valueTimeArray, function(i, value) {
+
+                                    var timeMaxPeople = maxPeople; //先預設帶入這間分行每個時段的預設人數
+                                    var timeCount = maxPeople; //該時段尚可預約人數
+                                    var timeTotal = maxPeople; //該時段可預約總人數
+                                    var timeIsFull = 'N';
+                                    var appoRadio = $('#time' + (i + 1));
+                                    var appoLabel = $('#timeLabel' + (i + 1));
+                                    var appoP = $('#number' + (i + 1));
+
+                                    //還原初始值
+                                    appoRadio.removeAttr('checked');
+                                    appoRadio.removeAttr('disabled');
+                                    appoLabel.css("color", "white");
+                                    appoP.css("color", "white");
+
+
+                                    //如果當日當時段已有預約資料，就覆蓋預設值
+                                    if (bookingObj != undefined) {
+                                        var times = bookingObj.times; //預約時段
+                                        $.each(times, function(timeIndex, timeObj) {
+                                            timeTotal = timeObj.total; //該時段可預約總人數
+                                            var timeCount2 = timeObj.count; //已被預約人數
+                                            var timeStr = timeObj.time; //時段
+                                            var timeIsFull2 = timeObj.isFull; //該時段是否已滿
+
+                                            if (value == timeStr) {
+                                                timeCount = timeTotal - timeCount2;
+                                                timeIsFull = timeIsFull2;
+                                            }
+                                        });
+                                    }
+
+                                    //放入該時段目前還可預約人數
+                                    $('#number' + (i + 1)).text(timeCount);
+
+                                    //if over time set full
+                                    if(isToday) {
+                                        var nowHour = myDate.getHours();
+
+                                        var compareStr = value.substring(0,2);
+                                        if(parseInt(compareStr) < 9) {
+                                            compareStr = parseInt(compareStr) + 12;
+                                        }
+
+                                        console.debug(nowHour);
+                                        console.debug(compareStr);
+                                        if(nowHour >= compareStr) {
+                                            timeIsFull = 'Y';
+                                        }
+                                    }
+
+                                    if (timeIsFull == 'Y') {
+
+                                        appoRadio.attr("disabled", true);
+                                        appoLabel.css("color", "#9D9D9D");
+                                        appoP.css("color", "#9D9D9D");
+                                    }
+
+                                });
 
 
                                 var dateAppoY = dateAppo.substr(0, 4);
@@ -5542,7 +5617,6 @@ function apply4_2(content) {
                                 var dateAppoTotal = dateAppoY + '/' + dateAppoM + '/' + dateAppoD;
 
                                 dateSelected.val(dateAppo);
-                                $('[name="dateTemp"]').val(dateAppo);
                                 dDate.text(dateAppoTotal);
 
                                 appointment.show();
@@ -5563,6 +5637,7 @@ function apply4_2(content) {
                         $('.fc-day-grid-container.fc-scroller').css('height', '100%');
                     }
 
+
                     $('#appointment').find('input').on('click', function() { //點選預約日期,右下方會產生日期和時間的資訊
                         var radioIndex = $(this).attr('id').substr(-1, 1);
                         var timeHour = $('#timeLabel' + radioIndex).text().substr(2, 2);
@@ -5582,101 +5657,15 @@ function apply4_2(content) {
                     });
 
 
+                    /*$('table .fc-rigid .fc-bg tr td').css('background-color', '#FAFAFA');
+                     $('table .fc-body .fc-sun').css('background-color', '#F0F0F0');
+                     $('table .fc-body .fc-sat').css('background-color', '#F0F0F0');
 
-                    var reservateBranch = content.idSelected;
-                    if (reservateBranch == thisBranch) {
-                        //日期
-                        if (datePicked != '') {
-                            var isTodayTrueOrFalse = $('td [data-date="' + datePicked + '"]').hasClass('fc-today');
-                            var bookingObject = hasBookingObj[datePicked];
-
-							 if ($('[name="dateTemp"]').val() == '') {
-                                $('[name="dateTemp"]').val(datePicked);
-                            }
-							var datePick = $('[name="dateTemp"]').val();
-							
-                            console.debug(bookingObject);
-                            var dDateTemp = $('#bDate');
-                            var pickYY, pickMM, pickDD;
-							var temp = $('[name="dateTemp"]').val();
-                            if (temp.length == 10) {
-                                pickYY = temp.substr(0, 4);
-                                pickMM = temp.substr(5, 2);
-                                pickDD = temp.substr(8, 2);
-                            }
-                            $('[name="dateSelected"]').val(pickYY + '/' + pickMM + '/' + pickDD);
-                            dDateTemp.text(pickYY + '/' + pickMM + '/' + pickDD);
-							
-                            $('td [data-date="' + datePick + '"]').addClass('active');
-                            
-							var myDay = new Date();
-                            showPeople(valueTimeArray, bookingObject, isTodayTrueOrFalse, myDay);
-                            appointment.show();
-                        }
-
-                        //時間
-
-                        if (timePicked != '') {
-                            var fullTimeText = '';
-                            var dTimeTemp = $('#bTime');
-                            if ($('[name="timeSelected"]').val() == '') {
-                                $('[name="timeSelected"]').val(timePicked);
-                            }
-                            if (timePicked == '0100') {
-                                fullTimeText = 'PM 01:00-02:00';
-                                dTimeTemp.text(fullTimeText);
-                            } else if (timePicked == '0200') {
-                                fullTimeText = 'PM 02:00-03:00';
-                                dTimeTemp.text(fullTimeText);
-                            } else if (timePicked == '0300') {
-                                fullTimeText = 'PM 03:00-04:00';
-                                dTimeTemp.text(fullTimeText);
-                            } else {
-                                var tempStart = parseInt(timePicked);
-                                var tempEnd = tempStart + 100;
-                                tempEnd = '' + tempEnd;
-                                tempStart = '' + tempStart;
-                                if (tempStart.length <= 3) {
-                                    tempStart = '0' + tempStart;
-                                }
-                                tempStart = tempStart.substr(0, 2) + ':' + tempStart.substr(2, 2);
-                                tempEnd = tempEnd.substr(0, 2) + ':' + tempEnd.substr(2, 2);
-                                dTimeTemp.text('AM' + tempStart + '-' + tempEnd);
-                            }
-                            var timeSelect = $('[name="timeSelected"]').val();
-                            switch (timeSelect) {
-                                case '0900':
-                                    $('#time1').trigger('click');
-                                    $('[name="timeSelected"]').val('0900');
-                                    break;
-                                case '1000':
-                                    $('#time2').trigger('click');
-                                    $('[name="timeSelected"]').val('1000');
-                                    break;
-                                case '1100':
-                                    $('#time3').trigger('click');
-                                    $('[name="timeSelected"]').val('1100');
-                                    break;
-                                case '0100':
-                                    $('#time4').trigger('click');
-                                    $('[name="timeSelected"]').val('0100');
-                                    break;
-                                case '0200':
-                                    $('#time5').trigger('click');
-                                    $('[name="timeSelected"]').val('0200');
-                                    break;
-                                case '0300':
-                                    $('#time6').trigger('click');
-                                    $('[name="timeSelected"]').val('0300');
-                                    break;
-                            }
-                        }
-
-
-
-                    }
-
-
+                     $('table .fc-today').css('background-color', '#0E89CB');
+                     $('table .fc-past').css('background-color', '#F0F0F0');
+                     $('table .fc-future').css('color', '#0E89CB');
+                     $('table .fc-body .fc-sun').css('color', '#DEDEDE');
+                     $('table .fc-body .fc-sat').css('color', '#DEDEDE');*/
                 });
 
 
@@ -5746,88 +5735,63 @@ function apply4_2(content) {
     telTemp.text(infoTel);
     $('[name="idSelected"]').val(infoId);
 
+    //日期
+    if (datePicked != '') {
+        var dDateTemp = $('#bDate');
+        var pickYY, pickMM, pickDD;
+        if (datePicked.length == 10) {
+            pickYY = datePicked.substr(0, 4);
+            pickMM = datePicked.substr(5, 2);
+            pickDD = datePicked.substr(8, 2);
+        }
+        $('[name="dateSelected"]').val(pickYY + '/' + pickMM + '/' + pickDD);
+        dDateTemp.text(pickYY + '/' + pickMM + '/' + pickDD);
+        $('td [data-date="' + datePicked + '"]').addClass('active');
+        appointment.show();
+    }
 
-}
-
-function showPeople(valueTimeArray, bookingObj, isToday, myDate) {
-    //長底下的時段
-    console.debug(valueTimeArray);
-    console.debug(bookingObj);
-    console.debug(isToday);
-    console.debug(myDate);
-    $.each(valueTimeArray, function(i, value) {
-
-        var timeMaxPeople = $('[name="people"]').val(); //先預設帶入這間分行每個時段的預設人數
-        var timeCount = $('[name="people"]').val(); //該時段尚可預約人數
-        var timeTotal = $('[name="people"]').val(); //該時段可預約總人數
-        var timeIsFull = 'N';
-        var appoRadio = $('#time' + (i + 1));
-        var appoLabel = $('#timeLabel' + (i + 1));
-        var appoP = $('#number' + (i + 1));
-
-        //還原初始值
-        appoRadio.removeAttr('checked');
-        appoRadio.removeAttr('disabled');
-        appoLabel.css("color", "white");
-        appoP.css("color", "white");
-
-
-        //如果當日當時段已有預約資料，就覆蓋預設值
-        if (bookingObj != undefined) {
-            console.debug(bookingObj);
-            var times = bookingObj.times; //預約時段
-            console.debug(times);
-            $.each(times, function(timeIndex, timeObj) {
-                timeTotal = timeObj.total; //該時段可預約總人數
-                var timeCount2 = timeObj.count; //已被預約人數
-                console.debug(timeObj);
-                var timeStr = timeObj.time; //時段
-                var timeIsFull2 = timeObj.isFull; //該時段是否已滿
-
-                if (value == timeStr) {
-                    timeCount = timeTotal - timeCount2;
-                    timeIsFull = timeIsFull2;
-                }
-                //放入該時段目前還可預約人數
-                $('#number' + (i + 1)).text(timeCount);
-
-            });
+    //時間
+    if (timePicked != '') {
+        var dTimeTemp = $('#bTime');
+        $('[name="timeSelected"]').val(timePicked);
+        if (timePicked == '0100') {
+            timePicked = 'PM 01:00-02:00';
+            dTimeTemp.text(timePicked);
         } else {
-            //否則時段為最大預約人數
-            var max = $('[name="people"]').val();
-            $('#number' + (i + 1)).text(max);
-            console.debug('max:' + max);
-
-        }
-
-		
-		
-        //if over time set full
-        if (isToday) {
-            var nowHour = myDate.getHours();
-
-            var compareStr = value.substring(0, 2);
-            if (parseInt(compareStr) < 9) {
-                compareStr = parseInt(compareStr) + 12;
+            var tempStart = parseInt(timePicked);
+            var tempEnd = tempStart + 100;
+            tempEnd = '' + tempEnd;
+            tempStart = '' + tempStart;
+            if (tempStart.length <= 3) {
+                tempStart = '0' + tempStart;
             }
-
-            console.debug(nowHour);
-            console.debug(compareStr);
-            if (nowHour >= compareStr) {
-                timeIsFull = 'Y';
-            }
-        }
-		
-		
-
-        if (timeIsFull == 'Y') {
-
-            appoRadio.attr("disabled", true);
-            appoLabel.css("color", "#9D9D9D");
-            appoP.css("color", "#9D9D9D");
+            tempStart = tempStart.substr(0, 2) + ':' + tempStart.substr(2, 2);
+            tempEnd = tempEnd.substr(0, 2) + ':' + tempEnd.substr(2, 2);
+            dTimeTemp.text('AM' + tempStart + '-' + tempEnd);
         }
 
-    });
+    }
+
+    switch (timePicked) {
+        case '0900':
+            $('#time1').attr('checked', true);
+            break;
+        case '1000':
+            $('#time2').attr('checked', true);
+            break;
+        case '1100':
+            $('#time3').attr('checked', true);
+            break;
+        case '0100':
+            $('#time4').attr('checked', true);
+            break;
+        case '0200':
+            $('#time5').attr('checked', true);
+            break;
+        case '0300':
+            $('#time6').attr('checked', true);
+            break;
+    }
 }
 
 function apply5_1_1(content) {
@@ -6004,6 +5968,35 @@ function apply5_1_1(content) {
     setSchoolInformation(schoolElementArr, schoolStringArr);
 
     //保證人資料
+    /**
+     var array = ['father','mother','thirdParty','spouse'];
+     $.each(array,function(i,name){
+		var showInfoD = showInfo.substr(i, 1);
+		var putDiv = $('#' + name);
+		
+		modal.getFamilyInfo(name, 'Y', function(familyInfo) {
+                        // setInfoValue(fatherInfo, fatherDiv);
+                        setInfoText(familyInfo, fatherDiv);
+                        var dayBirthday = familyInfo.birthday.substr(5, 2);
+                        var monthBirthday = familyInfo.birthday.substr(3, 2);
+                        var yearBirthday = familyInfo.birthday.substr(0, 3);
+
+                        if (yearBirthday.length == 2) {
+                            yearBirthday = '0' + yearBirthday;
+                        }
+                        if (monthBirthday.length == 1) {
+                            monthBirthday = '0' + monthBirthday;
+                        }
+                        if (dayBirthday.length == 1) {
+                            dayBirthday = '0' + dayBirthday;
+                        }
+
+                        var birthdayStr = '民國' + yearBirthday + '年' + monthBirthday + '月' + dayBirthday + '日';
+                        $('[name="'+name+'_birthday"]').text(birthdayStr);
+                    });
+	});
+     **/
+
     for (var i = 0; i <= 3; i++) {
         var showInfoD = showInfo.substr(i, 1);
         fatherDiv = $('#father');
@@ -6211,7 +6204,7 @@ function apply5_1_1(content) {
     //動態長紀錄size和副檔名的hidden
     console.debug(content.uploadFile);
     var docItem = content.uploadFile;
-    $.each(docItem, function(index, value) {
+    $.each(docItem, function(index, value){
         var currentIndex = 0;
 
         console.debug('value = ' + value);
@@ -6221,33 +6214,33 @@ function apply5_1_1(content) {
 
             console.debug(i + '=' + v);
 
-            var sizeArray = '<input type="hidden" class="fileSize_' + index + '" name="' + index + '_hidden' + currentIndex + '" value="">';
-            var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="' + index + 'Name_hidden' + currentIndex + '" value="">';
+            var sizeArray = '<input type="hidden" class="fileSize_'+index+'" name="'+index+'_hidden'+currentIndex+'" value="">';
+            var FilenameExtension = '<input type="hidden" class="fileNameExtension" name="'+index+'Name_hidden'+currentIndex+'" value="">';
             $('.processInner').prepend(sizeArray);
             $('.processInner').prepend(FilenameExtension);
-            var sizeHidden = $('[name="' + index + '_hidden' + currentIndex + '"]');
-            var nameHidden = $('[name="' + index + 'Name_hidden' + currentIndex + '"]');
+            var sizeHidden = $('[name="'+index+'_hidden'+currentIndex+'"]');
+            var nameHidden = $('[name="'+index+'Name_hidden'+currentIndex+'"]');
             sizeHidden.val(v.size);
             nameHidden.val(v.fileNameExtension);
             currentIndex++;
         });
     });
-
-    var loansIndex = content.loans;
+	
+	var loansIndex = content.loans;
     var lifePriceOfBill = content.accordingToBill.life;
     var lifePriceOfFree = content.freedom.life;
     var lowIncomesArr = [];
     var uploadObj = $('#uploadObj');
-
+  
     if (loansIndex == '1') {
         if (lifePriceOfBill > 0) {
             $('.lowIncome').show();
-            uploadEvent($('#lowIncome').find('input[type="file"]'));
+			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
     } else if (loansIndex == '2') {
         if (lifePriceOfFree > 0) {
             $('.lowIncome').show();
-            uploadEvent($('#lowIncome').find('input[type="file"]'));
+			uploadEvent($('#lowIncome').find('input[type="file"]'));
         }
     }
 
@@ -6255,30 +6248,20 @@ function apply5_1_1(content) {
 
     //帶入前步驟上傳的文件
     showUploadFiles(content, '5');
-
-    //綁預覽事件
+	
+	 //綁預覽事件
     $('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });
-
-    if (loansIndex == '1') {
-        if (lifePriceOfBill == 0) {
-            $('.lowIncome').hide();
-        }
-    } else if (loansIndex == '2') {
-        if (lifePriceOfFree == 0) {
-            $('.lowIncome').hide();
-        }
-    }
 }
 
 //帶預設值for上傳檔案
 function showUploadFiles(content, step) {
     console.debug(content);
 
-    var defaultName = '上傳檔案';
+	var defaultName = '上傳檔案';
     if (step == '5') {
-        defaultName = '修改檔案';
+		defaultName = '修改檔案';
     }
 
     var idCardPosition = content.uploadFile.idCardPosition;
@@ -6290,40 +6273,44 @@ function showUploadFiles(content, step) {
     var fileItem = content.uploadFile;
     var previewURL = 'data?action=downloadApplyDocument&isPreview=Y&docId=';
 
-    $.each(fileItem, function(item, docContent) { //跑文件項目
-        console.debug('--===~~~~////////~~~~===--');
-		console.debug(item);
+    $.each(fileItem, function(item, docContent) {    //跑文件項目
+        console.debug(item);
         console.debug(docContent);
         var itemName = item;
 
-        if (itemName == 'idCardNegative') {
+        if(itemName == 'idCardNegative') {
             itemName = 'idNegative';
-        } else if (itemName == 'idCardPosition') {
+        }
+        else if(itemName == 'idCardPosition') {
             itemName = 'idPositive';
-        } else if (itemName == 'lowIncome') {
+        }
+        else if(itemName == 'lowIncome') {
             itemName = 'lowIncome';
-        } else if (itemName == 'registration') {
+        }
+        else if(itemName == 'registration') {
             itemName = 'register';
         }
+
 		
-        var docLen = docContent.length;
-        //alert(itemName);
-        //alert(docContent.length);
+		var docLen = docContent.length;
+		//alert(itemName);
+		//alert(docContent.length);
         console.debug(docContent);
         console.debug('itemName = ' + itemName);
-        if (docContent == '' || docContent == undefined) {
+        if(docContent == '' || docContent == undefined){
             newFileName = '無';
-        } else {
-            $.each(docContent, function(index, value) { //跑文件項目裡的檔案
+        }
+        else{
+            $.each(docContent, function(index, value) {    //跑文件項目裡的檔案
                 var dataArr = [];
                 var docId = value.docId;
                 var size = value.size;
                 var fileName = value.fileName;
                 var fileNameExtension = value.fileNameExtension;
-                var fileURL = previewURL + docId; //檔案路徑
+                var fileURL = previewURL + docId;    //檔案路徑
                 console.debug(fileURL);
 
-                if (docId != undefined && docId != '') {
+                if(docId != undefined && docId != '') {
 
                     var itemNamePhoto_img;
                     var itemNameImg;
@@ -6335,93 +6322,98 @@ function showUploadFiles(content, step) {
                     var fileItemName;
                     var item = showFileString(itemName);
 
-                    if (index == 0) { //第一個代值
-                        itemNamePhoto_img = $('#' + itemName + 'Photo_img_' + index + '');
-                        itemNameImg = $('#' + itemName + 'Img_' + index + '');
-                        itemNameUpload = $('#' + itemName + 'Upload_' + index + '');
-                        //                        itemNameFile = $('[name="'+itemName+'File_'+index+'');
-                        itemNameView = $('#' + itemName + 'View_' + index + '');
-                        //                        itemName_view = $('#'+itemName+'_view_'+index+'');
-                        itemNameViewImg = $('#' + itemName + 'ViewImg_' + index + '');
-                        fileItemName = $('#' + itemName + '_' + index + ' .file-zh');
+                    if(index == 0) {   //第一個代值
+                        itemNamePhoto_img = $('#'+itemName+'Photo_img_'+index+'');
+                        itemNameImg = $('#'+itemName+'Img_'+index+'');
+                        itemNameUpload = $('#'+itemName+'Upload_'+index+'');
+//                        itemNameFile = $('[name="'+itemName+'File_'+index+'');
+                        itemNameView = $('#'+itemName+'View_'+index+'');
+//                        itemName_view = $('#'+itemName+'_view_'+index+'');
+                        itemNameViewImg = $('#'+itemName+'ViewImg_'+index+'');
+                        fileItemName = $('#'+itemName+'_'+index+' .file-zh');
+						
+						//2016-07-29 added by titan 長預設值的時候多加上判斷是註冊單或低收入戶才有下一個按鈕
+						if(itemName == 'lowIncome' || itemName == 'register') {
+				            //如果是最後一個,就再多長一個"上傳更多"的li
+							if((docLen-1) == index){
+								var tr = $('#'+itemName+'_'+index);
+								var newTr = addNewFile(tr, itemName, docLen,'上傳更多');
 
-                        if (itemName == 'lowIncome' || itemName == 'register') {
-                            //如果是最後一個,就再多長一個"上傳更多"的li
-                            if ((docLen - 1) == index) {
-                                var tr = $('#' + itemName + '_' + index);
-                                var newTr = addNewFile(tr, itemName, docLen, '上傳更多');
+		                        itemNamePhoto_img_more = newTr.find('#'+itemName+'Photo_img_'+docLen+'');
+		                        itemNameImg_more = newTr.find('#'+itemName+'Img_'+docLen+'');
+		                        itemNameUpload_more = newTr.find('#'+itemName+'Upload_'+docLen+'');
+		                        itemNameView_more = newTr.find('#'+itemName+'View_'+docLen+'');
+		                        itemNameViewImg_more = newTr.find('#'+itemName+'ViewImg_'+docLen+'');
+		                        fileItemName_more = newTr.find('#'+itemName+'_'+docLen+' .file-zh');
+								
+								itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
+			                    fileItemName_more.text(item);
+							}
+				        }
+				        
+						
 
-                                itemNamePhoto_img_more = newTr.find('#' + itemName + 'Photo_img_' + docLen + '');
-                                itemNameImg_more = newTr.find('#' + itemName + 'Img_' + docLen + '');
-                                itemNameUpload_more = newTr.find('#' + itemName + 'Upload_' + docLen + '');
-                                itemNameView_more = newTr.find('#' + itemName + 'View_' + docLen + '');
-                                itemNameViewImg_more = newTr.find('#' + itemName + 'ViewImg_' + docLen + '');
-                                fileItemName_more = newTr.find('#' + itemName + '_' + docLen + ' .file-zh');
-
-                                itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
-                                fileItemName_more.text(item);
-                            }
-                        }
-                    } else { //第一個以後用動態長的
-                        console.debug('長下一個：' + $('#' + itemName + '_' + (index - 1)).length);
-                        var tr = $('#' + itemName + '_' + (index - 1));
+                    }
+                    else{    //第一個以後用動態長的
+                        console.debug('長下一個：' + $('#'+itemName+'_'+(index-1)).length);
+                        var tr = $('#'+itemName+'_'+(index-1));
                         console.debug(tr);
                         console.debug(tr.html());
 
-                        var newTr = addNewFile(tr, itemName, index, '修改檔案');
+                        var newTr = addNewFile(tr, itemName, index,'修改檔案');
 
-                        itemNamePhoto_img = newTr.find('#' + itemName + 'Photo_img_' + index + '');
-                        itemNameImg = newTr.find('#' + itemName + 'Img_' + index + '');
-                        itemNameUpload = newTr.find('#' + itemName + 'Upload_' + index + '');
-                        itemNameView = newTr.find('#' + itemName + 'View_' + index + '');
-                        itemNameViewImg = newTr.find('#' + itemName + 'ViewImg_' + index + '');
-                        fileItemName = newTr.find('#' + itemName + '_' + index + ' .file-zh');
+                        itemNamePhoto_img = newTr.find('#'+itemName+'Photo_img_'+index+'');
+                        itemNameImg = newTr.find('#'+itemName+'Img_'+index+'');
+                        itemNameUpload = newTr.find('#'+itemName+'Upload_'+index+'');
+                        itemNameView = newTr.find('#'+itemName+'View_'+index+'');
+                        itemNameViewImg = newTr.find('#'+itemName+'ViewImg_'+index+'');
+                        fileItemName = newTr.find('#'+itemName+'_'+index+' .file-zh');
+						
+						//如果是最後一個,就再多長一個"上傳更多"的li
+						if((docLen-1) == index){
+							var tr = $('#'+itemName+'_'+index);
+							var newTr = addNewFile(tr, itemName, docLen,'上傳更多');
 
-                        //如果是最後一個,就再多長一個"上傳更多"的li
-                        if ((docLen - 1) == index) {
-                            var tr = $('#' + itemName + '_' + index);
-                            var newTr = addNewFile(tr, itemName, docLen, '上傳更多');
-
-                            itemNamePhoto_img_more = newTr.find('#' + itemName + 'Photo_img_' + docLen + '');
-                            itemNameImg_more = newTr.find('#' + itemName + 'Img_' + docLen + '');
-                            itemNameUpload_more = newTr.find('#' + itemName + 'Upload_' + docLen + '');
-                            itemNameView_more = newTr.find('#' + itemName + 'View_' + docLen + '');
-                            itemNameViewImg_more = newTr.find('#' + itemName + 'ViewImg_' + docLen + '');
-                            fileItemName_more = newTr.find('#' + itemName + '_' + docLen + ' .file-zh');
-
-                            itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
-                            fileItemName_more.text(item);
-                        }
+	                        itemNamePhoto_img_more = newTr.find('#'+itemName+'Photo_img_'+docLen+'');
+	                        itemNameImg_more = newTr.find('#'+itemName+'Img_'+docLen+'');
+	                        itemNameUpload_more = newTr.find('#'+itemName+'Upload_'+docLen+'');
+	                        itemNameView_more = newTr.find('#'+itemName+'View_'+docLen+'');
+	                        itemNameViewImg_more = newTr.find('#'+itemName+'ViewImg_'+docLen+'');
+	                        fileItemName_more = newTr.find('#'+itemName+'_'+docLen+' .file-zh');
+							
+							itemNameUpload_more.get(0).firstChild.nodeValue = '上傳更多';
+		                    fileItemName_more.text(item);
+						}
                     }
 
                     itemNamePhoto_img.attr("src", fileURL);
                     itemNameImg.text(fileName);
-                    itemNameUpload.get(0).firstChild.nodeValue = '修改檔案';
+					itemNameUpload.get(0).firstChild.nodeValue = '修改檔案';
                     itemNameUpload.parent().removeClass('file-upload').addClass('file-modify');
                     itemNameView.addClass('active');
                     itemNameViewImg.attr("src", fileURL);
-                    if (index !== 0) {
-                        fileItemName.text(item);
-                    }
-                    /*else{
+					if(index !== 0 ){
+						fileItemName.text(item);
+					}
+					/*else{
 						var itemArr = ['<td class="file-zh">註冊繳費單<span>（含註冊繳費單、住宿費用）</span></td>']; 
 						fileItemName.append(itemArr.join(''));
 					}*/
-
-
-                    itemNameUpload.parents('td.file-modify').attr('docid', docId);
+                    
+					
+					itemNameUpload.parents('td.file-modify').attr('docid',docId);
                 }
 
             });
         }
-
+		
     });
 
-    //綁預覽事件
+	//綁預覽事件
     /*newTr.find('.file-view a').off('click').on('click', function() {
         previewClickHandler($(this));
     });*/
-
+	
 }
 
 function setEducationText(info, div) {
@@ -6615,11 +6607,11 @@ function apply5_1_2(content) {
 
 }
 
-/*function resetApply() {
+function resetApply() {
     alert('您已超過一次性密碼有效時間，請重新操作。');
 
     //到前一步!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-}*/
+}
 
 function apply5_2(content) {
     console.debug(content);
@@ -6934,16 +6926,18 @@ function apply5_2(content) {
 
     var timeSelected = content.timeSelected;
     var amORpm = 'AM';
-    if (parseInt(timeSelected) < 900) { //決定要顯示'AM'或'PM'
+    if (parseInt(timeSelected) < 900 ) { //決定要顯示'AM'或'PM'
         amORpm = 'PM';
     }
 
     var endTime = parseInt(timeSelected) + 100;
     if (endTime == 200) {
         endTime = '0200';
-    } else if (endTime < 999) {
+    }
+    else if(endTime < 999) {
         endTime = '0' + endTime;
-    } else {
+    }
+    else {
         endTime += '';
     }
 
@@ -7024,24 +7018,24 @@ function apply5_2(content) {
         setLoanInformation(priceObj, elementObj);
     }
     /*申貸金額 (end)*/
-
+    
     /*要攜帶的文件(start)*/
     var signIOU = content.signBill; //是否需要簽立借據(須同時符合同一學程/同一學校/同一連帶保證人/同一申貸額度)
     var appoName = content.appoName; //本人姓名
     var loansPrice = content.loanPrice;
     var freedomLife = content.freedom.life;
     var accordingLife = content.accordingToBill.life;
-
+    
     var objList = []; //要攜帶的物品
     var objString = '';
-
-    console.debug(signIOU);
+	
+	console.debug(signIOU);
 
     if (signIOU == 'N') { //不需要簽立借據者
-        console.debug('NNNNNN');
+	console.debug('NNNNNN');      
         objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li><li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>');
-        objString = objString + '<li><p class="nasi">註冊繳費單/住宿費用單據</p></li><li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>';
-
+		objString = objString + '<li><p class="nasi">註冊繳費單/住宿費用單據</p></li><li><p class="nasi">本人(' + appoName + ')之身分證及印章</p></li>';
+		
         //判斷是否需要攜帶"政府機關出具之低收入戶或中低收入戶證明"
         if (loansPrice == '1') {
             if (accordingLife > 0) {
@@ -7055,30 +7049,31 @@ function apply5_2(content) {
             }
         }
 
-    } else { //需要簽立借據者
-        console.debug('YYYYYY');
+    } 
+	else { //需要簽立借據者
+	console.debug('YYYYYY');
         var allObj = getCarryObj(content);
-
+        
         console.debug(allObj);
 
         //必帶註冊繳費單/住宿繳費單,所以先塞進array中
         objList.push('<li><p class="nasi">註冊繳費單/住宿費用單據</p></li>');
         $.each(allObj, function(i, obj) {
             objList.push('<li><p class="nasi">' + obj + '</p></li>');
-            objString = objString + '<li><p class="nasi">' + obj + '</p></li>';
+			objString = objString + '<li><p class="nasi">' + obj + '</p></li>';
         });
     }
-
+    
     //將要攜帶的物品塞入hidden中
     $('[name="objListHidden"]').val(objString);
-
+    
     console.debug(objList);
     console.debug(objString);
     /*要攜帶的文件(end)*/
 }
 
-function determineRelationship(code) {
-    switch (code) {
+function determineRelationship(code){
+    switch (code){
         case '4A':
             return '兄弟';
         case '4B':
@@ -7177,8 +7172,8 @@ function apply6_1(content) {
 }
 
 function apply6_2(content) {
-    console.debug(content);
-    var signIOU = content.signBill;
+	console.debug(content);
+	var signIOU = content.signBill;
     var applyDate = new Date();
     var applyYear = applyDate.getFullYear();
     var applyMonth = applyDate.getMonth() + 1;
@@ -7202,15 +7197,15 @@ function apply6_2(content) {
     appHours.val(applyHours);
     appMinutes.val(applyMinutes);
     appSeconds.val(applySeconds);
-
-    //如果須簽立借據的情形,須增加[並連同保證人]
-    if (signIOU == 'Y') {
-        $('#hasIOU').show();
-    }
-    //如果不須簽立借據的情形,不須增加[並連同保證人]
-    else if (signIOU == 'N') {
-        $('#hasNoIOU').show();
-    }
+	
+	//如果須簽立借據的情形,須增加[並連同保證人]
+	if(signIOU == 'Y'){
+		$('#hasIOU').show();
+	}
+	//如果不須簽立借據的情形,不須增加[並連同保證人]
+	else if(signIOU == 'N'){
+		$('#hasNoIOU').show();
+	}
 
     //將一位數的日期補上0
     checkArr.push(applyMonth, applyDay, applyHours, applyMinutes, applySeconds);
@@ -7252,16 +7247,16 @@ function apply6_2(content) {
     nameAndAddr.text(branchName + '(' + branchAddr + ')');
     tel.text(branchTel);
     branchReservation.text(reservationTime);
-
-    //將需要攜帶的文件顯示在網頁上
+	
+	//將需要攜帶的文件顯示在網頁上
     var list = $('#carryObjList');
 
-    console.debug(objList);
-    var objArr = [];
-    objArr.push(objList);
+console.debug(objList);
+	var objArr = [];
+	objArr.push(objList);
 
     list.append(objArr.join(''));
-
+	
     //若點選"特殊情形證明文件"
     $('#SpecialStatus').on('click', function() {
         GardenUtils.display.popup({
@@ -7553,7 +7548,7 @@ function showFamilyInformation(adult, show, gua, itax, change, record) {
                         switch (identityStatus) {
                             case '1': //塞tag至array,以利之後判斷要顯示什麼樣的字串
                                 stringStatus_f[0] = true;
-                                guarantorText = guarantorText + '父親';
+                                guarantorText = guarantorText + '';
                                 break;
                             case '3': //顯示"是否為合計所得對象"的radio
                                 $('#incomeTaxRadio').show();

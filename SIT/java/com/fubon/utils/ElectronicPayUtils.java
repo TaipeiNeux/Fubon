@@ -42,7 +42,8 @@ public class ElectronicPayUtils {
             jsonObject.put("isSuccess","N");
             jsonObject.put("details", details);
 
-            if(loginUserBean != null) {
+            if(loginUserBean != null) 
+            {
                 String userId = loginUserBean.getUserId();
                 String isEtabs = ProjUtils.isEtabs(loginUserBean) ? "Y" : "N";
 
@@ -58,7 +59,8 @@ public class ElectronicPayUtils {
 
                     for(int i=1;i<=12;i++) {
                         JSONObject tmpjson = new JSONObject();
-                        if(StringUtils.isNotEmpty(d.getValue("ACNO_SL" + i).trim())) {
+                        if(StringUtils.isNotEmpty(d.getValue("ACNO_SL" + i).trim())) 
+                        {
                             tmpjson.put("account", d.getValue("ACNO_SL" + i).trim());// 94 + 就學帳號
                             tmpjson.put("principal", d.getValue("PRN_AMT" + i).trim());// 應繳本金
                             tmpjson.put("interest", d.getValue("INT_AMT" + i).trim());// 應繳利息
@@ -69,6 +71,7 @@ public class ElectronicPayUtils {
                         }
 
                     }
+                   
 
                     String date = d.getValue("DATE").trim();// 資料產生日期(YYYMMDD)
                     String deadline = d.getValue("PAY_END_DATE").trim();// 繳款期限(YYYMMDD)
@@ -85,9 +88,7 @@ public class ElectronicPayUtils {
                     jsonObject.put("deadline", formateDate(deadline,7,"yyyy/MM/dd"));// 繳款期限(YYYMMDD)
                     jsonObject.put("sum", sum);// 本期應繳總金額
 
-
-
-                    /**產生條碼*****************************************************************/
+                     /**產生條碼*****************************************************************/
 
                     //超商條碼一: 繳款期限第二碼開始取六碼+"6CH"
                     //超商條碼二: 超商條碼帳號
@@ -95,6 +96,11 @@ public class ElectronicPayUtils {
                     String code1 = deadline.substring(1) + "6CH";
                     String code2 = acNoMrk;
                     String code3 = date.substring(2, 6) + checkCode + StringUtils.leftPad(sum, 9, "0");
+                    
+                    ////2016/08/12 for pdf
+                    jsonObject.put("code1", code1);
+                    jsonObject.put("code2", code2);
+                    jsonObject.put("code3", code3);
 
                     Map<String, String> barcodeMap = new LinkedHashMap<String, String>();
                     barcodeMap.put("barcode1", getBarCodeImg(code1));
@@ -108,7 +114,9 @@ public class ElectronicPayUtils {
                 }
 
             }
-        }catch(Exception e) {
+        }
+        catch(Exception e) 
+        {
             e.printStackTrace();
         }
 
@@ -160,7 +168,8 @@ public class ElectronicPayUtils {
             canvas.finish();
             baos.close();
             barcode = datahead + DatatypeConverter.printBase64Binary(baos.toByteArray());
-        } catch (IOException e) {
+        } catch (IOException e) 
+        {
             barcode = "error=>" + e.getMessage();
         }
         return barcode;
@@ -171,7 +180,8 @@ public class ElectronicPayUtils {
      * @param date (YYYMMDD)
      * @return yyyy/MM/dd
      */
-    private static String formateDate(String date,int len,String format) {
+    private static String formateDate(String date,int len,String format) 
+    {
         String formateDate;
         try {
             int year = Integer.parseInt(date.substring(0,3)) + 1911;

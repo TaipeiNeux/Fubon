@@ -1,13 +1,17 @@
 package com.fubon.flow.impl;
 
+import com.fubon.utils.DBUtils;
 import com.neux.garden.authorization.LoginUserBean;
 import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
+import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -15,6 +19,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.json.JSONObject;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -166,6 +171,45 @@ public class ApplyOnline5 implements ILogic {
 
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        HttpServletRequest req = queryStringInfo.getRequest();
+        LoginUserBean loginUserBean = ProjUtils.getLoginBean(req.getSession());
+        String userId = loginUserBean.getUserId();
+
+        IDao dao = DaoFactory.getDefaultDao();
+        String apply4DraftXML = FlowUtils.getDraftData(userId, "apply", "apply_online_4", dao);
+
+        Document apply4Doc = DocumentHelper.parseText(apply4DraftXML);
+        Element applyOnline4Root = apply4Doc.getRootElement();
+        if(applyOnline4Root != null) {
+
+            String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+
+            String dateSelected = applyOnline4Root.element("dateSelected").getText();
+
+            String date8 = DateUtil.convertDateTo14(dateSelected).substring(0,8);
+
+            GardenLog.log(GardenLog.DEBUG, "對保分行[時間=" + date8 + "]");
+
+            //如果不是SIT，儲存時要額外檢查是否預約時間是否為例假日
+            if (!"sit".equalsIgnoreCase(env)) {
+                List<String> noBusinessDays = new ArrayList<String>();
+                DBUtils.getNoBusinessDay(date8.substring(0, 4), date8.substring(4, 6), noBusinessDays);
+
+                for(String day : noBusinessDays) {
+
+                    GardenLog.log(GardenLog.DEBUG,"對保分行[假日="+day+"]");
+
+                    day = DateUtil.convertDateTo14(day).substring(0,8);
+
+                    if(day.equalsIgnoreCase(date8)) {
+
+                        GardenLog.log(GardenLog.DEBUG,"對保時間為假日,客戶的：" + date8 + ",Oracle的：" + day);
+
+                        throw new Exception("您所申請的對保時間為假日，請重新挑選對保時間。");
+                    }
+                }
+
+            }
+        }
     }
 }

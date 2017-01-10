@@ -6,9 +6,17 @@ import com.fubon.flow.ILogic;
 import com.fubon.mark.MarkBean;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.fubon.webservice.WebServiceAgent;
+import com.fubon.webservice.bean.RQBean;
+import com.fubon.webservice.bean.RSBean;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
+import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+
+import java.util.Calendar;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -29,6 +37,8 @@ public class PersonalInfo2_1 implements ILogic {
         String userId = loginUserBean.getUserId();
 
         IDao dao = DaoFactory.getDefaultDao();
+        
+        String mobile="";
 
         String isRecord = ProjUtils.isPayHistory(userId,dao) ? "Y" : "N",id = "",name = "",marryStatus = "",cellPhone = "", email = "";
         String domicilePhoneRegionCode = "", domicilePhonePhone = "";
@@ -76,6 +86,30 @@ public class PersonalInfo2_1 implements ILogic {
         if(root.element("zipCode") != null) teleAddressZipCode = root.element("zipCode").getText();
 
         if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
+        
+        
+        
+            String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+            if(!"sit".equalsIgnoreCase(env)) {
+                RQBean rqBean54 = new RQBean();
+                rqBean54.setTxId("EB032154");
+                rqBean54.addRqParam("CUST_NO",userId);
+
+                RSBean rsBean54 = WebServiceAgent.callWebService(rqBean54);
+
+                if(rsBean54.isSuccess()) {
+                    Document doc = DocumentHelper.parseText(rsBean54.getTxnString());
+
+                    mobile = ProjUtils.get032154Col(doc,"8001");
+
+                    //行動電話抓8001
+                    if(StringUtils.isNotEmpty(mobile)) {
+                    	cellPhone = mobile;
+                    }
+
+                }
+            }
+       
 
 //        if(StringUtils.isNotEmpty(birthday)) {
 //            birthday = StringUtils.replace(birthday,"/","");
@@ -105,6 +139,16 @@ public class PersonalInfo2_1 implements ILogic {
         birthDay = StringUtils.leftPad(birthDay,2,"0");
 
         String birthday = birthYear + birthMonth + birthDay;
+        
+//        String now = DateUtil.getTodayString();        
+//        String b = DateUtil.addDate(now,Calendar.YEAR,-1911);
+//        b=b.substring(0,8);
+//        boolean checkdate =Double.parseDouble(b.substring(0,8)) >= Double.parseDouble(birthday);
+//      
+//        if(!checkdate)
+//        {
+//        	throw new Exception("生日需早於今日");
+//        }
 
         //裝值到content
         content.put("isRecord",isRecord);

@@ -1,5 +1,6 @@
 package com.fubon.flow.impl;
 
+import com.fubon.utils.DBUtils;
 import com.fubon.utils.MessageUtils;
 import com.fubon.utils.bean.MailBean;
 import com.neux.garden.authorization.LoginUserBean;
@@ -10,6 +11,7 @@ import com.fubon.utils.ProjUtils;
 import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.JSPUtils;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
@@ -22,9 +24,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -80,6 +80,8 @@ public class Apply6_2 implements ILogic {
         String objListHidden = "";
         String signBill = "";
         boolean isApply = false;
+
+        //System.out.println("@@@@@11111");
 
         //申請完了，要直接寫入AplyMemberTuitionLoanDtl
         String result = "申請成功-對保分行";
@@ -144,8 +146,10 @@ public class Apply6_2 implements ILogic {
 
             String applicantAdult = apply1_2Root.element("applicantAdult").getText();
             String userMarriedHidden = apply1_2Root.element("userMarriedHidden").getText();
-            String familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
-            String familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
+            // String familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
+            // String familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
+
+            // System.out.println("@@@@@@@@@"+familyStatusLevel1+familyStatusLevel2);
 
             String branchId = apply4Root.element("idSelected").getText();
             String dateSelected = apply4Root.element("dateSelected").getText();
@@ -188,7 +192,7 @@ public class Apply6_2 implements ILogic {
 
             content.put("reservation",reservation);
 
-            //依照申請人取得線上續貸資料
+            //依照申請人`取得線上續貸資料
             ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
 
 
@@ -296,12 +300,13 @@ public class Apply6_2 implements ILogic {
         mailBean.addResultParam("result",(StringUtils.isEmpty(errorCode) ? "<img src=\"{host}/img/na-14.png\">您已成功送出申請資料" : "<img src=\"{host}/img/na-16.png\">送出申請資料失敗("+errorCode+")"+errorMsg));
         mailBean.addResultParam("document",objListHidden);
         mailBean.addResultParam("signBill","Y".equals(signBill) ? "並連同保證人" : "");
-        MessageUtils.sendEmail(mailBean);
+        MessageUtils.sendEmail(mailBean,userId);
 
     }
 
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+
     }
 }

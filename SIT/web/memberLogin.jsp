@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
-<%
-    request.setCharacterEncoding("utf-8");
-
-    String action = request.getParameter("action");
+<% 
+request.setCharacterEncoding( "utf-8"); 
+String action = request.getParameter("action");
     if("index".equalsIgnoreCase(action)) {
         request.getSession().setAttribute("loginSuccessPage","index.jsp");
     }
@@ -22,7 +21,7 @@
     </div>
 
     <div class="contentArea">
-<form id="mainForm">
+
         <div class="memberArea">
             <section class="bannerArea">
 
@@ -82,21 +81,21 @@
                   <img src="img/fu-08.png" alt="">
                 </span>
                             <input name="studentId" placeholder="身分證字號" type="text">
-                            <label class="error error-msg"></label>
+							<label class="error error-msg"></label>
                         </div>
                         <div class="inputArea">
                                             <span>
                   <img src="img/fu-09.png" alt="">
                 </span>
                             <input name="studentCode" placeholder="使用者代碼" type="password">
-                            <label class="error error-msg"></label>
+							<label class="error error-msg"></label>
                         </div>
                         <div class="inputArea">
                                             <span>
                   <img src="img/fu-10.png" alt="">
                 </span>
                             <input name="studentPassword" placeholder="使用者密碼" type="password">
-                            <label class="error error-msg"></label>
+							<label class="error error-msg"></label>
                         </div>
                         <div class="loginBox">
                             <a href="forgetPassword.jsp">忘記代碼/密碼</a>
@@ -115,7 +114,7 @@
                 </div>
             </div>
         </div>
-</form>
+
     </div>
 
 

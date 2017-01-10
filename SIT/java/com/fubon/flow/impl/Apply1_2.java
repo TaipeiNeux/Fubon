@@ -7,7 +7,12 @@ import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -28,10 +33,11 @@ import org.json.JSONObject;
 public class Apply1_2 implements ILogic {
 
     @Override
-    public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception {
+    public void getDraftData(JSONObject content, Document draftData, JSPQueryStringInfo queryStringInfo) throws Exception 
+    {
 
         LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
-        String userId = loginUserBean.getUserId();
+        String userId = loginUserBean.getUserId();       
 
         String birthday = "",marryStatus = "",familyStatusLevel1 = "",familyStatusLevel2 = "" , familyStatusLevel1Text = "", familyStatusLevel2Text = "";
 
@@ -40,7 +46,8 @@ public class Apply1_2 implements ILogic {
         //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
         DataObject aplyMemberData = null;
         aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-        if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) {
+        if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) 
+        {
         	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
         }
         
@@ -76,6 +83,7 @@ public class Apply1_2 implements ILogic {
             monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
             dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
             birthday = yearBirthday + monthBirthday + dayBirthday;
+        
             marryStatus = step1Root.element("marryStatus").getText();
         }
         else if (aplyMemberData != null){
@@ -85,13 +93,15 @@ public class Apply1_2 implements ILogic {
             String monthBirthday = birthday.substring(3,5);
             String dayBirthday = birthday.substring(5,7);
             birthday = yearBirthday + monthBirthday + dayBirthday;
+            
             marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
         }
-        
-
-        setLevelText(LevelText, marryStatus, familyStatusLevel1, familyStatusLevel2);
+        boolean isAdult = ProjUtils.isAdult(birthday);
+     
+        setLevelText(LevelText, marryStatus, familyStatusLevel1, familyStatusLevel2,isAdult);
         familyStatusLevel1Text = LevelText.getString("familyStatusLevel1Text");
         familyStatusLevel2Text = LevelText.getString("familyStatusLevel2Text");
+      
 
         content.put("birthday",birthday);
         content.put("marryStatus",marryStatus);
@@ -106,8 +116,9 @@ public class Apply1_2 implements ILogic {
 
     }
 
-    public void setLevelText(JSONObject LevelText, String marryStatus, String familyStatusLevel1, String familyStatusLevel2) throws JSONException {
+    public void setLevelText(JSONObject LevelText, String marryStatus, String familyStatusLevel1, String familyStatusLevel2,boolean isAdult) throws JSONException {
         String familyStatusLevel1Text = "", familyStatusLevel2Text = "";
+       
 
         if(StringUtils.isNotEmpty(familyStatusLevel1) && StringUtils.isNotEmpty(familyStatusLevel2)) {
             if(marryStatus.equalsIgnoreCase("Y")){
@@ -176,20 +187,34 @@ public class Apply1_2 implements ILogic {
                 switch (Integer.valueOf(familyStatusLevel1)) {
                     case 1:
                         familyStatusLevel1Text = "父母雙方健在且婚姻關係持續中";
+                       
+                        
+                       
+                       
                         switch (Integer.valueOf(familyStatusLevel2)) {
                             case 1:
                                 familyStatusLevel2Text = "父母雙方皆擔任連帶保證人";
                                 break;
                             case 2:
+                            	if(!isAdult)
                                 familyStatusLevel2Text = "父親因特殊情形，無法擔任連帶保證人";
+                            	else
+                            	familyStatusLevel2Text = "父親擔任連帶保證人";
                                 break;
                             case 3:
+                            	if(!isAdult)
                                 familyStatusLevel2Text = "母親因特殊情形，無法擔任連帶保證人";
+                            	else                            		
+                            	familyStatusLevel2Text = "母親擔任連帶保證人";
                                 break;
                             case 4:
+                            	if(!isAdult)
                                 familyStatusLevel2Text = "非父母之第三人監護";
+                            	else
+                            	familyStatusLevel2Text = "第三人擔任連帶保證人";
                                 break;
                         }
+                        
                         break;
                     case 2:
                         familyStatusLevel1Text = "父母離婚";
@@ -204,8 +229,12 @@ public class Apply1_2 implements ILogic {
                                 familyStatusLevel2Text = "母親監護";
                                 break;
                             case 4:
-                                familyStatusLevel2Text = "非父母之第三人監護";
+                                if(!isAdult)
+                                    familyStatusLevel2Text = "非父母之第三人監護";
+                                else
+                                    familyStatusLevel2Text = "第三人擔任連帶保證人";
                                 break;
+
                         }
                         break;
                     case 3:
@@ -228,8 +257,10 @@ public class Apply1_2 implements ILogic {
                 }
             }
         }
-
+       
         LevelText.put("familyStatusLevel1Text", familyStatusLevel1Text);
         LevelText.put("familyStatusLevel2Text", familyStatusLevel2Text);
+        
+       
     }
 }
