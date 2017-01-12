@@ -626,7 +626,9 @@ public class DataServlet extends HttpServlet {
 					boolean isClear = checkAccountDetail(doc);
 					if (isClear) {
 						isAccountClear = "Y";
-					}
+					} else {
+                        isAccountClear = "N";
+                    }
 
 				}
 			}
