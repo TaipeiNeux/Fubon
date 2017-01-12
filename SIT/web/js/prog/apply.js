@@ -208,10 +208,6 @@ function apply1_1_valid() {
         msg: '通訊地址',
         group: 'addr'
     }, ];
-	
-	var validChineseArray = [
-		
-	];
 
     //Foolproof
     var isRecord = $('[name="isRecord"]').val();
@@ -241,13 +237,6 @@ function apply1_1_valid() {
             name: 'domicileLiner',
             msg: '戶籍地址',
             group: 'domicileAddr'
-        });
-		
-		validChineseArray.push({
-            name: 'name',
-            msg: '姓名',
-            hasHiddenCode: true,
-            hiddenTarget: $('input[name="name_hidden"]').val()
         });
     }
     //string
@@ -329,7 +318,12 @@ function apply1_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="mobile_hidden"]').val()
         }],
-        validChinese: validChineseArray,
+        validChinese: [{
+            name: 'name',
+            msg: '姓名',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="name_hidden"]').val()
+        }],
         errorDel: [],
         customizeFun: function(customizeValidResult) {
             //檢查全部的地址字數是否為39個字以內
@@ -4304,6 +4298,8 @@ function apply3_1(content) {
     var OnTheJob = content.OnTheJob;
     var departmentVal = content.department;
     //var studentId = content.student_id;
+    var eduYear = content.eduYear;
+    var semester = content.semester;
 
     //下拉式選單
     //教育階段
@@ -4505,14 +4501,14 @@ function apply3_1(content) {
     gradeSelect.on('change', function() {
         gradePicked = $(this).find('option:selected');
         gradeVal = gradePicked.val();
-        computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year);
+        computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year, eduYear);
     });
 
     //學校
     nameSelect.on('change', function() {
         schoolPicked = $(this).find('option:selected');
         year = schoolPicked.attr('class');
-        computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year);
+        computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year, eduYear);
     });
 
     //入學日期(年)
@@ -4527,7 +4523,7 @@ function apply3_1(content) {
             }
         } else {
             $('#overYear-msg').hide();
-            computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year);
+            computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year, eduYear);
         }
     });
 
@@ -4538,7 +4534,7 @@ function apply3_1(content) {
             month_enter = '0' + student_month_enter.val();
             student_month_enter.val(month_enter);
         }
-        computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year);
+        computeGraduation(student_year_enter.val(), student_month_enter.val(), gradeVal, year, eduYear);
     });
 
     var eStage = content.EducationStage;
@@ -4593,7 +4589,7 @@ function apply3_1(content) {
 }
 
 //計算畢業日期
-function computeGraduation(student_year_enterString, student_month_enterString, gradeVal, year) {
+function computeGraduation(student_year_enterString, student_month_enterString, gradeVal, year, eduYear) {
     var gDate = $('#gDate');
     var gArray = [];
     var grYear = "";
@@ -4618,7 +4614,8 @@ function computeGraduation(student_year_enterString, student_month_enterString, 
                          gradeVal = parseInt(gradeVal);
                          var more = (year - gradeVal > 0) ? year - gradeVal : 0;*/
                         var extraYear = ((year - gradeVal + 1) < 1) ? 1 : (year - gradeVal + 1);
-                        grYear = "" + (currentYear + extraYear);
+                        //grYear = "" + (currentYear + extraYear);
+                        grYear = "" + (parseInt(eduYear) + extraYear);
                         grMonth = "06";
 
                         gArray.length = 0;
@@ -4642,6 +4639,7 @@ function computeGraduation(student_year_enterString, student_month_enterString, 
     } else {
         graduationSetZero(grYear, grMonth, year_graduation_hidden, month_graduation_hidden);
     }
+
 
     if (student_year_enterInt == grYear) {
         if (student_month_enterString > parseInt(grMonth)) {
@@ -5432,6 +5430,7 @@ function apply4_2(content) {
                             //var date = new Date('2016-09-30 23:59:59');
                             //var date = new Date(2016,10,30,23,59,59);
 
+							var date = new Date(2017, 1, 24, 23, 59, 59);
 
                             if(compressDate - date > 0) {
                                 $('td [data-date="' + data_date + '"]').addClass('fc-holiday');

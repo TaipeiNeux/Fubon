@@ -54,8 +54,9 @@ public class AuthServlet extends HttpServlet
 //        sessionMap.put(id,sessionLoginBean);
 
         DataObject sessionTable = DaoFactory.getDefaultDataObject("session_table");
-        sessionTable.setValue("id",sessionLoginBean.getId());
 
+        sessionTable.setValue("id",sessionLoginBean.getId());
+//        sessionTable.setValue("id",sessionLoginBean.getSessionId());
 
         IDao dao = DaoFactory.getDefaultDao();
 
@@ -368,7 +369,7 @@ public class AuthServlet extends HttpServlet
                                                 GardenLog.log(GardenLog.DEBUG,"actSts = " + actSts);
                                                 String specSts = foo.elementText("SPEC_STS").trim();
                                                 GardenLog.log(GardenLog.DEBUG,"specSts = " + specSts);
-                                                if(Integer.valueOf(actSts)>1 || StringUtils.isNotEmpty(specSts)) isArrearChk++;
+                                                if(Integer.valueOf(actSts)>2 || StringUtils.isNotEmpty(specSts)) isArrearChk++;
                                             }
                                         }
                                     }
@@ -500,7 +501,7 @@ public class AuthServlet extends HttpServlet
 
             }
             else {
-                jsonObject.put("errorMsg", "身分證字號驗證錯誤");
+                jsonObject.put("errorMsg", "身分證字號或使用者代碼錯誤");
             }
 
         }catch(Exception e) {
@@ -620,6 +621,7 @@ public class AuthServlet extends HttpServlet
 
 //                GardenLog.log(GardenLog.DEBUG,"current = " + queryStringInfo.getRequest().getSession().getId());
 //                GardenLog.log(GardenLog.DEBUG,"sessionId = " + sessionId);
+
 
                 //如果驗證的sessionid跟目前的不同，則踢除
                 if(sessionLoginBean != null && !queryStringInfo.getRequest().getSession().getId().equals(sessionId)) {

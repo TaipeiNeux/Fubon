@@ -488,7 +488,9 @@ public class Apply2 implements ILogic {
 		String Third_yearBirthday = "", Third_monthBirthday = "", Third_dayBirthday = "";
 		String Fa_yearBirthday = "", Fa_monthBirthday = "", Fa_dayBirthday = "";
 		String spouse_yearBirthday = "", spouse_monthBirthday = "", spouse_dayBirthday = "";
-		
+
+        String fatherSameAddrHidden = "",motherSameAddrHidden = "";
+
 		DataObject aplyMemberData = null;
 		aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId, dao);
 		if (aplyMemberData == null && ProjUtils.isPayHistory(userId, dao)) {
@@ -579,8 +581,11 @@ public class Apply2 implements ILogic {
 			if (apply2Root.element("spouse_birthday2") != null)
 				spouse_monthBirthday = apply2Root.element("spouse_birthday2").getText();
 			if (apply2Root.element("spouse_birthday4") != null)
-				spouse_dayBirthday = apply2Root.element("spouse_birthday4").getText();	
-			
+				spouse_dayBirthday = apply2Root.element("spouse_birthday4").getText();
+
+            if (apply2Root.element("father_sameAddrHidden") != null)
+                fatherSameAddrHidden = apply2Root.element("father_sameAddrHidden").getText().toString();
+
 			if (apply2Root.element("father_id") != null)
 				father_id = apply2Root.element("father_id").getText();
 			if (apply2Root.element("father_name") != null)
@@ -599,8 +604,11 @@ public class Apply2 implements ILogic {
 			if (apply2Root.element("father_liner_domi") != null)
 				father_liner_domi = apply2Root.element("father_liner_domi").getText();
 			if (apply2Root.element("father_zipCode_domi") != null)
-				father_zipCode_domi = apply2Root.element("father_zipCode_domi").getText();			
-			
+				father_zipCode_domi = apply2Root.element("father_zipCode_domi").getText();
+
+            if (apply2Root.element("mother_sameAddrHidden") != null)
+                motherSameAddrHidden = apply2Root.element("mother_sameAddrHidden").getText().toString();
+
 			if (apply2Root.element("mother_id") != null)
 				mother_id = apply2Root.element("mother_id").getText();
 			if (apply2Root.element("mother_name") != null)
@@ -621,15 +629,15 @@ public class Apply2 implements ILogic {
 				mother_zipCode_domi = apply2Root.element("mother_zipCode_domi").getText();		
 			
 			
-			if(fathercheck.equals("1"))
+			if(fathercheck.equals("1") && !"Y".equalsIgnoreCase(fatherSameAddrHidden))
 			{
 				if(father_id.isEmpty()||father_name.isEmpty()||father_regionCode.isEmpty()||father_phone.isEmpty()||father_mobile.isEmpty()||father_neighborhood_domi.isEmpty()||father_address_domi.isEmpty()||father_liner_domi.isEmpty()||father_zipCode_domi.isEmpty()||Fa_yearBirthday.isEmpty()||Fa_monthBirthday.isEmpty()||Fa_dayBirthday.isEmpty())
-					throw new Exception("請確實填寫父親資料");	
+					throw new Exception("請填寫父親資料");
 			}
-			if(mothercheck.equals("1"))
+			if(mothercheck.equals("1") && !"Y".equalsIgnoreCase(motherSameAddrHidden))
 			{
 				if(mother_id.isEmpty()||mother_name.isEmpty()||mother_regionCode.isEmpty()||mother_phone.isEmpty()||mother_mobile.isEmpty()||mother_neighborhood_domi.isEmpty()||mother_address_domi.isEmpty()||mother_liner_domi.isEmpty()||mother_zipCode_domi.isEmpty()||Ma_yearBirthday.isEmpty()||Ma_monthBirthday.isEmpty()||Ma_dayBirthday.isEmpty())
-					throw new Exception("請確實填寫母親資料");	
+					throw new Exception("請填寫母親資料");
 			}
 			
 			Fa_yearBirthday= StringUtils.leftPad(Fa_yearBirthday,3,"0");
@@ -773,7 +781,7 @@ public class Apply2 implements ILogic {
         int level1 = Integer.valueOf(familyStatusLevel1);
         int level2 = Integer.valueOf(familyStatusLevel2);
 
-        if (marryStatus == "N") { //未婚
+        if ("N".equalsIgnoreCase(marryStatus)) { //未婚
             if (isAdult == false) { //未成年
                 if (level1 == 1) {
                     switch (level2) {

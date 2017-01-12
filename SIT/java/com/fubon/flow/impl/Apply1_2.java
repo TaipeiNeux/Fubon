@@ -5,6 +5,7 @@ import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
+import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.date.DateUtil;
@@ -96,6 +97,9 @@ public class Apply1_2 implements ILogic {
             
             marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
         }
+
+
+        birthday = ProjUtils.toYYYYBirthday(birthday);
         boolean isAdult = ProjUtils.isAdult(birthday);
      
         setLevelText(LevelText, marryStatus, familyStatusLevel1, familyStatusLevel2,isAdult);
@@ -103,7 +107,7 @@ public class Apply1_2 implements ILogic {
         familyStatusLevel2Text = LevelText.getString("familyStatusLevel2Text");
       
 
-        content.put("birthday",birthday);
+        content.put("birthday",ProjUtils.toBirthday(birthday));
         content.put("marryStatus",marryStatus);
         content.put("familyStatusLevel1",familyStatusLevel1);
         content.put("familyStatusLevel2",familyStatusLevel2);
@@ -118,7 +122,12 @@ public class Apply1_2 implements ILogic {
 
     public void setLevelText(JSONObject LevelText, String marryStatus, String familyStatusLevel1, String familyStatusLevel2,boolean isAdult) throws JSONException {
         String familyStatusLevel1Text = "", familyStatusLevel2Text = "";
-       
+
+        GardenLog.log(GardenLog.DEBUG,"marryStatus = " + marryStatus);
+        GardenLog.log(GardenLog.DEBUG,"familyStatusLevel1 = " + familyStatusLevel1);
+        GardenLog.log(GardenLog.DEBUG,"familyStatusLevel2 = " + familyStatusLevel2);
+        GardenLog.log(GardenLog.DEBUG,"isAdult = " + isAdult);
+
 
         if(StringUtils.isNotEmpty(familyStatusLevel1) && StringUtils.isNotEmpty(familyStatusLevel2)) {
             if(marryStatus.equalsIgnoreCase("Y")){
@@ -187,10 +196,7 @@ public class Apply1_2 implements ILogic {
                 switch (Integer.valueOf(familyStatusLevel1)) {
                     case 1:
                         familyStatusLevel1Text = "父母雙方健在且婚姻關係持續中";
-                       
-                        
-                       
-                       
+
                         switch (Integer.valueOf(familyStatusLevel2)) {
                             case 1:
                                 familyStatusLevel2Text = "父母雙方皆擔任連帶保證人";
@@ -220,13 +226,22 @@ public class Apply1_2 implements ILogic {
                         familyStatusLevel1Text = "父母離婚";
                         switch (Integer.valueOf(familyStatusLevel2)) {
                             case 1:
-                                familyStatusLevel2Text = "父母共同監護";
+                                if(!isAdult)
+                                    familyStatusLevel2Text = "父母共同監護";
+                                else
+                                    familyStatusLevel2Text = "父母雙方皆擔任連帶保證人";
                                 break;
                             case 2:
-                                familyStatusLevel2Text = "父親監護";
+                                if(!isAdult)
+                                    familyStatusLevel2Text = "父親監護";
+                                else
+                                    familyStatusLevel2Text = "父親擔任連帶保證人";
                                 break;
                             case 3:
-                                familyStatusLevel2Text = "母親監護";
+                                if(!isAdult)
+                                    familyStatusLevel2Text = "母親監護";
+                                else
+                                    familyStatusLevel2Text = "母親擔任連帶保證人";
                                 break;
                             case 4:
                                 if(!isAdult)
@@ -247,8 +262,16 @@ public class Apply1_2 implements ILogic {
                                 familyStatusLevel2Text = "母親擔任連帶保證人";
                                 break;
                             case 3:
-                                familyStatusLevel2Text = "非父母之第三人監護";
+                                if(!isAdult)
+                                    familyStatusLevel2Text = "非父母之第三人監護";
+                                else
+                                    familyStatusLevel2Text = "父親健在，第三人擔任連帶保證人";
                                 break;
+                            case 4:
+                                if(isAdult){
+                                    familyStatusLevel2Text = "母親健在，第三人擔任連帶保證人";
+                                    break;
+                                }
                         }
                         break;
                     case 4:
