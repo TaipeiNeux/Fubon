@@ -73,30 +73,20 @@ public class LoginFilter implements Filter {
 
             //判斷是否有重覆登入
             String userId = loginUserBean.getUserId();
-//            GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
 
-            SessionLoginBean sessionLoginBean = AuthServlet.getSessionLoginBean(userId);
-            if(sessionLoginBean != null) {
-                String sessionId = sessionLoginBean.getSessionId();
+            if(needLoginSet.contains(page)) {
 
-//                GardenLog.log(GardenLog.DEBUG,"current = " + request.getSession().getId());
-//                GardenLog.log(GardenLog.DEBUG,"sessionId = " + sessionId);
+                SessionLoginBean sessionLoginBean = AuthServlet.getSessionLoginBean(userId);
 
-                //如果驗證的sessionid跟目前的不同，則踢除
-                if(!request.getSession().getId().equals(sessionId)) {
-//                    GardenLog.log(GardenLog.DEBUG,"not match....kick!!");
-                    request.getSession().removeAttribute("loginUserBean");
+                if(sessionLoginBean != null) {
+                    String sessionId = sessionLoginBean.getSessionId();
 
-                    if(needLoginSet.contains(page)) {
-
-//                        System.out.println("page = " + page);
+                    //如果驗證的sessionid跟目前的不同，則踢除
+                    if(!request.getSession().getId().equals(sessionId)) {
+                        request.getSession().removeAttribute("loginUserBean");
 
                         //紀錄要去哪一頁
-//                        GardenLog.log(GardenLog.DEBUG,"set loginSuccessPage = " + page);
                         request.getSession().setAttribute("loginSuccessPage",page);
-
-//                GardenLog.log(GardenLog.DEBUG,"page = " + request.getSession().getAttribute("loginSuccessPage"));
-
                         response.sendRedirect("memberLogin.jsp");
                     }
                     else {
@@ -106,10 +96,39 @@ public class LoginFilter implements Filter {
                 else {
                     filterChain.doFilter(servletRequest,servletResponse);
                 }
+
+
             }
             else {
                 filterChain.doFilter(servletRequest,servletResponse);
             }
+
+
+//            SessionLoginBean sessionLoginBean = AuthServlet.getSessionLoginBean(userId);
+//            if(sessionLoginBean != null) {
+//                String sessionId = sessionLoginBean.getSessionId();
+//
+//                //如果驗證的sessionid跟目前的不同，則踢除
+//                if(!request.getSession().getId().equals(sessionId)) {
+//                    request.getSession().removeAttribute("loginUserBean");
+//
+//                    if(needLoginSet.contains(page)) {
+//
+//                        //紀錄要去哪一頁
+//                        request.getSession().setAttribute("loginSuccessPage",page);
+//                        response.sendRedirect("memberLogin.jsp");
+//                    }
+//                    else {
+//                        filterChain.doFilter(servletRequest,servletResponse);
+//                    }
+//                }
+//                else {
+//                    filterChain.doFilter(servletRequest,servletResponse);
+//                }
+//            }
+//            else {
+//                filterChain.doFilter(servletRequest,servletResponse);
+//            }
 
 
         }

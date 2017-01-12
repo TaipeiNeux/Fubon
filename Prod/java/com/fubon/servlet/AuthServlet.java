@@ -363,12 +363,20 @@ public class AuthServlet extends HttpServlet
                                                 Element foo = (Element) i.next();
                                                 String acnoSl = foo.elementText("ACNO_SL").trim();
                                                 if(acnoSl.equals(""))continue;
-                                                acnoSlList += acnoSl + ",";
-                                                GardenLog.log(GardenLog.DEBUG,"acnoSl = " + acnoSl);
+
                                                 String actSts = foo.elementText("ACT_STS").trim();
                                                 GardenLog.log(GardenLog.DEBUG,"actSts = " + actSts);
                                                 String specSts = foo.elementText("SPEC_STS").trim();
                                                 GardenLog.log(GardenLog.DEBUG,"specSts = " + specSts);
+
+                                                //如果已結清就不用秀
+                                                if("2".equalsIgnoreCase(actSts)) {
+                                                    continue;
+                                                }
+
+                                                acnoSlList += acnoSl + ",";
+                                                GardenLog.log(GardenLog.DEBUG,"acnoSl = " + acnoSl);
+
                                                 if(Integer.valueOf(actSts)>2 || StringUtils.isNotEmpty(specSts)) isArrearChk++;
                                             }
                                         }
@@ -762,6 +770,16 @@ public class AuthServlet extends HttpServlet
                             userMarriedHidden = apply1_2Root.element("userMarriedHidden").getText();
                             familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
                             familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
+                        }
+                        //如果草稿是空的，且是已申請案件，就撈申請資料
+                        else if("Y".equalsIgnoreCase(appCases)) {
+                            userMarriedHidden = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
+                            String familyStatus = aplyMemberData.getValue("FamilyStatus");
+                            if(StringUtils.isNotEmpty(familyStatus)) {
+                                familyStatusLevel1 = StringUtils.split(familyStatus,"_")[0];
+                                familyStatusLevel2 = StringUtils.split(familyStatus,"_")[1];
+                            }
+
                         }
 
 

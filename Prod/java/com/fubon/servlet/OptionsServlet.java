@@ -178,7 +178,7 @@ public class OptionsServlet extends HttpServlet {
         try{
             jsonObject.put("school",school);
             //System.out.println("@@@@@@@@@@"+type3);
-            if(type3.length() != 1&&type3.length() >0) {
+            if(type3.length() != 1) {
                 type3 = type3.substring(0,1);
             }
           

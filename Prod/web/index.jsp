@@ -76,21 +76,21 @@
                 <img src="img/fu-08.png" alt="">
               </span>
                     <input type="text" name="studentId" placeholder="身分證字號">
-                    <label class="error error-msg"></label>
+                    <label class="error"></label>
                 </div>
                 <div class="inputArea">
               <span>
                 <img src="img/fu-09.png" alt="">
               </span>
                     <input type="password" name="studentCode" placeholder="使用者代碼" autocomplete="off">
-                    <label class="error error-msg"></label>
+                    <label class="error"></label>
                 </div>
                 <div class="inputArea">
               <span>
                 <img src="img/fu-10.png" alt="">
               </span>
                     <input type="password" name="studentPassword" placeholder="使用者密碼" autocomplete="off">
-                    <label class="error error-msg"></label>
+                    <label class="error"></label>
                 </div>
                 <div class="loginBtn">
                     <a href="javascript:;" class="pobtn-srb" id="loginBtn">登入</a>
