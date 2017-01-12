@@ -106,7 +106,7 @@ public class ChangePwd3 implements ILogic {
         mailBean.addResultParam("result",(forgetResult.equals("success") ? "變更成功" : "變更失敗("+errorCode+")"+errorMsg));
         mailBean.addResultParam("imgSrc",forgetResult.equals("success") ? "{host}/img/na-14.png" : "{host}/img/deny.png");
 
-        MessageUtils.sendEmail(mailBean);
+        MessageUtils.sendEmail(mailBean,userId);
 
         content.put("changePwdResult",forgetResult);
         content.put("changePwdDate",forgetDate);

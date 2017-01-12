@@ -177,10 +177,11 @@ public class OptionsServlet extends HttpServlet {
 
         try{
             jsonObject.put("school",school);
-
-            if(type3.length() != 1) {
+            //System.out.println("@@@@@@@@@@"+type3);
+            if(type3.length() != 1&&type3.length() >0) {
                 type3 = type3.substring(0,1);
             }
+          
 
             IDao dao = DaoFactory.getDefaultDao();
             SQLCommand query = new SQLCommand("select SchoolCode,SchoolName,StudyYears from SchoolInfo where SchoolType1 = ? and SchoolType2 = ? and SchoolType3 = ? group by SchoolCode,SchoolName,StudyYears");

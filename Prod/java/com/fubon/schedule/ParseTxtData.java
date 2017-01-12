@@ -5,6 +5,8 @@ import com.neux.utility.orm.ORMAPI;
 import com.neux.utility.orm.bean.DataColumn;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +24,27 @@ import java.util.Map;
  * Time: 上午 11:26
  * To change this template use File | Settings | File Templates.
  */
-public class ParseTxtData {
+public class ParseTxtData 
+{
     private static String charset = "CP950";
+    public ParseTxtData() throws Exception 
+    {
+    	 
+              ORMAPI.openORM();
+         
+
+          //String filePath = "E:\\SVN\\2_project\\2016\\富邦-學貸\\客戶提供文件\\電子繳款單的規格及測試檔案\\SLBM013\\SLBM013.txt";
+           String filePath=PropertiesUtil.loadPropertiesByClassPath("/config.properties")
+      			.getProperty("SLBM013");
+          //String filePath="";
+           File file=new File(filePath);
+           if(file.exists())
+          insertDB(filePath);
+           else           
+        	   System.out.println("SLBM013 File is not exists");
+           
+          
+    }
 
     public static void insertDB(String filePath) throws Exception {
         Map<String, String> fieldMap1 = new LinkedHashMap<String, String>();
@@ -140,7 +161,7 @@ public class ParseTxtData {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+   /* public static void main(String[] args) throws Exception {
 
         try {
             ORMAPI.openORM();
@@ -148,10 +169,12 @@ public class ParseTxtData {
             e.printStackTrace();
         }
 
-        String filePath = "E:\\SVN\\2_project\\2016\\富邦-學貸\\客戶提供文件\\電子繳款單的規格及測試檔案\\SLBM013\\SLBM013.txt";
-
+        //String filePath = "E:\\SVN\\2_project\\2016\\富邦-學貸\\客戶提供文件\\電子繳款單的規格及測試檔案\\SLBM013\\SLBM013.txt";
+         String filePath=PropertiesUtil.loadPropertiesByClassPath("/config.properties")
+    			.getProperty("printurl");
+        //String filePath="";
         insertDB(filePath);
-    }
+    }*/
 
     public static int parseLen(List<String> list, int[] lens, int startIndex, byte[] bytes)
             throws UnsupportedEncodingException{
@@ -170,7 +193,8 @@ public class ParseTxtData {
         return startIndex;
     }
 
-    public static String[] getTokens(String sData, String sDelim) {
+    public static String[] getTokens(String sData, String sDelim) 
+    {
         @SuppressWarnings("unused")
         String sLastToken;
         String sToken;

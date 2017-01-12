@@ -33,7 +33,10 @@ var RepaymentInquiry_controller = (function(){
 			        /** Query Date **/
 			        var today = new Date();
 			        var today_d = today.getDate(), today_m = today.getMonth()+1, today_y = today.getFullYear();
-			        var start_d = today_d, start_m = today_m - 3, start_y = today_y,
+					
+					today.setMonth(today.getMonth() -3);
+					
+			        var start_d = today_d, start_m = today.getMonth()+1, start_y = today_y,
 			            end_d = today_d, end_m = today_m, end_y = today_y;
 			        var start_str = start_y+"/"+start_m+"/"+start_d,
 			            end_str = end_y+"/"+end_m+"/"+end_d;

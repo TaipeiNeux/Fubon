@@ -9,8 +9,12 @@ import com.fubon.utils.ProjUtils;
 import com.fubon.utils.bean.MailBean;
 import com.fubon.utils.bean.OTPBean;
 import com.fubon.utils.bean.SMSBean;
+import com.fubon.webservice.WebServiceAgent;
+import com.fubon.webservice.bean.RQBean;
+import com.fubon.webservice.bean.RSBean;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +50,31 @@ public class PersonalInfo2_2 implements ILogic {
         Element root = personalInfo1Doc.getRootElement();
         if(root.element("cellPhone") != null) mobile = root.element("cellPhone").getText();
         if(root.element("email") != null) email = root.element("email").getText();
+        
+        
+        //////////10/05  手機改詢問390
+      
+            String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+            if(!"sit".equalsIgnoreCase(env)) {
+                RQBean rqBean54 = new RQBean();
+                rqBean54.setTxId("EB032154");
+                rqBean54.addRqParam("CUST_NO",userId);
+
+                RSBean rsBean54 = WebServiceAgent.callWebService(rqBean54);
+
+                if(rsBean54.isSuccess()) {
+                    Document doc = DocumentHelper.parseText(rsBean54.getTxnString());
+
+                    String cellPhone = ProjUtils.get032154Col(doc,"8001");
+
+                    //行動電話抓8001
+                    if(StringUtils.isNotEmpty(cellPhone)) {
+                        mobile = cellPhone;
+                    }
+
+                }
+            }
+       
 
         //取得是否已撥款
         String isRecord = ProjUtils.isPayHistory(userId, dao) ? "Y" : "N";
@@ -64,7 +93,7 @@ public class PersonalInfo2_2 implements ILogic {
 
             MessageUtils.sendSMS(smsBean);
 
-            MessageUtils.saveOTPLog(dao,mobile,null,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),smsBean.getContent());
+            MessageUtils.saveOTPLog(dao,mobile,null,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),smsBean.getContent(),userId);
 
         }
         //如果沒撥款，發Email
@@ -78,9 +107,9 @@ public class PersonalInfo2_2 implements ILogic {
             mailBean.addResultParam("otpTime", DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss", otpBean.getOtpTime()));
             mailBean.addResultParam("funcName","變更基本資料");
 
-            MessageUtils.sendEmail(mailBean);
+            MessageUtils.sendEmail(mailBean,userId);
 
-            MessageUtils.saveOTPLog(dao,null,email,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),null);
+            MessageUtils.saveOTPLog(dao,null,email,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),null,userId);
         }
 
         String code_img = otpBean.getCodeImg();

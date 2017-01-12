@@ -75,7 +75,7 @@ public class LoginFilter implements Filter {
             String userId = loginUserBean.getUserId();
 //            GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
 
-            SessionLoginBean sessionLoginBean = AuthServlet.sessionMap.get(userId);
+            SessionLoginBean sessionLoginBean = AuthServlet.getSessionLoginBean(userId);
             if(sessionLoginBean != null) {
                 String sessionId = sessionLoginBean.getSessionId();
 

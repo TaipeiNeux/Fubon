@@ -133,6 +133,7 @@ function personalInfo_1(content) {
     var domicileAddress_hidden = $('[name="domicileAddress_hidden"]');
     var id_hidden = $('[name="id"]');
     var name_hidden = $('[name="name"]');
+	var nameTag = $('[name="nameTag"]');
     var teleAddress_hidden = $('[name="teleAddress_hidden"]');
     var birthday_hidden = $('[name="birthday"]');
 	var birthday_match = $('[name="birthday_match"]');
@@ -148,6 +149,7 @@ function personalInfo_1(content) {
 	isRecord_hidden.val(isRecord);
     id_hidden.val(id);
     name_hidden.val(name);
+    nameTag.val(name);
     d_phone.val(domicilePhone);
     t_phone.val(phone);
     email_hidden.val(email);
@@ -356,6 +358,7 @@ function personalInfo_1(content) {
     });
 
     //地址(下拉式選單)
+	/**
     var jsonCity = modal.getCity();
     console.debug(jsonCity);
     cityArr = jsonCity.cities;
@@ -368,6 +371,7 @@ function personalInfo_1(content) {
 
     citySelect.append(cityArray.join(''));
     domicileCitySelect.append(cityArray.join(''));
+**/
 
     //代入預設值
     //若有撈到使用者的地址（city, zip）,則顯示
@@ -1076,6 +1080,12 @@ function personalInfo_1_valid() {
             hasHiddenCode: true,
             hiddenTarget: $('input[name="email_hidden"]').val()
         }],
+		/*validChinese: [{
+            name: 'joyName',
+            msg: '姓名',
+            hasHiddenCode: true,
+            hiddenTarget: $('input[name="nameTag"]').val()
+        }],*/
         /*validDate: [{
             name: ['birth_year', 'birth_month', 'birth_day'],
             msg: '生日',

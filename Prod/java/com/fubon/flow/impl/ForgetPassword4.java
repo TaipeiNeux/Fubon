@@ -111,7 +111,7 @@ public class ForgetPassword4 implements ILogic {
         mailBean.setTitle(mailTitle);
         mailBean.addResultParam("result",(forgetPasswordResult.equals("success") ? "<img src=\"{host}/img/na-14.png\">申請成功" : "<img src=\"{host}/img/na-16.png\">申請失敗("+errorCode+")"+errorMsg));
 
-        MessageUtils.sendEmail(mailBean);
+        MessageUtils.sendEmail(mailBean,id);
 
 
         content.put("forgetPasswordResult",forgetPasswordResult);

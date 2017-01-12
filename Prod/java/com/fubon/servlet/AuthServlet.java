@@ -43,29 +43,79 @@ import java.util.*;
  * Time: 上午 11:54
  * To change this template use File | Settings | File Templates.
  */
-public class AuthServlet extends HttpServlet {
+public class AuthServlet extends HttpServlet
+{
 
     //每個帳號一個session只能登入一次
-    public static final Map<String,SessionLoginBean> sessionMap = new HashMap<String,SessionLoginBean>(); //身份證字號/sessionID
+//    public static final Map<String,SessionLoginBean> sessionMap = new HashMap<String,SessionLoginBean>(); //身份證字號/sessionID
 
     public static void addLoginInfoToApplication(String id , SessionLoginBean sessionLoginBean) {
         GardenLog.log(GardenLog.DEBUG,"addLoginInfoToApplication = " + id + ",sessionID=" + sessionLoginBean.getSessionId());
-        sessionMap.put(id,sessionLoginBean);
+//        sessionMap.put(id,sessionLoginBean);
+
+        DataObject sessionTable = DaoFactory.getDefaultDataObject("session_table");
+
+        sessionTable.setValue("id",sessionLoginBean.getId());
+//        sessionTable.setValue("id",sessionLoginBean.getSessionId());
+
+        IDao dao = DaoFactory.getDefaultDao();
+
+        try{
+            if(dao.querySingle(sessionTable,null)) {
+                sessionTable.setValue("session_id",sessionLoginBean.getSessionId());
+                sessionTable.setValue("times",sessionLoginBean.getLoginTime());
+                dao.update(sessionTable);
+            }
+            else {
+                sessionTable.setValue("session_id",sessionLoginBean.getSessionId());
+                sessionTable.setValue("times",sessionLoginBean.getLoginTime());
+                dao.insert(sessionTable);
+            }
+
+
+            GardenLog.log(GardenLog.DEBUG,"addLoginInfoToApplication = " + id + " success");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void removeLoginInfoToApplication(String id) {
 
         GardenLog.log(GardenLog.DEBUG,"removeLoginInfoToApplication = " + id);
-        sessionMap.remove(id);
+//        sessionMap.remove(id);
+
+        DataObject sessionTable = DaoFactory.getDefaultDataObject("session_table");
+        sessionTable.setValue("id",id);
+        try{
+            DaoFactory.getDefaultDao().delete(sessionTable);
+            GardenLog.log(GardenLog.DEBUG,"removeLoginInfoToApplication = " + id + " success");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static SessionLoginBean getSessionLoginBean(String id) {
-        return sessionMap.get(id);
+
+        DataObject sessionTable = DaoFactory.getDefaultDataObject("session_table");
+        sessionTable.setValue("id",id);
+        try{
+            if(DaoFactory.getDefaultDao().querySingle(sessionTable,null)) {
+                SessionLoginBean sessionLoginBean = new SessionLoginBean();
+
+                sessionLoginBean.setId(id);
+                sessionLoginBean.setLoginTime(sessionTable.getValue("times"));
+                sessionLoginBean.setSessionId(sessionTable.getValue("session_id"));
+
+                return sessionLoginBean;
+            }
+
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
-    public static Set<String> getLoginUserId() {
-        return sessionMap.keySet();
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -78,7 +128,8 @@ public class AuthServlet extends HttpServlet {
 
         String action = queryStringInfo.getParam("action");
 
-        if("login".equalsIgnoreCase(action)) {
+        if("login".equalsIgnoreCase(action))
+        {
             login(queryStringInfo,resp);
         }
         else if("logout".equalsIgnoreCase(action)) {
@@ -163,6 +214,7 @@ public class AuthServlet extends HttpServlet {
         IDao dao = DaoFactory.getDefaultDao();
 
         long now = System.currentTimeMillis();
+        DataObject studentUserProfile = DaoFactory.getDefaultDataObject("Student_UserProfile");
         try{
 
 
@@ -173,7 +225,7 @@ public class AuthServlet extends HttpServlet {
 
             //要查db確認身份，查：Student_UserProfile/Student_UserProfileDetail
 
-            DataObject studentUserProfile = DaoFactory.getDefaultDataObject("Student_UserProfile");
+
             studentUserProfile.setValue("IdNo",id);
 
             DataObject studentUserProfileDetail = DaoFactory.getDefaultDataObject("Student_UserProfileDetail");
@@ -207,6 +259,8 @@ public class AuthServlet extends HttpServlet {
                 else {
                     String s = id + "-" + userPwd;
                     String md5Password = DigestUtils.md5Hex(s.toUpperCase());
+                    // if(!userId.equalsIgnoreCase(dbUserId))
+                    //System.out.println("error");
 
                     //如果登入失敗超過3次就直接擋掉
                     if(failCount >= 3) {
@@ -214,8 +268,11 @@ public class AuthServlet extends HttpServlet {
                         jsonObject.put("errorMsg", "使用者密碼連續輸入錯誤三次，已被鎖定 ");
 
                         //如果使用者代碼不對，次數往上加，超過5次要額外發信
-                        if(!userId.equalsIgnoreCase(dbUserId)) {
-                            //密碼錯誤時，要回寫DB記錄次數
+                        if(!userId.equalsIgnoreCase(dbUserId))
+                        {
+                            //密碼錯誤時，要回寫DB記錄次數                   	
+
+
                             userIdNotMatchCount++;
 
                             studentUserProfile.setValue("UserIdNotMatchCount",userIdNotMatchCount + "");
@@ -233,10 +290,11 @@ public class AuthServlet extends HttpServlet {
                                 now = System.currentTimeMillis();
 
                                 //當驗證都過了，就判斷這身份證是否已經在別的瀏覽器登入
-                                if(sessionMap.containsKey(id) && !"Y".equals(force)) {
+                                SessionLoginBean checkSessionLoginBean = getSessionLoginBean(id);
+                                if(checkSessionLoginBean != null && !"Y".equals(force)) {
                                     jsonObject.put("errorCode","97");
                                     jsonObject.put("errorMsg","在別的瀏覽器登入");
-                                    jsonObject.put("LastSignOn",sessionMap.get(id).getLoginTime());
+                                    jsonObject.put("LastSignOn",checkSessionLoginBean.getLoginTime());
 
                                     sendEmail = false;
                                 }
@@ -311,7 +369,7 @@ public class AuthServlet extends HttpServlet {
                                                 GardenLog.log(GardenLog.DEBUG,"actSts = " + actSts);
                                                 String specSts = foo.elementText("SPEC_STS").trim();
                                                 GardenLog.log(GardenLog.DEBUG,"specSts = " + specSts);
-                                                if(Integer.valueOf(actSts)>1 || StringUtils.isNotEmpty(specSts)) isArrearChk++;
+                                                if(Integer.valueOf(actSts)>2 || StringUtils.isNotEmpty(specSts)) isArrearChk++;
                                             }
                                         }
                                     }
@@ -324,12 +382,29 @@ public class AuthServlet extends HttpServlet {
                                     GardenLog.log(GardenLog.DEBUG,"======login step4 waste:" + (System.currentTimeMillis()-now));
                                     now = System.currentTimeMillis();
 
+                                    //2017-01-05
+                                    //先取得「本學期」申請資料
+                                    HashMap<String,String> eduYearInfo = ProjUtils.getEduYearInfo(dao,null);
+
+                                    Map<String,String> queryMap = new HashMap<String,String>();
+                                    queryMap.put("EduYear",eduYearInfo.get("eduYear"));
+                                    queryMap.put("Semester",eduYearInfo.get("semester"));
+
+                                    //查這學期的申請案件
+                                    DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanData(id,queryMap,dao);
+
+                                    String appCases = aplyMemberData != null ? "Y" : "N";//本學期是否有申請案件
+                                    String kindOfCases = aplyMemberData != null ? aplyMemberData.getValue("AplyCaseType") : "";//紀錄案件種類(1:線上續貸/2:分行對保);
+
                                     String isEtabs = isETab ? "Y" : "N";//紀錄是否有簽訂線上服務註記
                                     String isArrear = isArrearChk == 0 ? "Y" : "N";//紀錄是否不欠款
 
                                     loginUserBean.addCustomizeValue("isEtabs",isEtabs);
                                     loginUserBean.addCustomizeValue("isArrear",isArrear);
                                     loginUserBean.addCustomizeValue("acnoSlList",acnoSlList);
+                                    loginUserBean.addCustomizeValue("appCases",appCases);
+                                    loginUserBean.addCustomizeValue("kindOfCases",kindOfCases);
+
                                     loginUserBean.setUserId(id);
                                     loginUserBean.setUserName(studentUserProfileDetail.getValue("Applicant"));
                                     loginUserBean.setSuccess(true);
@@ -398,14 +473,24 @@ public class AuthServlet extends HttpServlet {
 
                         }
                         else {
+
                             //密碼錯誤時，要回寫DB記錄次數
                             userIdNotMatchCount++;
+                            System.out.println(userIdNotMatchCount);
+
+                            //if(userIdNotMatchCount == 5)                                                        	
+                            //studentUserProfile.setValue("userIdNotMatchCount","");                            
+                            // else
+
+
+
 
                             studentUserProfile.setValue("UserIdNotMatchCount",userIdNotMatchCount + "");
-                            dao.update(studentUserProfile);
 
+                            dao.update(studentUserProfile);
                             jsonObject.put("errorMsg", "身分證字號或使用者代碼錯誤");
                         }
+
                     }
 
 
@@ -416,7 +501,7 @@ public class AuthServlet extends HttpServlet {
 
             }
             else {
-                jsonObject.put("errorMsg", "身分證字號驗證錯誤");
+                jsonObject.put("errorMsg", "身分證字號或使用者代碼錯誤");
             }
 
         }catch(Exception e) {
@@ -446,28 +531,42 @@ public class AuthServlet extends HttpServlet {
                 mailBean.addResultParam("result",jsonObject.getString("errorMsg"));
                 mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
 
-                MessageUtils.sendEmail(mailBean);
+                MessageUtils.sendEmail(mailBean,userId);
+
 
                 GardenLog.log(GardenLog.DEBUG,"======login step7 waste:" + (System.currentTimeMillis()-now));
                 now = System.currentTimeMillis();
 
+
+
 //                //錯誤第5次時，額外發送
-//                if(userIdNotMatchCount == 5) {
-//                    mailBean = new MailBean("login");
-//                    mailBean.setReceiver(email);
-//                    mailBean.setTitle(MessageUtils.loginFailTitle);
-//                    mailBean.addResultParam("errorCode","98");
-//                    mailBean.addResultParam("result","使用者代碼輸入錯誤五次");
-//                    mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
-//
-//                    MessageUtils.sendEmail(mailBean);
-//
-//                    GardenLog.log(GardenLog.DEBUG,"======login step8 waste:" + (System.currentTimeMillis()-now));
-//                    now = System.currentTimeMillis();
-//                }
+                if(userIdNotMatchCount >= 5)
+                {
+                    //System.out.println("寄信");
+
+                    //studentUserProfile.setValue("userIdNotMatchCount","0");
+                    //dao.update(studentUserProfile);
+
+
+                    mailBean = new MailBean("login");
+                    mailBean.setReceiver(email);
+                    mailBean.setTitle(MessageUtils.loginFailTitle);
+                    mailBean.addResultParam("errorCode","98");
+                    mailBean.addResultParam("result","使用者代碼輸入錯誤五次");
+                    mailBean.addResultParam("date",DateUtil.convert14ToDate("yyyy/MM/dd HH:mm:ss",DateUtil.getTodayString()));
+
+
+
+                    MessageUtils.sendEmail(mailBean,userId);
+
+                    GardenLog.log(GardenLog.DEBUG,"======login step8 waste:" + (System.currentTimeMillis()-now));
+                    now = System.currentTimeMillis();
+                }
             }catch(Exception e) {
                 e.printStackTrace();
             }
+
+
         }
 
         try{
@@ -517,11 +616,12 @@ public class AuthServlet extends HttpServlet {
                 String userId = loginUserBean.getUserId();
 //                GardenLog.log(GardenLog.DEBUG,"userId = " + userId);
 
-                SessionLoginBean sessionLoginBean = sessionMap.get(userId);
+                SessionLoginBean sessionLoginBean = getSessionLoginBean(userId);
                 String sessionId = sessionLoginBean.getSessionId();
 
 //                GardenLog.log(GardenLog.DEBUG,"current = " + queryStringInfo.getRequest().getSession().getId());
 //                GardenLog.log(GardenLog.DEBUG,"sessionId = " + sessionId);
+
 
                 //如果驗證的sessionid跟目前的不同，則踢除
                 if(sessionLoginBean != null && !queryStringInfo.getRequest().getSession().getId().equals(sessionId)) {
@@ -750,7 +850,6 @@ public class AuthServlet extends HttpServlet {
                             if("VERIFYING".equalsIgnoreCase(aplyStatus)) {
                                 censor = "2";
                             }
-                            //(已對保) = 審核完成-通過
                             else if("VERIFIED".equalsIgnoreCase(aplyStatus)) {
                                 censor = "3";
                             }

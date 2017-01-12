@@ -1,5 +1,19 @@
 package com.fubon.flow.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.json.JSONObject;
+
+import com.fubon.mark.MarkBean;
+import com.fubon.utils.FlowUtils;
+import com.fubon.utils.ProjUtils;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Titan
@@ -13,25 +27,12 @@ import com.fubon.webservice.bean.RQBean;
 import com.fubon.webservice.bean.RSBean;
 import com.neux.garden.authorization.LoginUserBean;
 import com.neux.garden.dbmgr.DaoFactory;
-import com.fubon.flow.ILogic;
-import com.fubon.mark.MarkBean;
-import com.fubon.utils.ProjUtils;
 import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
-import com.neux.utility.orm.dal.QueryConfig;
-import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.PropertiesUtil;
+import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 我要申請的1-1：申請人基本資料/基本資料
@@ -60,15 +61,9 @@ public class Apply1_1 extends MarkFlow {
 
         //如果有撥款紀錄就撈已撥款，如果沒有撥款紀錄就撈目前當學年度當學期的資料
         DataObject aplyMemberData = null;
-
-        //有撥款紀錄要額外帶入：身分證字號、姓名、生日、行動電話、Email、婚姻狀況、戶籍電話、通訊電話、戶籍地址、通訊地址
-        if("Y".equalsIgnoreCase(isRecord)) {
-            //帶入撥款紀錄
-            aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
-        }
-        else {
-            //先取得「本學期」申請資料
-//                aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+        if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) {
+        	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
         }
 
         //若有草稿就裝到content，沒有才走邏輯判斷
@@ -76,7 +71,6 @@ public class Apply1_1 extends MarkFlow {
             Element root = draftData.getRootElement();
             if(root.element("id") != null) id = root.element("id").getText();
             if(root.element("name") != null) name = root.element("name").getText();
-//            if(root.element("birthday") != null) birthday = root.element("birthday").getText();
 
             if(root.element("birthday0") != null) yearBirthday = root.element("birthday0").getText();
             if(root.element("birthday2") != null) monthBirthday = root.element("birthday2").getText();
@@ -105,14 +99,61 @@ public class Apply1_1 extends MarkFlow {
             if(root.element("address") != null) teleAddressAddress = root.element("address").getText();
 
             if(root.element("sameAddrHidden") != null) sameAddrHidden = root.element("sameAddrHidden").getText();
+        }
+        else if (aplyMemberData != null)
+        {
+        	//本學期有申請過案件就撈申請案件；無則撈撥款紀錄
+        	id = aplyMemberData.getValue("AplyIdNo");
+            name = aplyMemberData.getValue("Applicant");
+            birthday = aplyMemberData.getValue("AplyBirthday");
+            marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
 
-//            if(StringUtils.isNotEmpty(birthday)) {
-//                birthday = StringUtils.replace(birthday,"/","");
-//            }
+            domicilePhoneRegionCode = aplyMemberData.getValue("AplyTelNo1_1");
+            domicilePhonePhone = aplyMemberData.getValue("AplyTelNo1_2");
+            telePhoneRegionCode = aplyMemberData.getValue("AplyTelNo2_1");
+            telePhonePhone = aplyMemberData.getValue("AplyTelNo2_2");
+            cellPhone = aplyMemberData.getValue("AplyCellPhoneNo");
+            email = aplyMemberData.getValue("AplyEmail");
 
+            String zipCode1 = aplyMemberData.getValue("AplyZip1");
+            //用zipcode反查city
+            domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
+            domicileAddressZipCode = zipCode1; //戶藉行政區
+            domicileAddressLiner = aplyMemberData.getValue("Aply1Village");//戶藉村/里名稱(中文)
+//            domicileLinerName = aplyMemberHistoryData.getValue("AplyAddr1_4");
+            domicileAddressNeighborhood = aplyMemberData.getValue("AplyAddr1_3");
+            domicileAddressAddress = aplyMemberData.getValue("AplyAddr1");
+            //domicileAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","1");
+
+            String zipCode2 = aplyMemberData.getValue("AplyZip2");
+            //用zipcode反查city
+            teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
+            teleAddressZipCode = zipCode2;
+//            teleAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","2");
+            teleAddressAddress = aplyMemberData.getValue("AplyAddr2");
+            
+            String applyAddr1 = "", applyAddr2 = "";
+        	applyAddr1 += aplyMemberData.getValue("AplyZip1");
+        	applyAddr1 += aplyMemberData.getValue("Aply1Village");
+        	applyAddr1 += aplyMemberData.getValue("AplyAddr1_3") + "鄰";
+        	applyAddr1 += aplyMemberData.getValue("AplyAddr1");
+        	
+        	applyAddr2 += aplyMemberData.getValue("AplyZip2");
+        	applyAddr2 += aplyMemberData.getValue("Aply2Village");
+        	applyAddr2 += aplyMemberData.getValue("AplyAddr2_3");
+        	applyAddr2 += aplyMemberData.getValue("AplyAddr2");
+        	
+            sameAddrHidden = !applyAddr1.equals("") && applyAddr1.equals(applyAddr2) ? "Y" : "N";
+            
+            //DB是西元轉民國
+            birthday = ProjUtils.toBirthday(birthday);
+
+            //再拆成三個欄位
+            yearBirthday = birthday.substring(0,3);
+            monthBirthday = birthday.substring(3,5);
+            dayBirthday = birthday.substring(5,7);
         }
         else {
-
             //取得使用者相關資料
             id = loginUserBean.getCustomizeValue("IdNo");
             name = loginUserBean.getUserName();
@@ -127,67 +168,32 @@ public class Apply1_1 extends MarkFlow {
             telePhonePhone = loginUserBean.getCustomizeValue("AplyTelNo2_2");
 
             String zipCode1 = loginUserBean.getCustomizeValue("AplyZip1");
-
             //用zipcode反查city
             domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
-
             domicileAddressZipCode = zipCode1; //戶藉行政區
             domicileAddressLiner = loginUserBean.getCustomizeValue("Aply1Village");//戶藉村/里名稱(中文)
             domicileAddressNeighborhood = loginUserBean.getCustomizeValue("AplyAddr1_3");
             domicileAddressAddress = loginUserBean.getCustomizeValue("AplyAddr1");
 
-
             String zipCode2 = loginUserBean.getCustomizeValue("AplyZip2");
-
             //用zipcode反查city
             teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
-
             teleAddressZipCode = zipCode2;
             teleAddressAddress = loginUserBean.getCustomizeValue("AplyAddr2");
 
-
-
-            if(aplyMemberData != null) {
-                id = aplyMemberData.getValue("AplyIdNo");
-                name = aplyMemberData.getValue("Applicant");
-                birthday = aplyMemberData.getValue("AplyBirthday");
-                marryStatus = ProjUtils.toMarryName(aplyMemberData.getValue("Marriage"));
-
-                domicilePhoneRegionCode = aplyMemberData.getValue("AplyTelNo1_1");
-                domicilePhonePhone = aplyMemberData.getValue("AplyTelNo1_2");
-
-                telePhoneRegionCode = aplyMemberData.getValue("AplyTelNo2_1");
-                telePhonePhone = aplyMemberData.getValue("AplyTelNo2_2");
-
-                cellPhone = aplyMemberData.getValue("AplyCellPhoneNo");
-                email = aplyMemberData.getValue("AplyEmail");
-
-
-                zipCode1 = aplyMemberData.getValue("AplyZip1");
-
-                //用zipcode反查city
-                domicileAddressCityId = ProjUtils.toCityId(zipCode1,dao); //縣市別
-
-                domicileAddressZipCode = zipCode1; //戶藉行政區
-                domicileAddressLiner = aplyMemberData.getValue("Aply1Village");//戶藉村/里名稱(中文)
-//                domicileLinerName = aplyMemberHistoryData.getValue("AplyAddr1_4");
-                domicileAddressNeighborhood = aplyMemberData.getValue("AplyAddr1_3");
-                domicileAddressAddress = aplyMemberData.getValue("AplyAddr1");
-                //domicileAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","1");
-
-
-                zipCode2 = aplyMemberData.getValue("AplyZip2");
-
-                //用zipcode反查city
-                teleAddressCityId = ProjUtils.toCityId(zipCode2,dao);
-
-                teleAddressZipCode = zipCode2;
-//                teleAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","2");
-                teleAddressAddress = aplyMemberData.getValue("AplyAddr2");
-
-
-            }
-
+            String applyAddr1 = "", applyAddr2 = "";
+        	applyAddr1 += loginUserBean.getCustomizeValue("AplyZip1");
+        	applyAddr1 += loginUserBean.getCustomizeValue("Aply1Village");
+        	applyAddr1 += loginUserBean.getCustomizeValue("AplyAddr1_3") + "鄰";
+        	applyAddr1 += loginUserBean.getCustomizeValue("AplyAddr1");
+        	
+        	applyAddr2 += loginUserBean.getCustomizeValue("AplyZip2");
+        	applyAddr2 += loginUserBean.getCustomizeValue("Aply2Village");
+        	applyAddr2 += loginUserBean.getCustomizeValue("AplyAddr2_3");
+        	applyAddr2 += loginUserBean.getCustomizeValue("AplyAddr2");
+        	
+            sameAddrHidden = !applyAddr1.equals("") && applyAddr1.equals(applyAddr2) ? "Y" : "N";
+            
             //DB是西元轉民國
             birthday = ProjUtils.toBirthday(birthday);
 
@@ -196,6 +202,7 @@ public class Apply1_1 extends MarkFlow {
             monthBirthday = birthday.substring(3,5);
             dayBirthday = birthday.substring(5,7);
         }
+        //System.out.println(yearBirthday+monthBirthday+dayBirthday);
 
         //2016-08-04 added by titan 因為行動電話要改成一律問390，不然舊戶的電話改了後就收不到後續的OTP
         if(aplyMemberData != null) {
@@ -247,8 +254,9 @@ public class Apply1_1 extends MarkFlow {
             GardenLog.log(GardenLog.DEBUG,"teleAddressAddress = " + teleAddressAddress);
         }
 
-        birthday = yearBirthday + monthBirthday + dayBirthday;
-
+//        birthday = yearBirthday + monthBirthday + dayBirthday;
+       
+       
         //隱碼
         if(isMark()) {
             MarkBean markBean = new MarkBean();
@@ -282,17 +290,18 @@ public class Apply1_1 extends MarkFlow {
             markBean.addCode("address",teleAddressAddress,ProjUtils.toAddressAllMark(teleAddressAddress));
             teleAddressAddress = ProjUtils.toAddressAllMark(teleAddressAddress);
 
-            markBean.addCode("birthday4",dayBirthday,dayBirthday.substring(0,1) + "*");
+            markBean.addCode("birthday4",dayBirthday,dayBirthday.substring(0,1) + "*");            
             dayBirthday = dayBirthday.substring(0,1) + "*";
 
 //            markBean.addCode("birthday",birthday,ProjUtils.toBirthdayMark(birthday));
 //            birthday = ProjUtils.toBirthdayMark(birthday);
 
             queryStringInfo.getRequest().getSession().setAttribute("MarkBean",markBean);
-        }
-
-
-
+        } 
+       // boolean aaa=isMark();
+       // System.out.println("$$$$$$$$$$$$$$$$$$"+aaa+","+dayBirthday);
+        birthday = yearBirthday + monthBirthday + dayBirthday;
+       
         //裝值到content
         content.put("isPopUp",isPopUp);
         content.put("isEtabs",isEtabs);
@@ -304,8 +313,8 @@ public class Apply1_1 extends MarkFlow {
         content.put("dayBirthday",dayBirthday);
         content.put("birthday",birthday);
         content.put("marryStatus",marryStatus);
-
         content.put("sameAddr",sameAddrHidden);
+        
 
         JSONObject domicilePhone = new JSONObject();
         domicilePhone.put("regionCode",domicilePhoneRegionCode);
@@ -337,11 +346,87 @@ public class Apply1_1 extends MarkFlow {
         teleAddress.put("zipCode",teleAddressZipCode);
         teleAddress.put("address",teleAddressAddress);
         content.put("teleAddress",teleAddress);
-
     }
 
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+    	
+    	
+    	String draftXML = FlowUtils.toDraftDataXML(queryStringInfo,false);
+
+        LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
+        String userId = loginUserBean.getUserId();
+        
+        
+    	IDao dao = DaoFactory.getDefaultDao();
+    	 DataObject aplyMemberData = null;
+         aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+         if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) 
+         {
+         	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+         }
+         
+         String birthday="";         
+         String cbirthday="";
+    	//String draftXML = FlowUtils.getDraftData(userId,"apply","apply1_1",dao);
+    	 if (draftXML != null) {
+             Document step1Doc = DocumentHelper.parseText(draftXML);
+             Element step1Root = step1Doc.getRootElement();
+
+             String yearBirthday = step1Root.element("birthday0").getText();
+             String monthBirthday = step1Root.element("birthday2").getText();
+             String dayBirthday = step1Root.element("birthday4").getText();
+             
+             //System.out.println("@@@@"+yearBirthday+","+monthBirthday+","+dayBirthday);
+             yearBirthday= StringUtils.leftPad(yearBirthday,3,"0");
+             monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
+             dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
+             birthday = yearBirthday + monthBirthday + dayBirthday;
+             //cbirthday=yearBirthday+"-"+monthBirthday+"-"+dayBirthday;
+          
+         }
+         else if (aplyMemberData != null){
+         	birthday = aplyMemberData.getValue("AplyBirthday");
+         	birthday = ProjUtils.toBirthday(birthday);
+             String yearBirthday = birthday.substring(0,3);
+             String monthBirthday = birthday.substring(3,5);
+             String dayBirthday = birthday.substring(5,7);
+             birthday = yearBirthday + monthBirthday + dayBirthday;
+             //cbirthday=yearBirthday+"-"+monthBirthday+"-"+dayBirthday;
+           
+         }
+    	 
+
+    	 cbirthday=ProjUtils.toYYYYBirthday(birthday);
+    	
+    	  String now = DateUtil.getTodayString();
+         
+           String b = DateUtil.addDate(now,Calendar.YEAR,-1911);
+           b=b.substring(0,8);
+           
+           
+    
+       
+       	boolean checkdate =Double.parseDouble(b.substring(0,8)) > Double.parseDouble(birthday);
+       	
+      
+    	try {
+          	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+  			dateFormat.setLenient(false);
+  			if (cbirthday.length() == 8) 
+  			{
+  				cbirthday = cbirthday.substring(0, 4) + "-" + cbirthday.substring(4, 6) + "-"
+  						+ cbirthday.substring(6, 8);
+  				 dateFormat.parse(cbirthday.trim());
+  			}  			
+  			
+  		} catch (Exception e) {
+  			throw new Exception("生日格式錯誤");
+  		}
+          
+          if(!checkdate)
+          {
+          	throw new Exception("生日需早於今日");
+          }
     }
 }

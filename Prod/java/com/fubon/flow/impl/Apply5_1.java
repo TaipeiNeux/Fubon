@@ -45,21 +45,32 @@ public class Apply5_1 implements ILogic {
 
         //撈第四步要顯示的欄位
 
+        //撈第四步要顯示的欄位
         String apply4DraftXML = FlowUtils.getDraftData(userId,"apply","apply_document_4",dao);
-        if(StringUtils.isNotEmpty(apply4DraftXML)) {
+        if(apply4DraftXML != null && StringUtils.isNotEmpty(apply4DraftXML)) {
             Document apply4Doc = DocumentHelper.parseText(apply4DraftXML);
             Element root = apply4Doc.getRootElement();
             if(root.element("isPositive_hidden") != null) isPositive_hidden = root.element("isPositive_hidden").getText();
             if(root.element("isNegative_hidden") != null) isNegative_hidden = root.element("isNegative_hidden").getText();
             if(root.element("register_hidden") != null) register_hidden = root.element("register_hidden").getText();
+            if(root.element("lowIncome_hidden") != null) lowIncome_hidden = root.element("lowIncome_hidden").getText();
             if(root.element("idPositiveViewName_hidden") != null) idPositiveViewName_hidden = root.element("idPositiveViewName_hidden").getText();
             if(root.element("idNegativeViewName_hidden") != null) idNegativeViewName_hidden = root.element("idNegativeViewName_hidden").getText();
             if(root.element("registerViewName_hidden") != null) registerViewName_hidden = root.element("registerViewName_hidden").getText();
-            if(root.element("lowIncome_hidden") != null) lowIncome_hidden = root.element("lowIncome_hidden").getText();
             if(root.element("lowIncomeViewName_hidden") != null) lowIncomeViewName_hidden = root.element("lowIncomeViewName_hidden").getText();
-
         }
 
+        //判斷是否有低收入證明
+        //        String draftXML3_2 = FlowUtils.getDraftData(userId,"apply","apply3_2",dao);
+//        if (draftXML3_2 != null) {
+//            Document draftDoc3_2 = DocumentHelper.parseText(draftXML3_2);
+//            Element draftRoot3_2 = draftDoc3_2.getRootElement();
+//            if(draftRoot3_2.element("freedom_life") != null) freedom_life = draftRoot3_2.element("freedom_life").getText();
+//         
+//        }
+        
+        
+        
         //上傳文件撈Table
         SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name,Size from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
         query.addParamValue(userId);
@@ -77,6 +88,19 @@ public class Apply5_1 implements ILogic {
                 String docType = d.getValue("DocType");
                 String originalFileName = d.getValue("original_file_name");
                 String size = d.getValue("Size");
+                
+//                String File_Name="";
+//                String temp[] = originalFileName.split("[.]");
+//                if(temp.length>1){ 
+//                	File_Name = temp[temp.length-1];
+//                }else{
+//                	File_Name=""; 
+//                }
+//               
+//                if(!File_Name.toLowerCase().equals("peg")&&!File_Name.toLowerCase().equals("png")&&!File_Name.toLowerCase().equals("jpg")&&!File_Name.toLowerCase().equals("tif")&&!File_Name.toLowerCase().equals("gif")&&!File_Name.toLowerCase().equals("pdf"))
+//                	throw new Exception("請確認檔案副檔名");
+             
+                	
 
                 JSONObject tmp = new JSONObject();
                 tmp.put("fileName",originalFileName);
@@ -104,6 +128,12 @@ public class Apply5_1 implements ILogic {
         uploadFile.put("idCardNegative",idCardNegative);
         uploadFile.put("registration",registration);
         uploadFile.put("lowIncome",lowIncome);
+        
+//     if(idCardPosition.length()==0||idCardNegative.length()==0||registration.length()==0)
+//     {
+//    	 throw new Exception("請確實上傳檔案");
+//     }
+
 
 //        uploadFile.put("idCardPosition_docId",uploadFileIdCardPosition_docId);
 //        uploadFile.put("idCardNegative_docId",uploadFileIdCardNegative_docId);

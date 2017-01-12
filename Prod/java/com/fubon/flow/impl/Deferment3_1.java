@@ -2,14 +2,21 @@ package com.fubon.flow.impl;
 
 import com.fubon.utils.MessageUtils;
 import com.fubon.utils.bean.SMSBean;
+import com.fubon.webservice.WebServiceAgent;
+import com.fubon.webservice.bean.RQBean;
+import com.fubon.webservice.bean.RSBean;
 import com.neux.garden.authorization.LoginUserBean;
 import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
 import com.fubon.utils.bean.OTPBean;
+import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.json.JSONObject;
@@ -29,9 +36,39 @@ public class Deferment3_1 implements ILogic {
         String userId = loginUserBean.getUserId();
 
         IDao dao = DaoFactory.getDefaultDao();
+        
 
         //拿登入者的手機
         String mobile = loginUserBean.getCustomizeValue("AplyCellPhoneNo");
+       // String mobile="";
+        
+      
+            String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
+            if(!"sit".equalsIgnoreCase(env)) {
+                RQBean rqBean54 = new RQBean();
+                rqBean54.setTxId("EB032154");
+                rqBean54.addRqParam("CUST_NO",userId);
+
+                RSBean rsBean54 = WebServiceAgent.callWebService(rqBean54);
+
+                if(rsBean54.isSuccess()) {
+                    Document doc = DocumentHelper.parseText(rsBean54.getTxnString());
+
+                    String cellPhone = ProjUtils.get032154Col(doc,"8001");
+
+                    //行動電話抓8001
+                    if(StringUtils.isNotEmpty(cellPhone)) {
+                        mobile = cellPhone;
+                    }
+
+                   
+
+                }
+            }
+        
+       
+        
+        
 
         //抓1、2的草稿
         String deferment1DraftXML = FlowUtils.getDraftData(userId, "deferment", "deferment1", dao);

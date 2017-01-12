@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" %>
 <%@ include file="include/head.jsp" %>
-<% request.setCharacterEncoding( "utf-8"); %>
+<% 
+request.setCharacterEncoding( "utf-8"); 
+String action = request.getParameter("action");
+    if("index".equalsIgnoreCase(action)) {
+        request.getSession().setAttribute("loginSuccessPage","index.jsp");
+    }
+%>
 
 <body class="memberLogin_1">
 

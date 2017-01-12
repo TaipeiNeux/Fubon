@@ -7,13 +7,18 @@ import com.neux.garden.authorization.LoginUserBean;
 import com.neux.garden.dbmgr.DaoFactory;
 import com.fubon.flow.ILogic;
 import com.fubon.mark.MarkBean;
+import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
 import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.PropertiesUtil;
+import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
-import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -42,7 +47,8 @@ public class PersonalInfo1 implements ILogic {
         String domicileAddressCityName = "" , domicileAddressCityId = "", domicileAddressZipCode = "",domicileAddressZipCodeName = "",domicileLinerName = "",domicileAddressLiner = "",domicileAddressNeighborhood = "", domicileAddressAddress = "";
         String teleAddressCityId = "", teleAddressZipCode = "", teleAddressAddress = "";
 
-
+        String mobile="";
+     
         //取得使用者相關資料
         id = loginUserBean.getCustomizeValue("IdNo");
         name = loginUserBean.getUserName();
@@ -81,7 +87,12 @@ public class PersonalInfo1 implements ILogic {
 
             telePhoneRegionCode = aplyMemberHistoryData.getValue("AplyTelNo2_1");
             telePhonePhone = aplyMemberHistoryData.getValue("AplyTelNo2_2");
-
+            
+           
+           
+               
+           
+        
             String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
             if(!"sit".equalsIgnoreCase(env)) {
 
@@ -98,6 +109,12 @@ public class PersonalInfo1 implements ILogic {
                     email = ProjUtils.get032153Col8001(doc);
                     teleAddressZipCode = ProjUtils.get032153Col3802ZipCode(doc);
                     teleAddressAddress = ProjUtils.get032153Col3802Address(doc);
+
+                    //2016-08-23 added by titan 因為電文地址是包含縣市，所以先用zipcode去查中文後，再用中文來切
+                    String zipName = ProjUtils.toZipCodeName(teleAddressZipCode,dao);
+                    if(StringUtils.isNotEmpty(zipName) && teleAddressAddress.contains(zipName)) {
+                        teleAddressAddress = teleAddressAddress.substring(teleAddressAddress.indexOf(zipName) + zipName.length());
+                    }
                 }
 
                 RQBean rqBean54 = new RQBean();
@@ -111,6 +128,8 @@ public class PersonalInfo1 implements ILogic {
 
                     String domicile = ProjUtils.get032154Col3801Tel(doc);
                     String tele = ProjUtils.get032154Col3802Tel(doc);
+                    
+                  
 
                     //戶藉電話抓3801
                     if(StringUtils.isNotEmpty(domicile) && domicile.length() > 2) {
@@ -125,11 +144,23 @@ public class PersonalInfo1 implements ILogic {
                         telePhonePhone = tele.substring(2);
                         telePhonePhone = telePhonePhone.trim();
                     }
+                    
+                    mobile = ProjUtils.get032154Col(doc,"8001");
+
+                    //行動電話抓8001
+                    if(StringUtils.isNotEmpty(mobile)) {
+                 	   cellPhone = mobile;
+                    }
+                    
+
 
                 }
+                
 
             }
             else {
+            	cellPhone = aplyMemberHistoryData.getValue("AplyCellPhoneNo");
+            	
                 email = aplyMemberHistoryData.getValue("AplyEmail");
 //                teleAddressAddress = ProjUtils.toAddress(aplyMemberHistoryData,"Aply","2");
                 teleAddressAddress = aplyMemberHistoryData.getValue("AplyAddr2");
@@ -166,8 +197,6 @@ public class PersonalInfo1 implements ILogic {
         //轉成中文
         domicileAddressCityName = ProjUtils.toCityName(domicileAddressCityId,dao);
         domicileAddressZipCodeName = ProjUtils.toZipCodeName(domicileAddressZipCode,dao);
-
-        name = StringEscapeUtils.unescapeHtml4(name);
 
         //隱碼
         MarkBean markBean = new MarkBean();
@@ -241,11 +270,80 @@ public class PersonalInfo1 implements ILogic {
         teleAddress.put("zipCode",teleAddressZipCode);
         teleAddress.put("address",teleAddressAddress);
         content.put("teleAddress",teleAddress);
+        
+        System.out.println("@@@@@@Pes1");
 
     }
 
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        
+    	String draftXML = FlowUtils.toDraftDataXML(queryStringInfo,false);
+
+        LoginUserBean loginUserBean = ProjUtils.getLoginBean(queryStringInfo.getRequest().getSession());
+        String userId = loginUserBean.getUserId();
+        
+        
+    	IDao dao = DaoFactory.getDefaultDao();
+    	 DataObject aplyMemberData = null;
+         aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
+         if(aplyMemberData == null && ProjUtils.isPayHistory(userId,dao)) 
+         {
+         	aplyMemberData = ProjUtils.getNewsAplyMemberTuitionLoanHistoryData(userId,dao);
+         }
+         
+         String birthday="";         
+         String cbirthday="";
+    	//String draftXML = FlowUtils.getDraftData(userId,"apply","apply1_1",dao);
+    	 if (draftXML != null) {
+             Document step1Doc = DocumentHelper.parseText(draftXML);
+             Element step1Root = step1Doc.getRootElement();
+
+            String yearBirthday = step1Root.element("birthday_year").getText();
+            String monthBirthday = step1Root.element("birthday_month").getText();
+            String dayBirthday = step1Root.element("birthday_day").getText();
+             
+             //System.out.println("@@@@"+yearBirthday+","+monthBirthday+","+dayBirthday);
+            yearBirthday= StringUtils.leftPad(yearBirthday,3,"0");
+             monthBirthday = StringUtils.leftPad(monthBirthday,2,"0");
+             dayBirthday = StringUtils.leftPad(dayBirthday,2,"0");
+             birthday = yearBirthday + monthBirthday + dayBirthday;
+             //cbirthday=yearBirthday+"-"+monthBirthday+"-"+dayBirthday;
+          
+         }
+         else if (aplyMemberData != null){
+         	birthday = aplyMemberData.getValue("AplyBirthday");
+         	birthday = ProjUtils.toBirthday(birthday);
+             String yearBirthday = birthday.substring(0,3);
+             String monthBirthday = birthday.substring(3,5);
+             String dayBirthday = birthday.substring(5,7);
+             birthday = yearBirthday + monthBirthday + dayBirthday;
+             //cbirthday=yearBirthday+"-"+monthBirthday+"-"+dayBirthday;
+           
+         }
+    	 cbirthday=ProjUtils.toYYYYBirthday(birthday);
+    	  String now = DateUtil.getTodayString();        
+          String b = DateUtil.addDate(now,Calendar.YEAR,-1911);
+          b=b.substring(0,8);
+          boolean checkdate =Double.parseDouble(b.substring(0,8)) > Double.parseDouble(birthday);
+        
+          if(!checkdate)
+          {
+          	throw new Exception("生日需早於今日");
+          }
+          
+          try {
+            	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    			dateFormat.setLenient(false);
+    			if (cbirthday.length() == 8) 
+    			{
+    				cbirthday = cbirthday.substring(0, 4) + "-" + cbirthday.substring(4, 6) + "-"
+    						+ cbirthday.substring(6, 8);
+    				 dateFormat.parse(cbirthday.trim());
+    			}  			
+    			
+    		} catch (Exception e) {
+    			throw new Exception("生日格式錯誤");
+    		}
     }
 }

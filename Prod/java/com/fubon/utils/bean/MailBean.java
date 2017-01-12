@@ -36,12 +36,14 @@ public class MailBean {
     //要載入的mail文案html
     public MailBean(String htmlName) {
 
-//        String emailFolder = PropertiesUtil.getValue("/config.properties","emailFolder");
-//        Properties p = PropertiesUtil.loadPropertiesByClassPath("/config.properties");
-//        String emailFolder = p.getProperty("emailFolder");
+       // String emailFolder = PropertiesUtil.getValue("/config.properties","emailFolder");
+        Properties p = PropertiesUtil.loadPropertiesByClassPath("/config.properties");
+        String emailFolder = p.getProperty("emailFolder");
+    	
+    	
 
         try{
-            String emailFolder = "D:/student/email/";
+            //String emailFolder = "C:/student/email/";
             content = FileUtils.readFileToString(new File(emailFolder + htmlName + ".html"),"utf-8");
         }catch(Exception e) {
             e.printStackTrace();

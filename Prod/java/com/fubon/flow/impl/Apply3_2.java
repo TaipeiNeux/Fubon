@@ -8,6 +8,7 @@ import com.fubon.utils.ProjUtils;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -36,14 +37,23 @@ public class Apply3_2 implements ILogic {
         String accordingToBill_sum = "", freedom_sum = "";
 
         String stageSelectValue = "";
+        String whiteList = "";//此身份是否在白名單中
 
         IDao dao = DaoFactory.getDefaultDao();
+        DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
         String applyDraftXML3 = FlowUtils.getDraftData(userId,"apply","apply3_1",dao);
-        Document draftDoc = DocumentHelper.parseText(applyDraftXML3);
-        Element draftRoot = draftDoc.getRootElement();
+        if (applyDraftXML3 != null) {
+            Document draftDoc = DocumentHelper.parseText(applyDraftXML3);
+            Element draftRoot = draftDoc.getRootElement();
 
-        stageSelectValue = draftRoot.element("stageSelectValue") != null ? draftRoot.element("stageSelectValue").getText() : "";
-        OnTheJob = draftRoot.element("onTheJobHidden").getText();
+            stageSelectValue = draftRoot.element("stageSelectValue") != null ? draftRoot.element("stageSelectValue").getText() : "";
+            OnTheJob = draftRoot.element("onTheJobHidden").getText();
+        }
+        else if (aplyMemberData != null){
+            stageSelectValue = aplyMemberData.getValue("schoolType3");
+            OnTheJob = "0".equals(aplyMemberData.getValue("schoolWorkFlag")) ? "N" : "Y";
+        }
+
 
         //若有草稿過，就拿草稿的來用
         if(draftData != null) {
@@ -69,44 +79,42 @@ public class Apply3_2 implements ILogic {
             if(root.element("accordingToBill_sum_hidden") != null) accordingToBill_sum = root.element("accordingToBill_sum_hidden").getText();
             if(root.element("freedom_sum") != null) freedom_sum = root.element("freedom_sum").getText();
         }
-        else {
-            //先取得「本學期」申請資料
-//            DataObject aplyMemberData = ProjUtils.getAplyMemberTuitionLoanDataThisYearSemeter(userId,dao);
-//
-//            if(aplyMemberData != null) {
-//                loans = aplyMemberData.getValue("loanType");
-//                accordingToBillLoansSum = aplyMemberData.getValue("renderAmt_school");
-//
-//                if("1".equalsIgnoreCase(loans)) {
-//                    accordingToBillBook = aplyMemberData.getValue("renderAmt_book");
-//                    accordingToBillLive = aplyMemberData.getValue("renderAmt_lodging");
-//                    accordingToBillAbroad = aplyMemberData.getValue("renderAmt_study");
-//                    accordingToBillLife = aplyMemberData.getValue("renderAmt_living");
-//
-//                }
-//                else {
-//                    freedomBook = aplyMemberData.getValue("renderAmt_book");
-//                    freedomLive = aplyMemberData.getValue("renderAmt_lodging");
-//                    freedomAbroad = aplyMemberData.getValue("renderAmt_study");
-//                    freedomLife = aplyMemberData.getValue("renderAmt_living");
-//
-//                }
-//
-//                String scholarshipFlag = aplyMemberData.getValue("scholarshipFlag");
-//
-//                accordingToBillPublicExpense = "N".equals(scholarshipFlag) ? "0" : "1";
-//                freedomPublicExpense = "N".equals(scholarshipFlag) ? "0" : "1";
-//
-//                freedomCredit = aplyMemberData.getValue("renderAmt_education");
-//                freedomFPA = aplyMemberData.getValue("renderAmt_insurance");
-//                freedomPractice = aplyMemberData.getValue("renderAmt_practice");
-//
-//
-//                accordingToBill_sum = aplyMemberData.getValue("renderAmt");
-//                freedom_sum = aplyMemberData.getValue("renderAmt");
-//            }
+        //先取得「本學期」申請資料
+        else if (aplyMemberData != null){
+            loans = aplyMemberData.getValue("loanType");
+            accordingToBillLoansSum = aplyMemberData.getValue("renderAmt_school");
+
+            if("1".equalsIgnoreCase(loans)) {
+                accordingToBillBook = aplyMemberData.getValue("renderAmt_book");
+                accordingToBillLive = aplyMemberData.getValue("renderAmt_lodging");
+                accordingToBillAbroad = aplyMemberData.getValue("renderAmt_study");
+                accordingToBillLife = aplyMemberData.getValue("renderAmt_living");
+
+            }
+            else {
+                freedomMusic = aplyMemberData.getValue("renderAmt_music");
+                freedomBook = aplyMemberData.getValue("renderAmt_book");
+                freedomLive = aplyMemberData.getValue("renderAmt_lodging");
+                freedomAbroad = aplyMemberData.getValue("renderAmt_study");
+                freedomLife = aplyMemberData.getValue("renderAmt_living");
+            }
+
+            String scholarshipFlag = aplyMemberData.getValue("scholarshipFlag");
+
+            accordingToBillPublicExpense = "Y".equals(scholarshipFlag) ? aplyMemberData.getValue("scholarship") : "0";
+            freedomPublicExpense = "Y".equals(scholarshipFlag) ? aplyMemberData.getValue("scholarship") : "0";
+
+            freedomCredit = aplyMemberData.getValue("renderAmt_education");
+            freedomFPA = aplyMemberData.getValue("renderAmt_insurance");
+            freedomPractice = aplyMemberData.getValue("renderAmt_practice");
+
+            accordingToBill_sum = aplyMemberData.getValue("renderAmt");
+            freedom_sum = aplyMemberData.getValue("renderAmt");
         }
 
+        //0804 added by titan 加上白名單
+        whiteList = ProjUtils.queryApplyWhiteRecord(userId,dao);
+        whiteList = StringUtils.isEmpty(whiteList) ? "N" : "Y";
 
         content.put("loans",loans);
 
@@ -139,6 +147,7 @@ public class Apply3_2 implements ILogic {
 
         content.put("stageSelectValue",stageSelectValue);
 
+        content.put("whiteList",whiteList);
     }
 
     @Override

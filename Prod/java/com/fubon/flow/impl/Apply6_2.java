@@ -1,5 +1,6 @@
 package com.fubon.flow.impl;
 
+import com.fubon.utils.DBUtils;
 import com.fubon.utils.MessageUtils;
 import com.fubon.utils.bean.MailBean;
 import com.neux.garden.authorization.LoginUserBean;
@@ -10,6 +11,7 @@ import com.fubon.utils.ProjUtils;
 import com.neux.garden.log.GardenLog;
 import com.neux.utility.orm.bean.DataObject;
 import com.neux.utility.orm.dal.dao.module.IDao;
+import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.date.DateUtil;
 import com.neux.utility.utils.jsp.JSPUtils;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
@@ -22,9 +24,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -73,11 +73,15 @@ public class Apply6_2 implements ILogic {
 //        Element apply52Root = apply52Doc.getRootElement();
 
         //寄發email需要使用到的
+        String aplyNo = "";
         String email = "";
         String branchName = "",branchAddr = "",branchTel="";
-        String bookingTime = "";
+        String bookingDate = "",bookingTime = "";
         String objListHidden = "";
         String signBill = "";
+        boolean isApply = false;
+
+        //System.out.println("@@@@@11111");
 
         //申請完了，要直接寫入AplyMemberTuitionLoanDtl
         String result = "申請成功-對保分行";
@@ -85,10 +89,10 @@ public class Apply6_2 implements ILogic {
 
             email = apply1_1Root.element("email").getText();
 
-            DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo , dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,apply4Root,"2");
+            DataObject aplyMemberDataObject = ProjUtils.saveAplyMemberTuitionLoanDtl(queryStringInfo,content,dao,apply1_1Root,apply1_2Root,apply2Root,apply3_1Root,apply3_2Root,apply4Root,"2");
 
             boolean isAdult = ProjUtils.isAdult(aplyMemberDataObject.getValue("AplyBirthday"));
-            String aplyNo = aplyMemberDataObject.getValue("AplyNo");
+            aplyNo = aplyMemberDataObject.getValue("AplyNo");
 
             signBill = "Y".equals(aplyMemberDataObject.getValue("signBill")) ? "Y" : "N";
 
@@ -142,8 +146,10 @@ public class Apply6_2 implements ILogic {
 
             String applicantAdult = apply1_2Root.element("applicantAdult").getText();
             String userMarriedHidden = apply1_2Root.element("userMarriedHidden").getText();
-            String familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
-            String familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
+            // String familyStatusLevel1 = apply1_2Root.element("familyStatusLevel1").getText();
+            // String familyStatusLevel2 = apply1_2Root.element("familyStatusLevel2").getText();
+
+            // System.out.println("@@@@@@@@@"+familyStatusLevel1+familyStatusLevel2);
 
             String branchId = apply4Root.element("idSelected").getText();
             String dateSelected = apply4Root.element("dateSelected").getText();
@@ -172,7 +178,8 @@ public class Apply6_2 implements ILogic {
                 timeArea = "PM";
             }
 
-            bookingTime = DateUtil.convert14ToDate("yyyy/MM/dd",DateUtil.convertDateTo14(dateSelected)) + " " + timeArea + timeSelected.substring(0,2) + ":" + timeSelected.substring(2) + "-" + StringUtils.leftPad(Integer.parseInt(timeSelected.substring(0,2)) + 1 + "",2,"0") + ":00";
+            bookingDate = DateUtil.convert14ToDate("yyyy/MM/dd",DateUtil.convertDateTo14(dateSelected));
+            bookingTime = timeArea + timeSelected.substring(0,2) + ":" + timeSelected.substring(2) + "-" + StringUtils.leftPad(Integer.parseInt(timeSelected.substring(0,2)) + 1 + "",2,"0") + ":00";
 
             content.put("branchName",branch.getValue("BranchName")); // 分行名稱
             content.put("addr",branchAddr);          // 分行地址
@@ -185,7 +192,7 @@ public class Apply6_2 implements ILogic {
 
             content.put("reservation",reservation);
 
-            //依照申請人取得線上續貸資料
+            //依照申請人`取得線上續貸資料
             ProjUtils.setOnlineDocumentApplyData(content,userId,dao);
 
 
@@ -207,8 +214,10 @@ public class Apply6_2 implements ILogic {
             content.put("errorCode",errorCode);
             content.put("errorMsg",errorMsg);
 
+            isApply = true;
+
             //清除我要申請的草稿資料
-//            FlowUtils.resetDraftData(userId,"apply",dao);
+            FlowUtils.resetDraftData(userId,"apply",dao);
         }catch(Exception e) {
             GardenLog.log(GardenLog.DEBUG, "Apply6_2 Exception=>" + e.getMessage());
             StackTraceElement[] stackTraceElements = e.getStackTrace();
@@ -257,20 +266,47 @@ public class Apply6_2 implements ILogic {
 
         objListHidden = doc.select("ul").html();
 
+        String date = DateUtil.convert14ToDate("yyyy-MM-dd HH:mm:ss",DateUtil.getTodayString());
+
+        if(isApply){
+            try{
+                //儲存預約清單
+                DataObject AplyMemberTuitionLoanDtl_Booking = DaoFactory.getDefaultDataObject("AplyMemberTuitionLoanDtl_Booking");
+                if(AplyMemberTuitionLoanDtl_Booking != null) {
+                    AplyMemberTuitionLoanDtl_Booking.setValue("AplyNo", aplyNo);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_Date", date);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_Bank", branchName + "("+branchAddr+")" + branchTel);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_BKGDate", bookingDate);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_BKGTime", bookingTime);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_Document", objListHidden);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailBank_SignBill", "Y".equals(signBill) ? "並連同保證人" : "");
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailReceiver", email);
+                    AplyMemberTuitionLoanDtl_Booking.setValue("MailSendFlag","N");
+                    dao.insert(AplyMemberTuitionLoanDtl_Booking);
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+                GardenLog.log(GardenLog.DEBUG, "Apply6_2 Exception=>" + e.getMessage());
+            }
+        }
+
         MailBean mailBean = new MailBean("bank");
         mailBean.setReceiver(email);
         mailBean.setTitle(mailTitle);
+        mailBean.addResultParam("date", date);
         mailBean.addResultParam("bank", branchName + "("+branchAddr+")" + branchTel);
-        mailBean.addResultParam("time",bookingTime);
+        mailBean.addResultParam("time", bookingDate + " " + bookingTime);
         mailBean.addResultParam("result",(StringUtils.isEmpty(errorCode) ? "<img src=\"{host}/img/na-14.png\">您已成功送出申請資料" : "<img src=\"{host}/img/na-16.png\">送出申請資料失敗("+errorCode+")"+errorMsg));
         mailBean.addResultParam("document",objListHidden);
         mailBean.addResultParam("signBill","Y".equals(signBill) ? "並連同保證人" : "");
-        MessageUtils.sendEmail(mailBean);
+        MessageUtils.sendEmail(mailBean,userId);
 
     }
 
     @Override
     public void doAction(JSPQueryStringInfo queryStringInfo,JSONObject content) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+
     }
 }

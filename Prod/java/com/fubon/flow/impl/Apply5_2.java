@@ -11,13 +11,19 @@ import com.fubon.flow.ILogic;
 import com.fubon.utils.FlowUtils;
 import com.fubon.utils.ProjUtils;
 import com.fubon.utils.bean.OTPBean;
+import com.neux.utility.orm.bean.DataObject;
+import com.neux.utility.orm.dal.SQLCommand;
 import com.neux.utility.orm.dal.dao.module.IDao;
 import com.neux.utility.utils.PropertiesUtil;
 import com.neux.utility.utils.jsp.info.JSPQueryStringInfo;
+
+import java.util.Vector;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -37,19 +43,23 @@ public class Apply5_2 implements ILogic {
         IDao dao = DaoFactory.getDefaultDao();
 
         //取得第1-1的手機號碼
-        String draftXML = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
-        Document step1Doc = DocumentHelper.parseText(draftXML);
-        Element step1Root = step1Doc.getRootElement();
-
         String mobile = "";
-        String id = step1Root.element("id").getText();
+        String draftXML = FlowUtils.getDraftData(userId, "apply", "apply1_1", dao);
+        if (draftXML != null){
+            Document step1Doc = DocumentHelper.parseText(draftXML);
+            Element step1Root = step1Doc.getRootElement();
+            mobile = step1Root.element("cellPhone").getText();
+        } else {
+            mobile = loginUserBean.getCustomizeValue("AplyCellPhoneNo");
+        }
+
 
         //2016-08-04 added by titan 因為行動電話要改成一律問390，不然舊戶的電話改了後就收不到後續的OTP
         String env = PropertiesUtil.loadPropertiesByClassPath("/config.properties").getProperty("env");
         if(!"sit".equalsIgnoreCase(env)) {
             RQBean rqBean54 = new RQBean();
             rqBean54.setTxId("EB032154");
-            rqBean54.addRqParam("CUST_NO",id);
+            rqBean54.addRqParam("CUST_NO",userId);
 
             RSBean rsBean54 = WebServiceAgent.callWebService(rqBean54);
 
@@ -60,9 +70,39 @@ public class Apply5_2 implements ILogic {
 
             }
         }
-        else {
-            mobile = step1Root.element("cellPhone").getText();
+        
+        //上傳文件撈Table
+        SQLCommand query = new SQLCommand("select DocId,DocType,original_file_name,Size from AplyMemberTuitionLoanDtl_Doc where AplyIdNo = ?");
+        query.addParamValue(userId);
+        Vector<DataObject> docResult = new Vector<DataObject>();
+        dao.queryByCommand(docResult,query,null,null);
+
+      
+
+        if(docResult.size() != 0) {
+            for(DataObject d : docResult) {
+                
+                String originalFileName = d.getValue("original_file_name");
+               
+                
+                String File_Name="";
+                String temp[] = originalFileName.split("[.]");
+                if(temp.length>1){ 
+                	File_Name = temp[temp.length-1];
+                }else{
+                	File_Name=""; 
+                }
+                            
+
+                if(!File_Name.toLowerCase().equals("png")&&!File_Name.toLowerCase().equals("peg")&&!File_Name.toLowerCase().equals("jpg")&&!File_Name.toLowerCase().equals("tif")&&!File_Name.toLowerCase().equals("gif")&&!File_Name.toLowerCase().equals("pdf"))
+                	throw new Exception("請確認檔案副檔名");
+            }
+        
         }
+        
+        
+        
+
 
         //取得OTP驗證碼
         OTPBean otpBean = ProjUtils.createOTP(queryStringInfo.getRequest());
@@ -74,7 +114,7 @@ public class Apply5_2 implements ILogic {
 
         MessageUtils.sendSMS(smsBean);
 
-        MessageUtils.saveOTPLog(dao,mobile,null,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),smsBean.getContent());
+        MessageUtils.saveOTPLog(dao,mobile,null,queryStringInfo.getRequest(),otpBean.getOtpNumber(),otpBean.getOtpCode(),smsBean.getContent(),userId);
 
         content.put("mobile",mobile);
         content.put("code_img",otpBean.getCodeImg());
